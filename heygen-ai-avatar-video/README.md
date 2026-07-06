@@ -67,11 +67,41 @@ The assembly-only workflow in [PROMPT-template.md](PROMPT-template.md) requires 
 
 ## Usage
 
-1. Give your agent the skill (installed as above, or by path).
-2. For a full script-to-video job: provide the script, a HeyGen avatar id, and an ElevenLabs voice id. The skill drives the modular workflow, including the approval gates.
-3. For assembly-only jobs (avatar clips and audio already exist): fill in the placeholders (`<OPENING_1_PATH>`, `<PROJECT_PATH>`, `<NAMES>`, …) in [PROMPT-template.md](PROMPT-template.md) and send it as the task prompt.
+Once installed, the skill lives in `~/.claude/skills/heygen-ai-avatar-video/` and is available in **every** Claude Code session on the machine, forever. Nothing is re-installed per video. Videos themselves never go there: each job gets its own project folder (default `Documents\videos\<video-name>\`), created automatically by the skill.
 
-All per-project data (product names, proper nouns, paths, style preferences) lives in the prompt; the skill itself stays project-agnostic.
+There are two ways to use it:
+
+### Mode 1 — full production from a script (no template needed)
+
+Open a Claude Code session anywhere and describe the job in your own words, for example:
+
+> Turn `C:\...\script.md` into a modular vertical video: 3 openings, animated body, outro. HeyGen avatar `<id>`, ElevenLabs voice `<id>`.
+
+The skill triggers automatically by matching your request (you can also invoke it explicitly with `/heygen-ai-avatar-video`). From there it drives everything and asks for what it needs:
+
+1. Shows you a **creative proposal** (color palette, transitions, caption style, end card, act structure) and waits for your approval — nothing is generated or spent before this.
+2. Creates the project folder with its full structure (source, manifests, assets, renders, snapshots).
+3. Generates the TTS audio and shows you the **transcript for approval/corrections** before rendering any caption.
+4. Audits the paid-provider plan (only openings/outro may cost money, never the full script), generates the avatar clips, and freezes them locally.
+5. Renders the animated body locally, runs visual QA (safe zones, overflow, spelling), assembles the finals within the 2-encode quality budget, and verifies each MP4.
+6. Reports the final video paths under `renders\final\`.
+
+### Mode 2 — assembly-only job (use the template)
+
+Use [PROMPT-template.md](PROMPT-template.md) when the avatar clips and body audio **already exist** and you only need the animated body plus final assembly — zero paid API calls. This is a deliberate manual copy-paste flow, so you see and control the exact work order before sending it:
+
+1. Open `PROMPT-template.md` and replace every `<PLACEHOLDER>` with your real values (asset paths, project folder, brand names / proper nouns for the transcript check).
+2. Copy the whole text and paste it as your **first message** in a Claude Code session. That paste *is* the invocation — the header even installs the skill first if the machine doesn't have it yet.
+3. The same approval gates still apply (transcript, creative proposal) before anything renders.
+
+If you'd rather not edit the file by hand, ask the agent to fill it with you: it will ask for each value conversationally, show you the completed prompt, and confirm before starting.
+
+### Multiple videos and repairs
+
+- Each video = its own project folder. Making video #2 creates a new folder and never touches video #1.
+- To fix an existing video, point the skill at its project folder (e.g. *"fix the caption at 0:12 in `Documents\videos\my-video`"*). It reads that project's manifests and re-renders only the affected segment, reusing everything else — including the frozen paid HeyGen clips, so repairs cost nothing.
+
+All per-project data (product names, proper nouns, paths, style preferences) lives in your prompt or conversation; the skill itself stays project-agnostic.
 
 ## License
 
