@@ -8,7 +8,19 @@ A collection of reusable skills for AI coding agents (Claude Code, Codex, and si
 |---|---|
 | [heygen-ai-avatar-video](heygen-ai-avatar-video/) | Modular short-video production (TikTok / Reels / Shorts): HeyGen avatar openings/outro + HyperFrames animated body, ElevenLabs TTS, word-level captions, approval gates, encode budget, and QA/verification gates. |
 
-## Installation
+## Quick start — let your agent do everything
+
+No manual setup needed. Open Claude Code and paste:
+
+```text
+Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
+clone the repo to a temporary folder, copy the heygen-ai-avatar-video/ folder into
+~/.claude/skills/, and confirm the skill loads.
+```
+
+Then just describe your video job in the same session — the skill triggers automatically. Each skill's prompt template (e.g. [PROMPT-template.md](heygen-ai-avatar-video/PROMPT-template.md)) also self-installs the skill if it is missing, so you can simply fill in the placeholders and paste it as your first message.
+
+## Manual installation
 
 Clone the repo and copy the skill folder you want into your agent's skills directory:
 

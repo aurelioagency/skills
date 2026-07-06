@@ -1,6 +1,13 @@
-Use and or install the global skill:
+Use the global skill `heygen-ai-avatar-video`.
 
-<SKILL_PATH>
+If it is not installed on this machine, install it yourself first:
+1. Clone https://github.com/aurelioagency/skills.git into a temporary folder.
+2. Copy the `heygen-ai-avatar-video/` folder into the agent skills directory
+   (Claude Code: `~/.claude/skills/heygen-ai-avatar-video/`;
+   Codex: `~/.codex/skills/heygen-ai-avatar-video/`).
+3. Read its `SKILL.md` before doing anything else.
+
+Below, `<SKILL_DIR>` means that installed skill folder.
 
 Also use the HyperFrames skills/tools as needed:
 - hyperframes
