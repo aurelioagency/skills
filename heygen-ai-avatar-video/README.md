@@ -34,9 +34,11 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 **Option A — let your agent install it (recommended).** Open Claude Code and paste:
 
 ```text
-Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
-clone the repo to a temporary folder, copy the heygen-ai-avatar-video/ folder into
-~/.claude/skills/, and confirm the skill loads.
+Install the heygen-ai-avatar-video skill:
+1. Run: git clone https://github.com/aurelioagency/skills.git into a temporary folder.
+2. Copy only the heygen-ai-avatar-video/ folder from the cloned repo into
+   ~/.claude/skills/heygen-ai-avatar-video/
+3. Confirm the skill loads, then delete the temporary clone.
 ```
 
 [PROMPT-template.md](PROMPT-template.md) also self-installs the skill if it is missing, so for assembly-only jobs you can skip this step entirely and just paste the filled template.

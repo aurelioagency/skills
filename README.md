@@ -10,15 +10,18 @@ A collection of reusable skills for AI coding agents (Claude Code, Codex, and si
 
 ## Quick start — let your agent do everything
 
-No manual setup needed. Open Claude Code and paste:
+No manual setup needed. Open Claude Code and paste the install prompt of the skill you want, replacing `<skill-name>` with a folder name from the table above:
 
 ```text
-Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
-clone the repo to a temporary folder, copy the heygen-ai-avatar-video/ folder into
-~/.claude/skills/, and confirm the skill loads.
+Install the <skill-name> skill:
+1. Run: git clone https://github.com/aurelioagency/skills.git into a temporary folder.
+2. Copy only the <skill-name>/ folder from the cloned repo into ~/.claude/skills/<skill-name>/
+3. Confirm the skill loads, then delete the temporary clone.
 ```
 
-Then just describe your video job in the same session — the skill triggers automatically. Each skill's prompt template (e.g. [PROMPT-template.md](heygen-ai-avatar-video/PROMPT-template.md)) also self-installs the skill if it is missing, so you can simply fill in the placeholders and paste it as your first message.
+For example, for this repo's video skill use `heygen-ai-avatar-video` as `<skill-name>` — the exact prompt is also in [its README](heygen-ai-avatar-video/README.md).
+
+Then just describe your job in the same session — the skill triggers automatically. Each skill's prompt template (e.g. [PROMPT-template.md](heygen-ai-avatar-video/PROMPT-template.md)) also self-installs its skill if it is missing, so you can simply fill in the placeholders and paste it as your first message.
 
 ## Manual installation
 
