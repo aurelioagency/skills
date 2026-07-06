@@ -4,8 +4,9 @@ If it is not installed on this machine, install it yourself first:
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git
    into a temporary folder.
 2. Inside it, run: git sparse-checkout set heygen-ai-avatar-video
-3. Run: node install-skills.mjs heygen-ai-avatar-video
-   (installs only this skill into ~/.claude/skills/; use --codex for Codex).
+3. Copy the `heygen-ai-avatar-video/` folder into the agent skills directory
+   (Claude Code: `~/.claude/skills/heygen-ai-avatar-video/`;
+   Codex: `~/.codex/skills/heygen-ai-avatar-video/`).
 4. Delete the temporary clone and read the installed `SKILL.md` before doing
    anything else.
 

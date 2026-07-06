@@ -37,7 +37,7 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
 2. Inside it, run: git sparse-checkout set heygen-ai-avatar-video
-3. Run: node install-skills.mjs heygen-ai-avatar-video
+3. Copy the heygen-ai-avatar-video/ folder into ~/.claude/skills/heygen-ai-avatar-video/
 4. Delete the temporary clone, confirm the skill loads, explain how to use it,
    and ask me if we start my first video now.
 ```

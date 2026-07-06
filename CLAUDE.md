@@ -9,7 +9,7 @@ This repo is a collection of agent skills, one per subfolder containing a `SKILL
    node install-skills.mjs <skill-name>
    ```
 
-   This copies only that skill into `~/.claude/skills/` so it is available in every future chat (use `--codex` for Codex). Re-running it later updates that skill only.
+   This copies only that skill into `~/.claude/skills/` so it is available in every future chat (use `--codex` for Codex). Re-running it later updates that skill only. If this is a sparse checkout without `install-skills.mjs`, copy the skill folder into `~/.claude/skills/<skill-name>/` directly — that is all the installer does.
 3. **Confirm the skill loads**, then briefly explain — in the user's language — what it does and how it is used, based on the skill's own README.
 4. **Offer to start the first job right away.** For `heygen-ai-avatar-video`, ask whether they want a full script-to-video production or an assembly from existing clips/audio. For assembly, offer to fill `heygen-ai-avatar-video/PROMPT-template.md` together: ask for each placeholder value conversationally, show the filled prompt, and ask "Do I apply this prompt and start?" before proceeding.
 5. **Check requirements** for the chosen skill (Node, ffmpeg, Playwright, API keys per its README) and help set up anything missing.
