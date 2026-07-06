@@ -1,6 +1,6 @@
 # Video Production Guidelines
 
-These rules capture the generic production taste and QA decisions established during the grill-with-docs avatar recut. They apply to future HyperFrames/talking-head edits unless the user explicitly overrides them.
+These rules capture generic production taste and QA decisions established across prior avatar video productions. They apply to future HyperFrames/talking-head edits unless the user explicitly overrides them.
 
 ## Source Of Truth
 
