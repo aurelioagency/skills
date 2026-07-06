@@ -1,0 +1,4 @@
+interface:
+  display_name: "HeyGen AI Avatar Video"
+  short_description: "Build modular HeyGen avatar videos"
+  default_prompt: "Use $heygen-ai-avatar-video to turn this script into modular HeyGen avatar video variants with ElevenLabs audio, captions, animated middle, and verified final MP4s."

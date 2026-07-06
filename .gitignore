@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.*
+*.log
+
+# per-project media output (projects should live outside this repo,
+# but never commit media by accident)
+renders/
+snapshots/
+assets/avatar/
+assets/voice/
+assets/music/
+*.mp4
+*.wav
+*.mp3
