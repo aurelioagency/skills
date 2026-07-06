@@ -38,8 +38,11 @@ Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/s
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
 2. Inside it, run: git sparse-checkout set heygen-ai-avatar-video
 3. Copy the heygen-ai-avatar-video/ folder into ~/.claude/skills/heygen-ai-avatar-video/
-4. Delete the temporary clone, confirm the skill loads, explain how to use it,
-   and ask me if we start my first video now.
+4. Delete the temporary clone and confirm the skill loads.
+5. Check the requirements: Node 18+, ffmpeg, and Playwright. Install anything
+   missing (ask me to approve each install command).
+6. Explain how to use the skill, tell me where PROMPT-template.md ended up on my
+   machine, and ask me if we start my first video now.
 ```
 
 The agent fetches only this skill (not the whole collection), installs it permanently in `~/.claude/skills/` for all future chats, and walks you into your first job. [PROMPT-template.md](PROMPT-template.md) also self-installs the skill if it is missing, so for assembly-only jobs you can skip this step entirely and just paste the filled template.
@@ -90,7 +93,7 @@ The skill triggers automatically by matching your request (you can also invoke i
 
 Use [PROMPT-template.md](PROMPT-template.md) when the avatar clips and body audio **already exist** and you only need the animated body plus final assembly — zero paid API calls. This is a deliberate manual copy-paste flow, so you see and control the exact work order before sending it:
 
-1. Open `PROMPT-template.md` and replace every `<PLACEHOLDER>` with your real values (asset paths, project folder, brand names / proper nouns for the transcript check).
+1. Open `PROMPT-template.md` — it is installed with the skill, so it is already on your machine at `~/.claude/skills/heygen-ai-avatar-video/PROMPT-template.md` — and replace every `<PLACEHOLDER>` with your real values (asset paths, project folder, brand names / proper nouns for the transcript check).
 2. Copy the whole text and paste it as your **first message** in a Claude Code session. That paste *is* the invocation — the header even installs the skill first if the machine doesn't have it yet.
 3. The same approval gates still apply (transcript, creative proposal) before anything renders.
 

@@ -19,7 +19,10 @@ Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/s
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
 2. Inside it, run: git sparse-checkout set heygen-ai-avatar-video
 3. Copy the heygen-ai-avatar-video/ folder into ~/.claude/skills/heygen-ai-avatar-video/
-4. Delete the temporary clone, confirm the skill loads, explain how to use it,
+4. Delete the temporary clone and confirm the skill loads.
+5. Check the skill's requirements (see its README) and install anything missing
+   (ask me to approve each install command).
+6. Explain how to use the skill, tell me where its files ended up on my machine,
    and ask me if we start my first job now.
 ```
 

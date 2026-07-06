@@ -9,6 +9,8 @@ If it is not installed on this machine, install it yourself first:
    Codex: `~/.codex/skills/heygen-ai-avatar-video/`).
 4. Delete the temporary clone and read the installed `SKILL.md` before doing
    anything else.
+5. Check the requirements (Node 18+, ffmpeg, Playwright) and install anything
+   missing, asking the user to approve each install command.
 
 Below, `<SKILL_DIR>` means that installed skill folder.
 
