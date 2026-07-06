@@ -10,6 +10,8 @@ It covers the full pipeline: script parsing, ElevenLabs TTS, HeyGen avatar/lip-s
 
 Works with agent harnesses that support file-based skills (Claude Code, Codex, and similar).
 
+> **Note — this skill needs a real machine.** Production runs on Claude Code (the CLI in a terminal is enough; the desktop app also works). The claude.ai web chat cannot run it: its sandbox has no persistent disk for project folders, cannot call the HeyGen/ElevenLabs APIs, and cannot render video with ffmpeg/Playwright. The web chat is still great for preparing your script and filling in [PROMPT-template.md](PROMPT-template.md) conversationally — then paste the finished prompt into Claude Code on a computer to produce.
+
 ## What's in this folder
 
 | Path | Purpose |
