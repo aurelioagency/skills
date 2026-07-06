@@ -34,24 +34,26 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 **Option A — let your agent install it (recommended).** Open Claude Code and paste:
 
 ```text
-Install the heygen-ai-avatar-video skill:
-1. Run: git clone https://github.com/aurelioagency/skills.git into a temporary folder.
-2. Copy only the heygen-ai-avatar-video/ folder from the cloned repo into
-   ~/.claude/skills/heygen-ai-avatar-video/
-3. Confirm the skill loads, then delete the temporary clone.
+Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
+1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
+2. Inside it, run: git sparse-checkout set heygen-ai-avatar-video
+3. Run: node install-skills.mjs heygen-ai-avatar-video
+4. Delete the temporary clone, confirm the skill loads, explain how to use it,
+   and ask me if we start my first video now.
 ```
 
-[PROMPT-template.md](PROMPT-template.md) also self-installs the skill if it is missing, so for assembly-only jobs you can skip this step entirely and just paste the filled template.
+The agent fetches only this skill (not the whole collection), installs it permanently in `~/.claude/skills/` for all future chats, and walks you into your first job. [PROMPT-template.md](PROMPT-template.md) also self-installs the skill if it is missing, so for assembly-only jobs you can skip this step entirely and just paste the filled template.
 
-**Option B — manual.** Clone the repo and copy (or symlink) this skill's folder into your agent's skills directory:
+**Option B — manual.** Clone the repo and run the bundled installer:
 
 ```powershell
 git clone https://github.com/aurelioagency/skills.git
+cd skills
+node install-skills.mjs heygen-ai-avatar-video          # Claude Code
+node install-skills.mjs heygen-ai-avatar-video --codex  # Codex
 ```
 
-- **Claude Code**: copy `skills/heygen-ai-avatar-video/` to `~/.claude/skills/heygen-ai-avatar-video/` (or your project's `.claude/skills/`).
-- **Codex**: copy it to `~/.codex/skills/heygen-ai-avatar-video/`.
-- Any other harness: point it at this folder's `SKILL.md`.
+Any other harness: point it at this folder's `SKILL.md`.
 
 ## Requirements
 
