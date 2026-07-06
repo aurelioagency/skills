@@ -34,7 +34,7 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 Clone the repo and copy (or symlink) it into your agent's skills directory:
 
 ```powershell
-git clone <this-repo-url> heygen-ai-avatar-video
+git clone https://github.com/aurelioagency/skills.git heygen-ai-avatar-video
 ```
 
 - **Claude Code**: place the folder under `~/.claude/skills/heygen-ai-avatar-video/` (or your project's `.claude/skills/`).
