@@ -60,6 +60,31 @@ node install-skills.mjs heygen-ai-avatar-video --codex  # Codex
 
 Any other harness: point it at this folder's `SKILL.md`.
 
+## Updating
+
+Improvements land in this repo; your installed copy never updates itself. To update, re-run the installer — it replaces the installed skill cleanly, **preserves the `node_modules` you installed inside it** (Playwright keeps working), records the installed commit in `.installed-from.json`, and prints the old and new commits. Open Claude Code and paste:
+
+```text
+Update my installed heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
+1. If I have a clone of the repo, run git pull in it; otherwise make a temporary
+   sparse clone like in the install prompt.
+2. In the clone, run: node install-skills.mjs heygen-ai-avatar-video
+3. The installer prints the previous and new commit. Summarize what changed
+   between them (git log --oneline <old>..<new> -- heygen-ai-avatar-video) in my language.
+4. Confirm the skill still loads and that Playwright still resolves from the
+   installed skill's scripts. Delete the temporary clone if you made one.
+```
+
+To find out whether you are behind without installing anything, run this in an up-to-date clone:
+
+```powershell
+node install-skills.mjs heygen-ai-avatar-video --check
+```
+
+It compares the commit recorded in your installed copy against the checkout, counting only commits that touch this skill (exit code 3 means an update is available). Teams working on the repo can keep a permanent clone: updating is just `git pull` + the installer command.
+
+> Installed before `.installed-from.json` existed? The first re-install starts the tracking; from then on `--check` and the update summaries work.
+
 ## Requirements
 
 - **Node.js 18+** (bundled scripts are plain `node`, no install step).
