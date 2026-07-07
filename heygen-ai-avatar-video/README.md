@@ -85,6 +85,26 @@ It compares the commit recorded in your installed copy against the checkout, cou
 
 > Installed before `.installed-from.json` existed? The first re-install starts the tracking; from then on `--check` and the update summaries work.
 
+## Uninstalling
+
+The installed skill lives entirely in one folder: `~/.claude/skills/heygen-ai-avatar-video/`. Removing it never touches your video projects (they live in their own folders, e.g. `Documents\videos\<video-name>\`), other installed skills, or any clone of this repo. Open Claude Code and paste:
+
+```text
+Remove the heygen-ai-avatar-video skill from my machine:
+1. Delete the folder ~/.claude/skills/heygen-ai-avatar-video/ (all of it,
+   including its node_modules).
+2. Confirm the skill no longer loads. Do not touch my video project folders,
+   other installed skills, or any clone of the skills repo.
+```
+
+Or manually — from a clone of the repo:
+
+```powershell
+node install-skills.mjs heygen-ai-avatar-video --remove
+```
+
+(which only deletes the installed copy, never the repo folder), or simply delete `~/.claude/skills/heygen-ai-avatar-video/` yourself. You can reinstall at any time with the [Installation](#installation) prompt; only remember to reinstall Playwright afterwards (`npm i playwright` inside the installed skill) since it is removed along with the folder.
+
 ## Requirements
 
 - **Node.js 18+** (bundled scripts are plain `node`, no install step).

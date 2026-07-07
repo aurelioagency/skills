@@ -5,7 +5,8 @@
 // are never touched. Updates preserve the installed skill's node_modules and
 // record the installed commit in .installed-from.json. Run with no arguments
 // to list available skills. Use --check to report whether an installed skill
-// is behind this checkout without installing anything.
+// is behind this checkout without installing anything, and --remove to delete
+// the installed copy (the repo itself is never touched).
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -21,6 +22,7 @@ function parseArgs(argv) {
     if (item === '--dest') args.dest = path.resolve(argv[++i]);
     else if (item === '--codex') args.dest = path.join(os.homedir(), '.codex', 'skills');
     else if (item === '--check') args.check = true;
+    else if (item === '--remove' || item === '--uninstall') args.remove = true;
     else if (item === '--help' || item === '-h') args.help = true;
     else if (item.startsWith('--')) throw new Error(`Unknown argument: ${item}`);
     else args.names.push(item.replace(/[\\/]+$/, ''));
@@ -64,13 +66,34 @@ const args = parseArgs(process.argv);
 const skills = availableSkills();
 
 if (args.help || args.names.length === 0) {
-  console.log('Usage: node install-skills.mjs <skill-name> [more-skill-names] [--dest <skills-dir>] [--codex] [--check]');
+  console.log('Usage: node install-skills.mjs <skill-name> [more-skill-names] [--dest <skills-dir>] [--codex] [--check] [--remove]');
   console.log('Default destination: ~/.claude/skills');
   console.log('--check: report whether each installed skill is behind this checkout (git pull first); installs nothing.');
+  console.log('--remove: delete the installed copy of each named skill (including its node_modules); the repo is never touched.');
   console.log('');
   console.log('Available skills in this repo (sparse checkouts only show the one you fetched):');
   for (const name of skills) console.log(`  - ${name}`);
   process.exit(args.help ? 0 : 1);
+}
+
+if (args.remove) {
+  // Removal acts only on the destination; it does not require the skill to
+  // exist in this checkout and never touches the repo folder.
+  for (const name of args.names) {
+    const dest = path.join(args.dest, name);
+    if (!fs.existsSync(dest)) {
+      console.log(`${name}: not installed at ${dest}; nothing to remove.`);
+      continue;
+    }
+    if (!fs.existsSync(path.join(dest, 'SKILL.md'))) {
+      console.error(`${name}: ${dest} does not look like an installed skill (no SKILL.md); not removing it.`);
+      process.exit(1);
+    }
+    fs.rmSync(dest, { recursive: true, force: true });
+    console.log(`removed    ${name}  ->  ${dest}`);
+  }
+  console.log('Done. Reinstall any time with: node install-skills.mjs <skill-name>');
+  process.exit(0);
 }
 
 for (const name of args.names) {
