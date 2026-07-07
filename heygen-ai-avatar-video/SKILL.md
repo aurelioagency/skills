@@ -78,8 +78,21 @@ Keep this output contract:
 - `public\` is the active browser composition used by HyperFrames/Playwright. Do not mirror voice files into `public\`. Browser composition code in `public\index.html` must reference canonical project assets with paths such as `../assets/voice/<segment-id>.wav` or the `browserSrc` value in `manifests\audio-meta.json`.
 - `renders\segments\` contains reusable segment MP4s. `renders\final\` contains user-deliverable final MP4s.
 - `snapshots\` contains QA screenshots and overflow/layout reports.
+- `raws\` (optional, user-supplied-media jobs) contains the user's original source files for this video, copied verbatim during User Asset Intake. Create it with a plain mkdir when needed; never modify, rename, or delete anything inside it.
 
 Do not create a project-local `tools\` folder for normal runs. Reuse this skill's bundled `scripts\`. If a one-off local tool is unavoidable for a legacy repair, keep it temporary and promote repeated behavior back into the skill.
+
+## User Asset Intake
+
+When the user must supply existing media (opening clips, body audio, outro, script) and has not given explicit paths, never fail or stall on missing placeholders. Collect the assets this way:
+
+1. Ask only where the project should live (default `<Documents>\videos\<video-name>\`). Create the full project structure immediately, plus a `raws\` folder in the project root for the user's original files.
+2. Tell the user: "drop this video's files into `<project>\raws\` and tell me when they are ready". Suggest descriptive file names aligned with the segments (`intro`/`opening`, `body`, `outro`, `script`) — helpful but never required.
+3. Accept the two alternatives without friction: files dragged into the chat, or "they are in folder X". In both cases copy the originals into `<project>\raws\` yourself, so every project ends up self-contained: originals in `raws\`, deliverables in `renders\final\`.
+4. Inventory `raws\` with ffprobe: duration, video/audio streams, resolution. Classify candidates (opening1..openingN, body audio, outro, script/notes) by file name first, probed metadata second (short video+audio clips are opening/outro candidates; a long audio-only file is the body).
+5. **Intake mapping gate (blocking):** present the proposed file-to-segment mapping as a readable table — including any `raws\` files left unused — and wait for the user's confirmation or corrections before going further.
+6. After confirmation, copy the selected files into the canonical layout (`assets\avatar\`, `assets\voice\`, `source\`) and record each original path in `manifests\project.json`. Never modify, rename, or delete the files in `raws\` or the user's sources outside the project.
+7. When delivering, always report the exact final MP4 paths under `renders\final\` so the user never has to search for them.
 
 Minimize generated folders. If Video Cutter Lab or a provider creates a separate run directory, freeze the useful output back into this project root and record it in the manifest. Do not leave required assets only in scattered provider folders.
 

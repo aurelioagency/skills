@@ -39,7 +39,23 @@ The avatar/opening/outro assets are already provided. Your job is only:
 5. use the provided outro clip;
 6. assemble three final videos.
 
-Inputs I will provide:
+Inputs — choose ONE way to provide them:
+A) Easiest: leave everything as placeholders. When you start, create the full
+   project structure plus a raws\ folder, tell me to drop this video's files
+   into <PROJECT_PATH>\raws\ (suggest descriptive names like intro/body/outro),
+   and wait until I say they are ready.
+B) I tell you the folder where my files already are, or I drag them into the
+   chat: copy them into <PROJECT_PATH>\raws\ yourself.
+C) Explicit per-file paths, filled in below.
+
+In every case run the skill's User Asset Intake: never fail or guess on a
+missing placeholder. Inventory raws\ with ffprobe, show me your proposed
+file-to-segment mapping (opening1/2/3, body audio, outro, script) as a table,
+and WAIT for my confirmation before going further. Never modify, rename, or
+delete my original files. When you finish, tell me the exact paths of the
+final videos in renders\final\.
+
+Explicit paths (option C):
 - Opening 1 video/audio:
   <OPENING_1_PATH>
 - Opening 2 video/audio:
