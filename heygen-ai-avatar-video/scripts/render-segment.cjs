@@ -6,13 +6,13 @@ const { spawnSync } = require('node:child_process');
 
 function usage() {
   console.error(`Usage:
-  node render-segment.cjs --project <project-root> --output <out.mp4> [--storyboard storyboard.json] [--composition-id <id>] [--keep-frames]
+  node render-segment.cjs --project <project-root> --output <out.mp4> [--storyboard storyboard.json] [--composition-id <id>] [--keep-frames] [--crf 18] [--frame-format jpeg|png]
 
 Renders the current HyperFrames public/index.html with seek-safe video capture and optional storyboard audio mix.`);
 }
 
 function parseArgs(argv) {
-  const args = { storyboard: 'storyboard.json' };
+  const args = { storyboard: 'storyboard.json', crf: 18, frameFormat: 'jpeg' };
   for (let i = 0; i < argv.length; i += 1) {
     const item = argv[i];
     if (item === '--project') args.project = argv[++i];
@@ -21,6 +21,8 @@ function parseArgs(argv) {
     else if (item === '--composition-id') args.compositionId = argv[++i];
     else if (item === '--ffmpeg') args.ffmpeg = argv[++i];
     else if (item === '--keep-frames') args.keepFrames = true;
+    else if (item === '--crf') args.crf = Number(argv[++i]);
+    else if (item === '--frame-format') args.frameFormat = argv[++i];
     else if (item === '--help' || item === '-h') args.help = true;
     else throw new Error(`Unknown argument: ${item}`);
   }
@@ -141,8 +143,11 @@ async function main() {
     })));
   });
 
+  const frameFormat = args.frameFormat === 'png' ? 'png' : 'jpeg';
+  const frameExt = frameFormat === 'png' ? 'png' : 'jpg';
+  if (!Number.isFinite(args.crf) || args.crf < 0 || args.crf > 51) throw new Error(`Invalid --crf: ${args.crf}`);
   const totalFrames = Math.ceil(duration * fps);
-  console.log(`Capturing ${totalFrames} frames at ${width}x${height}, ${fps}fps`);
+  console.log(`Capturing ${totalFrames} frames at ${width}x${height}, ${fps}fps (${frameFormat}, crf ${args.crf})`);
   for (let frame = 0; frame < totalFrames; frame += 1) {
     const time = frame / fps;
     await page.evaluate(async ({ id, time }) => {
@@ -177,19 +182,22 @@ async function main() {
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     }, { id: compositionId, time });
 
-    const framePath = path.join(frameDir, `frame_${String(frame + 1).padStart(6, '0')}.jpg`);
-    await page.screenshot({ path: framePath, fullPage: false, type: 'jpeg', quality: 92 });
+    const framePath = path.join(frameDir, `frame_${String(frame + 1).padStart(6, '0')}.${frameExt}`);
+    const shotOptions = frameFormat === 'png'
+      ? { path: framePath, fullPage: false, type: 'png' }
+      : { path: framePath, fullPage: false, type: 'jpeg', quality: 92 };
+    await page.screenshot(shotOptions);
     if ((frame + 1) % 60 === 0 || frame + 1 === totalFrames) console.log(`Captured ${frame + 1}/${totalFrames}`);
   }
   await browser.close();
 
   const segments = Array.isArray(storyboard.segments) ? storyboard.segments.filter((segment) => segment.audio) : [];
-  const encodeInputs = ['-y', '-framerate', String(fps), '-i', path.join(frameDir, 'frame_%06d.jpg')];
+  const encodeInputs = ['-y', '-framerate', String(fps), '-i', path.join(frameDir, `frame_%06d.${frameExt}`)];
   const encodeTail = [
     '-t', Number(duration).toFixed(3),
     '-c:v', 'libx264',
     '-preset', 'slow',
-    '-crf', '18',
+    '-crf', String(args.crf),
     '-pix_fmt', 'yuv420p',
     '-r', String(fps),
     '-movflags', '+faststart',

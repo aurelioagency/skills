@@ -395,6 +395,7 @@ renders\segments\outro.mp4
 - Final assembly encode: CRF 14 maximum.
 - Any filter chain that includes crop + scale MUST end with `setsar=1` (without it the SAR ends up non-square, e.g. 3320:3321, and degrades the result).
 - If a new pipeline step would require an additional encode, the correct answer is to integrate it into an existing pass, never to add another encode.
+- In production, invoke segment renders with `render-segment.cjs ... --crf 10 --frame-format png` so the intermediate encode meets this budget from lossless PNG frame capture (JPEG capture artifacts degrade kinetic-text sharpness). The script defaults (`--crf 18`, JPEG q92) stay backward compatible.
 
 5. Assemble final variants.
 
