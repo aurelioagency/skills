@@ -77,6 +77,16 @@ These rules capture generic production taste and QA decisions established across
 - After segment assembly, verify the complete MP4, not only individual pieces: duration, resolution, video stream, audio stream, and a visual frame near each splice boundary.
 - Keep rendered final videos and the processed assets that produced them in the same global project folder so later agents can inspect or replace one segment without rediscovering the whole run.
 
+## Splice Pacing And Silence Budget
+
+- Silence budget per segment audio: head silence <= 0.45s, tail silence <= 0.45s, and total pause at each splice (tail of the previous segment + head of the next segment) between 0.4s and 0.9s — comparable to the natural pauses between spoken phrases (~0.5-0.83s in measured productions).
+- TTS output and user-provided audio usually arrive with recorded silence at the head and/or tail. User-provided audio is NOT clean audio: always measure it with ffmpeg silencedetect (noise threshold around `-35dB`) before rendering; never assume a file starts at the voice or ends right after it.
+- Run the bundled `audit-splice-silence.mjs` gate over ALL segment audio after transcription and before any segment render. It measures head/tail silence per segment, honors manifest `durationSec` trims as the effective segment end, and projects the dead-air pause at every assembly splice per variant. Any budget violation is a hard stop before rendering.
+- Head trim recipe: cut the head of the audio leaving ~0.25-0.35s before the first voiced sound, preserve the untouched original next to it as `<id>-original.wav`, and shift ALL word-level transcript timestamps by the same offset (clamp to >= 0) so captions stay in sync.
+- Tail trim recipe: do not edit the source file. Cut the segment's effective duration to last word +0.3s by setting `durationSec` in `manifests/audio-meta.json`, so render/assembly stops before the mute tail.
+- After trims, re-render only the affected segments and re-assemble only the affected variants.
+- Final verification: run silencedetect over each final MP4 and confirm no splice pause exceeds ~0.9s. A splice that sounds like a natural phrase pause passes; a noticeable vacuum of voice at a segment boundary does not, even when every stream and duration check passes.
+
 ## Background Music
 
 - Prefer Pixabay Music for lofi hip hop beds when the user has not supplied a track. The agent must search, select, download, and freeze the music itself; do not ask the user to download it.

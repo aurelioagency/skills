@@ -135,6 +135,13 @@ assets\voice\<segment-id>.transcript.json
 
 - Update `manifests\audio-meta.json` with segment duration and transcript path.
 - For browser playback from `public\index.html`, use `manifests\audio-meta.json` `browserSrc` values such as `../assets/voice/<segment-id>.wav`. Do not create `public\assets\voice\` mirrors.
+- After transcribing and before any segment render, run the splice-silence gate over ALL segment audio — generated and user-provided alike. User-provided audio is NOT clean audio: recorded head/tail silence must be measured, never assumed absent:
+
+```powershell
+node "<skill-dir>\scripts\audit-splice-silence.mjs" --project "<project>" --noise -35dB --max-head 0.45 --max-tail 0.45 --max-splice-gap 0.9
+```
+
+- Treat any `audit-splice-silence.mjs` failure as a hard stop before rendering: apply the exact trim recommendations from the report, update transcripts/manifests, and re-run the gate until it passes.
 
 ### Transcript Approval Gate (blocking, requires the user)
 
@@ -353,6 +360,7 @@ Required checks:
 4. Verify duration is expected after speed/music post-processing.
 5. Verify paid HeyGen outputs are frozen locally and preserved in paid-assets manifest.
 6. Verify assemble and verification manifests point to the final outputs.
+7. Run ffmpeg silencedetect over each final MP4 and verify no splice pause exceeds ~0.9s of dead air.
 
 Final response:
 PASS or FAIL, final paths, media metadata, manifest paths, and exact blocking issues.
@@ -502,6 +510,7 @@ captions\<prefix>.captions.srt
 - Need exact lip sync on an existing avatar clip: use the exact source audio that generated the HeyGen video, or ask before accepting drift.
 - Visual overflow in one animation: snapshot/check only affected timestamps, repair the segment, then reassemble.
 - Paid asset missing locally: search manifests and provider records before creating a new paid run.
+- Dead air / audio vacuum at a splice (the pause between segments is too long): measure with `audit-splice-silence.mjs`. Trim the head of the offending audio leaving ~0.25-0.35s before the voice, preserving the untouched original as `<id>-original.wav` and shifting ALL word-level transcript timestamps by the same offset (clamp to >= 0). Cut mute tails without modifying source files by reducing the segment's effective duration to last word +0.3s via `durationSec` in `manifests\audio-meta.json`. Then re-render only the affected segments and re-assemble only the affected variants.
 
 ## Reusable Tools To Prefer
 
@@ -515,6 +524,7 @@ node "<skill-dir>\scripts\preflight-tts-payload.mjs" --file "<project>\manifests
 node "<skill-dir>\scripts\generate-elevenlabs-segment.mjs" --project "<project>" --segment "opening2" --must-contain "skill"
 node "<skill-dir>\scripts\plan-heygen-jobs.mjs" --project "<project>" --all --concurrency 2 --max-avatar-duration 20
 node "<skill-dir>\scripts\audit-modular-plan.mjs" --project "<project>" --max-avatar-duration 20 --max-total-paid-duration 40
+node "<skill-dir>\scripts\audit-splice-silence.mjs" --project "<project>" --noise -35dB --max-head 0.45 --max-tail 0.45 --max-splice-gap 0.9
 node "<skill-dir>\scripts\heygen-job-state.mjs" claim --project "<project>" --job-id "heygen-opening2" --worker-id "<worker-name>"
 node "<skill-dir>\scripts\download-freeze-heygen.mjs" --project "<project>" --source "<url-or-file>" --output "assets/avatar/opening2.mp4" --asset-id "opening2"
 node "<skill-dir>\scripts\heygen-job-state.mjs" freeze --project "<project>" --job-id "heygen-opening2" --claim-token "<token>" --local-path "assets/avatar/opening2.mp4"
@@ -534,6 +544,7 @@ node "<skill-dir>\scripts\verify-render.mjs" --file "<project>\renders\final\vid
 - `generate-elevenlabs-segment.mjs`: generate one TTS segment, normalize WAV, transcribe, require key terms, and update `manifests\audio-meta.json`.
 - `plan-heygen-jobs.mjs`: build `manifests\heygen-jobs.json` from segment/audio manifests without provider calls, so paid HeyGen work can be delegated concurrently.
 - `audit-modular-plan.mjs`: pre-paid read-only gate that blocks full-script/body/middle HeyGen jobs, mojibake, missing manifests, blocked provider jobs, and excessive paid avatar duration.
+- `audit-splice-silence.mjs`: pre-render read-only audio gate that measures head/tail silence of every segment audio with silencedetect, projects the dead-air pause at each assembly splice, and fails with exact trim recommendations when the silence budget is exceeded.
 - `heygen-job-state.mjs`: claim, update, freeze, fail, release, or list HeyGen jobs with a lock so concurrent workers do not duplicate paid jobs.
 - `download-freeze-heygen.mjs`: download/copy completed HeyGen output into the project root and update `manifests\paid-assets.json`; it never deletes remote assets.
 - `freeze-background-music.mjs`: download/copy a selected, license-checked background track into `assets\music\` and update `manifests\assemble.json` with speed, volume, source, license, and attribution metadata.
@@ -562,4 +573,5 @@ Before reporting completion:
   - AAC or expected audio stream;
   - clear output path.
 - Extract or inspect at least one rendered frame near any repaired region and near each splice boundary.
+- Run ffmpeg silencedetect over each final MP4: no splice pause may exceed ~0.9s of silence. Splice pauses must stay comparable to the natural pauses between spoken phrases.
 - Report exact final paths, segment paths when relevant, manifests, HeyGen ids/page URLs, and any remaining risk.
