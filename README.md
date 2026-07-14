@@ -7,6 +7,7 @@ A collection of reusable skills for AI coding agents (Claude Code, Codex, and si
 | Skill | Description |
 |---|---|
 | [heygen-ai-avatar-video](heygen-ai-avatar-video/) | Modular short-video production (TikTok / Reels / Shorts): HeyGen avatar openings/outro + HyperFrames animated body, ElevenLabs TTS, word-level captions, approval gates, encode budget, and QA/verification gates. |
+| [social-carousel-generator](social-carousel-generator/) | Static TikTok and Instagram carousel generation from URLs, PDFs, pasted text, screenshots, or image references, with editable HTML source, PNG exports, captions, and visual QA. |
 
 ## Quick start — one paste, fully automatic
 
