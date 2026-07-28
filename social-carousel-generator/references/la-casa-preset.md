@@ -52,10 +52,9 @@ Archivo Black, Roboto Mono, and Inter are on Google Fonts; Georgia ships with Wi
 
 ### Recurring components
 
-- `A` serif badge inside a thin-bordered square, top-right of every slide.
 - Mono kicker in terracotta above or centered over the headline.
 - Verdict box: 1px terracotta or sage border, dark fill, one bold caps sentence in `#F6F2E9`.
-- Footer on content slides: serif italic `La Casa de Aurelio` left · mono page-counter pill center · cream `Swipe 👉` pill right.
+- Footer on content slides: **Inter** bold `aurelioagency.com` left · page-counter pill center (Inter bold, fill `#252422`, fully rounded `border-radius: 999px`) · cream `Swipe 👉` pill right.
 - Cream contrast cards (`#EDE8DE`, dark text, sage border) for outcomes/results, often paired against dark panel cards (`#191716`) for the "before"/technical side.
 
 ## Content slides
@@ -72,10 +71,12 @@ Archivo Black, Roboto Mono, and Inter are on Google Fonts; Georgia ships with Wi
 - Accents: only the canonical accent values from the brand system above — never eyeballed approximations.
 - Visual style: crisp editorial infographic with centered information.
 - Safe zone: keep meaningful text away from the top and bottom app overlay bands. Do not peg headlines, body copy, labels, logo, CTA copy, or footer text to the canvas edge.
-- Footer on content slides only:
-  - Bottom-left: `La Casa de Aurelio`
-  - Center: page count
-  - Bottom-right: `Swipe 👉`
+- Footer on content slides:
+  - Bottom-left: `aurelioagency.com` in Inter bold (not serif italic).
+  - Center: page counter pill.
+  - Bottom-right: `Swipe 👉` cream pill.
+- Page counter counts **every exported image, including the final CTA frame**. A carousel with 5 content slides plus the CTA runs `1/6` through `6/6`.
+- The CTA frame carries only the counter pill (its final number) — no brand line and no swipe prompt. Its own `La Casa de Aurelio` signature stays part of the CTA artwork.
 
 ## Fixed CTA
 
@@ -83,9 +84,12 @@ The La Casa preset has a fixed final CTA frame enabled.
 
 - Append it after the 3-6 content slides.
 - Do not include a swipe prompt on the CTA frame.
-- Use `assets/la-casa-cta.png` as the fixed CTA asset.
-- CTA copy in the asset: `Guarda este post` and `y sígueme para más`.
-- The bundled asset is `1080x1920` and is valid only for TikTok. For Instagram sizes, never crop, stretch, or letterbox it. Rebuild the CTA frame in HTML/CSS at the target size, keeping the same copy, background, typography, and accent style as the asset, and note the rebuild in the QA summary.
+- Fixed CTA assets, one per size — use the matching one, never crop or stretch across sizes:
+  - TikTok `1080x1920`: `assets/la-casa-cta.png`
+  - Instagram `1080x1440`: `assets/la-casa-cta-ig.png`
+- CTA copy in both assets: `Guarda este post` and `y sígueme para más`, over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature.
+- Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
+- If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here.
 
 Do not ask for the CTA every run when this preset is active. Ask only if the user explicitly wants to replace the CTA.
 
@@ -103,7 +107,7 @@ Before delivery, visually check:
 - Diagrams do not overlap labels.
 - Flow arrows connect deliberate steps.
 - Cards do not create random empty spaces.
-- CTA frame matches the bundled asset.
+- CTA frame uses the fixed asset for the target size, with the counter pill composed on top.
 - Every accent color in the render matches the canonical palette exactly (no near-duplicate hex drift).
 - Rendered text uses the canonical font families (Archivo Black / Roboto Mono / Inter / Georgia Italic) — verify the web fonts actually loaded before capture; a silent fallback to a system sans is a red issue.
 - Delivered files are true PNG exports from the render pipeline — never JPEG re-saves renamed to `.png`.
