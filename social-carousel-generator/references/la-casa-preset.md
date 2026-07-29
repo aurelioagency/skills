@@ -129,7 +129,7 @@ Do not ask for the CTA every run when this preset is active. Ask only if the use
 Every carousel ships a ready-to-publish caption in this exact structure. Deliver it as a single plain-text block, clearly labelled `CAPTION PARA INSTAGRAM/TIKTOK`, with nothing left for the user to edit.
 
 ```text
-Bienvenido a la Casa de Aurelio!
+Bienvenidos a la Casa de Aurelio!
 
 <2-4 lineas que resumen el gancho o insight principal del carrusel, tono directo, sin relleno>
 
