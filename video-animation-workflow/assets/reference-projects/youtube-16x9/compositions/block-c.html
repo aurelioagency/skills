@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face{font-family:InterLocal;src:url("assets/fonts/Inter-Variable.ttf");font-weight:100 900}
+        @font-face{font-family:PlayfairEditorial;src:url("assets/fonts/PlayfairDisplay-Italic-Variable.ttf");font-style:italic;font-weight:400 900}
+        #root{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;color:#111;font-family:InterLocal,sans-serif}
+        .paper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .compat{position:absolute;inset:0}
+        .compat .script{position:absolute;left:87px;top:225px;font:italic 400 168px/.9 PlayfairEditorial,serif}
+        .compat .small{position:absolute;font-size:52px;font-weight:400}
+        .compat .name{position:absolute;font-size:132px;line-height:.82;font-weight:700;letter-spacing:-7px}
+        #ytc-adaptable-a{left:94px;top:402px}#ytc-chatgpt-name{left:88px;top:452px}#ytc-o{left:94px;top:629px}#ytc-gemini-name{left:88px;top:681px}
+        .platform-card{position:absolute;z-index:7;filter:drop-shadow(0 24px 26px rgba(17,17,17,.20));transform-origin:center}
+        .platform-card>img{display:block;width:100%;height:100%;object-fit:contain}
+        .platform-card.claude{left:760px;top:130px;width:390px;height:305px;transform:rotate(-4deg)}
+        .platform-card.chatgpt{left:1085px;top:72px;width:455px;height:340px}
+        .platform-card.gemini{left:1480px;top:130px;width:405px;height:305px;transform:rotate(4deg)}
+        .platform-name{position:absolute;left:50%;top:50%;padding:8px 16px 10px;border-bottom:7px solid #e2987f;color:#111;font-size:44px;font-weight:700;letter-spacing:-2px;line-height:1;text-transform:uppercase;transform:translate(-50%,-50%);white-space:nowrap}
+        .platform-card.chatgpt .platform-name{border-bottom-color:#264b32;font-size:40px}
+        .platform-card.gemini .platform-name{border-bottom-color:#3858bf;font-size:42px}
+        .folder{position:absolute;left:1120px;top:560px;width:600px;height:500px;transform-origin:center;filter:drop-shadow(0 22px 24px rgba(17,17,17,.18))}
+        .folder>img{width:100%;height:100%;object-fit:contain}
+        .folder-label{position:absolute;left:51%;top:31%;color:#111;font-size:40px;font-weight:700;letter-spacing:-3px;transform:translateX(-50%) rotate(1deg)}
+        .routes{position:absolute;inset:0;width:1920px;height:1080px}
+        .routes path{fill:none;stroke:#e2987f;stroke-width:7;stroke-linecap:round}
+        .routes circle{fill:#f4efe3;stroke:#e2987f;stroke-width:7}
+        .receive{position:absolute;left:96px;top:205px;font-size:112px;line-height:.88;font-weight:700;letter-spacing:-6px;opacity:0}
+        .sheet{position:absolute;left:510px;top:150px;width:720px;height:770px;border:2px solid rgba(17,17,17,.20);border-radius:28px;background:#f4efe3;box-shadow:0 34px 80px rgba(17,17,17,.18);padding:62px 68px;transform-origin:center bottom}
+        .sheet h2{font-size:98px;line-height:.9;font-weight:700;letter-spacing:-6px}
+        .sheet .serif{font:italic 400 96px/.92 PlayfairEditorial,serif}
+        .sheet .meta{margin-top:38px;font-size:24px;line-height:1.65;letter-spacing:1px}
+        .workflow{opacity:0}
+        .asset-stack{position:absolute;left:610px;top:255px;width:1000px;height:650px}
+        .asset-card{position:absolute;width:600px;height:338px;border-radius:24px;background:#f4efe3;box-shadow:0 28px 60px rgba(17,17,17,.16);overflow:hidden;transform-origin:center}
+        .asset-card img{width:100%;height:100%;object-fit:contain}
+        .asset-card.timeline{left:0;top:0;rotation:-4deg}
+        .asset-card.camera{left:210px;top:160px}
+        .asset-card.claude-card{left:410px;top:300px;rotation:4deg}
+        .asset-label{position:absolute;left:96px;top:215px;font-size:104px;line-height:.9;font-weight:700;letter-spacing:-5px;opacity:0}
+        .directives{opacity:0}
+        .brand-board{position:absolute;left:120px;top:135px;width:1680px;height:810px;border:2px solid rgba(17,17,17,.16);border-radius:30px;background:#f4efe3;box-shadow:0 34px 80px rgba(17,17,17,.17);opacity:0}
+        .brand-title{position:absolute;left:70px;top:56px;font-size:112px;font-weight:700;letter-spacing:-6px}
+        .swatches{position:absolute;left:72px;top:225px;display:flex;gap:18px}
+        .swatch{width:78px;height:78px;border-radius:16px;border:2px solid #111}
+        .swatch.coral{background:#e2987f}.swatch.ink{background:#111}.swatch.slate{background:#748b9e}
+        .swatch-active{position:absolute;left:254px;top:215px;width:98px;height:98px;border:4px solid #111;border-radius:22px;opacity:0}
+        .tone-control{position:absolute;left:72px;top:360px;width:400px}
+        .tone-control .label{font-size:24px;letter-spacing:2px}
+        .tone-control .value{margin-top:16px;font-size:66px;font-weight:700}
+        .tone-control .value.serif-value{position:absolute;left:0;top:42px;font:italic 400 92px/.9 PlayfairEditorial,serif;opacity:0}
+        .preview{position:absolute;left:600px;top:145px;width:980px;height:551px;border-radius:26px;overflow:hidden;background:#151b24;box-shadow:0 30px 70px rgba(17,17,17,.18)}
+        .preview .timeline-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .preview .camera-original,.preview .camera-slate{position:absolute;left:215px;top:125px;width:570px;height:321px;object-fit:contain}
+        .preview .camera-slate{opacity:0}
+        .preview .preview-copy{position:absolute;left:34px;top:28px;padding:10px 16px;background:#e2987f;color:#111;border-radius:10px;font-size:24px;font-weight:700}
+        .style-copy{position:absolute;left:96px;top:180px;font-size:104px;line-height:.88;font-weight:700;letter-spacing:-6px;opacity:0}
+        .final-copy{position:absolute;left:96px;top:210px;width:680px;opacity:0}
+        .final-copy .sans{font-size:104px;line-height:.88;font-weight:700;letter-spacing:-6px}
+        .final-copy .serif{margin-top:28px;font:italic 400 118px/.92 PlayfairEditorial,serif}
+        .final-card{position:absolute;left:820px;top:330px;width:950px;height:534px;border-radius:28px;background:#f4efe3;overflow:hidden;box-shadow:0 34px 80px rgba(17,17,17,.20);opacity:0}
+        .final-fill{position:absolute;inset:0;transform-origin:left center}
+        .final-fill>img.timeline-final{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .final-fill>img.camera-final{position:absolute;left:210px;top:112px;width:540px;height:304px;object-fit:contain}
+        .final-meta{position:absolute;left:36px;bottom:28px;padding:10px 15px;border-radius:9px;background:#748b9e;color:#111;font-size:20px;font-weight:600}
+        .final-tag{position:absolute;left:96px;bottom:72px;font-size:24px;letter-spacing:2px;opacity:0}
+      </style>
+
+      <div data-hf-id="hf-y7du" id="root" data-composition-id="ytc" data-start="0" data-width="1920" data-height="1080" data-duration="10">
+        <img data-hf-id="hf-sqwv" class="paper" src="assets/images/warm_cream_paper_background.png" alt="">
+        <div data-hf-id="hf-c95l" id="ytc-compat" class="compat" data-layout-allow-overflow="">
+          <div data-hf-id="hf-p47p" class="script">adaptable</div>
+          <div data-hf-id="hf-zk5w" id="ytc-adaptable-a" class="small" data-layout-allow-overlap="">A</div>
+          <div data-hf-id="hf-qcpg" id="ytc-chatgpt-name" class="name">CHATGPT</div>
+          <div data-hf-id="hf-3j86" id="ytc-o" class="small" data-layout-allow-overlap="">O</div>
+          <div data-hf-id="hf-i6q2" id="ytc-gemini-name" class="name">GEMINI</div>
+        </div>
+        <div data-hf-id="hf-quws" id="ytc-claude" class="platform-card claude">
+          <img data-hf-id="hf-17n7" src="assets/images/claude-window-v1.png" alt="Claude"><span data-hf-id="hf-s0r2" class="platform-name">CLAUDE</span>
+        </div>
+        <div data-hf-id="hf-l2ye" id="ytc-chatgpt" class="platform-card chatgpt">
+          <img data-hf-id="hf-cg2j" src="assets/images/chatgpt-window-v1.png" alt="ChatGPT"><span data-hf-id="hf-u0vv" class="platform-name">CHATGPT</span>
+        </div>
+        <div data-hf-id="hf-6smv" id="ytc-gemini" class="platform-card gemini" data-layout-allow-overflow="">
+          <img data-hf-id="hf-ez75" src="assets/images/gemini-window-v1.png" alt="Gemini"><span data-hf-id="hf-217n" class="platform-name">GEMINI</span>
+        </div>
+        <div data-hf-id="hf-e7ci" id="ytc-folder" class="folder">
+          <img data-hf-id="hf-mmxo" src="assets/images/skill-folder-v1.png" alt="Carpeta skill original"><span data-hf-id="hf-smsx" class="folder-label" data-layout-allow-occlusion="">SKILL</span>
+        </div>
+        <svg data-hf-id="hf-2b18" id="ytc-routes" class="routes" viewBox="0 0 1920 1080" aria-hidden="true" data-layout-allow-overflow="">
+          <path data-hf-id="hf-slw4" d="M1410 690 C1300 580 1110 520 955 430" />
+          <circle data-hf-id="hf-9cel" cx="955" cy="430" r="12" />
+          <path data-hf-id="hf-b73c" d="M1410 690 C1415 545 1325 455 1315 360" />
+          <circle data-hf-id="hf-rkfw" cx="1315" cy="360" r="12" />
+          <path data-hf-id="hf-m34q" d="M1410 690 C1530 570 1670 505 1705 430" />
+          <circle data-hf-id="hf-oxf3" cx="1705" cy="430" r="12" />
+        </svg>
+
+        <div data-hf-id="hf-8fe4" id="ytc-receive" class="receive" data-layout-allow-overlap="">RECIBÍS<br data-hf-id="hf-x5px">LA SKILL</div>
+        <div data-hf-id="hf-12wo" id="ytc-workflow" class="sheet workflow" data-layout-allow-overlap="">
+          <h2 data-hf-id="hf-rj5y">WORKFLOW</h2>
+          <div data-hf-id="hf-rr84" class="meta">TIMING · STORYBOARD<br data-hf-id="hf-rsrt">ANIMACIÓN · SOUND DESIGN</div>
+        </div>
+
+        <div data-hf-id="hf-cs8t" id="ytc-assets" class="asset-stack">
+          <div data-hf-id="hf-bfrv" id="ytc-timeline-card" class="asset-card timeline"><img data-hf-id="hf-kr0p" src="assets/images/video_editor_timeline_panel.png" alt="Timeline"></div>
+          <div data-hf-id="hf-f5h7" id="ytc-camera-card" class="asset-card camera"><img data-hf-id="hf-hm1z" src="assets/images/camera_recording_icon_asset.png" alt="Cámara"></div>
+          <div data-hf-id="hf-y3b4" id="ytc-claude-card" class="asset-card claude-card"><img data-hf-id="hf-lcw0" src="assets/images/claude-window-v1-package-card.png" alt="Claude"></div>
+        </div>
+        <div data-hf-id="hf-xfau" id="ytc-asset-label" class="asset-label">ASSETS<br data-hf-id="hf-szow">DEL VIDEO</div>
+
+        <div data-hf-id="hf-izoi" id="ytc-directives" class="sheet directives" data-layout-allow-overlap="">
+          <h2 data-hf-id="hf-plih">DIRECTIVAS</h2>
+          <div data-hf-id="hf-2skh" class="meta">PALETA · TIPOGRAFÍA<br data-hf-id="hf-sldv">MOVIMIENTO · SONIDO</div>
+        </div>
+
+        <div data-hf-id="hf-vvl7" id="ytc-brand-board" class="brand-board">
+          <div data-hf-id="hf-b212" id="ytc-brand-title" class="brand-title">COLOR</div>
+          <div data-hf-id="hf-41co" class="swatches">
+            <div data-hf-id="hf-nr6r" class="swatch coral"></div><div data-hf-id="hf-dths" class="swatch ink"></div><div data-hf-id="hf-sqjn" class="swatch slate"></div>
+          </div>
+          <div data-hf-id="hf-a67d" id="ytc-swatch-active" class="swatch-active"></div>
+          <div data-hf-id="hf-8g5y" class="tone-control" data-layout-allow-overlap="">
+            <div data-hf-id="hf-zibw" class="label">TONO</div>
+            <div data-hf-id="hf-ldym" id="ytc-directo" class="value">DIRECTO</div>
+            <div data-hf-id="hf-jnq9" id="ytc-cercano" class="value serif-value">CERCANO</div>
+          </div>
+          <div data-hf-id="hf-izkz" id="ytc-preview" class="preview">
+            <img data-hf-id="hf-0hal" class="timeline-bg" src="assets/images/video_editor_timeline_panel_preview.png" alt="">
+            <img data-hf-id="hf-j607" id="ytc-camera-original" class="camera-original" src="assets/images/camera_recording_icon.png" alt="Cámara coral">
+            <img data-hf-id="hf-pugv" id="ytc-camera-slate" class="camera-slate" src="assets/images/camera_recording_icon_brand_slate.png" alt="Cámara slate">
+            <div data-hf-id="hf-lwm5" id="ytc-preview-copy" class="preview-copy">TU PALETA</div>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-e72s" id="ytc-style-copy" class="style-copy">ESTILO<br data-hf-id="hf-qluq">DE MARCA</div>
+        <div data-hf-id="hf-58tl" id="ytc-final-copy" class="final-copy">
+          <div data-hf-id="hf-rnkz" class="sans">NO EMPEZÁS</div>
+          <div data-hf-id="hf-m4v3" class="serif">DE CERO.</div>
+        </div>
+        <div data-hf-id="hf-a6a9" id="ytc-final-card" class="final-card">
+          <div data-hf-id="hf-8a7l" id="ytc-final-fill" class="final-fill">
+            <img data-hf-id="hf-9uuc" class="timeline-final" src="assets/images/video_editor_timeline_panel_final.png" alt="">
+            <img data-hf-id="hf-nrpx" class="camera-final" src="assets/images/camera_recording_icon_brand_slate_final.png" alt="Cámara personalizada">
+            <div data-hf-id="hf-b2n1" class="final-meta">TU MARCA</div>
+          </div>
+        </div>
+        <div data-hf-id="hf-1dtn" id="ytc-final-tag" class="final-tag">WORKFLOW + ASSETS + DIRECTIVAS</div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({paused:true});
+
+        tl.set("#ytc-gemini",{x:0,y:0,scale:1,rotation:4,opacity:1},0);
+        tl.set("#ytc-gemini-name",{x:0,y:0,opacity:1},0);
+        tl.set("#ytc-compat",{opacity:1},0);
+
+        tl.to(["#ytc-compat","#ytc-routes"],{x:-520,opacity:0,duration:.40,ease:"power3.in"},.10);
+        tl.fromTo("#ytc-receive",{opacity:0,y:72},{opacity:1,y:0,duration:.34,ease:"power4.out"},.22);
+        tl.to(["#ytc-claude","#ytc-chatgpt","#ytc-gemini"],{x:320,y:360,scale:.34,opacity:0,duration:.72,ease:"power2.inOut"},.18);
+        tl.to("#ytc-folder",{x:40,y:-85,scale:1.06,duration:.72,ease:"power2.inOut"},.18);
+
+        tl.to("#ytc-receive",{y:-110,scale:.72,opacity:.30,duration:.45,ease:"power2.inOut"},.75);
+        tl.fromTo("#ytc-workflow",{opacity:0,scale:.18,y:500},{opacity:1,scale:1,y:0,duration:.72,ease:"power3.out"},.75);
+        tl.to("#ytc-folder",{x:300,y:80,scale:.52,duration:.62,ease:"power2.inOut"},.90);
+
+        tl.to("#ytc-workflow",{x:-460,scale:.58,opacity:0,duration:.54,ease:"power2.inOut"},1.48);
+        tl.to("#ytc-receive",{opacity:0,duration:.22,ease:"power1.in"},1.20);
+        tl.fromTo("#ytc-asset-label",{opacity:0,y:72},{opacity:1,y:0,duration:.25,ease:"power4.out"},1.48);
+        tl.fromTo("#ytc-timeline-card",{opacity:0,scale:.55,y:250},{opacity:1,scale:1,y:0,duration:.48,ease:"power3.out"},1.48);
+        tl.fromTo("#ytc-camera-card",{opacity:0,scale:.55,y:250},{opacity:1,scale:1,y:0,duration:.48,ease:"power3.out"},1.56);
+        tl.fromTo("#ytc-claude-card",{opacity:0,scale:.55,y:250},{opacity:1,scale:1,y:0,duration:.48,ease:"power3.out"},1.64);
+
+        tl.to(["#ytc-assets","#ytc-asset-label","#ytc-workflow"],{opacity:0,y:-120,duration:.36,ease:"power2.in"},2.20);
+        tl.fromTo("#ytc-directives",{opacity:0,scale:.24,y:480},{opacity:1,scale:1,y:0,duration:.45,ease:"power3.out"},2.20);
+
+        tl.to("#ytc-directives",{opacity:0,scale:.86,duration:.18,ease:"power1.in"},2.70);
+        tl.fromTo("#ytc-brand-board",{opacity:0,scale:.94},{opacity:1,scale:1,duration:.42,ease:"power3.out"},2.82);
+        tl.addLabel("color-edit",3.45);
+        tl.fromTo("#ytc-swatch-active",{opacity:0,scale:.72},{opacity:1,scale:1,duration:.72,ease:"power2.inOut"},"color-edit");
+        tl.to("#ytc-preview-copy",{backgroundColor:"#748b9e",color:"#f4efe3",duration:.72,ease:"power2.inOut"},"color-edit");
+        tl.to("#ytc-camera-original",{opacity:0,duration:.34,ease:"power2.inOut"},"color-edit+=0.18");
+        tl.to("#ytc-camera-slate",{opacity:1,duration:.34,ease:"power2.inOut"},"color-edit+=0.18");
+
+        tl.to("#ytc-brand-title",{y:-10,scale:.82,duration:.28,ease:"power2.inOut"},4.15);
+        tl.to("#ytc-directo",{opacity:0,duration:.22,ease:"power1.in"},4.25);
+        tl.to("#ytc-cercano",{opacity:1,duration:.22,ease:"power1.out"},4.25);
+
+        tl.to("#ytc-brand-board",{x:0,y:50,scale:.84,opacity:.32,duration:.48,ease:"power2.inOut"},4.65);
+        tl.to(["#ytc-brand-title",".swatches","#ytc-swatch-active",".tone-control"],{opacity:0,duration:.18,ease:"power1.in"},4.48);
+        tl.fromTo("#ytc-style-copy",{opacity:0,y:70},{opacity:1,y:0,duration:.28,ease:"power4.out"},4.65);
+        tl.to("#ytc-preview",{x:130,y:45,scale:1.10,duration:.58,ease:"power2.inOut"},4.65);
+
+        tl.to(["#ytc-style-copy","#ytc-brand-board"],{opacity:0,duration:.16,ease:"power1.in"},5.85);
+        tl.fromTo("#ytc-final-copy",{opacity:0,y:68},{opacity:1,y:0,duration:.28,ease:"power4.out"},5.93);
+        tl.fromTo("#ytc-final-card",{opacity:0,scale:.88,y:80},{opacity:1,scale:1,y:0,duration:.48,ease:"power3.out"},5.85);
+        tl.fromTo("#ytc-final-fill",{scaleX:0},{scaleX:1,duration:1.18,ease:"power2.inOut"},6.02);
+        tl.to("#ytc-folder",{x:-920,y:10,scale:.70,duration:.65,ease:"power2.inOut"},6.02);
+        tl.to("#ytc-final-tag",{opacity:1,duration:.22,ease:"power1.out"},7.30);
+        tl.to("#ytc-final-card",{scale:1.012,y:-4,duration:2.50,ease:"none"},7.45);
+
+        window.__timelines["ytc"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

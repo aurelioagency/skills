@@ -1,0 +1,16 @@
+{
+  "duration": 10,
+  "maxStaticSec": 1.2,
+  "assertions": [
+    { "kind": "appearsBy", "selector": "#yta-q", "bySec": 0.4 },
+    { "kind": "appearsBy", "selector": "#yta-asi", "bySec": 1.8 },
+    { "kind": "appearsBy", "selector": "#yta-editor", "bySec": 3.9 },
+    { "kind": "appearsBy", "selector": "#yta-task-caption", "bySec": 5.2 },
+    { "kind": "appearsBy", "selector": "#yta-task-sync", "bySec": 7.0 },
+    { "kind": "appearsBy", "selector": "#yta-return-copy", "bySec": 9.2 },
+    { "kind": "before", "a": "#yta-q", "b": "#yta-editor" },
+    { "kind": "before", "a": "#yta-editor", "b": "#yta-return-copy" },
+    { "kind": "staysInFrame", "selector": "#yta-camera-card" },
+    { "kind": "keepsMoving", "withinSelector": "#root" }
+  ]
+}

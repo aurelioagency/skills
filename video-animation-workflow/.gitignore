@@ -1,0 +1,10 @@
+# This skill intentionally distributes its noncommercial reference media.
+# Keep the repository-wide media exclusions for every other skill.
+!assets/starter-library/sfx/
+!assets/starter-library/sfx/**
+!assets/reference-projects/**/assets/audio/
+!assets/reference-projects/**/assets/audio/**
+!assets/reference-proof/renders/
+!assets/reference-proof/renders/**
+!assets/reference-proof/snapshots/
+!assets/reference-proof/snapshots/**

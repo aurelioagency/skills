@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="UTF-8"></head>
+  <body>
+    <template>
+      <style>
+        @font-face{font-family:InterLocal;src:url("assets/fonts/Inter-Variable.ttf");font-weight:100 900}
+        @font-face{font-family:PlayfairEditorial;src:url("assets/fonts/PlayfairDisplay-Italic-Variable.ttf");font-style:italic;font-weight:400 900}
+        #root{position:absolute;inset:0;width:1080px;height:1920px;overflow:hidden;color:#111;font-family:InterLocal,sans-serif}
+        .paper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+        .intro-card{position:absolute;left:120px;top:700px;width:840px;height:472px;z-index:2;border-radius:30px;background:#f4efe3;overflow:hidden;box-shadow:0 34px 80px rgba(17,17,17,.20);transform-origin:center}
+        .intro-card img{width:100%;height:100%;object-fit:contain}
+        .return-copy{position:absolute;left:72px;top:250px;width:820px;font-size:102px;line-height:.88;font-weight:700;letter-spacing:-6px}
+        .layer-chip{position:absolute;z-index:5;padding:12px 20px;border:2px solid #111;border-radius:999px;background:#f4efe3;font-size:22px;font-weight:700;opacity:0}
+        .chip-caption{left:170px;top:620px}.chip-assets{left:760px;top:640px}.chip-motion{left:330px;top:1215px}
+        .coral-line{position:absolute;z-index:4;height:3px;background:#e2987f;transform-origin:left center;opacity:0}
+        .line-1{left:330px;top:682px;width:135px;transform:rotate(18deg)}
+        .line-2{left:775px;top:700px;width:130px;transform:rotate(150deg)}
+        .line-3{left:520px;top:1208px;width:96px;transform:rotate(-70deg)}
+        .all-copy{position:absolute;left:72px;top:300px;width:860px;font-size:88px;line-height:.9;font-weight:700;letter-spacing:-5px;opacity:0}
+
+        .folder{position:absolute;left:240px;top:1300px;width:600px;height:500px;z-index:6;opacity:.12;transform-origin:center;filter:drop-shadow(0 22px 24px rgba(17,17,17,.18))}
+        .folder>img{width:100%;height:100%;object-fit:contain}
+        .folder-label{position:absolute;left:51%;top:31%;color:#111;font-size:38px;font-weight:700;letter-spacing:-3px;transform:translateX(-50%) rotate(1deg);opacity:0}
+
+        .lockup{position:absolute;left:72px;top:210px;width:850px;text-transform:uppercase;z-index:10}
+        .lockup .small{position:absolute;font-size:42px;font-weight:400;opacity:0}
+        .lockup .hero{position:absolute;font-size:122px;line-height:.86;font-weight:700;letter-spacing:-7px;opacity:0}
+        .lockup .platform-word{position:absolute;font-size:100px;line-height:.86;font-weight:700;letter-spacing:-6px;opacity:0}
+        #rlb-las{left:0;top:0}
+        #rlb-genere{left:0;top:70px}
+        #rlb-conuna{left:4px;top:215px}
+        #rlb-skill{left:0;top:290px}
+        #rlb-para{left:4px;top:438px}
+        #rlb-claude-name{left:0;top:505px}
+
+        .compat{position:absolute;inset:0;z-index:10;opacity:0}
+        .compat .script{position:absolute;left:72px;top:250px;font:italic 400 112px/.9 PlayfairEditorial,serif}
+        .compat .small{position:absolute;font-size:42px;font-weight:400}
+        .compat .name{position:absolute;font-size:100px;line-height:.82;font-weight:700;letter-spacing:-6px}
+        #rlb-adaptable-a{left:78px;top:384px}
+        #rlb-chatgpt-name{left:72px;top:432px}
+        #rlb-o{left:78px;top:566px}
+        #rlb-gemini-name{left:72px;top:614px}
+
+        .platform-card{position:absolute;z-index:8;opacity:0;filter:drop-shadow(0 22px 30px rgba(17,17,17,.18));transform-origin:center;will-change:transform}
+        .platform-card>img{display:block;width:100%;height:100%;object-fit:contain}
+        .platform-card.claude{left:40px;top:825px;width:400px;height:313px}
+        .platform-card.chatgpt{left:300px;top:915px;width:480px;height:359px;z-index:9}
+        .platform-card.gemini{left:640px;top:830px;width:400px;height:301px}
+        .platform-name{position:absolute;left:50%;top:50%;padding:7px 13px 9px;border-bottom:6px solid #e2987f;color:#111;font-size:38px;font-weight:700;letter-spacing:-2px;line-height:1;text-transform:uppercase;transform:translate(-50%,-50%);white-space:nowrap}
+        .platform-card.chatgpt .platform-name{border-bottom-color:#264b32;font-size:34px}
+        .platform-card.gemini .platform-name{border-bottom-color:#3858bf;font-size:36px}
+
+        .routes{position:absolute;inset:0;width:1080px;height:1920px;z-index:5}
+        .routes path{fill:none;stroke:#e2987f;stroke-width:5;stroke-linecap:round}
+        .routes circle{fill:#f4efe3;stroke:#e2987f;stroke-width:5;opacity:0}
+      </style>
+
+      <div data-hf-id="hf-huoo" id="root" data-composition-id="rlb" data-start="0" data-width="1080" data-height="1920" data-duration="10">
+        <img data-hf-id="hf-sqwv" class="paper" src="assets/images/warm_cream_paper_background.png" alt="">
+        <div data-hf-id="hf-slrc" id="rlb-card" class="intro-card"><img data-hf-id="hf-esch" src="assets/images/camera_recording_icon.png" alt="Cámara coral"></div>
+        <div data-hf-id="hf-hs69" id="rlb-return-copy" class="return-copy" data-layout-allow-occlusion="">ESTA<br data-hf-id="hf-x5px">INTRODUCCIÓN</div>
+
+        <div data-hf-id="hf-jwri" id="rlb-chip-caption" class="layer-chip chip-caption">CAPTIONS</div>
+        <div data-hf-id="hf-skcq" id="rlb-chip-assets" class="layer-chip chip-assets">ASSETS</div>
+        <div data-hf-id="hf-foid" id="rlb-chip-motion" class="layer-chip chip-motion">MOVIMIENTO + SONIDO</div>
+        <div data-hf-id="hf-besd" id="rlb-line-1" class="coral-line line-1"></div>
+        <div data-hf-id="hf-nz3d" id="rlb-line-2" class="coral-line line-2"></div>
+        <div data-hf-id="hf-yopx" id="rlb-line-3" class="coral-line line-3"></div>
+        <div data-hf-id="hf-ot32" id="rlb-all-copy" class="all-copy">Y TODAS ESTAS<br data-hf-id="hf-rsrt">ANIMACIONES</div>
+
+        <div data-hf-id="hf-t4ln" id="rlb-folder" class="folder">
+          <img data-hf-id="hf-mmxo" src="assets/images/skill-folder-v1.png" alt="Carpeta skill original">
+          <span data-hf-id="hf-30gx" id="rlb-folder-label" class="folder-label" data-layout-allow-occlusion="" data-layout-allow-overlap="">SKILL</span>
+        </div>
+
+        <div data-hf-id="hf-o8ca" id="rlb-lockup" class="lockup" data-layout-allow-overflow="">
+          <div data-hf-id="hf-tmdi" id="rlb-las" class="small" data-layout-allow-overlap="">LAS</div>
+          <div data-hf-id="hf-lbhr" id="rlb-genere" class="hero">GENERÉ</div>
+          <div data-hf-id="hf-jiwu" id="rlb-conuna" class="small" data-layout-allow-overlap="">CON UNA</div>
+          <div data-hf-id="hf-zecx" id="rlb-skill" class="hero" data-layout-allow-overlap="">SKILL</div>
+          <div data-hf-id="hf-4hay" id="rlb-para" class="small" data-layout-allow-overlap="">PARA</div>
+          <div data-hf-id="hf-8gnz" id="rlb-claude-name" class="platform-word">CLAUDE</div>
+        </div>
+
+        <div data-hf-id="hf-qyhb" id="rlb-claude" class="platform-card claude">
+          <img data-hf-id="hf-17n7" src="assets/images/claude-window-v1.png" alt="Claude">
+          <span data-hf-id="hf-s0r2" class="platform-name">CLAUDE</span>
+        </div>
+        <div data-hf-id="hf-1c1z" id="rlb-chatgpt" class="platform-card chatgpt">
+          <img data-hf-id="hf-cg2j" src="assets/images/chatgpt-window-v1.png" alt="ChatGPT">
+          <span data-hf-id="hf-u0vv" class="platform-name">CHATGPT</span>
+        </div>
+        <div data-hf-id="hf-h59e" id="rlb-gemini" class="platform-card gemini" data-layout-allow-overflow="">
+          <img data-hf-id="hf-ez75" src="assets/images/gemini-window-v1.png" alt="Gemini">
+          <span data-hf-id="hf-0e5z" class="platform-name" data-layout-allow-occlusion="">GEMINI</span>
+        </div>
+
+        <div data-hf-id="hf-my7n" id="rlb-compat" class="compat">
+          <div data-hf-id="hf-ghhr" class="script">adaptable</div>
+          <div data-hf-id="hf-afzj" id="rlb-adaptable-a" class="small" data-layout-allow-overlap="">A</div>
+          <div data-hf-id="hf-lvao" id="rlb-chatgpt-name" class="name">CHATGPT</div>
+          <div data-hf-id="hf-fbha" id="rlb-o" class="small" data-layout-allow-overlap="">O</div>
+          <div data-hf-id="hf-gk42" id="rlb-gemini-name" class="name">GEMINI</div>
+        </div>
+
+        <svg data-hf-id="hf-ftst" id="rlb-routes" class="routes" viewBox="0 0 1080 1920" aria-hidden="true">
+          <path data-hf-id="hf-rtbq" id="rlb-route-claude" d="M540 1392 C430 1320 320 1240 240 1120" />
+          <circle data-hf-id="hf-4dzj" cx="240" cy="1120" r="10" />
+          <path data-hf-id="hf-4ayy" id="rlb-route-chatgpt" d="M540 1392 C540 1345 540 1305 540 1260" />
+          <circle data-hf-id="hf-88un" cx="540" cy="1260" r="10" />
+          <path data-hf-id="hf-9ho8" id="rlb-route-gemini" d="M540 1392 C650 1315 760 1230 840 1120" />
+          <circle data-hf-id="hf-mpgl" cx="840" cy="1120" r="10" />
+        </svg>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines=window.__timelines||{};
+        var tl=gsap.timeline({paused:true});
+
+        ["#rlb-route-claude","#rlb-route-chatgpt","#rlb-route-gemini"].forEach(function(sel){
+          var path=document.querySelector(sel);
+          var len=path.getTotalLength();
+          path.style.strokeDasharray=String(len);
+          path.style.strokeDashoffset=String(len);
+        });
+
+        tl.fromTo("#rlb-chip-caption",{opacity:0,scale:.86,y:30},{opacity:1,scale:1,y:0,duration:.34,ease:"power3.out"},.12);
+        tl.fromTo("#rlb-line-1",{opacity:0,scaleX:0},{opacity:1,scaleX:1,duration:.42,ease:"power2.out"},.20);
+        tl.fromTo("#rlb-chip-assets",{opacity:0,scale:.86,x:45},{opacity:1,scale:1,x:0,duration:.34,ease:"power3.out"},.95);
+        tl.fromTo("#rlb-line-2",{opacity:0,scaleX:0},{opacity:1,scaleX:1,duration:.42,ease:"power2.out"},1.02);
+        tl.fromTo("#rlb-chip-motion",{opacity:0,scale:.86,y:45},{opacity:1,scale:1,y:0,duration:.34,ease:"power3.out"},1.75);
+        tl.fromTo("#rlb-line-3",{opacity:0,scaleX:0},{opacity:1,scaleX:1,duration:.42,ease:"power2.out"},1.82);
+        tl.to("#rlb-return-copy",{y:-90,scale:.82,opacity:.28,duration:.48,ease:"power2.inOut"},1.78);
+        tl.to("#rlb-return-copy",{opacity:0,duration:.18,ease:"power1.in"},2.34);
+        tl.fromTo("#rlb-all-copy",{opacity:0,y:75},{opacity:1,y:0,duration:.30,ease:"power4.out"},2.55);
+        tl.to(["#rlb-chip-caption","#rlb-chip-assets","#rlb-chip-motion","#rlb-line-1","#rlb-line-2","#rlb-line-3"],{opacity:0,duration:.28,ease:"power1.in"},2.68);
+
+        var driver={p:0};
+        tl.to(driver,{p:1,duration:1.02,ease:"power3.out",onUpdate:function(){
+          var p=driver.p;
+          var cardP=Math.min(1,p/.50);
+          gsap.set("#rlb-card",{x:140*cardP,y:310*cardP,scale:1-.72*cardP,rotation:-5*cardP,opacity:1-cardP});
+          gsap.set("#rlb-folder",{y:-320*(1-p),scale:.76+.24*p,opacity:.12+.34*p});
+        }},2.72);
+        tl.to("#rlb-all-copy",{y:-320,opacity:0,duration:.38,ease:"power2.in"},3.62);
+
+        tl.set("#rlb-las",{opacity:1,y:48},4.00);
+        tl.to("#rlb-las",{y:0,duration:.14,ease:"power4.out"},4.00);
+        tl.set("#rlb-genere",{opacity:1,y:72},4.35);
+        tl.to("#rlb-genere",{y:0,duration:.19,ease:"power4.out"},4.35);
+        tl.set("#rlb-conuna",{opacity:1,y:44},5.05);
+        tl.to("#rlb-conuna",{y:0,duration:.14,ease:"power4.out"},5.05);
+        tl.set("#rlb-skill",{opacity:1,scale:.90},5.60);
+        tl.to("#rlb-skill",{scale:1,duration:.35,ease:"power3.out"},5.60);
+        tl.to("#rlb-folder",{y:0,scale:1,opacity:1,duration:.62,ease:"power3.out"},5.60);
+        tl.to("#rlb-folder-label",{opacity:1,duration:.18,ease:"power1.out"},5.90);
+        tl.set("#rlb-para",{opacity:1,y:40},6.35);
+        tl.to("#rlb-para",{y:0,duration:.14,ease:"power4.out"},6.35);
+        tl.set("#rlb-claude-name",{opacity:1,y:64},6.48);
+        tl.to("#rlb-claude-name",{y:0,duration:.18,ease:"power4.out"},6.48);
+        tl.fromTo("#rlb-claude",
+          {opacity:0,x:300,y:360,scale:.20,rotation:0},
+          {opacity:1,x:0,y:0,scale:1,rotation:-4,duration:.68,ease:"power3.out"},
+          6.32
+        );
+
+        tl.to("#rlb-lockup",{y:-430,rotation:-2,opacity:0,duration:.35,ease:"power3.in"},6.60);
+        tl.fromTo("#rlb-compat",{opacity:0,y:72},{opacity:1,y:0,duration:.30,ease:"power3.out"},6.95);
+        tl.to("#rlb-route-claude",{strokeDashoffset:0,duration:.52,ease:"power2.out"},7.05);
+        tl.to("#rlb-route-chatgpt",{strokeDashoffset:0,duration:.52,ease:"power2.out"},7.15);
+        tl.to("#rlb-route-gemini",{strokeDashoffset:0,duration:.52,ease:"power2.out"},7.25);
+        tl.to(".routes circle",{opacity:1,duration:.24,ease:"power1.out"},7.05);
+
+        tl.fromTo("#rlb-chatgpt",
+          {opacity:0,x:0,y:330,scale:.18,rotation:0},
+          {opacity:1,x:0,y:0,scale:1,rotation:0,duration:.72,ease:"power3.out"},
+          7.25
+        );
+        tl.fromTo("#rlb-chatgpt-name",{opacity:0,y:52},{opacity:1,y:0,duration:.28,ease:"power4.out"},7.25);
+        tl.fromTo("#rlb-o",{opacity:0,y:28},{opacity:1,y:0,duration:.20,ease:"power4.out"},7.80);
+        tl.fromTo("#rlb-gemini-name",{opacity:0,x:120},{opacity:1,x:0,duration:.58,ease:"power3.out"},8.05);
+        tl.fromTo("#rlb-gemini",
+          {opacity:0,x:-300,y:420,scale:.18,rotation:0},
+          {opacity:1,x:0,y:0,scale:1,rotation:4,duration:.58,ease:"power3.out"},
+          8.05
+        );
+
+        window.__timelines["rlb"]=tl;
+      </script>
+    </template>
+  </body>
+</html>

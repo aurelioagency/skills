@@ -1,0 +1,22 @@
+{
+  "duration": 30,
+  "maxStaticSec": 1.25,
+  "assertions": [
+    { "kind": "appearsBy", "selector": "#rla-q", "bySec": 0.4 },
+    { "kind": "appearsBy", "selector": "#rla-asi", "bySec": 1.8 },
+    { "kind": "appearsBy", "selector": "#rla-editor", "bySec": 3.9 },
+    { "kind": "appearsBy", "selector": "#rla-return-copy", "bySec": 9.2 },
+    { "kind": "appearsBy", "selector": "#rlb-all-copy", "bySec": 13.1 },
+    { "kind": "appearsBy", "selector": "#rlb-folder", "bySec": 15.9 },
+    { "kind": "appearsBy", "selector": "#rlb-claude", "bySec": 16.9 },
+    { "kind": "appearsBy", "selector": "#rlb-chatgpt", "bySec": 19.3 },
+    { "kind": "appearsBy", "selector": "#rlc-gemini", "bySec": 20.3 },
+    { "kind": "appearsBy", "selector": "#rlc-workflow", "bySec": 22.9 },
+    { "kind": "appearsBy", "selector": "#rlc-brand-board", "bySec": 25.9 },
+    { "kind": "appearsBy", "selector": "#rlc-final-copy", "bySec": 28.4 },
+    { "kind": "before", "a": "#rla-q", "b": "#rla-editor" },
+    { "kind": "before", "a": "#rlb-folder", "b": "#rlb-chatgpt" },
+    { "kind": "before", "a": "#rlc-receive", "b": "#rlc-workflow" },
+    { "kind": "keepsMoving", "withinSelector": "#root" }
+  ]
+}

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Video Animation Workflow"
+  short_description: "Create branded motion-graphics videos"
+  brand_color: "#E2987F"
+  default_prompt: "Use $video-animation-workflow to turn my audio, script, or topic into a branded animated video."

@@ -1,0 +1,1570 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-29T17:45:45.726Z",
+  "sourceProduction": "video-intro-ai-workflow",
+  "formats": [
+    "1920x1080",
+    "1080x1920"
+  ],
+  "license": {
+    "originalPackage": "PolyForm Noncommercial 1.0.0",
+    "openFonts": "SIL Open Font License 1.1",
+    "note": "A file-specific license or notice overrides the package default."
+  },
+  "fileCount": 194,
+  "totalBytes": 115409458,
+  "files": [
+    {
+      "path": "reference-projects/README.md",
+      "bytes": 1075,
+      "sha256": "b6a87f3511fedac4009b805eb4191cb19ea235f2089c1a7fc4ef41b4a63f0773",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/chime_glass_gemini_reveal.mp3",
+      "bytes": 9239,
+      "sha256": "194cc24ee12d4349ec41c8999fcad60ea31eb65d63404920d480b5608835b368",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/click_soft_important_word_or_ui_lock.mp3",
+      "bytes": 11702,
+      "sha256": "075e17bdac5c13662a1c9530050e0046f81d4138e00eb3bf30427a7b4404103d",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/confirm_three_platform_nodes.mp3",
+      "bytes": 11328,
+      "sha256": "127a8b5ef8defeae500459038ef48093002597fbced0901f742f643f249f9be0",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/gift_pop_object_or_section_reveal.mp3",
+      "bytes": 23040,
+      "sha256": "19ab7193f626ff57fdeef60b45543bac416fcbcec803cfb417abe4b271c1b352",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/impact_hero_word_or_low_thump.mp3",
+      "bytes": 8821,
+      "sha256": "174f643255d3445eb2123f75e940f7a34a9f5863687941722fb0fb76095038dd",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/lock_phone_or_platform_card.mp3",
+      "bytes": 12164,
+      "sha256": "735d1753c42654e5611a1ba27a7a3debcbf27671fb152c8e2f0c168f5a46e01c",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/pop_social_content_cards.mp3",
+      "bytes": 11328,
+      "sha256": "127a8b5ef8defeae500459038ef48093002597fbced0901f742f643f249f9be0",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/pop_warm_ui_claude_reveal.mp3",
+      "bytes": 13836,
+      "sha256": "56d19a8424635fa37d1a9b6220272f03317978945dfa719e42353e2a03ae3ae4",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/ratchet_repeat_rewind_action.mp3",
+      "bytes": 15090,
+      "sha256": "e40fb9deb6bbb7f8415d85e3be77167f443987df3dd10772b2b6a997a8a77c98",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/snap_timeline_cut_or_folder_open.mp3",
+      "bytes": 14672,
+      "sha256": "200ab0cc88a5df194240bea03d05a5bc8d271d763cfcdc329309accb9e7a6619",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/swipe_social_content_transition.mp3",
+      "bytes": 9239,
+      "sha256": "194cc24ee12d4349ec41c8999fcad60ea31eb65d63404920d480b5608835b368",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/tick_important_word.mp3",
+      "bytes": 8821,
+      "sha256": "174f643255d3445eb2123f75e940f7a34a9f5863687941722fb0fb76095038dd",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/voiceover_es_robust_paced.wav",
+      "bytes": 853484,
+      "sha256": "115304471f3298b4cfa016f5132628f1893dad3c77f9840398a098815a2c03d1",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "Reference-only noncommercial voice-over; do not reuse as another creator identity"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/whoosh_clean_scene_wipe.mp3",
+      "bytes": 8821,
+      "sha256": "41e054e4baac4d9def83a109d2ea5404e53f4bc965b2f458dd491783a97200d9",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/whoosh_fast_transition.mp3",
+      "bytes": 8821,
+      "sha256": "41e054e4baac4d9def83a109d2ea5404e53f4bc965b2f458dd491783a97200d9",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/audio/whoosh_short_scene_or_text_transition.mp3",
+      "bytes": 18390,
+      "sha256": "c2efd9d902a59bf9ec5019035d7deadd17762136896b6e3cb6dd99ea50997a30",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/fonts/Inter-Variable.ttf",
+      "bytes": 876576,
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/fonts/PlayfairDisplay-Italic-Variable.ttf",
+      "bytes": 278688,
+      "sha256": "a5e26dc5e2e77fb2803a0bf02fd4f81ee136ec8dea863ccdb0c59a263b21378b",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/ai_skill_folder_black_coral.png",
+      "bytes": 1152792,
+      "sha256": "121fb0ea236d23a8a94bf13c1629299cf82651a0a3156efe0f37ae7bd938ee78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/camera_recording_icon_asset.png",
+      "bytes": 952374,
+      "sha256": "61f6e2b0f50c950343e9e9070fe51446f44470f1ae8b1e415bb7372586318f2a",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/camera_recording_icon_brand_slate_final.png",
+      "bytes": 1775121,
+      "sha256": "6ff68c34557fda8d1ef715b9a93acbd300025b753a665716c696aa04fd941c30",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/camera_recording_icon_brand_slate.png",
+      "bytes": 1775121,
+      "sha256": "6ff68c34557fda8d1ef715b9a93acbd300025b753a665716c696aa04fd941c30",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/camera_recording_icon.png",
+      "bytes": 952374,
+      "sha256": "61f6e2b0f50c950343e9e9070fe51446f44470f1ae8b1e415bb7372586318f2a",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/chatgpt_workspace_window.png",
+      "bytes": 1046681,
+      "sha256": "9c19807fc5b89fb14c3521e322cccd37bedf078653fee491c9c5f6bdbb7c7f78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/chatgpt-window-v1.png",
+      "bytes": 1046681,
+      "sha256": "9c19807fc5b89fb14c3521e322cccd37bedf078653fee491c9c5f6bdbb7c7f78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/claude_workspace_window_asset.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/claude_workspace_window.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/claude-window-v1.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/editing_scissors_icon.png",
+      "bytes": 346714,
+      "sha256": "c6e837ec8cc2177a6656409cd6a243171adb5e9eb9ba9014e2d22db295df4e81",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/gemini_workspace_window.png",
+      "bytes": 869444,
+      "sha256": "d0adaf763e6b1f037cf7de20f0b57824a2598382494794cba9320346630c8c91",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/gemini-window-v1.png",
+      "bytes": 869444,
+      "sha256": "d0adaf763e6b1f037cf7de20f0b57824a2598382494794cba9320346630c8c91",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/layered_video_editing_stack.png",
+      "bytes": 786300,
+      "sha256": "b76691f5bbd7be5a3d66384cfa55b425d29c4d87c59452455d62ff29ad68a955",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/pixel_hand_cursor.png",
+      "bytes": 269489,
+      "sha256": "cf3699c32529c562cf1ea2f07122fc856b2b03f261f76633b094e77aab98c319",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/skill-folder-v1.png",
+      "bytes": 1152792,
+      "sha256": "121fb0ea236d23a8a94bf13c1629299cf82651a0a3156efe0f37ae7bd938ee78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/video_editor_timeline_panel_final.png",
+      "bytes": 717608,
+      "sha256": "b917b8ee2769d29b76518dcc0fe1abf138ba4c69906b3cb24731082f0220e7ce",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/video_editor_timeline_panel_preview.png",
+      "bytes": 717608,
+      "sha256": "b917b8ee2769d29b76518dcc0fe1abf138ba4c69906b3cb24731082f0220e7ce",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/video_editor_timeline_panel.png",
+      "bytes": 717608,
+      "sha256": "b917b8ee2769d29b76518dcc0fe1abf138ba4c69906b3cb24731082f0220e7ce",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/assets/images/warm_cream_paper_background.png",
+      "bytes": 1735027,
+      "sha256": "ce46303c47ac40fc8c0f8212f1abb31b40f93dcacd97e2d6a48522555f1a6c57",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/BRIEF.md",
+      "bytes": 1169,
+      "sha256": "237a0f356faf81ad7f11c6c1ed650514c0b0f989e58493c9b423695f868eb17f",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/compositions/block-a.html",
+      "bytes": 8457,
+      "sha256": "ca1921868501d15bb6feb011230615e30b6ce8f985b7515d337f59af0636687d",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/compositions/block-a.motion.json",
+      "bytes": 746,
+      "sha256": "a2dd2129dba4ebe12396a1b7fa9448f2e226a833553aa9ccc9fd04ffa68fcb71",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/compositions/block-b.html",
+      "bytes": 13494,
+      "sha256": "974caa2e89f7e94a01db5ddb025f83c9ab17f6d9e016954151d35f4793542567",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/compositions/block-b.motion.json",
+      "bytes": 821,
+      "sha256": "84662fe834fbf59d58011a10b56c71dd00fbdc12e04de6b935623066ea0961fd",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/compositions/block-c.html",
+      "bytes": 18035,
+      "sha256": "d36486562e98aed19a16fe9bb4d29ad3a76e2f40fdc985e626d6c0d389ffb35c",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/compositions/block-c.motion.json",
+      "bytes": 919,
+      "sha256": "981adbc3e68e8da47e6a50e2edf1bf3fffc306dc048ff43a90d595b792004feb",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/DESIGN.md",
+      "bytes": 2164,
+      "sha256": "213b2140827848f9752843baac46b4885bbcbcdf6ffea8f80e7a2e9c3eb09c45",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/hyperframes.json",
+      "bytes": 355,
+      "sha256": "ad5dadeef78a520800a9e5cdd27a92ff5ac37f11b6a07f611b6b52b9f8c79a17",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/index.html",
+      "bytes": 7784,
+      "sha256": "8d164780f6d718226542136df69347da43b1fb083a5448f1778ca258d9e65850",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/index.motion.json",
+      "bytes": 1181,
+      "sha256": "b6cf276e7607e51c38e8e902c75603f1a0bfd7de37b1de19b0cec3ddeaff9382",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/meta.json",
+      "bytes": 90,
+      "sha256": "f9dbd0abc51717b5bd07a41e928054bfcc350058108fd848b595e5225d7f9b1e",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/package.json",
+      "bytes": 294,
+      "sha256": "bf95a0e570cdcbc5f9accf87ce702baf5d2ed45fcb8fa0fa83e84d44c12433a1",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/SCRIPT.md",
+      "bytes": 448,
+      "sha256": "ae4c64a4d496e92226e796180cbbed0594588583598990844f2c19a11025b9b9",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/reel-9x16/STORYBOARD.md",
+      "bytes": 1267,
+      "sha256": "0803b063ae97fa47009185e823453bb9853cbbdf391aa93b5546cecc82224eac",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/chime_glass_gemini_reveal.mp3",
+      "bytes": 9239,
+      "sha256": "194cc24ee12d4349ec41c8999fcad60ea31eb65d63404920d480b5608835b368",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/click_soft_important_word_or_ui_lock.mp3",
+      "bytes": 11702,
+      "sha256": "075e17bdac5c13662a1c9530050e0046f81d4138e00eb3bf30427a7b4404103d",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/confirm_three_platform_nodes.mp3",
+      "bytes": 11328,
+      "sha256": "127a8b5ef8defeae500459038ef48093002597fbced0901f742f643f249f9be0",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/gift_pop_object_or_section_reveal.mp3",
+      "bytes": 23040,
+      "sha256": "19ab7193f626ff57fdeef60b45543bac416fcbcec803cfb417abe4b271c1b352",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/impact_hero_word_or_low_thump.mp3",
+      "bytes": 8821,
+      "sha256": "174f643255d3445eb2123f75e940f7a34a9f5863687941722fb0fb76095038dd",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/lock_phone_or_platform_card.mp3",
+      "bytes": 12164,
+      "sha256": "735d1753c42654e5611a1ba27a7a3debcbf27671fb152c8e2f0c168f5a46e01c",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/pop_social_content_cards.mp3",
+      "bytes": 11328,
+      "sha256": "127a8b5ef8defeae500459038ef48093002597fbced0901f742f643f249f9be0",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/pop_warm_ui_claude_reveal.mp3",
+      "bytes": 13836,
+      "sha256": "56d19a8424635fa37d1a9b6220272f03317978945dfa719e42353e2a03ae3ae4",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/ratchet_repeat_rewind_action.mp3",
+      "bytes": 15090,
+      "sha256": "e40fb9deb6bbb7f8415d85e3be77167f443987df3dd10772b2b6a997a8a77c98",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/snap_timeline_cut_or_folder_open.mp3",
+      "bytes": 14672,
+      "sha256": "200ab0cc88a5df194240bea03d05a5bc8d271d763cfcdc329309accb9e7a6619",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/swipe_social_content_transition.mp3",
+      "bytes": 9239,
+      "sha256": "194cc24ee12d4349ec41c8999fcad60ea31eb65d63404920d480b5608835b368",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/tick_important_word.mp3",
+      "bytes": 8821,
+      "sha256": "174f643255d3445eb2123f75e940f7a34a9f5863687941722fb0fb76095038dd",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/voiceover_es_robust_paced.wav",
+      "bytes": 853484,
+      "sha256": "115304471f3298b4cfa016f5132628f1893dad3c77f9840398a098815a2c03d1",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "Reference-only noncommercial voice-over; do not reuse as another creator identity"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/whoosh_clean_scene_wipe.mp3",
+      "bytes": 8821,
+      "sha256": "41e054e4baac4d9def83a109d2ea5404e53f4bc965b2f458dd491783a97200d9",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/whoosh_fast_transition.mp3",
+      "bytes": 8821,
+      "sha256": "41e054e4baac4d9def83a109d2ea5404e53f4bc965b2f458dd491783a97200d9",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/audio/whoosh_short_scene_or_text_transition.mp3",
+      "bytes": 18390,
+      "sha256": "c2efd9d902a59bf9ec5019035d7deadd17762136896b6e3cb6dd99ea50997a30",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/fonts/Inter-Variable.ttf",
+      "bytes": 876576,
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/fonts/PlayfairDisplay-Italic-Variable.ttf",
+      "bytes": 278688,
+      "sha256": "a5e26dc5e2e77fb2803a0bf02fd4f81ee136ec8dea863ccdb0c59a263b21378b",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/ai_skill_folder_black_coral.png",
+      "bytes": 1152792,
+      "sha256": "121fb0ea236d23a8a94bf13c1629299cf82651a0a3156efe0f37ae7bd938ee78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/camera_recording_icon_asset.png",
+      "bytes": 952374,
+      "sha256": "61f6e2b0f50c950343e9e9070fe51446f44470f1ae8b1e415bb7372586318f2a",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/camera_recording_icon_brand_slate_final.png",
+      "bytes": 1775121,
+      "sha256": "6ff68c34557fda8d1ef715b9a93acbd300025b753a665716c696aa04fd941c30",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/camera_recording_icon_brand_slate.png",
+      "bytes": 1775121,
+      "sha256": "6ff68c34557fda8d1ef715b9a93acbd300025b753a665716c696aa04fd941c30",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/camera_recording_icon.png",
+      "bytes": 952374,
+      "sha256": "61f6e2b0f50c950343e9e9070fe51446f44470f1ae8b1e415bb7372586318f2a",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/chatgpt_workspace_window.png",
+      "bytes": 1046681,
+      "sha256": "9c19807fc5b89fb14c3521e322cccd37bedf078653fee491c9c5f6bdbb7c7f78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/chatgpt-window-v1.png",
+      "bytes": 1046681,
+      "sha256": "9c19807fc5b89fb14c3521e322cccd37bedf078653fee491c9c5f6bdbb7c7f78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/claude_workspace_window_asset.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/claude_workspace_window.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/claude-window-v1-package-card.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/claude-window-v1.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/editing_scissors_icon.png",
+      "bytes": 346714,
+      "sha256": "c6e837ec8cc2177a6656409cd6a243171adb5e9eb9ba9014e2d22db295df4e81",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/gemini_workspace_window.png",
+      "bytes": 869444,
+      "sha256": "d0adaf763e6b1f037cf7de20f0b57824a2598382494794cba9320346630c8c91",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/gemini-window-v1.png",
+      "bytes": 869444,
+      "sha256": "d0adaf763e6b1f037cf7de20f0b57824a2598382494794cba9320346630c8c91",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/layered_video_editing_stack.png",
+      "bytes": 786300,
+      "sha256": "b76691f5bbd7be5a3d66384cfa55b425d29c4d87c59452455d62ff29ad68a955",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/pixel_hand_cursor.png",
+      "bytes": 269489,
+      "sha256": "cf3699c32529c562cf1ea2f07122fc856b2b03f261f76633b094e77aab98c319",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/skill-folder-v1.png",
+      "bytes": 1152792,
+      "sha256": "121fb0ea236d23a8a94bf13c1629299cf82651a0a3156efe0f37ae7bd938ee78",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/video_editor_timeline_panel_final.png",
+      "bytes": 717608,
+      "sha256": "b917b8ee2769d29b76518dcc0fe1abf138ba4c69906b3cb24731082f0220e7ce",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/video_editor_timeline_panel_preview.png",
+      "bytes": 717608,
+      "sha256": "b917b8ee2769d29b76518dcc0fe1abf138ba4c69906b3cb24731082f0220e7ce",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/video_editor_timeline_panel.png",
+      "bytes": 717608,
+      "sha256": "b917b8ee2769d29b76518dcc0fe1abf138ba4c69906b3cb24731082f0220e7ce",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/assets/images/warm_cream_paper_background.png",
+      "bytes": 1735027,
+      "sha256": "ce46303c47ac40fc8c0f8212f1abb31b40f93dcacd97e2d6a48522555f1a6c57",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/BRIEF.md",
+      "bytes": 1089,
+      "sha256": "659b6713c8798c904026c9b0ba3ad3b3673a11d46985965ef1321eda745ad83f",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/compositions/block-a.html",
+      "bytes": 8499,
+      "sha256": "7b4d4cd737d415c9ac70c4548920114f8d10e5994ff9b1cfcb2a7dfcd6964e97",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/compositions/block-a.motion.json",
+      "bytes": 746,
+      "sha256": "3af69d8e092b9711c24663cb8c46867ee8c4d28a8b393ea3f88fcd2c42aff768",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/compositions/block-b.html",
+      "bytes": 13585,
+      "sha256": "403842fdc5c4de365d00f2d56be8f535e5cfaac9f3376f3bd0f047837a2cf746",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/compositions/block-b.motion.json",
+      "bytes": 821,
+      "sha256": "a50a7e5be719a2332f7322b1c3a774e318f5ef810d59339659e79556e6c21a15",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/compositions/block-c.html",
+      "bytes": 17456,
+      "sha256": "3337ea1e07495a9d9a399f6f929bb09e9e8e46f6a34b79f76dab5c77c1f3b266",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/compositions/block-c.motion.json",
+      "bytes": 919,
+      "sha256": "5b604ac3cacf29213fd07ad304d4fd61cd1001ed03f65de9a16a817016a099dd",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/DESIGN.md",
+      "bytes": 2250,
+      "sha256": "6e4804284a3093235b1e1f0cc1cfe9b550482fe72ecf022cb8ff19802b1a1299",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/hyperframes.json",
+      "bytes": 355,
+      "sha256": "ad5dadeef78a520800a9e5cdd27a92ff5ac37f11b6a07f611b6b52b9f8c79a17",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/index.html",
+      "bytes": 7719,
+      "sha256": "3dff56895354d88b284b701f4d59c59c0fbeadb810205b7a07ab5c91285857d8",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/index.motion.json",
+      "bytes": 1185,
+      "sha256": "17de2c3fa66a0ae074d5eb88fbc495291775b7e37e11bd94f3f495d408638e5a",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/meta.json",
+      "bytes": 96,
+      "sha256": "2664f36b7e8ce55a83299c94eef0b64f96268de1a536c3b7ef775a9a245c82ef",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/package.json",
+      "bytes": 297,
+      "sha256": "bc508c8dcac72cd61919a1e5730e08bbba573de9ef0fa6b119adcb64ae3041d2",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/SCRIPT.md",
+      "bytes": 448,
+      "sha256": "ae4c64a4d496e92226e796180cbbed0594588583598990844f2c19a11025b9b9",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-projects/youtube-16x9/STORYBOARD.md",
+      "bytes": 1294,
+      "sha256": "b0bfc078aeac99a8756a8f2e6d9d9c83fdac2b9093b7bfe29cfb8308137ace98",
+      "category": "editable-reference-project",
+      "purpose": "Editable HyperFrames source, media, or project evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/ORIGINAL_ASSET_INDEX.md",
+      "bytes": 7700,
+      "sha256": "ea538424eb040631fce3990aec8bc859d63bf5afb275d43ae03b7eaa892f2296",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/PHASE_1_APPROVED_SCRIPTS.md",
+      "bytes": 2041,
+      "sha256": "46255f016bef3671b015036995bc97dd43b7df06495b790e7f6264fc2a7e6888",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/PHASE_2_TIMING_MAP.md",
+      "bytes": 4540,
+      "sha256": "c649b3c124fd9aecd38584bab510222e4d99066b7c342398cd2034d635f1d136",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/REEL_STORYBOARD_VALIDATION.md",
+      "bytes": 3838,
+      "sha256": "07df9a6da5f25bca03988612b9975bc399859d3ed9ae6e1a20c2faea2c6a9690",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/SOUND_DESIGN_CUE_SHEET.md",
+      "bytes": 6625,
+      "sha256": "417acb90d2aa644b15cd687b894bf2842a342dcaedb385eae3e23c7204c3fe5b",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/SOURCE_AUDIT.md",
+      "bytes": 2853,
+      "sha256": "6b6207c08bf8a25bd58e99dbf6d42f55c9cc0e6ae55bcabeefcbd49f6427f102",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/VOICEOVER_TIMING.md",
+      "bytes": 2690,
+      "sha256": "ac62cc4eacf5e0739b4f71b79f3edc08e42ec91fc6242a7c4fd53e2bd2ccb064",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/documents/YOUTUBE_STORYBOARD_VALIDATION.md",
+      "bytes": 5259,
+      "sha256": "3a6858ccaf928e6b427ba27e567cbf37a4fd54616377116af3dc7e5dac1ce0f9",
+      "category": "reference-document",
+      "purpose": "Production decision, validation, source, or manifest evidence",
+      "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
+    },
+    {
+      "path": "reference-proof/imagegen-prompts/reel-9x16/block-a-00-10.md",
+      "bytes": 10713,
+      "sha256": "49c8f972e6f885cb9777c86fe8c4535eaae0089a26143ba4cfcb6c508b4e757b",
+      "category": "imagegen-prompt",
+      "purpose": "Prompt record for storyboard or production raster generation",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/imagegen-prompts/reel-9x16/block-b-10-20.md",
+      "bytes": 18616,
+      "sha256": "65f7ed64acf1bcaa93d565e6c6cf83df6a2b06b83a91416c59362d103822bcc4",
+      "category": "imagegen-prompt",
+      "purpose": "Prompt record for storyboard or production raster generation",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/imagegen-prompts/reel-9x16/block-c-20-30.md",
+      "bytes": 9853,
+      "sha256": "32a145f5ca22d240905eec1357f1bfc54d325efb85b0bc45b89a44b9480ba1c3",
+      "category": "imagegen-prompt",
+      "purpose": "Prompt record for storyboard or production raster generation",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/imagegen-prompts/youtube-16x9/block-a-00-10.md",
+      "bytes": 9075,
+      "sha256": "68d6231cb2fb74806482347d7a75b75f4130555c0ed0e3e1719913e409da0b5d",
+      "category": "imagegen-prompt",
+      "purpose": "Prompt record for storyboard or production raster generation",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/imagegen-prompts/youtube-16x9/block-b-10-20.md",
+      "bytes": 7520,
+      "sha256": "99aa0461ffd69638eb5963a457359c04148746ef6c724c0bb042ea2bdc78b590",
+      "category": "imagegen-prompt",
+      "purpose": "Prompt record for storyboard or production raster generation",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/imagegen-prompts/youtube-16x9/block-c-20-30.md",
+      "bytes": 14956,
+      "sha256": "6b241b49d6388e64604f948e0acfb53f930d27d1fbc42e5f9a13aa46fe6ad3c1",
+      "category": "imagegen-prompt",
+      "purpose": "Prompt record for storyboard or production raster generation",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/renders/reel-9x16-master.mp4",
+      "bytes": 11601471,
+      "sha256": "3e5d24b24f299ec5a44b4b34f6af6ac78b3b768be91f15ad3c036d496bf93a9c",
+      "category": "reference-render",
+      "purpose": "Final approved encoded MP4 demonstrating the complete workflow",
+      "license": "Reference-only noncommercial use; see LICENSE"
+    },
+    {
+      "path": "reference-proof/renders/youtube-16x9-master.mp4",
+      "bytes": 12524539,
+      "sha256": "fda18e39e0357167c8f1fbe406a1dc39c9c148301d9389df8e1f4e149df77cdb",
+      "category": "reference-render",
+      "purpose": "Final approved encoded MP4 demonstrating the complete workflow",
+      "license": "Reference-only noncommercial use; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/reel-9x16/callout-overlap-corrected-contact-sheet.jpg",
+      "bytes": 570095,
+      "sha256": "89d93b450ce4e3bbfd09cb41b30e5851463cb2c20297ce0c10fc8ac7e6814ec4",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/reel-9x16/phone-reveal-contact-sheet-1.jpg",
+      "bytes": 652099,
+      "sha256": "3d9da0ddf4730f6b2ec8171f38941d1c671a0eab1ddc9e885847a0072b85e6e8",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/reel-9x16/phone-reveal-contact-sheet-2.jpg",
+      "bytes": 71333,
+      "sha256": "33b74d8df310c38ebdba28ef17a43932c1ffca6563d8fd6a1a69beee8596ee72",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/reel-9x16/voice-sync-contact-sheet-1.jpg",
+      "bytes": 557092,
+      "sha256": "22d48dd147d96e6a182d2999d0babba0576587a22a9e8787afb428945bbe1401",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/reel-9x16/voice-sync-contact-sheet-2.jpg",
+      "bytes": 70544,
+      "sha256": "3d497769b2e0fe4cf9bd5b18ebe7b78b6de1b3da01e5c79b479abb164e3517f4",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/youtube-16x9/platform-transition-contact-sheet.jpg",
+      "bytes": 257229,
+      "sha256": "705f776803a4440772a0cb98875db58b1b3d9b3a3463f1523d240a08427d3b42",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/youtube-16x9/voice-sync-contact-sheet-1.jpg",
+      "bytes": 188002,
+      "sha256": "331483218e2059208721d283e2c42608624af03e5808c3851dce3a07da4e02cb",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/snapshots/youtube-16x9/voice-sync-contact-sheet-2.jpg",
+      "bytes": 22154,
+      "sha256": "69022ae170216f1f5a62934027d8729712e4b019ad40cfe566bd0baeeb23ceb8",
+      "category": "checkpoint-proof",
+      "purpose": "Approved animation checkpoint or contact sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/storyboards/reel-9x16/block-a-00-10.png",
+      "bytes": 1865569,
+      "sha256": "0b9c19bc70d06e74230e66eb9749c70af4b684366ce75c785c0959cc0d5cb251",
+      "category": "storyboard-proof",
+      "purpose": "Approved format-specific storyboard sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/storyboards/reel-9x16/block-b-10-20.png",
+      "bytes": 2063904,
+      "sha256": "1046a903df8ad3a5fd9ca8496c96a374d7ee518e7d4c520ec1c87017c9b08c66",
+      "category": "storyboard-proof",
+      "purpose": "Approved format-specific storyboard sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/storyboards/reel-9x16/block-c-20-30.png",
+      "bytes": 1696637,
+      "sha256": "f667a077fbca9ee7f0574851881a194c18796fdca680576ef6bb4802ce462231",
+      "category": "storyboard-proof",
+      "purpose": "Approved format-specific storyboard sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/storyboards/youtube-16x9/block-a-00-10.png",
+      "bytes": 2090054,
+      "sha256": "71c324183957f61ddbb7d71ef31a507e83a8211e53989cbebc2e003682b3eb49",
+      "category": "storyboard-proof",
+      "purpose": "Approved format-specific storyboard sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/storyboards/youtube-16x9/block-b-10-20.png",
+      "bytes": 1496903,
+      "sha256": "55f13348e191d5f3c93ba573b9a4d03db8a9fbbc63a97a13045dc628b80077be",
+      "category": "storyboard-proof",
+      "purpose": "Approved format-specific storyboard sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "reference-proof/storyboards/youtube-16x9/block-c-20-30.png",
+      "bytes": 1622489,
+      "sha256": "99b5d36aff88a5d654726905e4348205ca4aff6f7d8107bcd153e1bc8a61de29",
+      "category": "storyboard-proof",
+      "purpose": "Approved format-specific storyboard sheet",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "starter-library/fonts/INTER_OFL.txt",
+      "bytes": 4376,
+      "sha256": "5dd548d31a85f756e01d63e00d7faf1e324103ed3e9102fcbbabf2cc2db6dd39",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "starter-library/fonts/Inter-Variable.ttf",
+      "bytes": 876576,
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "starter-library/fonts/PLAYFAIR_DISPLAY_OFL.txt",
+      "bytes": 4448,
+      "sha256": "0bb2b43ffd21233963b5d0c0eb6f1abffa776ec53c56131b5818708f2730ffd6",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "starter-library/fonts/PlayfairDisplay-Italic-Variable.ttf",
+      "bytes": 278688,
+      "sha256": "a5e26dc5e2e77fb2803a0bf02fd4f81ee136ec8dea863ccdb0c59a263b21378b",
+      "category": "open-font",
+      "purpose": "Redistributable typography starter or license text",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "path": "starter-library/guides/GENERIC_CAPTION_KINETIC_TYPE_BEST_PRACTICES.md",
+      "bytes": 8379,
+      "sha256": "006b8035f1fdabff60e60ae59a56381600efe85792fee49262060812b8bb0527",
+      "category": "production-guide",
+      "purpose": "Reusable caption, typography, motion, or asset-usage guidance",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "starter-library/guides/GENERIC_TYPOGRAPHY_SYSTEM.md",
+      "bytes": 4535,
+      "sha256": "bfd0de4caa8723952586caceb4fc656a4470283ee2b8156acd475cec56686e26",
+      "category": "production-guide",
+      "purpose": "Reusable caption, typography, motion, or asset-usage guidance",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "starter-library/guides/generic-kinetic-type.css",
+      "bytes": 3410,
+      "sha256": "68e02b4f6d10c2bdc50684d34aa5ad6bbbf88fa39698da3c356f24a3085c7b95",
+      "category": "production-guide",
+      "purpose": "Reusable caption, typography, motion, or asset-usage guidance",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/ai_skill_folder_black_coral.png",
+      "bytes": 1152792,
+      "sha256": "121fb0ea236d23a8a94bf13c1629299cf82651a0a3156efe0f37ae7bd938ee78",
+      "category": "production-image",
+      "purpose": "ai skill folder black coral",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/camera_recording_icon_brand_slate.png",
+      "bytes": 1775121,
+      "sha256": "6ff68c34557fda8d1ef715b9a93acbd300025b753a665716c696aa04fd941c30",
+      "category": "production-image",
+      "purpose": "camera recording icon brand slate",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/camera_recording_icon.png",
+      "bytes": 952374,
+      "sha256": "61f6e2b0f50c950343e9e9070fe51446f44470f1ae8b1e415bb7372586318f2a",
+      "category": "production-image",
+      "purpose": "camera recording icon",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/camera_recording_motion_echo.png",
+      "bytes": 716522,
+      "sha256": "98e5c824adc172cf53224bf82c937453b1fb6bb04e8f593b3f8bef7a605ff112",
+      "category": "production-image",
+      "purpose": "camera recording motion echo",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/chatgpt_workspace_window.png",
+      "bytes": 1046681,
+      "sha256": "9c19807fc5b89fb14c3521e322cccd37bedf078653fee491c9c5f6bdbb7c7f78",
+      "category": "production-image",
+      "purpose": "chatgpt workspace window",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/claude_workspace_window.png",
+      "bytes": 944218,
+      "sha256": "48ba2a47819a5c86a5d389ab15973e9c78a4b1517f5e9ae84e88e02a91e538e6",
+      "category": "production-image",
+      "purpose": "claude workspace window",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/coral_gift_box_illustration_green_screen.png",
+      "bytes": 1412626,
+      "sha256": "bdc3c1e004a2598081fd282e120c5771d5e6e35302dd6ac5ceb5b36d2f57d7fb",
+      "category": "production-image",
+      "purpose": "coral gift box illustration green screen",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/coral_gift_box_illustration_transparent.png",
+      "bytes": 1031282,
+      "sha256": "6c9979d6c2b0f79eda8011598bd082de01ddaf3cefc0cc2d3fe71c2d7292885c",
+      "category": "production-image",
+      "purpose": "coral gift box illustration transparent",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/coral_gift_box_premium_vector.svg",
+      "bytes": 2184,
+      "sha256": "d7ec838839e134e67f4ab63ed2fd8c73aebb05e455316d9776b15545de365ecc",
+      "category": "production-image",
+      "purpose": "coral gift box premium vector",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/editing_scissors_icon.png",
+      "bytes": 346714,
+      "sha256": "c6e837ec8cc2177a6656409cd6a243171adb5e9eb9ba9014e2d22db295df4e81",
+      "category": "production-image",
+      "purpose": "editing scissors icon",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/gemini_workspace_window.png",
+      "bytes": 869444,
+      "sha256": "d0adaf763e6b1f037cf7de20f0b57824a2598382494794cba9320346630c8c91",
+      "category": "production-image",
+      "purpose": "gemini workspace window",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/green_dollar_cash_symbol.png",
+      "bytes": 850279,
+      "sha256": "85496431bcda271c05954cdeb8a367e8654db4ce107aef5b477b79699b376512",
+      "category": "production-image",
+      "purpose": "green dollar cash symbol",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/layered_video_editing_stack.png",
+      "bytes": 786300,
+      "sha256": "b76691f5bbd7be5a3d66384cfa55b425d29c4d87c59452455d62ff29ad68a955",
+      "category": "production-image",
+      "purpose": "layered video editing stack",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/painted_x_no_manual_editing.png",
+      "bytes": 712537,
+      "sha256": "67b92efde7acab7bdffccf24d533379734e10381b7ac19f40a4b27dd9fb22a1c",
+      "category": "production-image",
+      "purpose": "painted x no manual editing",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/pixel_hand_cursor.png",
+      "bytes": 269489,
+      "sha256": "cf3699c32529c562cf1ea2f07122fc856b2b03f261f76633b094e77aab98c319",
+      "category": "production-image",
+      "purpose": "pixel hand cursor",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/social_content_cards_stack.png",
+      "bytes": 1102988,
+      "sha256": "147da348b99015946ea25a870be8f1bd019bb2c69f72217abe46fd1dbb2fde95",
+      "category": "production-image",
+      "purpose": "social content cards stack",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/three_phone_content_constellation.png",
+      "bytes": 374515,
+      "sha256": "29970a55b03938a3f6e24b41bcc9af0786f02632d1c4aa67566076d7f788002b",
+      "category": "production-image",
+      "purpose": "three phone content constellation",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/three_vertical_phones_empty_screens.png",
+      "bytes": 1386445,
+      "sha256": "175f17acc8663572fc01f025b36941ff8994f47054167487844d2656935b39cf",
+      "category": "production-image",
+      "purpose": "three vertical phones empty screens",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/video_editor_timeline_panel.png",
+      "bytes": 717608,
+      "sha256": "b917b8ee2769d29b76518dcc0fe1abf138ba4c69906b3cb24731082f0220e7ce",
+      "category": "production-image",
+      "purpose": "video editor timeline panel",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/production/warm_cream_paper_background.png",
+      "bytes": 1735027,
+      "sha256": "ce46303c47ac40fc8c0f8212f1abb31b40f93dcacd97e2d6a48522555f1a6c57",
+      "category": "production-image",
+      "purpose": "warm cream paper background",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_camera_recording_icon.png",
+      "bytes": 1516929,
+      "sha256": "8fb98e8a0d7f8c814e6b9022376b553a4074c78204b67300c904b417aa68ceb8",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_camera_recording_motion_echo.png",
+      "bytes": 1526643,
+      "sha256": "5489fe9df721c08830c23c14203bd013463c838da15678a16a0f635ed7377ac1",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_editing_scissors_icon.png",
+      "bytes": 1364987,
+      "sha256": "840d0354580f0ea0b42e980982170a62fe76c4db296740dedd06ea99bc414dfe",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_green_dollar_cash_symbol.png",
+      "bytes": 1468001,
+      "sha256": "c59b2e7076cbb3a95f6b7e37a0ee4c6834245dc07fc9a52f53045fc19b9fe98c",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_layered_video_editing_stack.png",
+      "bytes": 1314468,
+      "sha256": "d3d1d7c3c3fc5382f2756a881ed3dd46386440b316119303083d78c31111c190",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_painted_x_no_manual_editing.png",
+      "bytes": 1401132,
+      "sha256": "c6064879f779dfe61ba55fa5fa8a120ad4c33f14c904f4f1524fb82545b877cd",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_pixel_hand_cursor.png",
+      "bytes": 977932,
+      "sha256": "8780923b2a72fb023c5bd3013b9efa1fa8443f14ee5c9c8ab1bdf18c10086ca8",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_social_content_cards_stack.png",
+      "bytes": 1530887,
+      "sha256": "d7af8c6f569613387ce2e1b38d299bf24e1a90df224174bf7dd30139c2a184e0",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_three_phone_content_constellation.png",
+      "bytes": 1158404,
+      "sha256": "3e8a18d853ebf9bc35db164a1569efd77f6a45fd32cba92574272a9d3d516632",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/images/source/source_raw_video_editor_timeline_panel.png",
+      "bytes": 1165402,
+      "sha256": "3972cfb95496f665f82249a2f94baa12a37677239279bb87e1a551043f7549c7",
+      "category": "imagegen-source",
+      "purpose": "Untouched source generation retained for identity and regeneration evidence",
+      "license": "Reference package: noncommercial use; see LICENSE"
+    },
+    {
+      "path": "starter-library/sfx/cash_money_value_word.mp3",
+      "bytes": 12164,
+      "sha256": "36e858b6c100b48c70b65835128d67975922c33e3539669c43a783d3d5b72ddf",
+      "category": "semantic-sfx",
+      "purpose": "cash money value word",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/chime_glass_gemini_reveal.mp3",
+      "bytes": 9239,
+      "sha256": "194cc24ee12d4349ec41c8999fcad60ea31eb65d63404920d480b5608835b368",
+      "category": "semantic-sfx",
+      "purpose": "chime glass gemini reveal",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/click_soft_important_word_or_ui_lock.mp3",
+      "bytes": 11702,
+      "sha256": "075e17bdac5c13662a1c9530050e0046f81d4138e00eb3bf30427a7b4404103d",
+      "category": "semantic-sfx",
+      "purpose": "click soft important word or ui lock",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/confirm_three_platform_nodes.mp3",
+      "bytes": 11328,
+      "sha256": "127a8b5ef8defeae500459038ef48093002597fbced0901f742f643f249f9be0",
+      "category": "semantic-sfx",
+      "purpose": "confirm three platform nodes",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/gift_pop_object_or_section_reveal.mp3",
+      "bytes": 23040,
+      "sha256": "19ab7193f626ff57fdeef60b45543bac416fcbcec803cfb417abe4b271c1b352",
+      "category": "semantic-sfx",
+      "purpose": "gift pop object or section reveal",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/impact_hero_word_or_low_thump.mp3",
+      "bytes": 8821,
+      "sha256": "174f643255d3445eb2123f75e940f7a34a9f5863687941722fb0fb76095038dd",
+      "category": "semantic-sfx",
+      "purpose": "impact hero word or low thump",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/lock_phone_or_platform_card.mp3",
+      "bytes": 12164,
+      "sha256": "735d1753c42654e5611a1ba27a7a3debcbf27671fb152c8e2f0c168f5a46e01c",
+      "category": "semantic-sfx",
+      "purpose": "lock phone or platform card",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/pop_social_content_cards.mp3",
+      "bytes": 11328,
+      "sha256": "127a8b5ef8defeae500459038ef48093002597fbced0901f742f643f249f9be0",
+      "category": "semantic-sfx",
+      "purpose": "pop social content cards",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/pop_warm_ui_claude_reveal.mp3",
+      "bytes": 13836,
+      "sha256": "56d19a8424635fa37d1a9b6220272f03317978945dfa719e42353e2a03ae3ae4",
+      "category": "semantic-sfx",
+      "purpose": "pop warm ui claude reveal",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/ratchet_repeat_rewind_action.mp3",
+      "bytes": 15090,
+      "sha256": "e40fb9deb6bbb7f8415d85e3be77167f443987df3dd10772b2b6a997a8a77c98",
+      "category": "semantic-sfx",
+      "purpose": "ratchet repeat rewind action",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/shutter_camera_recording_reveal.mp3",
+      "bytes": 13836,
+      "sha256": "56d19a8424635fa37d1a9b6220272f03317978945dfa719e42353e2a03ae3ae4",
+      "category": "semantic-sfx",
+      "purpose": "shutter camera recording reveal",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/slice_typography_split.mp3",
+      "bytes": 14672,
+      "sha256": "200ab0cc88a5df194240bea03d05a5bc8d271d763cfcdc329309accb9e7a6619",
+      "category": "semantic-sfx",
+      "purpose": "slice typography split",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/snap_timeline_cut_or_folder_open.mp3",
+      "bytes": 14672,
+      "sha256": "200ab0cc88a5df194240bea03d05a5bc8d271d763cfcdc329309accb9e7a6619",
+      "category": "semantic-sfx",
+      "purpose": "snap timeline cut or folder open",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/sparkle_success_or_magic_reveal.mp3",
+      "bytes": 57678,
+      "sha256": "a66b2829a307bcb5b1f6551d7cdc72fe45bbe9a91abfb994d28db8d5e4e42ea8",
+      "category": "semantic-sfx",
+      "purpose": "sparkle success or magic reveal",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/swipe_social_content_transition.mp3",
+      "bytes": 9239,
+      "sha256": "194cc24ee12d4349ec41c8999fcad60ea31eb65d63404920d480b5608835b368",
+      "category": "semantic-sfx",
+      "purpose": "swipe social content transition",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/tick_important_word.mp3",
+      "bytes": 8821,
+      "sha256": "174f643255d3445eb2123f75e940f7a34a9f5863687941722fb0fb76095038dd",
+      "category": "semantic-sfx",
+      "purpose": "tick important word",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/whoosh_clean_scene_wipe.mp3",
+      "bytes": 8821,
+      "sha256": "41e054e4baac4d9def83a109d2ea5404e53f4bc965b2f458dd491783a97200d9",
+      "category": "semantic-sfx",
+      "purpose": "whoosh clean scene wipe",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/whoosh_fast_transition.mp3",
+      "bytes": 8821,
+      "sha256": "41e054e4baac4d9def83a109d2ea5404e53f4bc965b2f458dd491783a97200d9",
+      "category": "semantic-sfx",
+      "purpose": "whoosh fast transition",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    },
+    {
+      "path": "starter-library/sfx/whoosh_short_scene_or_text_transition.mp3",
+      "bytes": 18390,
+      "sha256": "c2efd9d902a59bf9ec5019035d7deadd17762136896b6e3cb6dd99ea50997a30",
+      "category": "semantic-sfx",
+      "purpose": "whoosh short scene or text transition",
+      "license": "Reference package: noncommercial use; see LICENSE and ORIGINAL_ASSET_INDEX.md"
+    }
+  ]
+}

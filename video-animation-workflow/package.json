@@ -1,0 +1,13 @@
+{
+  "name": "video-animation-workflow",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preflight": "node scripts/preflight.mjs",
+    "discover-brand": "node scripts/discover-brand.mjs",
+    "brands": "node scripts/brand-profile.mjs list",
+    "test": "node scripts/self-test.mjs",
+    "verify-assets": "node scripts/verify-assets.mjs"
+  }
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="UTF-8"></head>
+  <body>
+    <template>
+      <style>
+        @font-face{font-family:InterLocal;src:url("assets/fonts/Inter-Variable.ttf");font-weight:100 900}
+        @font-face{font-family:PlayfairEditorial;src:url("assets/fonts/PlayfairDisplay-Italic-Variable.ttf");font-style:italic;font-weight:400 900}
+        #root{position:absolute;inset:0;width:1080px;height:1920px;overflow:hidden;color:#111;font-family:InterLocal,sans-serif}
+        .paper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .hook{position:absolute;left:72px;top:210px;width:850px;height:480px;transform-origin:left top}
+        .hook-question{font-size:88px;line-height:.9;font-weight:700;letter-spacing:-4px}
+        .hook-seen{position:absolute;left:0;top:190px;font:italic 400 90px/1 PlayfairEditorial,serif}
+        .hook-asi{position:absolute;left:-4px;top:278px;font-size:174px;line-height:.86;font-weight:700;letter-spacing:-8px}
+        .camera-card{position:absolute;left:180px;top:620px;width:720px;height:405px;border-radius:28px;overflow:hidden;transform-origin:center}
+        .camera-card img{width:100%;height:100%;object-fit:contain}
+        .editor{position:absolute;left:100px;top:780px;width:880px;height:930px;border-radius:32px;overflow:hidden;background:#151b24;box-shadow:0 35px 80px rgba(17,17,17,.20)}
+        .editor>img{position:absolute;left:0;top:130px;width:100%;height:495px;object-fit:cover}
+        .manual-copy{position:absolute;left:72px;top:300px;width:800px}
+        .manual-copy .sans{font-size:82px;line-height:.9;font-weight:700;letter-spacing:-4px}
+        .manual-copy .serif{margin-top:8px;font:italic 400 104px/.9 PlayfairEditorial,serif}
+        .tasks{position:absolute;left:72px;top:210px;width:820px}
+        .task{font-size:74px;line-height:.9;font-weight:700;letter-spacing:-4px;opacity:0;transform-origin:left}
+        .task+.task{margin-top:42px}
+        #rla-task-sync{font-size:64px;width:600px}
+        .task.final{font:italic 400 92px/.92 PlayfairEditorial,serif;letter-spacing:-3px}
+        .stack{position:absolute;left:245px;top:745px;width:620px;height:349px;object-fit:contain}
+        .cursor{position:absolute;left:650px;top:1240px;width:190px;height:190px;object-fit:contain}
+        .scissors{position:absolute;left:730px;top:1360px;width:220px;height:147px;object-fit:contain}
+        .folder-echo{position:absolute;left:660px;top:770px;width:300px;height:300px;object-fit:contain;opacity:0}
+        .return-copy{position:absolute;left:72px;top:250px;width:820px;font-size:102px;line-height:.88;font-weight:700;letter-spacing:-6px;opacity:0}
+      </style>
+
+      <div data-hf-id="hf-s1ob" id="root" data-composition-id="rla" data-start="0" data-width="1080" data-height="1920" data-duration="10">
+        <img data-hf-id="hf-sqwv" class="paper" src="assets/images/warm_cream_paper_background.png" alt="">
+        <div data-hf-id="hf-zsk2" id="rla-hook" class="hook" data-layout-allow-overlap="">
+          <div data-hf-id="hf-xslu" id="rla-q" class="hook-question">¿QUERÉS QUE<br data-hf-id="hf-x5px">TUS VIDEOS</div>
+          <div data-hf-id="hf-syfm" id="rla-seen" class="hook-seen">se vean</div>
+          <div data-hf-id="hf-6j9g" id="rla-asi" class="hook-asi" data-layout-allow-overflow="">ASÍ</div>
+        </div>
+        <div data-hf-id="hf-1v5q" id="rla-camera-card" class="camera-card">
+          <img data-hf-id="hf-r7gv" src="assets/images/camera_recording_icon.png" alt="Cámara profesional coral">
+        </div>
+        <div data-hf-id="hf-i2ba" id="rla-editor" class="editor"><img data-hf-id="hf-ksvb" src="assets/images/video_editor_timeline_panel.png" alt="Timeline de edición"></div>
+        <div data-hf-id="hf-sp0u" id="rla-manual" class="manual-copy" data-layout-allow-overlap="">
+          <div data-hf-id="hf-rxqb" class="sans">SIN ANIMAR TODO</div>
+          <div data-hf-id="hf-7zh4" class="serif">a mano?</div>
+        </div>
+        <div data-hf-id="hf-jrdu" id="rla-tasks" class="tasks">
+          <div data-hf-id="hf-gb77" id="rla-task-caption" class="task">DISEÑAR<br data-hf-id="hf-rsrt">CAPTIONS</div>
+          <div data-hf-id="hf-384p" id="rla-task-assets" class="task">BUSCAR<br data-hf-id="hf-szow">ASSETS</div>
+          <div data-hf-id="hf-jgxm" id="rla-task-sync" class="task">SINCRONIZAR<br data-hf-id="hf-sldv">MOVIMIENTOS</div>
+          <div data-hf-id="hf-k2ri" id="rla-task-time" class="task final">LLEVA TIEMPO</div>
+        </div>
+        <img data-hf-id="hf-km8v" id="rla-stack" class="stack" src="assets/images/layered_video_editing_stack.png" alt="Capas de assets">
+        <img data-hf-id="hf-fhey" id="rla-cursor" class="cursor" src="assets/images/pixel_hand_cursor.png" alt="Cursor de edición">
+        <img data-hf-id="hf-87xi" id="rla-scissors" class="scissors" src="assets/images/editing_scissors_icon.png" alt="Tijera de edición">
+        <img data-hf-id="hf-k4fw" id="rla-folder-echo" class="folder-echo" src="assets/images/skill-folder-v1.png" alt="">
+        <div data-hf-id="hf-rz8y" id="rla-return-copy" class="return-copy" data-layout-allow-occlusion="">ESTA<br data-hf-id="hf-qluq">INTRODUCCIÓN</div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines=window.__timelines||{};
+        var tl=gsap.timeline({paused:true});
+        tl.fromTo("#rla-q",{opacity:0,y:72},{opacity:1,y:0,duration:.22,ease:"power4.out"},.02);
+        tl.fromTo("#rla-camera-card",{opacity:0,y:150},{opacity:1,y:0,duration:.68,ease:"power3.out"},.08);
+        tl.fromTo("#rla-seen",{opacity:0,y:50},{opacity:1,y:0,duration:.18,ease:"power4.out"},1.05);
+        tl.fromTo("#rla-asi",{opacity:0,scale:.82,y:70},{opacity:1,scale:1,y:0,duration:.42,ease:"power3.out"},1.22);
+        tl.to("#rla-camera-card",{scale:1.05,y:20,duration:.6,ease:"power2.inOut"},1.05);
+
+        tl.fromTo("#rla-editor",{opacity:0,y:180,scale:.95},{opacity:1,y:0,scale:1,duration:.72,ease:"power3.out"},3.10);
+        tl.to("#rla-camera-card",{x:120,y:-170,scale:.72,borderRadius:24,backgroundColor:"#f4efe3",boxShadow:"0 28px 70px rgba(17,17,17,.18)",duration:.8,ease:"power2.inOut"},3.10);
+        tl.to("#rla-hook",{y:-410,scale:.72,opacity:0,duration:.62,ease:"power2.inOut"},3.10);
+        tl.fromTo("#rla-manual",{opacity:0,y:70},{opacity:1,y:0,duration:.34,ease:"power4.out"},3.24);
+        tl.fromTo("#rla-cursor",{opacity:0,x:170,y:-90},{opacity:1,x:0,y:0,duration:.58,ease:"power2.inOut"},3.44);
+        tl.fromTo("#rla-scissors",{opacity:0,y:-110,rotation:-8},{opacity:1,y:0,rotation:0,duration:.42,ease:"power3.out"},4.12);
+
+        tl.to("#rla-manual",{y:-190,scale:.76,opacity:0,duration:.32,ease:"power2.inOut"},4.70);
+        tl.set("#rla-task-caption",{opacity:1,y:70},4.72);
+        tl.to("#rla-task-caption",{y:0,duration:.20,ease:"power4.out"},4.72);
+        tl.to("#rla-cursor",{x:-180,y:-110,duration:.72,ease:"power2.inOut"},4.82);
+        tl.set("#rla-task-assets",{opacity:1,y:62},5.65);
+        tl.to("#rla-task-assets",{y:0,duration:.18,ease:"power4.out"},5.65);
+        tl.fromTo("#rla-stack",{opacity:0,x:180},{opacity:1,x:0,duration:.48,ease:"power3.out"},5.66);
+        tl.to("#rla-editor",{y:140,scale:.86,duration:.56,ease:"power2.inOut"},5.65);
+        tl.set("#rla-task-sync",{opacity:1,y:76},6.55);
+        tl.to("#rla-task-sync",{y:0,duration:.20,ease:"power4.out"},6.55);
+        tl.to("#rla-camera-card",{x:250,y:-120,scale:.60,duration:.52,ease:"power2.inOut"},6.25);
+        tl.set("#rla-task-time",{opacity:1,y:58},7.08);
+        tl.to("#rla-task-time",{y:0,duration:.18,ease:"power4.out"},7.08);
+        tl.to("#rla-cursor",{x:-390,y:100,duration:.88,ease:"power2.inOut"},6.64);
+        tl.to("#rla-scissors",{x:-80,y:20,rotation:5,duration:.42,ease:"power3.out"},7.32);
+
+        tl.to(["#rla-editor","#rla-stack","#rla-cursor","#rla-scissors","#rla-manual","#rla-tasks"],{opacity:0,duration:.34,ease:"power1.in"},8.40);
+        tl.to("#rla-camera-card",{x:-60,y:80,scale:1.167,borderRadius:24,backgroundColor:"#f4efe3",boxShadow:"0 34px 80px rgba(17,17,17,.20)",duration:.86,ease:"power2.inOut"},8.40);
+        tl.fromTo("#rla-return-copy",{opacity:0,y:76},{opacity:1,y:0,duration:.28,ease:"power4.out"},8.78);
+        tl.to("#rla-folder-echo",{opacity:.14,duration:.55,ease:"power1.out"},8.78);
+        window.__timelines["rla"]=tl;
+      </script>
+    </template>
+  </body>
+</html>

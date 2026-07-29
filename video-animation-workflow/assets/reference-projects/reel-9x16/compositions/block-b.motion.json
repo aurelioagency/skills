@@ -1,0 +1,17 @@
+{
+  "duration": 10,
+  "maxStaticSec": 1.2,
+  "assertions": [
+    { "kind": "appearsBy", "selector": "#rlb-chip-caption", "bySec": 0.7 },
+    { "kind": "appearsBy", "selector": "#rlb-all-copy", "bySec": 3.1 },
+    { "kind": "appearsBy", "selector": "#rlb-genere", "bySec": 4.9 },
+    { "kind": "appearsBy", "selector": "#rlb-folder", "bySec": 5.9 },
+    { "kind": "appearsBy", "selector": "#rlb-claude", "bySec": 6.9 },
+    { "kind": "appearsBy", "selector": "#rlb-compat", "bySec": 8.1 },
+    { "kind": "appearsBy", "selector": "#rlb-chatgpt", "bySec": 9.3 },
+    { "kind": "before", "a": "#rlb-chip-caption", "b": "#rlb-folder" },
+    { "kind": "before", "a": "#rlb-folder", "b": "#rlb-chatgpt" },
+    { "kind": "staysInFrame", "selector": "#rlb-folder" },
+    { "kind": "keepsMoving", "withinSelector": "#root" }
+  ]
+}

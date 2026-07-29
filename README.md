@@ -8,6 +8,7 @@ A collection of reusable skills for AI coding agents (Claude Code, Codex, and si
 |---|---|
 | [heygen-ai-avatar-video](heygen-ai-avatar-video/) | Modular short-video production (TikTok / Reels / Shorts): HeyGen avatar openings/outro + HyperFrames animated body, ElevenLabs TTS, word-level captions, approval gates, encode budget, and QA/verification gates. |
 | [social-carousel-generator](social-carousel-generator/) | Static TikTok and Instagram carousel generation from URLs, PDFs, pasted text, screenshots, or image references, with editable HTML source, PNG exports, captions, and visual QA. |
+| [video-animation-workflow](video-animation-workflow/) | Branded 15–30 second motion-graphics videos from audio, video, scripts, or topics, with persistent brand profiles, approval gates, HyperFrames source, semantic sound design, and intentional 16:9 and 9:16 layouts. |
 
 ## Quick start — one paste, fully automatic
 
@@ -44,4 +45,7 @@ Run it with no arguments to list the available skills. Any other harness: point 
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Applies to every skill in this repo.
+MIT — see [LICENSE](LICENSE) — except where a skill folder contains its own
+license. `video-animation-workflow` is free for noncommercial use under its
+folder-level [PolyForm Noncommercial License 1.0.0](video-animation-workflow/LICENSE).
+Bundled third-party resources retain their own licenses.

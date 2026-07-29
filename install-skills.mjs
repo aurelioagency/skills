@@ -182,5 +182,19 @@ for (const name of args.names) {
   if (previous?.commit && headCommit && previous.commit !== headCommit) {
     console.log(`  ${previous.commit.slice(0, 7)} -> ${headCommit.slice(0, 7)}  (changes: git log --oneline ${previous.commit.slice(0, 7)}..${headCommit.slice(0, 7)} -- ${name})`);
   }
+  const preflight = path.join(dest, 'scripts', 'preflight.mjs');
+  if (action === 'installed' && fs.existsSync(preflight)) {
+    console.log(`  first-run preflight for ${name}:`);
+    try {
+      execFileSync(process.execPath, [preflight, '--project', process.cwd()], {
+        cwd: dest,
+        encoding: 'utf8',
+        windowsHide: true,
+        stdio: 'inherit',
+      });
+    } catch {
+      console.log(`  Preflight did not complete. Re-run manually: node "${preflight}" --project "<your-project>"`);
+    }
+  }
 }
 console.log(`Done: ${args.names.length} skill(s) now available in every session.`);

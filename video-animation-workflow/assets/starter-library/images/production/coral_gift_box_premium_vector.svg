@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" role="img" aria-labelledby="title desc">
+  <title id="title">Premium gift</title>
+  <desc id="desc">A coral gift box with a sculpted ribbon, warm cream highlights, and subtle charcoal depth.</desc>
+  <defs>
+    <linearGradient id="box" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0ad96"/>
+      <stop offset="0.58" stop-color="#e2987f"/>
+      <stop offset="1" stop-color="#c97963"/>
+    </linearGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff8ed"/>
+      <stop offset="1" stop-color="#e9dfd1"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="22" stdDeviation="18" flood-color="#101010" flood-opacity=".2"/>
+    </filter>
+  </defs>
+  <ellipse cx="260" cy="430" rx="155" ry="28" fill="#101010" opacity=".1"/>
+  <g filter="url(#shadow)">
+    <rect x="100" y="205" width="320" height="215" rx="28" fill="url(#box)" stroke="#101010" stroke-width="8"/>
+    <rect x="76" y="172" width="368" height="82" rx="24" fill="#f2b29c" stroke="#101010" stroke-width="8"/>
+    <path d="M228 172h64v248h-64z" fill="url(#ribbon)" stroke="#101010" stroke-width="7"/>
+    <path d="M76 214h368" stroke="#101010" stroke-width="7" opacity=".88"/>
+    <path d="M226 171c-68-4-112-36-101-73 10-34 61-30 91 10 17 23 26 44 28 63h-18Z" fill="#f7f3ea" stroke="#101010" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M294 171c68-4 112-36 101-73-10-34-61-30-91 10-17 23-26 44-28 63h18Z" fill="#f7f3ea" stroke="#101010" stroke-width="8" stroke-linejoin="round"/>
+    <circle cx="260" cy="171" r="30" fill="#101010"/>
+    <circle cx="260" cy="171" r="14" fill="#e2987f"/>
+    <path d="M131 282v82" stroke="#fff8ed" stroke-width="11" stroke-linecap="round" opacity=".55"/>
+  </g>
+  <g fill="none" stroke="#e2987f" stroke-width="8" stroke-linecap="round">
+    <path d="M74 112 48 86"/>
+    <path d="M446 112 472 86"/>
+    <path d="M54 164H20"/>
+    <path d="M466 164h34"/>
+  </g>
+  <g fill="#101010">
+    <circle cx="49" cy="54" r="8"/>
+    <circle cx="471" cy="54" r="8"/>
+  </g>
+</svg>

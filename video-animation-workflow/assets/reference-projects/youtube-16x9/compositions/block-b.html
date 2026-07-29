@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face{font-family:InterLocal;src:url("assets/fonts/Inter-Variable.ttf");font-weight:100 900}
+        @font-face{font-family:PlayfairEditorial;src:url("assets/fonts/PlayfairDisplay-Italic-Variable.ttf");font-style:italic;font-weight:400 900}
+        #root{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;color:#111;font-family:InterLocal,sans-serif}
+        .paper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .intro-card{position:absolute;left:790px;top:128px;width:1040px;height:585px;border-radius:32px;background:#f4efe3;overflow:hidden;box-shadow:0 34px 80px rgba(17,17,17,.20);transform-origin:center}
+        .intro-card img{width:100%;height:100%;object-fit:contain}
+        .return-copy{position:absolute;left:96px;top:240px;width:650px;font-size:96px;line-height:.88;font-weight:700;letter-spacing:-6px}
+        .layer-chip{position:absolute;padding:14px 24px;border:2px solid #111;border-radius:999px;background:#f4efe3;font-size:24px;font-weight:700;letter-spacing:.5px;opacity:0}
+        .chip-caption{left:1120px;top:90px}.chip-assets{left:1515px;top:265px}.chip-motion{left:1050px;top:680px}
+        .coral-line{position:absolute;height:3px;background:#e2987f;transform-origin:left center;opacity:0}
+        .line-1{left:1220px;top:175px;width:260px;rotation:12deg}.line-2{left:1440px;top:340px;width:210px;rotation:-14deg}.line-3{left:1130px;top:650px;width:300px;rotation:-20deg}
+        .all-copy{position:absolute;left:96px;top:210px;width:800px;font-size:92px;line-height:.90;font-weight:700;letter-spacing:-5px;opacity:0}
+
+        .folder{position:absolute;left:1080px;top:255px;width:720px;height:600px;opacity:.10;transform-origin:center;filter:drop-shadow(0 22px 24px rgba(17,17,17,.18))}
+        .folder img{width:100%;height:100%;object-fit:contain}
+        .folder-label{position:absolute;left:51%;top:31%;color:#111;font-size:48px;font-weight:700;letter-spacing:-3px;transform:translateX(-50%) rotate(1deg);opacity:0}
+
+        .lockup{position:absolute;inset:0;line-height:.84;text-transform:uppercase}
+        .lockup .small{position:absolute;font-size:58px;font-weight:400;opacity:0}
+        .lockup .hero{position:absolute;font-size:164px;font-weight:700;letter-spacing:-9px;opacity:0}
+        .lockup .platform-word{position:absolute;font-size:108px;font-weight:700;letter-spacing:-6px;opacity:0}
+        #ytb-las{left:92px;top:84px}
+        #ytb-genere{left:82px;top:145px}
+        #ytb-conuna{left:94px;top:318px}
+        #ytb-skill{left:82px;top:382px;font-size:170px}
+        #ytb-para{left:94px;top:580px;font-size:50px}
+        #ytb-claude-name{left:88px;top:628px}
+
+        .platform-card{position:absolute;z-index:7;filter:drop-shadow(0 24px 26px rgba(17,17,17,.20));transform-origin:center}
+        .platform-card>img{display:block;width:100%;height:100%;object-fit:contain}
+        .platform-card.claude{left:760px;top:130px;width:390px;height:305px;transform:rotate(-4deg)}
+        .platform-card.chatgpt{left:1085px;top:72px;width:455px;height:340px}
+        .platform-card.gemini{left:1480px;top:130px;width:405px;height:305px;transform:rotate(4deg)}
+        .platform-name{position:absolute;left:50%;top:50%;padding:8px 16px 10px;border-bottom:7px solid #e2987f;color:#111;font-size:44px;font-weight:700;letter-spacing:-2px;line-height:1;text-transform:uppercase;transform:translate(-50%,-50%);white-space:nowrap}
+        .platform-card.chatgpt .platform-name{border-bottom-color:#264b32;font-size:40px}
+        .platform-card.gemini .platform-name{border-bottom-color:#3858bf;font-size:42px}
+
+        .compat{position:absolute;inset:0;opacity:0}
+        .compat .script{position:absolute;left:87px;top:225px;font:italic 400 168px/.9 PlayfairEditorial,serif}
+        .compat .small{position:absolute;font-size:52px;font-weight:400}
+        .compat .name{position:absolute;font-size:132px;line-height:.82;font-weight:700;letter-spacing:-7px}
+        #ytb-adaptable-a{left:94px;top:402px}
+        #ytb-chatgpt-name{left:88px;top:452px}
+        #ytb-o{left:94px;top:629px}
+        #ytb-gemini-name{left:88px;top:681px}
+
+        .routes{position:absolute;inset:0;width:1920px;height:1080px}
+        .routes path{fill:none;stroke:#e2987f;stroke-width:7;stroke-dasharray:18 16;stroke-linecap:round}
+        .routes circle{fill:#f4efe3;stroke:#e2987f;stroke-width:7;opacity:0}
+      </style>
+
+      <div data-hf-id="hf-2psv" id="root" data-composition-id="ytb" data-start="0" data-width="1920" data-height="1080" data-duration="10">
+        <img data-hf-id="hf-sqwv" class="paper" src="assets/images/warm_cream_paper_background.png" alt="">
+        <div data-hf-id="hf-ukfd" id="ytb-card" class="intro-card"><img data-hf-id="hf-r7gv" src="assets/images/camera_recording_icon.png" alt="Cámara profesional coral"></div>
+        <div data-hf-id="hf-xo5i" id="ytb-return-copy" class="return-copy" data-layout-allow-occlusion="">ESTA<br data-hf-id="hf-x5px">INTRODUCCIÓN</div>
+
+        <div data-hf-id="hf-63wz" id="ytb-chip-caption" class="layer-chip chip-caption">CAPTIONS</div>
+        <div data-hf-id="hf-7g2l" id="ytb-chip-assets" class="layer-chip chip-assets">ASSETS</div>
+        <div data-hf-id="hf-lers" id="ytb-chip-motion" class="layer-chip chip-motion">MOVIMIENTO + SONIDO</div>
+        <div data-hf-id="hf-yptw" id="ytb-line-1" class="coral-line line-1"></div>
+        <div data-hf-id="hf-j310" id="ytb-line-2" class="coral-line line-2"></div>
+        <div data-hf-id="hf-tud4" id="ytb-line-3" class="coral-line line-3"></div>
+        <div data-hf-id="hf-dmnn" id="ytb-all-copy" class="all-copy">Y TODAS ESTAS<br data-hf-id="hf-rsrt">ANIMACIONES</div>
+
+        <div data-hf-id="hf-31d2" id="ytb-folder" class="folder">
+          <img data-hf-id="hf-mmxo" src="assets/images/skill-folder-v1.png" alt="Carpeta skill original">
+          <span data-hf-id="hf-w0jg" id="ytb-folder-label" class="folder-label" data-layout-allow-occlusion="">SKILL</span>
+        </div>
+
+        <div data-hf-id="hf-6ngf" id="ytb-lockup" class="lockup" data-layout-allow-overflow="">
+          <div data-hf-id="hf-jqub" id="ytb-las" class="small" data-layout-allow-overlap="">LAS</div>
+          <div data-hf-id="hf-5tfy" id="ytb-genere" class="hero">GENERÉ</div>
+          <div data-hf-id="hf-2uu1" id="ytb-conuna" class="small" data-layout-allow-overlap="">CON UNA</div>
+          <div data-hf-id="hf-jgjq" id="ytb-skill" class="hero">SKILL</div>
+          <div data-hf-id="hf-2ebv" id="ytb-para" class="small" data-layout-allow-overlap="">PARA</div>
+          <div data-hf-id="hf-io3c" id="ytb-claude-name" class="platform-word">CLAUDE</div>
+        </div>
+
+        <div data-hf-id="hf-8nfm" id="ytb-claude" class="platform-card claude">
+          <img data-hf-id="hf-17n7" src="assets/images/claude-window-v1.png" alt="Claude">
+          <span data-hf-id="hf-s0r2" class="platform-name">CLAUDE</span>
+        </div>
+        <div data-hf-id="hf-i6v8" id="ytb-chatgpt" class="platform-card chatgpt">
+          <img data-hf-id="hf-cg2j" src="assets/images/chatgpt-window-v1.png" alt="ChatGPT">
+          <span data-hf-id="hf-u0vv" class="platform-name">CHATGPT</span>
+        </div>
+        <div data-hf-id="hf-pfqn" id="ytb-gemini" class="platform-card gemini" data-layout-allow-overflow="">
+          <img data-hf-id="hf-ez75" src="assets/images/gemini-window-v1.png" alt="Gemini">
+          <span data-hf-id="hf-217n" class="platform-name">GEMINI</span>
+        </div>
+
+        <div data-hf-id="hf-p7ka" id="ytb-compat" class="compat">
+          <div data-hf-id="hf-ghhr" class="script">adaptable</div>
+          <div data-hf-id="hf-ae7u" id="ytb-adaptable-a" class="small" data-layout-allow-overlap="">A</div>
+          <div data-hf-id="hf-j0kz" id="ytb-chatgpt-name" class="name">CHATGPT</div>
+          <div data-hf-id="hf-slej" id="ytb-o" class="small" data-layout-allow-overlap="">O</div>
+          <div data-hf-id="hf-o5vx" id="ytb-gemini-name" class="name">GEMINI</div>
+        </div>
+
+        <svg data-hf-id="hf-jgua" class="routes" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path data-hf-id="hf-jxh4" id="ytb-route-claude" d="M1410 690 C1300 580 1110 520 955 430" />
+          <circle data-hf-id="hf-9cel" cx="955" cy="430" r="12" />
+          <path data-hf-id="hf-jew3" id="ytb-route-chatgpt" d="M1410 690 C1415 545 1325 455 1315 360" />
+          <circle data-hf-id="hf-rkfw" cx="1315" cy="360" r="12" />
+          <path data-hf-id="hf-2gat" id="ytb-route-gemini" d="M1410 690 C1530 570 1670 505 1705 430" />
+          <circle data-hf-id="hf-oxf3" cx="1705" cy="430" r="12" />
+        </svg>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines=window.__timelines||{};
+        var tl=gsap.timeline({paused:true});
+        ["#ytb-route-claude","#ytb-route-chatgpt","#ytb-route-gemini"].forEach(function(sel){
+          var path=document.querySelector(sel);
+          var len=path.getTotalLength();
+          path.style.strokeDasharray=String(len);
+          path.style.strokeDashoffset=String(len);
+        });
+
+        tl.fromTo("#ytb-chip-caption",{opacity:0,scale:.86,y:30},{opacity:1,scale:1,y:0,duration:.34,ease:"power3.out"},.12);
+        tl.fromTo("#ytb-line-1",{opacity:0,scaleX:0},{opacity:1,scaleX:1,duration:.42,ease:"power2.out"},.20);
+        tl.fromTo("#ytb-chip-assets",{opacity:0,scale:.86,x:45},{opacity:1,scale:1,x:0,duration:.34,ease:"power3.out"},.95);
+        tl.fromTo("#ytb-line-2",{opacity:0,scaleX:0},{opacity:1,scaleX:1,duration:.42,ease:"power2.out"},1.02);
+        tl.fromTo("#ytb-chip-motion",{opacity:0,scale:.86,y:45},{opacity:1,scale:1,y:0,duration:.34,ease:"power3.out"},1.75);
+        tl.fromTo("#ytb-line-3",{opacity:0,scaleX:0},{opacity:1,scaleX:1,duration:.42,ease:"power2.out"},1.82);
+        tl.to("#ytb-return-copy",{y:-90,scale:.82,opacity:.28,duration:.48,ease:"power2.inOut"},1.78);
+        tl.to("#ytb-return-copy",{opacity:0,duration:.18,ease:"power1.in"},2.34);
+        tl.fromTo("#ytb-all-copy",{opacity:0,y:75},{opacity:1,y:0,duration:.30,ease:"power4.out"},2.55);
+        tl.to(["#ytb-chip-caption","#ytb-chip-assets","#ytb-chip-motion","#ytb-line-1","#ytb-line-2","#ytb-line-3"],{opacity:0,duration:.28,ease:"power1.in"},2.68);
+
+        var driver={p:0};
+        tl.to(driver,{p:1,duration:1.02,ease:"back.out(1.15)",onUpdate:function(){
+          var p=driver.p;
+          var cardP=Math.min(1,p/.48);
+          gsap.set("#ytb-card",{x:310*cardP,y:165*cardP,scale:1-.72*cardP,rotation:-5*cardP,opacity:1-cardP});
+          gsap.set("#ytb-folder",{x:170*(1-p),y:90*(1-p),scale:.72+.28*p,opacity:.10+.36*p});
+        }},2.72);
+        tl.to("#ytb-all-copy",{x:-500,opacity:0,duration:.38,ease:"power2.in"},3.62);
+
+        tl.set("#ytb-las",{opacity:1,y:48},4.00);tl.to("#ytb-las",{y:0,duration:.14,ease:"power4.out"},4.00);
+        tl.set("#ytb-genere",{opacity:1,y:72},4.35);tl.to("#ytb-genere",{y:0,duration:.19,ease:"power4.out"},4.35);
+        tl.set("#ytb-conuna",{opacity:1,y:44},5.05);tl.to("#ytb-conuna",{y:0,duration:.14,ease:"power4.out"},5.05);
+        tl.set("#ytb-skill",{opacity:1,scale:.90},5.60);tl.to("#ytb-skill",{scale:1,duration:.35,ease:"power3.out"},5.60);
+        tl.to("#ytb-folder",{x:0,y:0,scale:1,opacity:1,duration:.62,ease:"power3.out"},5.60);
+        tl.to("#ytb-folder-label",{opacity:1,duration:.18,ease:"power1.out"},5.90);
+        tl.set("#ytb-para",{opacity:1,y:40},6.35);tl.to("#ytb-para",{y:0,duration:.14,ease:"power4.out"},6.35);
+        tl.set("#ytb-claude-name",{opacity:1,y:64},6.48);tl.to("#ytb-claude-name",{y:0,duration:.18,ease:"power4.out"},6.48);
+        tl.fromTo("#ytb-claude",{opacity:0,scale:.72,y:210},{opacity:1,scale:1,y:0,duration:.48,ease:"power3.out"},6.36);
+        tl.to("#ytb-folder",{x:-20,y:255,scale:.8333,duration:.64,ease:"power2.inOut"},6.36);
+
+        tl.to("#ytb-lockup",{y:-560,rotation:-3,opacity:0,duration:.35,ease:"power3.in"},6.60);
+        tl.fromTo("#ytb-compat",{opacity:0,y:66},{opacity:1,y:0,duration:.28,ease:"power4.out"},6.95);
+        tl.to("#ytb-route-claude",{strokeDashoffset:0,duration:.48,ease:"power2.out"},7.05);
+        tl.to("#ytb-route-chatgpt",{strokeDashoffset:0,duration:.48,ease:"power2.out"},7.15);
+        tl.to("#ytb-route-gemini",{strokeDashoffset:0,duration:.48,ease:"power2.out"},7.25);
+        tl.to(".routes circle",{opacity:1,duration:.20,ease:"power1.out"},7.05);
+        tl.fromTo("#ytb-chatgpt",{opacity:0,scale:.72,y:210},{opacity:1,scale:1,y:0,duration:.48,ease:"power3.out"},7.25);
+        tl.fromTo("#ytb-chatgpt-name",{opacity:0,y:60},{opacity:1,y:0,duration:.18,ease:"power4.out"},7.25);
+        tl.fromTo("#ytb-o",{opacity:0,y:35},{opacity:1,y:0,duration:.14,ease:"power4.out"},7.80);
+        /*
+         * Gemini resolves before the B/C production seam. The card and native
+         * word share one causal folder-to-platform arrival, then hold through
+         * the cut so neither opacity nor velocity restarts at 20s.
+         */
+        tl.fromTo(
+          "#ytb-gemini-name",
+          {opacity:0,x:120,y:26},
+          {opacity:1,x:0,y:0,duration:.58,ease:"power3.out"},
+          8.05
+        );
+        tl.fromTo(
+          "#ytb-gemini",
+          {opacity:0,x:-260,y:310,scale:.22,rotation:0},
+          {opacity:1,x:0,y:0,scale:1,rotation:4,duration:.58,ease:"power3.out"},
+          8.05
+        );
+
+        window.__timelines["ytb"]=tl;
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "duration": 10,
+  "maxStaticSec": 1.2,
+  "assertions": [
+    { "kind": "appearsBy", "selector": "#ytb-chip-caption", "bySec": 0.7 },
+    { "kind": "appearsBy", "selector": "#ytb-all-copy", "bySec": 3.1 },
+    { "kind": "appearsBy", "selector": "#ytb-genere", "bySec": 4.9 },
+    { "kind": "appearsBy", "selector": "#ytb-folder", "bySec": 5.9 },
+    { "kind": "appearsBy", "selector": "#ytb-claude", "bySec": 6.9 },
+    { "kind": "appearsBy", "selector": "#ytb-compat", "bySec": 8.1 },
+    { "kind": "appearsBy", "selector": "#ytb-chatgpt", "bySec": 9.3 },
+    { "kind": "before", "a": "#ytb-chip-caption", "b": "#ytb-folder" },
+    { "kind": "before", "a": "#ytb-folder", "b": "#ytb-chatgpt" },
+    { "kind": "staysInFrame", "selector": "#ytb-folder" },
+    { "kind": "keepsMoving", "withinSelector": "#root" }
+  ]
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face{font-family:InterLocal;src:url("assets/fonts/Inter-Variable.ttf");font-weight:100 900}
+        @font-face{font-family:PlayfairEditorial;src:url("assets/fonts/PlayfairDisplay-Italic-Variable.ttf");font-style:italic;font-weight:400 900}
+        #root{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;color:#111;font-family:InterLocal,sans-serif}
+        .paper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .hook{position:absolute;left:96px;top:82px;width:980px;height:520px;transform-origin:left top}
+        .hook-question{font-size:112px;line-height:.9;font-weight:700;letter-spacing:-5px;text-transform:uppercase}
+        .hook-seen{position:absolute;left:2px;top:198px;font:italic 400 118px/.95 PlayfairEditorial,serif}
+        .hook-asi{position:absolute;left:-4px;top:302px;font-size:190px;line-height:.86;font-weight:700;letter-spacing:-9px}
+        .camera-card{position:absolute;left:1160px;top:225px;width:650px;height:366px;border-radius:28px;overflow:hidden;transform-origin:center center}
+        .camera-card img{width:100%;height:100%;object-fit:contain}
+        .editor{position:absolute;left:600px;top:315px;width:1180px;height:664px;border-radius:30px;overflow:hidden;background:#151b24;box-shadow:0 35px 80px rgba(17,17,17,.20)}
+        .editor>img{width:100%;height:100%;object-fit:cover}
+        .manual-copy{position:absolute;left:96px;top:325px;width:620px}
+        .manual-copy .sans{font-size:74px;line-height:.9;font-weight:700;letter-spacing:-4px}
+        .manual-copy .serif{margin-top:2px;font:italic 400 118px/.86 PlayfairEditorial,serif}
+        .tasks{position:absolute;left:96px;top:155px;width:760px}
+        .task{font-size:68px;line-height:.92;font-weight:700;letter-spacing:-3px;text-transform:uppercase;opacity:0;transform-origin:left center}
+        .task+.task{margin-top:42px}
+        .task.final{font:italic 400 102px/.9 PlayfairEditorial,serif;text-transform:none;letter-spacing:-2px}
+        .stack{position:absolute;left:1160px;top:235px;width:650px;height:366px;object-fit:contain}
+        .cursor{position:absolute;left:1480px;top:610px;width:205px;height:205px;object-fit:contain}
+        .scissors{position:absolute;left:1500px;top:705px;width:230px;height:153px;object-fit:contain}
+        .folder-echo{position:absolute;left:1410px;top:150px;width:360px;height:360px;object-fit:contain;opacity:0}
+        .return-copy{position:absolute;left:96px;top:240px;width:650px;font-size:96px;line-height:.88;font-weight:700;letter-spacing:-6px;text-transform:uppercase;opacity:0}
+      </style>
+
+      <div data-hf-id="hf-vav0" id="root" data-composition-id="yta" data-start="0" data-width="1920" data-height="1080" data-duration="10">
+        <img data-hf-id="hf-sqwv" class="paper" src="assets/images/warm_cream_paper_background.png" alt="">
+        <div data-hf-id="hf-90xz" id="yta-hook" class="hook" data-layout-allow-overlap="">
+          <div data-hf-id="hf-b6hn" id="yta-q" class="hook-question">¿QUERÉS QUE<br data-hf-id="hf-x5px">TUS VIDEOS</div>
+          <div data-hf-id="hf-kcth" id="yta-seen" class="hook-seen">se vean</div>
+          <div data-hf-id="hf-v8z1" id="yta-asi" class="hook-asi" data-layout-allow-overflow="">ASÍ</div>
+        </div>
+
+        <div data-hf-id="hf-5ltx" id="yta-camera-card" class="camera-card">
+          <img data-hf-id="hf-r7gv" src="assets/images/camera_recording_icon.png" alt="Cámara profesional coral">
+        </div>
+
+        <div data-hf-id="hf-hf8f" id="yta-editor" class="editor">
+          <img data-hf-id="hf-ksvb" src="assets/images/video_editor_timeline_panel.png" alt="Timeline de edición">
+        </div>
+
+        <div data-hf-id="hf-nkl7" id="yta-manual" class="manual-copy" data-layout-allow-overlap="">
+          <div data-hf-id="hf-9yp5" class="sans">SIN ANIMAR<br data-hf-id="hf-rsrt">TODO</div>
+          <div data-hf-id="hf-7zh4" class="serif">a mano?</div>
+        </div>
+
+        <div data-hf-id="hf-2ust" id="yta-tasks" class="tasks">
+          <div data-hf-id="hf-zv58" id="yta-task-caption" class="task">DISEÑAR<br data-hf-id="hf-szow">CAPTIONS</div>
+          <div data-hf-id="hf-f84a" id="yta-task-assets" class="task">BUSCAR<br data-hf-id="hf-sldv">ASSETS</div>
+          <div data-hf-id="hf-ytr1" id="yta-task-sync" class="task">SINCRONIZAR<br data-hf-id="hf-qluq">MOVIMIENTOS</div>
+          <div data-hf-id="hf-5qvl" id="yta-task-time" class="task final">LLEVA TIEMPO</div>
+        </div>
+
+        <img data-hf-id="hf-yjz3" id="yta-stack" class="stack" data-layout-allow-overflow="" src="assets/images/layered_video_editing_stack.png" alt="Capas de assets">
+        <img data-hf-id="hf-8o6r" id="yta-cursor" class="cursor" src="assets/images/pixel_hand_cursor.png" alt="Cursor de edición">
+        <img data-hf-id="hf-yp0r" id="yta-scissors" class="scissors" src="assets/images/editing_scissors_icon.png" alt="Tijera de edición">
+        <img data-hf-id="hf-7skn" id="yta-folder-echo" class="folder-echo" src="assets/images/skill-folder-v1.png" alt="">
+        <div data-hf-id="hf-dwod" id="yta-return-copy" class="return-copy" data-layout-allow-occlusion="">ESTA<br data-hf-id="hf-q7jp">INTRODUCCIÓN</div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({paused:true});
+
+        tl.fromTo("#yta-q",{opacity:0,y:72},{opacity:1,y:0,duration:.22,ease:"power4.out"},.02);
+        tl.fromTo("#yta-camera-card",{opacity:0,x:150},{opacity:1,x:0,duration:.68,ease:"power3.out"},.08);
+        tl.fromTo("#yta-seen",{opacity:0,y:50},{opacity:1,y:0,duration:.18,ease:"power4.out"},1.05);
+        tl.fromTo("#yta-asi",{opacity:0,scale:.82,y:70},{opacity:1,scale:1,y:0,duration:.42,ease:"power3.out"},1.22);
+        tl.to("#yta-camera-card",{scale:1.08,x:-8,y:-8,duration:.6,ease:"power2.inOut"},1.05);
+
+        tl.fromTo("#yta-editor",{opacity:0,y:170,scale:.94},{opacity:1,y:0,scale:1,duration:.72,ease:"power3.out"},3.10);
+        tl.to("#yta-camera-card",{x:30,y:-139,scale:.962,borderRadius:24,backgroundColor:"#f4efe3",boxShadow:"0 28px 70px rgba(17,17,17,.18)",duration:.8,ease:"power2.inOut"},3.10);
+        tl.to("#yta-hook",{x:-650,scale:.72,opacity:0,duration:.62,ease:"power2.inOut"},3.10);
+        tl.fromTo("#yta-manual",{opacity:0,y:70},{opacity:1,y:0,duration:.34,ease:"power4.out"},3.24);
+        tl.fromTo("#yta-cursor",{opacity:0,x:160,y:-80},{opacity:1,x:0,y:0,duration:.58,ease:"power2.inOut"},3.44);
+        tl.fromTo("#yta-scissors",{opacity:0,y:-110,rotation:-8},{opacity:1,y:0,rotation:0,duration:.42,ease:"power3.out"},4.12);
+
+        tl.to("#yta-manual",{y:-195,scale:.76,opacity:0,duration:.32,ease:"power2.inOut"},4.70);
+        tl.set("#yta-task-caption",{opacity:1,y:70},4.72);
+        tl.to("#yta-task-caption",{y:0,duration:.20,ease:"power4.out"},4.72);
+        tl.to("#yta-cursor",{x:-175,y:-92,duration:.72,ease:"power2.inOut"},4.82);
+
+        tl.set("#yta-task-assets",{opacity:1,y:62},5.65);
+        tl.to("#yta-task-assets",{y:0,duration:.18,ease:"power4.out"},5.65);
+        tl.fromTo("#yta-stack",{opacity:0,x:180},{opacity:1,x:0,duration:.48,ease:"power3.out"},5.66);
+        tl.to("#yta-editor",{x:110,y:65,scale:.84,duration:.56,ease:"power2.inOut"},5.65);
+
+        tl.set("#yta-task-sync",{opacity:1,y:76},6.55);
+        tl.to("#yta-task-sync",{y:0,duration:.20,ease:"power4.out"},6.55);
+        tl.set("#yta-task-time",{opacity:1,y:58},7.08);
+        tl.to("#yta-task-time",{y:0,duration:.18,ease:"power4.out"},7.08);
+        tl.to("#yta-cursor",{x:-430,y:125,duration:.88,ease:"power2.inOut"},6.64);
+        tl.to("#yta-scissors",{x:-70,y:12,rotation:5,duration:.42,ease:"power3.out"},7.32);
+
+        tl.to(["#yta-editor","#yta-stack","#yta-cursor","#yta-scissors","#yta-manual","#yta-tasks"],{opacity:0,duration:.34,ease:"power1.in"},8.40);
+        tl.to("#yta-camera-card",{x:-370,y:-97,scale:1.6,borderRadius:20,backgroundColor:"#f4efe3",boxShadow:"0 34px 80px rgba(17,17,17,.20)",duration:.86,ease:"power2.inOut"},8.40);
+        tl.fromTo("#yta-return-copy",{opacity:0,y:76},{opacity:1,y:0,duration:.28,ease:"power4.out"},8.78);
+        tl.to("#yta-folder-echo",{opacity:.14,duration:.55,ease:"power1.out"},8.78);
+
+        window.__timelines["yta"] = tl;
+      </script>
+    </template>
+  </body>
+</html>
