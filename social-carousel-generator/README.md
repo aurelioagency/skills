@@ -18,8 +18,14 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 |---|---|
 | [SKILL.md](SKILL.md) | The skill itself: workflow, gates, visual rules, QA |
 | [references/html-rendering.md](references/html-rendering.md) | Static HTML screenshot workflow, contact-sheet QA, typography-floor QA |
-| [references/la-casa-preset.md](references/la-casa-preset.md) | La Casa de Aurelio brand preset: voice, style, sizes, fixed CTA |
+| [references/la-casa-preset.md](references/la-casa-preset.md) | La Casa de Aurelio brand preset: voice, palette, measured background field, footer spec, fixed CTA |
+| [scripts/render-and-audit.mjs](scripts/render-and-audit.mjs) | Renders every slide at platform size and runs the programmatic QA. Exits 3 on red issues |
+| [scripts/measure-stage.mjs](scripts/measure-stage.mjs) | Real height of every block per slide — run it before reflowing to a shorter canvas |
+| [scripts/compare-blocks.mjs](scripts/compare-blocks.mjs) | Block-by-block diff of two PNGs, to prove a fixed asset's layout did not move |
+| [assets/template/](assets/template/) | Package scaffolding: `index.html`, `styles.css`, `slide-data.js`, plus `cta-ig.html` to regenerate the CTA |
+| [assets/fonts/](assets/fonts/) | Archivo Black, Roboto Mono, Inter — bundled so renders are identical on any machine |
 | [assets/la-casa-cta.png](assets/la-casa-cta.png) | Fixed final CTA frame for La Casa (1080×1920, TikTok) |
+| [assets/la-casa-cta-ig.png](assets/la-casa-cta-ig.png) | Fixed final CTA frame for La Casa (1080×1440, Instagram) |
 
 ## Key features
 
@@ -29,9 +35,11 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 - **Confirmation before rendering** — the recommended carousel split (how many carousels, which angles) plus two hook options per carousel (A/B with a reasoned recommendation) must be approved by the user before any slide is built.
 - **Hook craft built in** — every hook follows the brand's two-part pattern (setup headline + twist subtitle) with explicit quality criteria: concrete numbers for authority, tension between the two lines, specific over generic, no clickbait the source can't back.
 - **Editable HTML package** — every carousel is a small static site (`index.html` + `styles.css` + `slide-data.js`); PNGs are browser screenshots of it, so any fix is a source edit plus re-render, never a PNG patch.
+- **Programmatic QA before your eyes** — `scripts/render-and-audit.mjs` renders each slide and fails the delivery on: a web font that silently fell back, any word under the typography floor, anything outside the safe area, orphan last lines, broken assets, canvas overflow, an off-centre cover hook, vertical imbalance, a counter off the canvas centre, an overlay landing on fixed artwork, and optical imbalance inside chrome — measured on real pixels, because a box can be symmetric while its ink is not. It writes `qa-report.json` and exits 3 if anything is red.
+- **Documented layout exceptions** — a brand's approved layout sometimes contradicts a rule. Listing a check id in `slide-data.js` under `layoutExceptions` (and recording the reason in `manifest.json`) drops that one check to an informational note while everything else keeps blocking. Never a shortcut the agent takes on its own.
 - **Typography floor** — on a 1080px-wide export every user-facing word must render at ≥ `40px` computed size (`24px` only for numeric page counters and decorative marks). Copy that doesn't fit gets shortened or split, never shrunk.
 - **Safe-area QA** — all readable content stays ≥ `5%` from the side edges and ≥ `10%` from top/bottom (app overlay zones); the first-slide hook must be horizontally centered; small compositions floating in empty space are rejected.
-- **Fixed brand CTA** — La Casa appends a fixed CTA frame after the content slides. The bundled asset is TikTok-size; for Instagram the CTA is rebuilt in HTML/CSS at target size, never cropped or stretched.
+- **Fixed brand CTA** — La Casa appends a fixed CTA frame after the content slides, with one bundled asset per size (TikTok and Instagram). The page counter is composed on top at render time, so the same asset serves a carousel of any length. Assets are never cropped or stretched across sizes.
 - **Humanized captions** — every slide passage and post description passes a humanizer step (no generic AI phrasing, no filler, no dictionary tone) before delivery.
 - **Adaptation mode** — bring an existing carousel of your own (final PNGs or its editable package) and convert it to another platform or size. Copy is transcribed verbatim and confirmed with you, slides are rebuilt in HTML at the target size (originals are never scaled or cropped), and any copy that can't fit the typography floor in the new ratio is adjusted only with your approval. Third-party carousels are never cloned: their screenshots enter the normal creation flow as information sources, and the copy is written from scratch in your brand's voice.
 
@@ -89,7 +97,7 @@ Or simply delete `~/.claude/skills/social-carousel-generator/` yourself.
 ## Requirements
 
 - **Python 3** on `PATH` — serves the carousel package locally (`python -m http.server`) during rendering.
-- **Playwright** (`npm i playwright`) or an **installed Chrome/Chromium** — captures each slide at the exact platform viewport with `deviceScaleFactor: 1`.
+- **Playwright** (`npm i playwright`) — captures each slide at the exact platform viewport with `deviceScaleFactor: 1` and drives the bundled QA scripts. The scripts resolve it from the package folder, the skill folder, or a sibling skill's `node_modules`.
 - **No API keys and no paid providers** — everything renders locally.
 
 ## Usage
@@ -111,7 +119,7 @@ The skill triggers automatically by matching your request. From there it drives 
 3. Proposes the **carousel split** (how many carousels, which angle each) and waits for your confirmation before building anything.
 4. Drafts 3–6 content slides per carousel, one job per slide.
 5. Builds the editable HTML package and renders ordered PNGs at platform size.
-6. Runs contact-sheet QA: typography floor, safe areas, centered hook, clipping, overlap. Every red issue is fixed in source and re-rendered before delivery.
+6. Runs `scripts/render-and-audit.mjs` first, then the contact-sheet pass by eye for what a machine cannot judge: meaning, overlap, rhythm. Every red issue is fixed in source and re-rendered before delivery — PNGs are never patched.
 7. Delivers `exports-ready/` PNGs plus captions (`post-descriptions.md`), the brief, and a `manifest.json`, with a short validation summary.
 
 ### Package output
@@ -124,6 +132,8 @@ social-carousels/<slug>/
   carousel-brief.md   # source, angles, decisions
   post-descriptions.md# captions + hashtags (humanized)
   manifest.json       # platform, size, slide order, CTA status
+  qa-report.json      # programmatic QA results per slide
+  contact-sheet.png   # all slides on one sheet, for the visual pass
   exports/            # working renders
   exports-ready/      # clean upload files
 ```
