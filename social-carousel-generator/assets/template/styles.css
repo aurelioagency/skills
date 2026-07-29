@@ -1,0 +1,209 @@
+/* Base del sistema de carrusel. Copiala al paquete y agregale los layouts por slide.
+   Trae resueltas las trampas que ya nos costaron rondas de correccion:
+   footer con centrado optico compensado, safe area por tamano, y balance de texto.
+
+   Los colores y familias son los de La Casa de Aurelio (references/la-casa-preset.md).
+   Para otra marca, reemplaza el bloque :root y los @font-face. */
+
+@font-face {
+  font-family: 'Archivo Black';
+  src: url('assets/fonts/ArchivoBlack.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('assets/fonts/RobotoMono-VF.ttf') format('truetype');
+  font-weight: 100 700;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/Inter-VF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: block;
+}
+
+:root {
+  --bg: #000000;
+  --field: #050505;
+  --grid: #0e0e0e;
+  --ink: #f6f2e9;
+  --cream: #ede8de;
+  --panel: #191716;
+  --panel-2: #2f2c2b;
+
+  --terracotta: #d66f50;
+  --terracotta-dark: #964f3a;
+  --sage: #6ea48c;
+  --sage-dark: #2c614a;
+  --ochre: #d6b85e;
+  --ochre-dark: #9c843c;
+  --pink: #ecacc7;
+  --pink-dark: #604854;
+
+  /* Safe area: 5% laterales, 10% arriba/abajo.
+     1080x1920 -> --pad-y: 192px | 1080x1440 -> --pad-y: 144px */
+  --pad-x: 54px;
+  --pad-y: 144px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { background: #000; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1440px;          /* ajusta al alto de la plataforma */
+  background-color: var(--field);
+  /* Dos halos radiales. NO son decoracion opcional: sin ellos el fondo queda plano
+     y se nota contra el set publicado. Valores medidos, no estimados. */
+  background-image:
+    radial-gradient(circle 480px at 11% 23%, rgba(214, 111, 80, 0.062), rgba(214, 111, 80, 0) 100%),
+    radial-gradient(circle 480px at 85% 71%, rgba(110, 164, 140, 0.055), rgba(110, 164, 140, 0) 100%);
+  overflow: hidden;
+  font-family: 'Archivo Black', sans-serif;
+  color: var(--ink);
+}
+
+/* campo editorial: trama de puntos + contornos tenues */
+.slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Periodo 26px, punto de 2x2px. Medido en el set publicado: a 46px los puntos
+     quedan aislados y se leen uno por uno en vez de formar textura. */
+  background-image: radial-gradient(circle, var(--grid) 1px, transparent 1.1px);
+  background-size: 26px 26px;
+}
+.contours { position: absolute; inset: 0; opacity: 0.5; pointer-events: none; }
+
+/* ---------------------------------------------------------------------------
+   FOOTER — no lo toques sin volver a correr render-and-audit.mjs.
+   Cada valor de aca abajo salio de medir pixeles, no de estimar:
+   - el contador va centrado en el CANVAS (left:50%), no repartido con space-between;
+   - el contador es cromo numerico: 26px, no el piso de 40;
+   - la pildora de swipe lleva padding asimetrico porque el emoji trae mas bearing
+     a la derecha, y el span va con translateY porque la caja de linea de Inter
+     reserva ~10px muertos sobre la mayuscula que abajo no existen.
+   --------------------------------------------------------------------------- */
+.footer {
+  position: absolute;
+  left: var(--pad-x);
+  right: var(--pad-x);
+  bottom: var(--pad-y);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;        /* evita que colapse en la CTA, donde solo hay contador */
+  z-index: 5;
+}
+.footer .brand {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.footer .counter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  background: #252422;
+  border-radius: 999px;
+  padding: 9px 20px;
+  line-height: 1;
+}
+.footer .swipe {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  color: #14110f;
+  background: var(--cream);
+  border-radius: 8px;
+  height: 55px;
+  padding: 0 20px 0 25px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  top: 4px;
+}
+.footer .swipe span { display: block; line-height: 1; transform: translateY(-3px); }
+.footer.cta-footer { justify-content: center; }
+
+/* ---------------------------------------------------------------------------
+   STAGE — la columna de contenido dentro del safe area.
+   `top` arranca en el borde del safe area. Si alguna vez lo bajas para esquivar
+   un elemento (un badge, un logo) y despues sacas ese elemento, VOLVE A SUBIRLO:
+   el desbalance vertical que queda lo detecta render-and-audit.mjs.
+   --------------------------------------------------------------------------- */
+.stage {
+  position: absolute;
+  left: var(--pad-x);
+  right: var(--pad-x);
+  top: var(--pad-y);
+  bottom: calc(var(--pad-y) + 82px);   /* deja lugar al footer */
+  display: flex;
+  flex-direction: column;
+  z-index: 4;
+}
+.spacer { flex: 1 1 auto; }
+
+/* ---------- tipografia base ---------- */
+.kicker {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: 0.16em;
+  color: var(--terracotta);
+  text-transform: uppercase;
+}
+.kicker.sage { color: var(--sage); }
+.kicker.ochre { color: var(--ochre); }
+.kicker.pink { color: var(--pink); }
+
+h1 {
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  color: var(--ink);
+}
+
+/* text-wrap: balance evita huerfanas sin tocar el copy.
+   El audit marca como red issue toda ultima linea con menos del 22% del ancho. */
+.serif-line {
+  font-family: Georgia, 'Lora', serif;
+  font-size: 44px;
+  line-height: 1.28;
+  color: rgba(246, 242, 233, 0.9);
+  text-align: center;
+  text-wrap: balance;
+}
+.note {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 40px;          /* PISO. Las notas metodologicas no son excepcion */
+  line-height: 1.24;
+  color: rgba(246, 242, 233, 0.58);
+  text-align: center;
+  text-wrap: balance;
+}
+.body-copy {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 44px;
+  line-height: 1.32;
+  color: rgba(246, 242, 233, 0.9);
+  text-wrap: balance;
+}
+
+/* ---------- CTA fija: asset + contador compuesto encima ---------- */
+.cta-base { position: absolute; inset: 0; width: 1080px; height: 1440px; display: block; }

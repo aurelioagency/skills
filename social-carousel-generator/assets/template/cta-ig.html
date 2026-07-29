@@ -1,0 +1,44 @@
+<meta charset="utf-8">
+<title>CTA Instagram — asset fijo</title>
+<style>
+@font-face { font-family:'Inter'; src:url('assets/fonts/Inter-VF.ttf') format('truetype'); font-weight:100 900; font-display:block; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { background:#000; }
+/* Maqueta identica al asset anterior. Lo unico que cambia respecto de aquel:
+   la trama pasa de 46px a 26px y el wordmark usa el PNG sin las estelas de la estrella. */
+.cta { position:relative; width:1080px; height:1440px; background:#050505; overflow:hidden;
+       font-family:'Inter',sans-serif; color:#fff; }
+.cta::before { content:''; position:absolute; inset:0;
+  background-image: radial-gradient(circle, #0e0e0e 1px, transparent 1.1px);
+  background-size: 26px 26px; }
+.contours { position:absolute; inset:0; opacity:.5; }
+.stage { position:absolute; left:54px; right:54px; top:144px; bottom:144px;
+         display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+.l1 { font-weight:800; font-size:82px; letter-spacing:-.02em; color:#fff; position:relative; }
+.l2 { font-weight:500; font-size:62px; letter-spacing:-.01em; color:#fff; margin-top:26px; }
+.stroke { height:9px; border-radius:6px; margin:0 auto; }
+.s-pink  { width:560px; background:#ecacc7; margin-top:-18px; }
+.s-sage  { width:500px; background:#6ea48c; margin-top:16px; }
+.s-terra { width:350px; background:#d66f50; margin-top:22px; }
+.s-ochre { width:200px; background:#d6b85e; margin-top:22px; }
+.wordmark { width:470px; margin-top:130px; display:block; }
+.sign { font-family:Georgia,serif; font-style:italic; font-size:42px; color:rgba(246,242,233,.9); margin-top:54px; }
+</style>
+<div class="cta">
+  <svg class="contours" viewBox="0 0 1080 1440" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#211d1b" stroke-width="1.2">
+      <ellipse cx="540" cy="250" rx="900" ry="230"/><ellipse cx="540" cy="470" rx="980" ry="270"/>
+      <ellipse cx="540" cy="980" rx="900" ry="250"/><ellipse cx="540" cy="1210" rx="1000" ry="290"/>
+    </g>
+  </svg>
+  <div class="stage">
+    <div class="l1">Guarda este post</div>
+    <div class="stroke s-pink"></div>
+    <div class="l2">y sígueme para más</div>
+    <div class="stroke s-sage"></div>
+    <div class="stroke s-terra"></div>
+    <div class="stroke s-ochre"></div>
+    <img class="wordmark" src="assets/aurelio-wordmark.png" alt="Aurelio">
+    <div class="sign">La Casa de Aurelio</div>
+  </div>
+</div>

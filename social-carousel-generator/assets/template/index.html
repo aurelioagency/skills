@@ -1,0 +1,78 @@
+<meta charset="utf-8">
+<title>Carrusel — plantilla</title>
+<link rel="stylesheet" href="styles.css">
+<script src="slide-data.js"></script>
+
+<div id="root"></div>
+
+<script>
+// Plantilla minima. Agrega un bloque por tipo de slide en render().
+// Se renderiza de a una slide con ?slide=N; sin parametro muestra todas apiladas.
+
+const CONTOURS = `
+<svg class="contours" viewBox="0 0 1080 1440" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="#211d1b" stroke-width="1.2">
+    <ellipse cx="540" cy="250"  rx="900" ry="230"/>
+    <ellipse cx="540" cy="470"  rx="980" ry="270"/>
+    <ellipse cx="540" cy="980"  rx="900" ry="250"/>
+    <ellipse cx="540" cy="1210" rx="1000" ry="290"/>
+  </g>
+</svg>`;
+
+// El contador cuenta TODAS las imagenes, incluida la CTA final.
+// El <span> dentro de .swipe no es decorativo: styles.css lo usa para compensar
+// la caja de linea de la fuente. No lo saques.
+function footer(i, total) {
+  return `
+  <div class="footer">
+    <div class="brand">aurelioagency.com</div>
+    <div class="counter">${i + 1}/${total}</div>
+    <div class="swipe"><span>Swipe 👉</span></div>
+  </div>`;
+}
+
+function head(s) {
+  return `
+    <div class="head-block">
+      <div class="kicker ${s.accent || ''}">${s.kicker}</div>
+      <h1>${s.headline}</h1>
+      ${s.serif ? `<div class="serif-line">${s.serif}</div>` : ''}
+    </div>`;
+}
+
+function render(s, i, total) {
+  const isCTA = s.type === 'cta';
+  let inner = '';
+
+  if (s.type === 'cover') {
+    inner = `
+      <div class="stage">
+        ${head(s)}
+        <div class="spacer"></div>
+      </div>`;
+  }
+
+  // ...un bloque por cada tipo de slide del carrusel...
+
+  if (isCTA) {
+    inner = `<img class="cta-base" src="${s.asset}" alt="CTA">
+             <div class="footer cta-footer"><div class="counter">${total}/${total}</div></div>`;
+  }
+
+  const chrome = isCTA ? '' : footer(i, total);
+  const field = isCTA ? '' : CONTOURS;
+  return `<div class="slide s-${s.type}">${field}${inner}${chrome}</div>`;
+}
+
+const params = new URLSearchParams(location.search);
+const data = window.CAROUSEL;
+const total = data.slides.length;          // incluye la CTA
+const idx = params.has('slide') ? parseInt(params.get('slide'), 10) - 1 : null;
+
+if (idx === null) {
+  document.getElementById('root').innerHTML =
+    data.slides.map((s, i) => render(s, i, total)).join('<div style="height:40px"></div>');
+} else {
+  document.getElementById('root').innerHTML = render(data.slides[idx], idx, total);
+}
+</script>

@@ -23,7 +23,24 @@ Extracted from the published La Casa carousel set (2026-07). Use these exact val
 
 Neutrals:
 
-- Background: `#000000` base with a `#050505` field, subtle dot-grid texture around `#0E0E0E`, and faint elliptical contour lines barely lighter than the field.
+- Background: `#000000` base with a `#050505` field and faint elliptical contour lines barely lighter than the field.
+- **Dot grid — the period matters as much as the colour.** `26px` grid, `2x2px` dot, rendered value `rgb(14,14,14)` over the `#050505` field. Measured on the published set:
+
+  ```css
+  background-image: radial-gradient(circle, #0e0e0e 1px, transparent 1.1px);
+  background-size: 26px 26px;
+  ```
+
+  At a coarser period (46px was tried) the dots stop reading as texture and start reading as individual specks scattered across the canvas — the field looks like a starfield instead of paper grain. If a rebuild ever looks "speckled", check this value first.
+- **Two radial glows over that field.** Part of the brand, not optional polish: without them the background reads flat against the published set. Measured from the median background of the published TikTok carousel (six slides, so per-slide content cancels out) and verified by re-measuring the render:
+
+  ```css
+  background-image:
+    radial-gradient(circle 480px at 11% 23%, rgba(214, 111, 80, 0.062), rgba(214, 111, 80, 0) 100%),
+    radial-gradient(circle 480px at 85% 71%, rgba(110, 164, 140, 0.055), rgba(110, 164, 140, 0) 100%);
+  ```
+
+  Warm glow: terracotta `#D66F50` peaking at ~6% alpha, centered upper-left. Cool glow: sage `#6EA48C` peaking at ~5.5%, centered lower-right. Both fall to the base field over ~480px. Centers are percentages so they hold across `1080x1920` and `1080x1440`. Peak values over the `#050505` field: `rgb(18,11,9)` warm, `rgb(10,14,12)` cool.
 - Primary text and headlines: `#F6F2E9` (warm off-white).
 - Cream surfaces (footer pills, contrast cards): `#EDE8DE` with dark text.
 - Dark panels (cards, UI mockups): `#191716` to `#2F2C2B`.
@@ -57,24 +74,37 @@ Archivo Black, Roboto Mono, and Inter are on Google Fonts; Georgia ships with Wi
 - Footer on content slides: **Inter** bold `aurelioagency.com` left · page-counter pill center (Inter bold, fill `#252422`, fully rounded `border-radius: 999px`) · cream `Swipe 👉` pill right.
 - Cream contrast cards (`#EDE8DE`, dark text, sage border) for outcomes/results, often paired against dark panel cards (`#191716`) for the "before"/technical side.
 
+### Never on a slide
+
+This list is closed on purpose. If an element is not in the components above, it does not go on the canvas — including when an older published carousel shows it.
+
+- No corner badge, initial, monogram, or boxed letter (an `A` mark in a corner is not part of this brand system).
+- No watermark, no logo on content slides. The `AURELIO` wordmark lives inside the fixed CTA artwork and nowhere else.
+- No on-screen source line or URL beyond the footer's `aurelioagency.com`.
+- No decorative ornaments, frames, or corner marks beyond the dot-grid field and the faint contour lines.
+
+In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take the chrome from here.
+
 ## Content slides
 
 - Background: black editorial field per the canonical palette above.
 - Typography: per the typography roles above — large off-white sans headlines, mono labels, serif italic support.
 - Typography floor at `1080px` width: `40px` for every readable word, including diagram labels, card text, source lines, caveats, methodological notes, footer brand text, and swipe text. Use `24px` only for the numeric page counter and decorative single-character marks. Never shrink copy below the floor to make it fit.
-- First content slide: always center the primary hook block horizontally and center-align the title text. A left-aligned cover headline is not permitted.
+- First content slide: center the primary hook block horizontally and center-align the title text. A left-aligned cover headline is only allowed as a Documented Layout Exception (see SKILL.md) — decided by the user and recorded in both `slide-data.js` and `manifest.json`.
 - Cover hook follows the two-part structure defined in SKILL.md (Hooks): setup line as the off-white Archivo Black headline; twist line in the carousel's dominant accent (ochre, dusty pink, or sage — the published set uses all three) or as a serif italic support sentence. One accent per cover.
 - Content clearance: keep all readable content at least `5%` from the left and right edges and `10%` from the top and bottom edges. Per size:
   - `1080x1920`: `x=54..1026`, `y=192..1728`.
   - `1080x1440`: `x=54..1026`, `y=144..1296`.
+- No on-screen source line. Traceability lives in `carousel-brief.md`, not on the slides.
 - Composition scale: expand content inside the safe area with larger type and reflowed visual elements. Do not accept a small composition surrounded by avoidable empty space.
 - Accents: only the canonical accent values from the brand system above — never eyeballed approximations.
 - Visual style: crisp editorial infographic with centered information.
 - Safe zone: keep meaningful text away from the top and bottom app overlay bands. Do not peg headlines, body copy, labels, logo, CTA copy, or footer text to the canvas edge.
-- Footer on content slides:
-  - Bottom-left: `aurelioagency.com` in Inter bold (not serif italic).
-  - Center: page counter pill.
-  - Bottom-right: `Swipe 👉` cream pill.
+- Footer on content slides. These values come from measuring rendered pixels, not from estimating — copy `assets/template/styles.css`, which has them baked in, and re-run the audit after any change:
+  - Bottom-left: `aurelioagency.com` in Inter bold `40px` (not serif italic).
+  - Center: page counter pill, Inter bold **`26px`** — it is numeric chrome, not reading text, so the `40px` floor does not apply and a counter at `40px` is oversized. Fill `#252422`, `border-radius: 999px`, padding `9px 20px`.
+  - The counter is centered on the **canvas** (`left: 50%`, absolute), not distributed with `space-between`. Those are different positions whenever the brand line and the swipe pill have different widths, and the canvas center is the correct one.
+  - Bottom-right: `Swipe 👉` cream pill, height `55px`, `border-radius: 8px`. Padding is asymmetric (`0 20px 0 25px`) because the emoji carries more side bearing than the `S`, and the inner `<span>` takes `line-height: 1; transform: translateY(-3px)` because Inter's line box reserves ~10px of dead space above the cap height that does not exist below the baseline. The pill itself sits `4px` lower so its text shares a baseline with the brand line. Measured result: 9px of cream above and below the ink, 26px left and right.
 - Page counter counts **every exported image, including the final CTA frame**. A carousel with 5 content slides plus the CTA runs `1/6` through `6/6`.
 - The CTA frame carries only the counter pill (its final number) — no brand line and no swipe prompt. Its own `La Casa de Aurelio` signature stays part of the CTA artwork.
 
@@ -89,9 +119,43 @@ The La Casa preset has a fixed final CTA frame enabled.
   - Instagram `1080x1440`: `assets/la-casa-cta-ig.png`
 - CTA copy in both assets: `Guarda este post` and `y sígueme para más`, over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature.
 - Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
-- If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here.
+- If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here. `assets/template/cta-ig.html` is the source that produced the `1080x1440` asset.
+- **Regenerating an existing CTA asset:** the current asset at that size is the reference, not the other platform's artwork. Keep its block layout (positions and widths) and change only what was asked. Verify with `scripts/compare-blocks.mjs` against the previous file before replacing it, and keep the counter band free of artwork — the asset cannot be reflowed once the counter is composed on top.
 
 Do not ask for the CTA every run when this preset is active. Ask only if the user explicitly wants to replace the CTA.
+
+## Caption template (Instagram / TikTok)
+
+Every carousel ships a ready-to-publish caption in this exact structure. Deliver it as a single plain-text block, clearly labelled `CAPTION PARA INSTAGRAM/TIKTOK`, with nothing left for the user to edit.
+
+```text
+Bienvenido a la Casa de Aurelio!
+
+<2-4 lineas que resumen el gancho o insight principal del carrusel, tono directo, sin relleno>
+
+De la teoría a la práctica: Aurelio Agency →
+https://www.aurelioagency.com/es
+
+Únete a la comunidad:
+https://www.skool.com/la-casa-de-aurelio-2061
+
+#claude #ia #Automatizacion #AIWorkflows #LaCasaDeAurelio <2-3 hashtags dinamicos>
+```
+
+Rules:
+
+- The greeting, the services paragraph, and both links are **fixed**. Never reword, translate, shorten, or adapt them to the carousel's topic.
+- The only written paragraph is the second block: it restates the carousel's strongest idea or figure in 2-4 lines. No filler, no recap of every slide.
+- The five fixed hashtags always appear first, in this order: `#claude #ia #Automatizacion #AIWorkflows #LaCasaDeAurelio`.
+- Then add 2-3 dynamic hashtags chosen by the carousel's central topic:
+  - Agents / task automation → `#AIAgents #Agentic`
+  - n8n / workflows → `#n8n #NoCode #WorkflowAutomation`
+  - OpenAI / specific models → `#OpenAI #Codex #GPT`
+  - Productivity / business → `#Productividad #FutureOfWork #PYMES`
+  - Development / code → `#DevTools #SoftwareEngineering`
+  - No category fits → build 2-3 specific hashtags from literal keywords in the carousel (tool names, technical concepts).
+- Blank lines between blocks exactly as shown.
+- The humanizer pass applies to the written paragraph only; fixed blocks pass through untouched.
 
 ## Layout checks
 
