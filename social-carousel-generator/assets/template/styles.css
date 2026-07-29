@@ -57,11 +57,13 @@ html, body { background: #000; }
   width: 1080px;
   height: 1440px;          /* ajusta al alto de la plataforma */
   background-color: var(--field);
-  /* Dos halos radiales. NO son decoracion opcional: sin ellos el fondo queda plano
-     y se nota contra el set publicado. Valores medidos, no estimados. */
+  /* Dos halos radiales. NO son decoracion opcional: sin ellos el fondo queda plano.
+     Valores medidos, no estimados: el halo calido da rgb(30,17,14) sobre el campo
+     rgb(5,5,5). El set publicado los tenia al 6,2% / 5,5% y a esa intensidad no se
+     veian en pantalla (rgb(18,11,9)); estos son los valores vigentes. */
   background-image:
-    radial-gradient(circle 480px at 11% 23%, rgba(214, 111, 80, 0.062), rgba(214, 111, 80, 0) 100%),
-    radial-gradient(circle 480px at 85% 71%, rgba(110, 164, 140, 0.055), rgba(110, 164, 140, 0) 100%);
+    radial-gradient(circle 480px at 11% 23%, rgba(214, 111, 80, 0.12), rgba(214, 111, 80, 0) 100%),
+    radial-gradient(circle 480px at 85% 71%, rgba(110, 164, 140, 0.107), rgba(110, 164, 140, 0) 100%);
   overflow: hidden;
   font-family: 'Archivo Black', sans-serif;
   color: var(--ink);
@@ -77,16 +79,19 @@ html, body { background: #000; }
   background-image: radial-gradient(circle, var(--grid) 1px, transparent 1.1px);
   background-size: 26px 26px;
 }
-.contours { position: absolute; inset: 0; opacity: 0.5; pointer-events: none; }
+/* Opacidad 1 y trazo de 1.6px (el stroke-width vive en el SVG de index.html).
+   A 0.5 y 1.2px la linea daba rgb(19,17,16) sobre campo rgb(5,5,5): invisible en
+   pantalla. Con estos valores da rgb(33,29,27) y se lee como textura editorial. */
+.contours { position: absolute; inset: 0; opacity: 1; pointer-events: none; }
 
 /* ---------------------------------------------------------------------------
    FOOTER — no lo toques sin volver a correr render-and-audit.mjs.
    Cada valor de aca abajo salio de medir pixeles, no de estimar:
    - el contador va centrado en el CANVAS (left:50%), no repartido con space-between;
-   - el contador es cromo numerico: 26px, no el piso de 40;
-   - la pildora de swipe lleva padding asimetrico porque el emoji trae mas bearing
-     a la derecha, y el span va con translateY porque la caja de linea de Inter
-     reserva ~10px muertos sobre la mayuscula que abajo no existen.
+   - el contador es cromo numerico: 26px, no el piso de 40, y su pildora si necesita
+     compensacion optica: la caja de linea de Inter reserva ~10px muertos sobre la
+     mayuscula que abajo no existen;
+   - el swipe es texto plano, con la misma fuente, cuerpo y color que la marca.
    --------------------------------------------------------------------------- */
 .footer {
   position: absolute;
@@ -121,21 +126,15 @@ html, body { background: #000; }
   padding: 9px 20px;
   line-height: 1;
 }
+/* `← Desliza` en texto plano: misma fuente, cuerpo y color que la marca, y sobre su
+   misma linea de base. Al no tener fondo no necesita correccion optica de caja. */
 .footer .swipe {
   font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 40px;
-  color: #14110f;
-  background: var(--cream);
-  border-radius: 8px;
-  height: 55px;
-  padding: 0 20px 0 25px;
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-  top: 4px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
-.footer .swipe span { display: block; line-height: 1; transform: translateY(-3px); }
 .footer.cta-footer { justify-content: center; }
 
 /* ---------------------------------------------------------------------------
@@ -204,6 +203,72 @@ h1 {
   color: rgba(246, 242, 233, 0.9);
   text-wrap: balance;
 }
+
+/* ---------------------------------------------------------------------------
+   PORTADA — dos fuentes y dos colores, las dos centradas.
+   Titular en Archivo Black color tinta; giro en serif italica y en el acento
+   dominante de la portada. El giro va en caja de oracion: en italica las
+   mayusculas pierden el contraste con el titular, que es justo lo que aporta.
+   --------------------------------------------------------------------------- */
+.s-cover .stage { justify-content: flex-start; align-items: center; text-align: center; }
+.s-cover .kicker { margin-bottom: 34px; }
+/* Dale a cada titular su cuerpo explicito y colocá los <br> a mano: asi se controlan
+   los cortes de linea en vez de detectarlos despues como huerfanas. */
+.s-cover h1 { font-size: 90px; text-align: center; }
+.s-cover .twist {
+  font-family: Georgia, 'Lora', serif;
+  font-style: italic;
+  font-size: 60px;              /* 1080x1440; escalalo con el alto de la plataforma */
+  line-height: 1.16;
+  letter-spacing: -0.005em;
+  color: var(--ochre);          /* el acento dominante de esta portada */
+  margin-top: 40px;
+  text-align: center;
+}
+
+/* La portada lleva ademas un grafico simple y directo. Este es el patron por
+   defecto: un nodo que se abre hacia varios destinos. Cambia las etiquetas, o
+   reemplazalo por otro grafico, pero no dejes la portada solo con texto. */
+.fanout { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.fanout .hub {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 44px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: #14110f;
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 26px 44px 22px;      /* asimetrico: Archivo Black deja aire sobre la mayuscula */
+}
+.fanout .stem { width: 2px; height: 30px; background: var(--ochre-dark); }
+/* corchete hacia abajo: sin las patas laterales la linea flota suelta sobre las
+   pildoras y no se lee como reparto */
+.fanout .bus {
+  width: 860px;
+  height: 20px;
+  border: 2px solid var(--ochre-dark);
+  border-bottom: none;
+  margin-bottom: 28px;
+}
+.nets { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; width: 100%; }
+.nets span {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 40px;              /* el piso: a 44px la fila se parte y deja huerfanas */
+  color: rgba(246, 242, 233, 0.86);
+  background: var(--panel);
+  border: 1.5px solid var(--panel-2);
+  border-radius: 999px;
+  height: 80px;
+  padding: 0 30px;
+  display: inline-flex;
+  align-items: center;
+}
+/* Sin translateY: la correccion de la pildora del contador NO se copia aca.
+   Ese valor pertenece a su cuerpo y su altura de caja; con -4px aca la tinta
+   quedaba 17px arriba contra 26px abajo. Medi antes de compensar. */
+.nets span b { display: block; line-height: 1; font-weight: 600; }
+.nets span.last { border-color: var(--ochre-dark); color: var(--ochre); }
 
 /* ---------- CTA fija: asset + contador compuesto encima ---------- */
 .cta-base { position: absolute; inset: 0; width: 1080px; height: 1440px; display: block; }

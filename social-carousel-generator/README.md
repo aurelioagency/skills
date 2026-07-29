@@ -22,10 +22,11 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 | [scripts/render-and-audit.mjs](scripts/render-and-audit.mjs) | Renders every slide at platform size and runs the programmatic QA. Exits 3 on red issues |
 | [scripts/measure-stage.mjs](scripts/measure-stage.mjs) | Real height of every block per slide — run it before reflowing to a shorter canvas |
 | [scripts/compare-blocks.mjs](scripts/compare-blocks.mjs) | Block-by-block diff of two PNGs, to prove a fixed asset's layout did not move |
-| [assets/template/](assets/template/) | Package scaffolding: `index.html`, `styles.css`, `slide-data.js`, plus `cta-ig.html` to regenerate the CTA |
+| [scripts/contact-sheet.mjs](scripts/contact-sheet.mjs) | Builds the contact sheet from `exports/` for the visual pass |
+| [assets/template/](assets/template/) | Package scaffolding: `index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` to regenerate the CTA |
 | [assets/fonts/](assets/fonts/) | Archivo Black, Roboto Mono, Inter — bundled so renders are identical on any machine |
-| [assets/la-casa-cta.png](assets/la-casa-cta.png) | Fixed final CTA frame for La Casa (1080×1920, TikTok) |
-| [assets/la-casa-cta-ig.png](assets/la-casa-cta-ig.png) | Fixed final CTA frame for La Casa (1080×1440, Instagram) |
+| [assets/la-casa-cta.png](assets/la-casa-cta.png) · [-aurelio](assets/la-casa-cta-aurelio.png) | Fixed final CTA for La Casa (1080×1920, TikTok): normal and comment variant |
+| [assets/la-casa-cta-ig.png](assets/la-casa-cta-ig.png) · [-aurelio](assets/la-casa-cta-ig-aurelio.png) | Fixed final CTA for La Casa (1080×1440, Instagram): normal and comment variant |
 
 ## Key features
 

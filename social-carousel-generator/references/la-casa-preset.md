@@ -23,7 +23,21 @@ Extracted from the published La Casa carousel set (2026-07). Use these exact val
 
 Neutrals:
 
-- Background: `#000000` base with a `#050505` field and faint elliptical contour lines barely lighter than the field.
+- Background: `#000000` base with a `#050505` field and four wide elliptical contour lines crossing it.
+- **Contour lines — measured, not "barely lighter".** `#211d1b`, `stroke-width: 1.6`, container at `opacity: 1`. Rendered value over the field: `rgb(33,29,27)`.
+
+  ```html
+  <svg class="contours" viewBox="0 0 1080 1440">
+    <g fill="none" stroke="#211d1b" stroke-width="1.6">
+      <ellipse cx="540" cy="250"  rx="900"  ry="230"/>
+      <ellipse cx="540" cy="470"  rx="980"  ry="270"/>
+      <ellipse cx="540" cy="980"  rx="900"  ry="250"/>
+      <ellipse cx="540" cy="1210" rx="1000" ry="290"/>
+    </g>
+  </svg>
+  ```
+
+  For `1080x1920` scale `viewBox`, `cy` and `ry` by `1.3333` (`cy` 333/627/1307/1613, `ry` 307/360/333/387); `rx` stays. Earlier work had them at `1.2px` and `opacity: 0.5`, which renders as `rgb(19,17,16)` — 14 levels over the field, invisible on a phone. If a render looks like it has no curves at all, check this value before assuming they are missing.
 - **Dot grid — the period matters as much as the colour.** `26px` grid, `2x2px` dot, rendered value `rgb(14,14,14)` over the `#050505` field. Measured on the published set:
 
   ```css
@@ -32,15 +46,17 @@ Neutrals:
   ```
 
   At a coarser period (46px was tried) the dots stop reading as texture and start reading as individual specks scattered across the canvas — the field looks like a starfield instead of paper grain. If a rebuild ever looks "speckled", check this value first.
-- **Two radial glows over that field.** Part of the brand, not optional polish: without them the background reads flat against the published set. Measured from the median background of the published TikTok carousel (six slides, so per-slide content cancels out) and verified by re-measuring the render:
+- **Two radial glows over that field.** Part of the brand, not optional polish: without them the background reads flat.
 
   ```css
   background-image:
-    radial-gradient(circle 480px at 11% 23%, rgba(214, 111, 80, 0.062), rgba(214, 111, 80, 0) 100%),
-    radial-gradient(circle 480px at 85% 71%, rgba(110, 164, 140, 0.055), rgba(110, 164, 140, 0) 100%);
+    radial-gradient(circle 480px at 11% 23%, rgba(214, 111, 80, 0.12), rgba(214, 111, 80, 0) 100%),
+    radial-gradient(circle 480px at 85% 71%, rgba(110, 164, 140, 0.107), rgba(110, 164, 140, 0) 100%);
   ```
 
-  Warm glow: terracotta `#D66F50` peaking at ~6% alpha, centered upper-left. Cool glow: sage `#6EA48C` peaking at ~5.5%, centered lower-right. Both fall to the base field over ~480px. Centers are percentages so they hold across `1080x1920` and `1080x1440`. Peak values over the `#050505` field: `rgb(18,11,9)` warm, `rgb(10,14,12)` cool.
+  Warm glow: terracotta `#D66F50` at 12% alpha, centered upper-left. Cool glow: sage `#6EA48C` at 10.7%, centered lower-right. Both fall to the base field over ~480px. Centers are percentages so they hold across `1080x1920` and `1080x1440`. Peak value over the `#050505` field: `rgb(30,17,14)` warm.
+
+  The first published set carried them at 6.2% / 5.5% (`rgb(18,11,9)` warm), which is below what a phone screen shows — the field read as flat black and the glows had to be measured on the PNG to prove they were there at all. These are the current values; the older ones are history, not a fallback.
 - Primary text and headlines: `#F6F2E9` (warm off-white).
 - Cream surfaces (footer pills, contrast cards): `#EDE8DE` with dark text.
 - Dark panels (cards, UI mockups): `#191716` to `#2F2C2B`.
@@ -71,7 +87,7 @@ Archivo Black, Roboto Mono, and Inter are on Google Fonts; Georgia ships with Wi
 
 - Mono kicker in terracotta above or centered over the headline.
 - Verdict box: 1px terracotta or sage border, dark fill, one bold caps sentence in `#F6F2E9`.
-- Footer on content slides: **Inter** bold `aurelioagency.com` left · page-counter pill center (Inter bold, fill `#252422`, fully rounded `border-radius: 999px`) · cream `Swipe 👉` pill right.
+- Footer on content slides: **Inter** bold `aurelioagency.com` left · page-counter pill center (Inter bold, fill `#252422`, fully rounded `border-radius: 999px`) · `← Desliza` right, in the same Inter bold, size and colour as the brand line.
 - Cream contrast cards (`#EDE8DE`, dark text, sage border) for outcomes/results, often paired against dark panel cards (`#191716`) for the "before"/technical side.
 
 ### Never on a slide
@@ -91,7 +107,11 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
 - Typography: per the typography roles above — large off-white sans headlines, mono labels, serif italic support.
 - Typography floor at `1080px` width: `40px` for every readable word, including diagram labels, card text, source lines, caveats, methodological notes, footer brand text, and swipe text. Use `24px` only for the numeric page counter and decorative single-character marks. Never shrink copy below the floor to make it fit.
 - First content slide: center the primary hook block horizontally and center-align the title text. A left-aligned cover headline is only allowed as a Documented Layout Exception (see SKILL.md) — decided by the user and recorded in both `slide-data.js` and `manifest.json`.
-- Cover hook follows the two-part structure defined in SKILL.md (Hooks): setup line as the off-white Archivo Black headline; twist line in the carousel's dominant accent (ochre, dusty pink, or sage — the published set uses all three) or as a serif italic support sentence. One accent per cover.
+- Cover hook follows the two-part structure defined in SKILL.md (Hooks), and the cover is built on a fixed contrast — **two fonts and two colours, both centered**:
+  - Setup line: Archivo Black in `#F6F2E9`, ALL CAPS, the largest type on the canvas.
+  - Twist line: **Georgia italic** in the cover's dominant accent (ochre, dusty pink, or sage — the published set uses all three), in sentence case. Italic caps lose the contrast against the headline, which is the whole point of the second line.
+  - One accent per cover. The kicker takes that same accent.
+- The cover also carries **one simple, direct graphic** — never text alone. The default pattern is a fan-out: a cream node with the system's name, a stem, a distribution bracket and a row of pills for the destinations (`.fanout` in `assets/template/styles.css`). Any equally simple graphic works; a crowded illustration does not.
 - Content clearance: keep all readable content at least `5%` from the left and right edges and `10%` from the top and bottom edges. Per size:
   - `1080x1920`: `x=54..1026`, `y=192..1728`.
   - `1080x1440`: `x=54..1026`, `y=144..1296`.
@@ -103,26 +123,35 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
 - Footer on content slides. These values come from measuring rendered pixels, not from estimating — copy `assets/template/styles.css`, which has them baked in, and re-run the audit after any change:
   - Bottom-left: `aurelioagency.com` in Inter bold `40px` (not serif italic).
   - Center: page counter pill, Inter bold **`26px`** — it is numeric chrome, not reading text, so the `40px` floor does not apply and a counter at `40px` is oversized. Fill `#252422`, `border-radius: 999px`, padding `9px 20px`.
-  - The counter is centered on the **canvas** (`left: 50%`, absolute), not distributed with `space-between`. Those are different positions whenever the brand line and the swipe pill have different widths, and the canvas center is the correct one.
-  - Bottom-right: `Swipe 👉` cream pill, height `55px`, `border-radius: 8px`. Padding is asymmetric (`0 20px 0 25px`) because the emoji carries more side bearing than the `S`, and the inner `<span>` takes `line-height: 1; transform: translateY(-3px)` because Inter's line box reserves ~10px of dead space above the cap height that does not exist below the baseline. The pill itself sits `4px` lower so its text shares a baseline with the brand line. Measured result: 9px of cream above and below the ink, 26px left and right.
+  - The counter is centered on the **canvas** (`left: 50%`, absolute), not distributed with `space-between`. Those are different positions whenever the brand line and the swipe line have different widths, and the canvas center is the correct one.
+  - Bottom-right: `← Desliza` in plain text — Inter bold `40px`, colour `#F6F2E9`, no pill, no emoji. Same font, size, colour and baseline as the brand line on the left, so the footer reads as one row. Having no background, it needs no optical padding correction; the counter pill is the only footer element that does.
 - Page counter counts **every exported image, including the final CTA frame**. A carousel with 5 content slides plus the CTA runs `1/6` through `6/6`.
 - The CTA frame carries only the counter pill (its final number) — no brand line and no swipe prompt. Its own `La Casa de Aurelio` signature stays part of the CTA artwork.
 
 ## Fixed CTA
 
-The La Casa preset has a fixed final CTA frame enabled.
+The La Casa preset has a fixed final CTA frame enabled, in **two variants**. Ask once per carousel, in Spanish, unless the user already said which one they want:
+
+`¿CTA normal ("Guarda este post") o CTA de comentario ("Comenta AURELIO" para recibir la skill por DM)?`
 
 - Append it after the 3-6 content slides.
 - Do not include a swipe prompt on the CTA frame.
-- Fixed CTA assets, one per size — use the matching one, never crop or stretch across sizes:
-  - TikTok `1080x1920`: `assets/la-casa-cta.png`
-  - Instagram `1080x1440`: `assets/la-casa-cta-ig.png`
-- CTA copy in both assets: `Guarda este post` and `y sígueme para más`, over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature.
-- Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
-- If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here. `assets/template/cta-ig.html` is the source that produced the `1080x1440` asset.
-- **Regenerating an existing CTA asset:** the current asset at that size is the reference, not the other platform's artwork. Keep its block layout (positions and widths) and change only what was asked. Verify with `scripts/compare-blocks.mjs` against the previous file before replacing it, and keep the counter band free of artwork — the asset cannot be reflowed once the counter is composed on top.
+- Fixed CTA assets, one per size and variant — use the matching one, never crop or stretch across sizes:
 
-Do not ask for the CTA every run when this preset is active. Ask only if the user explicitly wants to replace the CTA.
+  | | TikTok `1080x1920` | Instagram `1080x1440` |
+  |---|---|---|
+  | Normal | `assets/la-casa-cta.png` | `assets/la-casa-cta-ig.png` |
+  | Comentario | `assets/la-casa-cta-aurelio.png` | `assets/la-casa-cta-ig-aurelio.png` |
+
+- Copy in the normal variant: `Guarda este post` / `y sígueme para más`. In the comment variant: `Comenta AURELIO` / `y te enviamos la skill por DM`. Both sit over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature, in the same layout.
+- When the comment variant is used, the word to comment must also appear in the caption's written paragraph. If it ever changes, it changes in both places.
+- All four assets carry the same field as the content slides: dot grid, both glows and the contour lines. None of them is flat.
+- Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
+- If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here.
+- **Sources.** `assets/template/cta-ig.html` and `cta-ig-aurelio.html` produce the two `1080x1440` assets; render them with `assets/template/make-cta.mjs`. The two `1080x1920` assets have **no HTML source**: that artwork predates this repo and its colour strokes are hand-drawn, slightly rotated (bounding boxes 23/18/17/11px tall against the flat 9px bars of the Instagram asset). They cannot be re-rendered without inventing them, so they are maintained by compositing — new field underneath, original artwork on top through a luminance mask. If the TikTok CTA ever needs a copy change, expect to redraw by hand whatever the old text was painted over: under the glyphs there is no artwork left to recover (the comment variant's pink underline had to be redrawn from its measured geometry, 630x9px centered at 576.5/823.5, rotated -1.18°).
+- **Regenerating an existing CTA asset:** the current asset at that size is the reference, not the other platform's artwork. Keep its block layout (positions and widths) and change only what was asked. Verify with `scripts/compare-blocks.mjs` against the previous file before replacing it, and keep the counter band free of artwork — the asset cannot be reflowed once the counter is composed on top. A pure background change must report `+0% +0px` on **every** block; a copy change may only move the text blocks.
+
+Ask which of the two variants goes on this carousel. Never ask to design a new CTA when this preset is active — only if the user explicitly wants to replace it.
 
 ## Caption template (Instagram / TikTok)
 
@@ -166,12 +195,13 @@ Before delivery, visually check:
 - Text is not clipped.
 - Every readable word meets the typography floor at computed style level.
 - The first-slide hook block is horizontally centered and its title text is center-aligned.
+- The cover reads as two fonts and two colours: Archivo Black headline in `#F6F2E9`, Georgia italic twist in the dominant accent. And it carries a graphic, not text alone.
 - All readable text respects the `5%` side and `10%` top/bottom clearances.
 - The composition expands within the safe area instead of remaining small amid avoidable empty space.
 - Diagrams do not overlap labels.
 - Flow arrows connect deliberate steps.
 - Cards do not create random empty spaces.
-- CTA frame uses the fixed asset for the target size, with the counter pill composed on top.
+- CTA frame uses the fixed asset for the target size **and the chosen variant**, with the counter pill composed on top. If it is the comment variant, the word to comment also appears in the caption.
 - Every accent color in the render matches the canonical palette exactly (no near-duplicate hex drift).
 - Rendered text uses the canonical font families (Archivo Black / Roboto Mono / Inter / Georgia Italic) — verify the web fonts actually loaded before capture; a silent fallback to a system sans is a red issue.
 - Delivered files are true PNG exports from the render pipeline — never JPEG re-saves renamed to `.png`.

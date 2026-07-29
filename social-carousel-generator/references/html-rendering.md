@@ -4,7 +4,7 @@ Use this workflow when creating the editable carousel package.
 
 ## Starting the package
 
-Do not improvise the skeleton. Copy `assets/template/` into the package (`index.html`, `styles.css`, `slide-data.js`) and `assets/fonts/*.ttf` into `<package>/assets/fonts/`, then add the per-slide layouts. The template already carries the footer with its optical corrections, the safe-area constants, and the `layoutExceptions` field — rebuilding those from scratch is how they get re-broken.
+Do not improvise the skeleton. Copy `assets/template/` into the package (`index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` if the CTA has to be regenerated) and `assets/fonts/*.ttf` into `<package>/assets/fonts/`, then add the per-slide layouts. The template already carries the footer with its optical corrections, the safe-area constants, and the `layoutExceptions` field — rebuilding those from scratch is how they get re-broken.
 
 ## Files
 
@@ -85,6 +85,16 @@ It lists every ink block in both images with its vertical position and width, an
 
 Fixed assets cannot be reflowed at render time, so anything composed on top (a counter pill, a badge) has to land on empty artwork. `render-and-audit.mjs` checks that ring automatically and fails if there is ink within 14px of the overlay.
 
+## Contact sheet
+
+`scripts/contact-sheet.mjs` builds it from `exports/`:
+
+```powershell
+node "<skill-dir>/scripts/contact-sheet.mjs"
+```
+
+Run it from the package folder; `--cols` changes the grid. It needs no local server — the PNGs are inlined as data URIs.
+
 ## Implementation notes
 
 - Namespace slide-type classes (`s-cover`, `s-verdict`, …). A bare type class collides with same-named component classes and silently restyles the whole slide.
@@ -92,8 +102,13 @@ Fixed assets cannot be reflowed at render time, so anything composed on top (a c
 - Verify every derived or extracted asset by looking at it before wiring it in. A logo cut out of another image can come out inverted or opaque and still render "successfully".
 - Load fonts from files inside the package so the render is identical on any machine.
 - Use `text-wrap: balance` on running text (`.serif-line`, `.note`, `.body-copy`, punch lines). It prevents orphans without touching approved copy — the only orphan fix available in Adaptation Mode.
-- Never center chrome with symmetric padding alone. A font's line box reserves dead space above the cap height that does not exist below the baseline, and emoji add their own side bearing, so `padding: 7px 22px` can render as 21px of background above the ink and 9px below. Compensate with asymmetric padding or a `translateY` on an inner `<span>`, then confirm with the audit.
+- Never center chrome with symmetric padding alone. A font's line box reserves dead space above the cap height that does not exist below the baseline, so `padding: 7px 22px` can render as 21px of background above the ink and 9px below — that is why the counter pill carries an asymmetric correction. Compensate with asymmetric padding or a `translateY` on an inner `<span>`, then confirm with the audit.
 - When you delete an element, grep for the layout constants that existed because of it. A `top` offset that once cleared a corner badge keeps pushing content down forever after the badge is gone.
+- **Distribute slack with two `.spacer`s, not a fixed `margin-top`.** A head block followed by `margin-top: 46px` on the middle block pushes all the leftover space into one gap between the middle block and whatever closes the slide. That layout *passes* the vertical-balance check — the first and last content pixels are still symmetric — and still reads as a hole in the middle of the slide. Put a `.spacer` before and after the middle block and let flexbox split the slack in two.
+- **Optical corrections are per-element measurements, not reusable constants.** The counter pill's `translateY(-3px)` belongs to its font size and box height. Copying it onto the cover's network pills over-corrected them: 17px of background above the ink against 26px below. Removing it balanced them. Measure the new element; never inherit the number.
+- **Known false positive in the optical check:** a pill whose border colour contrasts strongly with its fill reads as ink at the box edge, so the horizontal test reports `0px` of background on one side. It fired on an ochre-bordered `+3 más` pill. Confirm on the PNG before chasing it.
+- **Known non-blocking warnings, both letterform:** descenders (the `g` in `Instagram`) push the ink down ~10px against the box; the left side bearing of `Y` and `T` leaves ~8px more air on the left. Both are optically correct. Fixing them would need per-word padding.
+- Playwright is resolved from the package, then the skill folder, then a sibling skill (`loadChromium`). If none has it, `npm i playwright` inside the package — or copy `node_modules` from a previous package, which is faster and works.
 
 ## Contact sheet QA
 

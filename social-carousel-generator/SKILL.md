@@ -34,7 +34,7 @@ Before planning content, ask which brand the carousel is for, unless the user al
 
 `¿Este carrusel es para La Casa de Aurelio o para otra marca?`
 
-If the answer is La Casa de Aurelio, Agencia Aurelio, or this workspace, read `references/la-casa-preset.md` and use that preset.
+If the answer is La Casa de Aurelio, Agencia Aurelio, or this workspace, read `references/la-casa-preset.md` and use that preset. That preset ships a fixed CTA in two variants, so ask which one this carousel closes with — normal (`Guarda este post`) or comment (`Comenta AURELIO` to receive the skill by DM) — unless the user already said. Nothing else about the CTA is up for discussion.
 
 If it is for another brand, run the setup interview before planning content:
 
@@ -127,9 +127,11 @@ The hook is the first slide's only job: stop the scroll. Write and approve hooks
 Every hook is two parts:
 
 1. Setup line: a strong, specific claim — the main headline.
-2. Twist line: the tension, break, or consequence. Styled with the carousel's dominant accent color from the active preset's palette, or as a serif italic support sentence — never hardcoded to one color.
+2. Twist line: the tension, break, or consequence. It must contrast with the headline in **both font and colour** — the active preset defines how (La Casa: serif italic in the carousel's dominant accent, sentence case). Never hardcode a colour.
 
-Both lines must be short enough to hold the typography floor without shrinking. If a line only works small, rewrite it shorter.
+Both lines are centered, and both must be short enough to hold the typography floor without shrinking. If a line only works small, rewrite it shorter.
+
+The cover also carries one simple graphic. A cover that is only type reads as a title card, not as a hook — see the preset for the default pattern.
 
 ### Approval gate
 
@@ -194,7 +196,7 @@ Hard QA rules:
 - Treat any user-facing word below the typography floor as a red issue that blocks delivery.
 - Always center the primary hook block on the first content slide. Its bounding box must be horizontally centered in the canvas and its text must use centered alignment. A left-aligned or edge-anchored cover hook is a red issue **unless the user decides otherwise** — see Documented Layout Exceptions below.
 - Balance the vertical composition. The gap above the first content pixel and the gap below the last must be within `4%` of the canvas height of each other. This is the check that catches dead space nobody meant to leave: when you remove an element, revisit every layout constant that existed to accommodate it. A stage offset that once cleared a badge keeps pushing content down long after the badge is gone. Fixed CTA assets are exempt.
-- Center chrome optically, not just geometrically. Symmetric CSS padding does not produce symmetric-looking boxes: a font's line box reserves dead space above the cap height that does not exist below the baseline, and emoji carry their own side bearing. Verify pills, chips, buttons, and counters by measuring the actual background margin around the ink in the rendered PNG, then compensate with asymmetric padding or a `translateY` on the text. `scripts/render-and-audit.mjs` measures this automatically; in the footer it is a red issue.
+- Center chrome optically, not just geometrically. Symmetric CSS padding does not produce symmetric-looking boxes: a font's line box reserves dead space above the cap height that does not exist below the baseline, and emoji carry their own side bearing. Verify pills, chips, buttons, and counters by measuring the actual background margin around the ink in the rendered PNG, then compensate with asymmetric padding or a `translateY` on the text. The correction belongs to that element's font size and box height — never copy a working `translateY` onto a different pill. `scripts/render-and-audit.mjs` measures this automatically; in the footer it is a red issue.
 - Size chrome for its role. Page counters, decorative marks, and similar non-reading elements sit at `24-26px` on a `1080px`-wide export. The `40px` floor is a minimum for text the reader is meant to read, not a target for every glyph on the canvas.
 - Keep all readable content inside a central safe area with `5%` clearance from the left and right edges and `10%` clearance from the top and bottom edges. At `1080x1920` this means `x=54..1026` and `y=192..1728`; at `1080x1440` it means `x=54..1026` and `y=144..1296`. Approved fixed CTA assets are exempt.
 - Expand the composition deliberately within that safe area. Increase type, reflow visual elements, and use the available width and height before accepting large empty regions around small content. An unnecessarily small composition surrounded by avoidable empty space is a red issue.
