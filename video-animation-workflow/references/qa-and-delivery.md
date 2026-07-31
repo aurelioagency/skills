@@ -5,6 +5,7 @@
 - [Review order](#review-order)
 - [Source checks](#source-checks)
 - [Visual inspection](#visual-inspection)
+- [Reels safe-zone audit](#reels-safe-zone-audit)
 - [Required job package](#required-job-package)
 - [Default synchronized deliverables](#default-synchronized-deliverables)
 - [Blocking failures](#blocking-failures)
@@ -59,6 +60,41 @@ Check:
 - silence and SFX tails.
 
 Automated metrics can expose failures but cannot prove that motion is smooth or a composition is premium.
+
+## Reels safe-zone audit
+
+For every Instagram or Facebook Reel, read [reels-9x16-safe-zones.md](reels-9x16-safe-zones.md) and calculate the actual canvas geometry:
+
+```text
+node <skill>/scripts/reels-safe-zone.mjs --width 1080 --height 1920 --json
+```
+
+Capture every contracted panel with the supplied debug overlay enabled. Check the full animated envelope, including entrances and exits.
+
+Use HyperFrames `--caption-zone` checks for the three UI bands:
+
+```text
+npx hyperframes check --samples 31 --caption-zone "x0=0;y0=.65;x1=1;y1=1;severity=error"
+npx hyperframes check --samples 31 --caption-zone "x0=0;y0=0;x1=1;y1=.14;severity=error"
+npx hyperframes check --samples 31 --caption-zone "x0=.90;y0=.14;x1=1;y1=.65;severity=error"
+```
+
+These checks use element centers and do not replace visual inspection of the entire bounding box. Never waive a caption, logo, CTA, brand label, face, or key product with `data-layout-allow-caption-zone`. Disable the debug overlay before the clean preview and final render.
+
+## Transition-boundary audit
+
+For every narrative handoff, inspect at least three frames: immediately before the boundary, during the handoff, and immediately after it.
+
+Verify:
+
+- every future phase is fully hidden before its contracted entrance;
+- the outgoing phase is fully cleared before replacement content occupies the same zone;
+- no forgotten child layer, shadow, connector, or label survives its parent phase;
+- no asset sits at low opacity between scenes and then “appears” a second time;
+- a persistent subject remains one element with continuous position, scale, and direction;
+- any simultaneous visibility is an approved handoff of approximately `0.20s` or less.
+
+When browser inspection is available, record each phase wrapper's computed opacity and bounding box. Fail the boundary when two intersecting narrative phases are both above `0.05` opacity without a storyboard-approved exception.
 
 ## Required job package
 
@@ -124,7 +160,11 @@ Do not deliver as final when any of these remains:
 - generated text that must be exact;
 - one format cropped from another;
 - captions outside safe areas;
+- a Reel caption or critical asset outside its documented full-motion safe rectangle;
+- Reel-safe geometry copied blindly to another vertical platform;
 - important overlap or occlusion;
+- an uncontracted future or outgoing phase visible above `0.05` opacity;
+- an asset parked semi-transparent between narrative phases;
 - text disappearing only to return at another size;
 - missing sound support at a meaningful transition;
 - voice obscured by SFX;

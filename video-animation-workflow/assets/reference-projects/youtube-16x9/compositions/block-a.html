@@ -85,7 +85,7 @@
         tl.fromTo("#yta-cursor",{opacity:0,x:160,y:-80},{opacity:1,x:0,y:0,duration:.58,ease:"power2.inOut"},3.44);
         tl.fromTo("#yta-scissors",{opacity:0,y:-110,rotation:-8},{opacity:1,y:0,rotation:0,duration:.42,ease:"power3.out"},4.12);
 
-        tl.to("#yta-manual",{y:-195,scale:.76,opacity:0,duration:.32,ease:"power2.inOut"},4.70);
+        tl.to("#yta-manual",{y:-195,scale:.76,opacity:0,duration:.18,ease:"power2.in"},4.48);
         tl.set("#yta-task-caption",{opacity:1,y:70},4.72);
         tl.to("#yta-task-caption",{y:0,duration:.20,ease:"power4.out"},4.72);
         tl.to("#yta-cursor",{x:-175,y:-92,duration:.72,ease:"power2.inOut"},4.82);
@@ -105,7 +105,6 @@
         tl.to(["#yta-editor","#yta-stack","#yta-cursor","#yta-scissors","#yta-manual","#yta-tasks"],{opacity:0,duration:.34,ease:"power1.in"},8.40);
         tl.to("#yta-camera-card",{x:-370,y:-97,scale:1.6,borderRadius:20,backgroundColor:"#f4efe3",boxShadow:"0 34px 80px rgba(17,17,17,.20)",duration:.86,ease:"power2.inOut"},8.40);
         tl.fromTo("#yta-return-copy",{opacity:0,y:76},{opacity:1,y:0,duration:.28,ease:"power4.out"},8.78);
-        tl.to("#yta-folder-echo",{opacity:.14,duration:.55,ease:"power1.out"},8.78);
 
         window.__timelines["yta"] = tl;
       </script>

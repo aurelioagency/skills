@@ -7,6 +7,7 @@
     "preflight": "node scripts/preflight.mjs",
     "discover-brand": "node scripts/discover-brand.mjs",
     "brands": "node scripts/brand-profile.mjs list",
+    "reels-safe-zone": "node scripts/reels-safe-zone.mjs",
     "test": "node scripts/self-test.mjs",
     "verify-assets": "node scripts/verify-assets.mjs"
   }

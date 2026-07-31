@@ -69,6 +69,8 @@ Ask for the target format after inspecting the source:
 - both;
 - a custom canvas.
 
+For `9:16`, record the exact destination: Instagram Reels, Facebook Reels, Stories, TikTok, YouTube Shorts, or another player. Do not treat every phone interface as having the same safe zone.
+
 When both are requested, keep the same narrative, spoken timing, asset identity, and sound plan, but author two intentional compositions. Never crop one format into the other.
 
 Default to 15-30 seconds. Real audio sets the working duration. If supplied audio or an approved script falls outside that range, estimate the true duration and ask whether to preserve it or reduce it. Do not silently speed up speech or cut meaning.
@@ -156,6 +158,7 @@ Every panel must specify:
 - sound opportunity;
 - landscape layout when requested;
 - portrait layout when requested;
+- platform-safe rectangle for every portrait layout;
 - purpose of the shot.
 
 Use the confirmed image-generation tool for storyboard sheets and every new raster illustration. Keep captions, logos, UI labels, and exact spelling out of generated images. Save each generated asset separately with its prompt and source output.
@@ -182,6 +185,9 @@ Requirements:
 - deterministic, seek-safe animation;
 - native editable captions;
 - stable element identity;
+- explicit ownership for every narrative phase;
+- future phase groups hidden in their base CSS or deterministic initial state;
+- no idle, semi-transparent incoming or outgoing layers between scenes;
 - progressive scale, position, masking, tracking, and camera changes;
 - no text disappearing and returning merely to become smaller;
 - no decorative filler in unused space;
@@ -190,7 +196,9 @@ Requirements:
 - one meaningful visual asset on major screens when it adds meaning;
 - one continuous composition when a subject must persist across a boundary.
 
-Render checkpoints at every approved panel and high-risk transition. Compare them against the binding storyboard before adding final sound design.
+For Instagram or Facebook Reels, read [reels-9x16-safe-zones.md](references/reels-9x16-safe-zones.md), calculate the current canvas geometry, and validate the full animated bounding boxes of captions and critical assets. The bottom third is UI space, not a lower-third caption area.
+
+Render checkpoints at every approved panel and immediately before, during, and after every high-risk transition. Compare them against the binding storyboard before adding final sound design.
 
 Read [animation-captions-and-sound.md](references/animation-captions-and-sound.md) for caption geometry, safe areas, audio-first synchronization, semantic motion, and SFX behavior.
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-29T17:45:45.726Z",
+  "generatedAt": "2026-07-30T15:32:56.933Z",
   "sourceProduction": "video-intro-ai-workflow",
   "formats": [
     "1920x1080",
@@ -11,13 +11,13 @@
     "openFonts": "SIL Open Font License 1.1",
     "note": "A file-specific license or notice overrides the package default."
   },
-  "fileCount": 194,
-  "totalBytes": 115409458,
+  "fileCount": 195,
+  "totalBytes": 115416536,
   "files": [
     {
       "path": "reference-projects/README.md",
-      "bytes": 1075,
-      "sha256": "b6a87f3511fedac4009b805eb4191cb19ea235f2089c1a7fc4ef41b4a63f0773",
+      "bytes": 1089,
+      "sha256": "b6df630be6c9d9f375a2f15ee08d2de2c14c9bef10d4a31c2e42c425d553e839",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
@@ -328,96 +328,96 @@
     },
     {
       "path": "reference-projects/reel-9x16/BRIEF.md",
-      "bytes": 1169,
-      "sha256": "237a0f356faf81ad7f11c6c1ed650514c0b0f989e58493c9b423695f868eb17f",
+      "bytes": 1202,
+      "sha256": "15f7f2ef6d204be3b40dc11f11b6ad8ca8f2f0472d49281d6375628a8b03e0f3",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/compositions/block-a.html",
-      "bytes": 8457,
-      "sha256": "ca1921868501d15bb6feb011230615e30b6ce8f985b7515d337f59af0636687d",
+      "bytes": 9250,
+      "sha256": "2cebfdb7142b7de93e81cb7dd82c078870c798dfc766e90542d065926dcc3ae3",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/compositions/block-a.motion.json",
-      "bytes": 746,
-      "sha256": "a2dd2129dba4ebe12396a1b7fa9448f2e226a833553aa9ccc9fd04ffa68fcb71",
+      "bytes": 762,
+      "sha256": "7b4aa0dc7c16a13bd42c9a23a9cc1552efa85b8aaa2c2cbe4c165a7734201987",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/compositions/block-b.html",
-      "bytes": 13494,
-      "sha256": "974caa2e89f7e94a01db5ddb025f83c9ab17f6d9e016954151d35f4793542567",
+      "bytes": 14484,
+      "sha256": "e5054384541dc73f6e64205d6a1d7e761946a468c0e2df0e2f33fc840bf88a9f",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/compositions/block-b.motion.json",
-      "bytes": 821,
-      "sha256": "84662fe834fbf59d58011a10b56c71dd00fbdc12e04de6b935623066ea0961fd",
+      "bytes": 838,
+      "sha256": "02c1f19788cd56c35774b5fc0d4dff5aae7e1e9a331af0014061e4d035f6b909",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/compositions/block-c.html",
-      "bytes": 18035,
-      "sha256": "d36486562e98aed19a16fe9bb4d29ad3a76e2f40fdc985e626d6c0d389ffb35c",
+      "bytes": 19158,
+      "sha256": "5d38523c8b868fa144af7314853e46af4490b13b8c1a9035a14aaaa10ad135c2",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/compositions/block-c.motion.json",
-      "bytes": 919,
-      "sha256": "981adbc3e68e8da47e6a50e2edf1bf3fffc306dc048ff43a90d595b792004feb",
+      "bytes": 937,
+      "sha256": "5fe08588a5e56e25c73f972f707022167e916ec3f22794ecd00dce5b6b18ec81",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/DESIGN.md",
-      "bytes": 2164,
-      "sha256": "213b2140827848f9752843baac46b4885bbcbcdf6ffea8f80e7a2e9c3eb09c45",
+      "bytes": 2525,
+      "sha256": "cdd6fd60349d925d994a4639e8b7b9dbfa6900ef9f5eb0c5a953e480130905b7",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/hyperframes.json",
-      "bytes": 355,
-      "sha256": "ad5dadeef78a520800a9e5cdd27a92ff5ac37f11b6a07f611b6b52b9f8c79a17",
+      "bytes": 368,
+      "sha256": "15fdc9a3e26a2840a007d82965f5072a32d5ade83b2119a396508e2baabd61b0",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/index.html",
-      "bytes": 7784,
-      "sha256": "8d164780f6d718226542136df69347da43b1fb083a5448f1778ca258d9e65850",
+      "bytes": 7845,
+      "sha256": "84a99519924bea566d0a250d5b5fe96b6ece8fa28932b9cab175e6a90faef604",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/index.motion.json",
-      "bytes": 1181,
-      "sha256": "b6cf276e7607e51c38e8e902c75603f1a0bfd7de37b1de19b0cec3ddeaff9382",
+      "bytes": 1203,
+      "sha256": "51301797323dfd1aaecaf24d15a39a258e8ee7fe7f3a846192519ef0111c53d6",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/meta.json",
-      "bytes": 90,
-      "sha256": "f9dbd0abc51717b5bd07a41e928054bfcc350058108fd848b595e5225d7f9b1e",
+      "bytes": 95,
+      "sha256": "06de6c55ce4c59f90ab589ce7e6d50182d98573b380848a9519fe22ad606457a",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
@@ -425,23 +425,23 @@
     {
       "path": "reference-projects/reel-9x16/package.json",
       "bytes": 294,
-      "sha256": "bf95a0e570cdcbc5f9accf87ce702baf5d2ed45fcb8fa0fa83e84d44c12433a1",
+      "sha256": "625d1471a3d023a4971c0455474007027a309db806f4831c74d5ffa94da8eea7",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/SCRIPT.md",
-      "bytes": 448,
-      "sha256": "ae4c64a4d496e92226e796180cbbed0594588583598990844f2c19a11025b9b9",
+      "bytes": 451,
+      "sha256": "84b960db28e9c3b70bfe9d5a8a8140379df5d2ee656b5ce6e1df35a79c37f5ab",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/reel-9x16/STORYBOARD.md",
-      "bytes": 1267,
-      "sha256": "0803b063ae97fa47009185e823453bb9853cbbdf391aa93b5546cecc82224eac",
+      "bytes": 1303,
+      "sha256": "bfbec62bd5b465fc59ee2f58478227e41c2572a86da296a2ade288b7937fd4e6",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
@@ -760,232 +760,232 @@
     },
     {
       "path": "reference-projects/youtube-16x9/BRIEF.md",
-      "bytes": 1089,
-      "sha256": "659b6713c8798c904026c9b0ba3ad3b3673a11d46985965ef1321eda745ad83f",
+      "bytes": 1122,
+      "sha256": "009738adf2b426fd0c4dc82842d1768e97db079622eda7d836cf36dddb6ad518",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/compositions/block-a.html",
-      "bytes": 8499,
-      "sha256": "7b4d4cd737d415c9ac70c4548920114f8d10e5994ff9b1cfcb2a7dfcd6964e97",
+      "bytes": 8523,
+      "sha256": "e88ae64f95cacffe31bcb70617ec0dcd0890173363bcd2b5fa544327271f8f8d",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/compositions/block-a.motion.json",
-      "bytes": 746,
-      "sha256": "3af69d8e092b9711c24663cb8c46867ee8c4d28a8b393ea3f88fcd2c42aff768",
+      "bytes": 762,
+      "sha256": "25d55169fc689d097ab0472f80c23f2b62c397486b6fffe654f9017338596bf5",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/compositions/block-b.html",
-      "bytes": 13585,
-      "sha256": "403842fdc5c4de365d00f2d56be8f535e5cfaac9f3376f3bd0f047837a2cf746",
+      "bytes": 13711,
+      "sha256": "adf4ab95586746c2add31319457e6144f0055746deb671cbb9a7140ce7f57bae",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/compositions/block-b.motion.json",
-      "bytes": 821,
-      "sha256": "a50a7e5be719a2332f7322b1c3a774e318f5ef810d59339659e79556e6c21a15",
+      "bytes": 838,
+      "sha256": "b07e3aef187dd2c3aff59999fe768773a61c9ebb36520e8e8c1e63633a402f3b",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/compositions/block-c.html",
-      "bytes": 17456,
-      "sha256": "3337ea1e07495a9d9a399f6f929bb09e9e8e46f6a34b79f76dab5c77c1f3b266",
+      "bytes": 17769,
+      "sha256": "627712ae28fdf0a760cf8de90e2cda3adeef5d55e4e8b4706cb07feb08cd7108",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/compositions/block-c.motion.json",
-      "bytes": 919,
-      "sha256": "5b604ac3cacf29213fd07ad304d4fd61cd1001ed03f65de9a16a817016a099dd",
+      "bytes": 937,
+      "sha256": "c31b0d6d8a5cbe21757823fdd781a90a5c551184dd2aca5917d10792716c0b4e",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/DESIGN.md",
-      "bytes": 2250,
-      "sha256": "6e4804284a3093235b1e1f0cc1cfe9b550482fe72ecf022cb8ff19802b1a1299",
+      "bytes": 2297,
+      "sha256": "4b30eeb9cc9cbe8ab8e17a5c1059fb59bcaebb5a047df6b9d37683ddba1503ef",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/hyperframes.json",
-      "bytes": 355,
-      "sha256": "ad5dadeef78a520800a9e5cdd27a92ff5ac37f11b6a07f611b6b52b9f8c79a17",
+      "bytes": 368,
+      "sha256": "15fdc9a3e26a2840a007d82965f5072a32d5ade83b2119a396508e2baabd61b0",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/index.html",
-      "bytes": 7719,
-      "sha256": "3dff56895354d88b284b701f4d59c59c0fbeadb810205b7a07ab5c91285857d8",
+      "bytes": 7780,
+      "sha256": "732c57faecdd65a76dd48447d58118a9dc981ecfefc53f9b1329b435815ea6f4",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/index.motion.json",
-      "bytes": 1185,
-      "sha256": "17de2c3fa66a0ae074d5eb88fbc495291775b7e37e11bd94f3f495d408638e5a",
+      "bytes": 1207,
+      "sha256": "2e985d3d00598f14fbf1166b781bac253ef3386796030d92393f87c5bd8d4272",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/meta.json",
-      "bytes": 96,
-      "sha256": "2664f36b7e8ce55a83299c94eef0b64f96268de1a536c3b7ef775a9a245c82ef",
+      "bytes": 101,
+      "sha256": "cb34bec7c7f141fa6ccbf520497b104211732910e0aaccb49a3f23526d42ca8a",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/package.json",
-      "bytes": 297,
-      "sha256": "bc508c8dcac72cd61919a1e5730e08bbba573de9ef0fa6b119adcb64ae3041d2",
+      "bytes": 308,
+      "sha256": "1265b222611de500436598afed025c04b3e3fa54446ae723eea56faea6c6f123",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/SCRIPT.md",
-      "bytes": 448,
-      "sha256": "ae4c64a4d496e92226e796180cbbed0594588583598990844f2c19a11025b9b9",
+      "bytes": 451,
+      "sha256": "84b960db28e9c3b70bfe9d5a8a8140379df5d2ee656b5ce6e1df35a79c37f5ab",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-projects/youtube-16x9/STORYBOARD.md",
-      "bytes": 1294,
-      "sha256": "b0bfc078aeac99a8756a8f2e6d9d9c83fdac2b9093b7bfe29cfb8308137ace98",
+      "bytes": 1330,
+      "sha256": "6aab3c5d4238fe23abbddad2ad1e48c8c451cb37335872768f4136f579b898e6",
       "category": "editable-reference-project",
       "purpose": "Editable HyperFrames source, media, or project evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/ORIGINAL_ASSET_INDEX.md",
-      "bytes": 7700,
-      "sha256": "ea538424eb040631fce3990aec8bc859d63bf5afb275d43ae03b7eaa892f2296",
+      "bytes": 7828,
+      "sha256": "df0791220e1c5419b140dca9cb1df20df62589a2161e8dda56b5f545d6917507",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/PHASE_1_APPROVED_SCRIPTS.md",
-      "bytes": 2041,
-      "sha256": "46255f016bef3671b015036995bc97dd43b7df06495b790e7f6264fc2a7e6888",
+      "bytes": 2084,
+      "sha256": "fb50e8516f477c49e7c338bea6671128034da17ecc191ce706b856921a2517b8",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/PHASE_2_TIMING_MAP.md",
-      "bytes": 4540,
-      "sha256": "c649b3c124fd9aecd38584bab510222e4d99066b7c342398cd2034d635f1d136",
+      "bytes": 4572,
+      "sha256": "5a95cf8fdd81005ac59bc6e4b4d083ba3c0276b5a4bb832c9eaeb10fc9b18fb1",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/REEL_STORYBOARD_VALIDATION.md",
-      "bytes": 3838,
-      "sha256": "07df9a6da5f25bca03988612b9975bc399859d3ed9ae6e1a20c2faea2c6a9690",
+      "bytes": 3891,
+      "sha256": "35398bb456b8b2068c6b03464a5d8065ecff03b1fbdfb9efed25021f7b26804a",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/SOUND_DESIGN_CUE_SHEET.md",
-      "bytes": 6625,
-      "sha256": "417acb90d2aa644b15cd687b894bf2842a342dcaedb385eae3e23c7204c3fe5b",
+      "bytes": 6699,
+      "sha256": "e61f5e1a4af0c73409fa6b3b0d7cef52050cf2a91c6f215573f08fc8722b89fb",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/SOURCE_AUDIT.md",
-      "bytes": 2853,
-      "sha256": "6b6207c08bf8a25bd58e99dbf6d42f55c9cc0e6ae55bcabeefcbd49f6427f102",
+      "bytes": 2918,
+      "sha256": "1e3dad610df289387f47d01eb6a8d0ab0507c14a54f4bd35c2447636e43c0a56",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/VOICEOVER_TIMING.md",
-      "bytes": 2690,
-      "sha256": "ac62cc4eacf5e0739b4f71b79f3edc08e42ec91fc6242a7c4fd53e2bd2ccb064",
+      "bytes": 2771,
+      "sha256": "9422d0feaacf80a783132130c64dc9ce166d36496f99a343bdecc1c0c2b6a12c",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/documents/YOUTUBE_STORYBOARD_VALIDATION.md",
-      "bytes": 5259,
-      "sha256": "3a6858ccaf928e6b427ba27e567cbf37a4fd54616377116af3dc7e5dac1ce0f9",
+      "bytes": 5338,
+      "sha256": "64f7aa3695b6b188619310459aa7f1712e1bae67d1717d465cd2f4ebc80a55b0",
       "category": "reference-document",
       "purpose": "Production decision, validation, source, or manifest evidence",
       "license": "PolyForm Noncommercial 1.0.0 or file-specific third-party license"
     },
     {
       "path": "reference-proof/imagegen-prompts/reel-9x16/block-a-00-10.md",
-      "bytes": 10713,
-      "sha256": "49c8f972e6f885cb9777c86fe8c4535eaae0089a26143ba4cfcb6c508b4e757b",
+      "bytes": 10815,
+      "sha256": "488132e49dfc2f45247f3240f3c3d3e833cfa974e92f9d146cf41412430d4106",
       "category": "imagegen-prompt",
       "purpose": "Prompt record for storyboard or production raster generation",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
     },
     {
       "path": "reference-proof/imagegen-prompts/reel-9x16/block-b-10-20.md",
-      "bytes": 18616,
-      "sha256": "65f7ed64acf1bcaa93d565e6c6cf83df6a2b06b83a91416c59362d103822bcc4",
+      "bytes": 18766,
+      "sha256": "a94baa00b22789ae35d29f2bc2e9d57a5691c9e4f02ae8226391bba74c328b21",
       "category": "imagegen-prompt",
       "purpose": "Prompt record for storyboard or production raster generation",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
     },
     {
       "path": "reference-proof/imagegen-prompts/reel-9x16/block-c-20-30.md",
-      "bytes": 9853,
-      "sha256": "32a145f5ca22d240905eec1357f1bfc54d325efb85b0bc45b89a44b9480ba1c3",
+      "bytes": 9918,
+      "sha256": "c18479e9422e3351165361cc5cc630dc96ad9872168ebbbad64ef113a218720e",
       "category": "imagegen-prompt",
       "purpose": "Prompt record for storyboard or production raster generation",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
     },
     {
       "path": "reference-proof/imagegen-prompts/youtube-16x9/block-a-00-10.md",
-      "bytes": 9075,
-      "sha256": "68d6231cb2fb74806482347d7a75b75f4130555c0ed0e3e1719913e409da0b5d",
+      "bytes": 9176,
+      "sha256": "4de40b65cdee25f524101e8427f79b638b336e99b43b4a8426ec5fe8343bac38",
       "category": "imagegen-prompt",
       "purpose": "Prompt record for storyboard or production raster generation",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
     },
     {
       "path": "reference-proof/imagegen-prompts/youtube-16x9/block-b-10-20.md",
-      "bytes": 7520,
-      "sha256": "99aa0461ffd69638eb5963a457359c04148746ef6c724c0bb042ea2bdc78b590",
+      "bytes": 7580,
+      "sha256": "1fdcb115ae7c96dce9a117bfefcdd6bea5373931552d0342131100dd8b2f2008",
       "category": "imagegen-prompt",
       "purpose": "Prompt record for storyboard or production raster generation",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
     },
     {
       "path": "reference-proof/imagegen-prompts/youtube-16x9/block-c-20-30.md",
-      "bytes": 14956,
-      "sha256": "6b241b49d6388e64604f948e0acfb53f930d27d1fbc42e5f9a13aa46fe6ad3c1",
+      "bytes": 15069,
+      "sha256": "f30ad1787162c35aa1bb36a759e3a1696f95afb0db811a60243550147ca6e0e5",
       "category": "imagegen-prompt",
       "purpose": "Prompt record for storyboard or production raster generation",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
@@ -1120,8 +1120,8 @@
     },
     {
       "path": "starter-library/fonts/INTER_OFL.txt",
-      "bytes": 4376,
-      "sha256": "5dd548d31a85f756e01d63e00d7faf1e324103ed3e9102fcbbabf2cc2db6dd39",
+      "bytes": 4469,
+      "sha256": "d7cee39dfa656bffe74385c76debffe635788a83c00ce4370718c99d4c2650ff",
       "category": "open-font",
       "purpose": "Redistributable typography starter or license text",
       "license": "SIL Open Font License 1.1"
@@ -1136,8 +1136,8 @@
     },
     {
       "path": "starter-library/fonts/PLAYFAIR_DISPLAY_OFL.txt",
-      "bytes": 4448,
-      "sha256": "0bb2b43ffd21233963b5d0c0eb6f1abffa776ec53c56131b5818708f2730ffd6",
+      "bytes": 4541,
+      "sha256": "a32c1e30554f8227178d1643d182f9328b6529d92c9b43d86a16fb528381d857",
       "category": "open-font",
       "purpose": "Redistributable typography starter or license text",
       "license": "SIL Open Font License 1.1"
@@ -1152,24 +1152,32 @@
     },
     {
       "path": "starter-library/guides/GENERIC_CAPTION_KINETIC_TYPE_BEST_PRACTICES.md",
-      "bytes": 8379,
-      "sha256": "006b8035f1fdabff60e60ae59a56381600efe85792fee49262060812b8bb0527",
+      "bytes": 8685,
+      "sha256": "3d3a5a088ef8ed06d818346549b45f674b3156a64e4655b2055e35d5a75b5ad1",
       "category": "production-guide",
       "purpose": "Reusable caption, typography, motion, or asset-usage guidance",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
     },
     {
       "path": "starter-library/guides/GENERIC_TYPOGRAPHY_SYSTEM.md",
-      "bytes": 4535,
-      "sha256": "bfd0de4caa8723952586caceb4fc656a4470283ee2b8156acd475cec56686e26",
+      "bytes": 4653,
+      "sha256": "a8e05f52c03ac4ee6bd9521ae1d488bb9f4645564a045b414b403e31d003a1bc",
       "category": "production-guide",
       "purpose": "Reusable caption, typography, motion, or asset-usage guidance",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
     },
     {
       "path": "starter-library/guides/generic-kinetic-type.css",
-      "bytes": 3410,
-      "sha256": "68e02b4f6d10c2bdc50684d34aa5ad6bbbf88fa39698da3c356f24a3085c7b95",
+      "bytes": 3550,
+      "sha256": "835d3f881afbc2bce74b5a170827600450563ad0d17da024c96afcb4fdf30c7c",
+      "category": "production-guide",
+      "purpose": "Reusable caption, typography, motion, or asset-usage guidance",
+      "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
+    },
+    {
+      "path": "starter-library/guides/reels-9x16-safe-zone.css",
+      "bytes": 892,
+      "sha256": "8bef159a0566325c928d1b518fce58104b7ff0b69f901bc7c48f81725e0d3cfe",
       "category": "production-guide",
       "purpose": "Reusable caption, typography, motion, or asset-usage guidance",
       "license": "PolyForm Noncommercial 1.0.0; see LICENSE"
@@ -1240,8 +1248,8 @@
     },
     {
       "path": "starter-library/images/production/coral_gift_box_premium_vector.svg",
-      "bytes": 2184,
-      "sha256": "d7ec838839e134e67f4ab63ed2fd8c73aebb05e455316d9776b15545de365ecc",
+      "bytes": 2224,
+      "sha256": "2e6137c4615f7909b539820eeb41456d9f8d7359be55a3e66fd1576a2dad6070",
       "category": "production-image",
       "purpose": "coral gift box premium vector",
       "license": "Reference package: noncommercial use; see LICENSE"

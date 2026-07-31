@@ -8,7 +8,7 @@
         @font-face{font-family:PlayfairEditorial;src:url("assets/fonts/PlayfairDisplay-Italic-Variable.ttf");font-style:italic;font-weight:400 900}
         #root{position:absolute;inset:0;width:1080px;height:1920px;overflow:hidden;color:#111;font-family:InterLocal,sans-serif}
         .paper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-        .hook{position:absolute;left:72px;top:210px;width:850px;height:480px;transform-origin:left top}
+        .hook{position:absolute;left:72px;top:290px;width:850px;height:480px;transform-origin:left top}
         .hook-question{font-size:88px;line-height:.9;font-weight:700;letter-spacing:-4px}
         .hook-seen{position:absolute;left:0;top:190px;font:italic 400 90px/1 PlayfairEditorial,serif}
         .hook-asi{position:absolute;left:-4px;top:278px;font-size:174px;line-height:.86;font-weight:700;letter-spacing:-8px}
@@ -19,21 +19,25 @@
         .manual-copy{position:absolute;left:72px;top:300px;width:800px}
         .manual-copy .sans{font-size:82px;line-height:.9;font-weight:700;letter-spacing:-4px}
         .manual-copy .serif{margin-top:8px;font:italic 400 104px/.9 PlayfairEditorial,serif}
-        .tasks{position:absolute;left:72px;top:210px;width:820px}
+        .tasks{position:absolute;left:72px;top:290px;width:820px;z-index:10}
         .task{font-size:74px;line-height:.9;font-weight:700;letter-spacing:-4px;opacity:0;transform-origin:left}
         .task+.task{margin-top:42px}
         #rla-task-sync{font-size:64px;width:600px}
         .task.final{font:italic 400 92px/.92 PlayfairEditorial,serif;letter-spacing:-3px}
-        .stack{position:absolute;left:245px;top:745px;width:620px;height:349px;object-fit:contain}
+        .stack{position:absolute;left:620px;top:790px;width:320px;height:180px;object-fit:contain}
         .cursor{position:absolute;left:650px;top:1240px;width:190px;height:190px;object-fit:contain}
         .scissors{position:absolute;left:730px;top:1360px;width:220px;height:147px;object-fit:contain}
         .folder-echo{position:absolute;left:660px;top:770px;width:300px;height:300px;object-fit:contain;opacity:0}
-        .return-copy{position:absolute;left:72px;top:250px;width:820px;font-size:102px;line-height:.88;font-weight:700;letter-spacing:-6px;opacity:0}
+        .return-copy{position:absolute;left:72px;top:290px;width:820px;font-size:102px;line-height:.88;font-weight:700;letter-spacing:-6px;opacity:0}
+        .reels-meta-safe-overlay,.reels-caption-safe-overlay{position:absolute;z-index:2147483647;box-sizing:border-box;display:none}
+        .reels-meta-safe-overlay{left:6%;right:6%;top:14%;bottom:35%;border:3px dashed rgba(255,45,85,.95)}
+        .reels-caption-safe-overlay{left:6%;right:10%;top:14%;bottom:35%;border:2px solid rgba(0,180,255,.95)}
+        #root[data-reels-safe-debug="true"] .reels-meta-safe-overlay,#root[data-reels-safe-debug="true"] .reels-caption-safe-overlay{display:block}
       </style>
 
       <div data-hf-id="hf-s1ob" id="root" data-composition-id="rla" data-start="0" data-width="1080" data-height="1920" data-duration="10">
         <img data-hf-id="hf-sqwv" class="paper" src="assets/images/warm_cream_paper_background.png" alt="">
-        <div data-hf-id="hf-zsk2" id="rla-hook" class="hook" data-layout-allow-overlap="">
+        <div data-hf-id="hf-zsk2" id="rla-hook" class="hook" data-layout-allow-overlap="" data-layout-allow-overflow="">
           <div data-hf-id="hf-xslu" id="rla-q" class="hook-question">¿QUERÉS QUE<br data-hf-id="hf-x5px">TUS VIDEOS</div>
           <div data-hf-id="hf-syfm" id="rla-seen" class="hook-seen">se vean</div>
           <div data-hf-id="hf-6j9g" id="rla-asi" class="hook-asi" data-layout-allow-overflow="">ASÍ</div>
@@ -57,6 +61,8 @@
         <img data-hf-id="hf-87xi" id="rla-scissors" class="scissors" src="assets/images/editing_scissors_icon.png" alt="Tijera de edición">
         <img data-hf-id="hf-k4fw" id="rla-folder-echo" class="folder-echo" src="assets/images/skill-folder-v1.png" alt="">
         <div data-hf-id="hf-rz8y" id="rla-return-copy" class="return-copy" data-layout-allow-occlusion="">ESTA<br data-hf-id="hf-qluq">INTRODUCCIÓN</div>
+        <div data-hf-id="hf-safe-meta-a" class="reels-meta-safe-overlay" data-layout-ignore="" aria-hidden="true"></div>
+        <div data-hf-id="hf-safe-caption-a" class="reels-caption-safe-overlay" data-layout-ignore="" aria-hidden="true"></div>
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
@@ -76,7 +82,7 @@
         tl.fromTo("#rla-cursor",{opacity:0,x:170,y:-90},{opacity:1,x:0,y:0,duration:.58,ease:"power2.inOut"},3.44);
         tl.fromTo("#rla-scissors",{opacity:0,y:-110,rotation:-8},{opacity:1,y:0,rotation:0,duration:.42,ease:"power3.out"},4.12);
 
-        tl.to("#rla-manual",{y:-190,scale:.76,opacity:0,duration:.32,ease:"power2.inOut"},4.70);
+        tl.to("#rla-manual",{y:-190,scale:.76,opacity:0,duration:.18,ease:"power2.in"},4.48);
         tl.set("#rla-task-caption",{opacity:1,y:70},4.72);
         tl.to("#rla-task-caption",{y:0,duration:.20,ease:"power4.out"},4.72);
         tl.to("#rla-cursor",{x:-180,y:-110,duration:.72,ease:"power2.inOut"},4.82);
@@ -95,7 +101,6 @@
         tl.to(["#rla-editor","#rla-stack","#rla-cursor","#rla-scissors","#rla-manual","#rla-tasks"],{opacity:0,duration:.34,ease:"power1.in"},8.40);
         tl.to("#rla-camera-card",{x:-60,y:80,scale:1.167,borderRadius:24,backgroundColor:"#f4efe3",boxShadow:"0 34px 80px rgba(17,17,17,.20)",duration:.86,ease:"power2.inOut"},8.40);
         tl.fromTo("#rla-return-copy",{opacity:0,y:76},{opacity:1,y:0,duration:.28,ease:"power4.out"},8.78);
-        tl.to("#rla-folder-echo",{opacity:.14,duration:.55,ease:"power1.out"},8.78);
         window.__timelines["rla"]=tl;
       </script>
     </template>

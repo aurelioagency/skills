@@ -5,8 +5,11 @@ Concept angle: la misma introducción se despliega como un objeto vertical táct
 ## Canvas and safety
 
 - Canvas `1080×1920`.
-- Essential text: `x=72–900`, `y=210–1540`.
-- Right rail `x=920–1080` and bottom `y=1600–1920` contain no indispensable copy.
+- Conservative Reels critical rectangle: `x=65–1015`, `y=269–1248`.
+- Workflow caption rectangle: `x=65–972`, `y=269–1248`.
+- Keep the top `14%`, bottom `35%`, and at least `6%` on both sides free of indispensable elements.
+- Reserve the rightmost `10%` for the Reel interaction rail whenever the element is text, a logo, a CTA, or an exact label.
+- Backgrounds and nonessential bleed may extend into UI zones; captions and key assets may not.
 
 ## Palette
 
