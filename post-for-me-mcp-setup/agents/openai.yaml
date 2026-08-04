@@ -1,0 +1,4 @@
+interface:
+  display_name: "Post for Me MCP Setup"
+  short_description: "Install and verify the Post for Me MCP"
+  default_prompt: "Use $post-for-me-mcp-setup to install the Post for Me MCP server in my Claude, verify it with a read-only account check, and tell me which files it touched. Do not publish anything as a test."
