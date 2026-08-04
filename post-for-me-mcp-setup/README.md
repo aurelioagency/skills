@@ -158,6 +158,21 @@ The key is stored in plain text in Claude's config file, which is how MCP config
 
 Once installed, the skill lives in `~/.claude/skills/post-for-me-mcp-setup/` and is available in **every** Claude Code session on the machine. It triggers on its own whenever you mention installing, configuring or repairing Post for Me — you can also invoke it explicitly with `/post-for-me-mcp-setup`.
 
+It is good for four things. Installing is the one that brings people here, but it is the one you do least:
+
+| What for | What you say | How often |
+|---|---|---|
+| **Install** | *"install the Post for Me MCP, my key is pfm_live_…"* | Once per machine |
+| **Diagnose and repair** | *"the server shows an error"*, *"it worked yesterday and now it's gone"* | Every time something breaks |
+| **Verify** | *"is my Post for Me connection still working?"* | Whenever you are unsure |
+| **Uninstall** | *"remove the Post for Me MCP"* | Moving machines, or dropping it |
+
+Diagnosing is the one that repeats. Installing happens once; things breaking does not — which is why `references/troubleshooting.md` is the largest file in the skill.
+
+It also handles reconfiguration without a full reinstall: pin a version instead of `@latest` (`--version`), install into Claude Code as well as the desktop app (`--target both`), rotate your API key (just run it again — it updates rather than duplicates), or rename the server (`--name`).
+
+What it does **not** do is publish. Once the MCP is running, this skill steps out of the way: you ask Claude to upload a video and the MCP handles it directly.
+
 ### Installing the MCP
 
 Describe it in your own words, for example:
