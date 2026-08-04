@@ -6,9 +6,10 @@ A collection of reusable skills for AI coding agents (Claude Code, Codex, and si
 
 | Skill | Description |
 |---|---|
+| [fable-5-protocol](fable-5-protocol/) | Cost-aware quality protocol that raises cheaper Claude models (Haiku / Sonnet / Opus) toward Fable 5 discipline: answer structure, verification habits, and project/API instructions to cut spend without cutting rigor. |
 | [heygen-ai-avatar-video](heygen-ai-avatar-video/) | Modular short-video production (TikTok / Reels / Shorts): HeyGen avatar openings/outro + HyperFrames animated body, ElevenLabs TTS, word-level captions, approval gates, encode budget, and QA/verification gates. |
 | [post-for-me-mcp-setup](post-for-me-mcp-setup/) | One-paste setup of the official Post for Me MCP server for social publishing: OS and path detection, safe config editing with backups and atomic writes, app-restart handling, read-only verification, uninstall, and a diagnostic reference. Never publishes anything. |
-| [social-carousel-generator](social-carousel-generator/) | Static TikTok and Instagram carousel generation from URLs, PDFs, pasted text, screenshots, or image references, with editable HTML source, PNG exports, captions, and visual QA. |
+| [social-carousel-generator](social-carousel-generator/) | Instagram and TikTok carousels from URLs, PDFs, YouTube videos, text, or screenshots — multi-brand: each brand keeps its own editable preset (palette, fonts, CTA, caption) and an asset bank the agent picks from by context. Editable HTML source, programmatic visual QA, adaptation between platforms, and a drag-to-Drive delivery folder with PNGs + caption.txt. |
 | [video-animation-workflow](video-animation-workflow/) | Branded 15–30 second motion-graphics videos from audio, video, scripts, or topics, with persistent brand profiles, approval gates, HyperFrames source, semantic sound design, and intentional 16:9 and 9:16 layouts. |
 
 ## Quick start — one paste, fully automatic
