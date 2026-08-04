@@ -2,6 +2,8 @@
 
 Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aurelio, or the local default carousel style.
 
+> This file ships with the skill, so **a skill update overwrites it**. It is also the worked example for `references/brand-preset-template.md`. If you want to edit La Casa's rules and keep the edits, eject it into the workspace once — copy this file to `social-carousels/brands/la-casa/preset.md`, together with the fonts and CTA assets it references — and edit there. A workspace preset always wins over the bundled one.
+
 ## Defaults
 
 - Platform: always ask before planning content, even when this preset is active. Ask exactly once, in Spanish:
@@ -155,7 +157,7 @@ Ask which of the two variants goes on this carousel. Never ask to design a new C
 
 ## Caption template (Instagram / TikTok)
 
-Every carousel ships a ready-to-publish caption in this exact structure. Deliver it as a single plain-text block, clearly labelled `CAPTION PARA INSTAGRAM/TIKTOK`, with nothing left for the user to edit.
+Every carousel ships a ready-to-publish caption in this exact structure, written to `caption.txt` inside the delivery folder (plain text, UTF-8, nothing but the caption) and also pasted in the chat, with nothing left for the user to edit.
 
 ```text
 Bienvenidos a la Casa de Aurelio!

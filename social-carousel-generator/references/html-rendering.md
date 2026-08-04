@@ -4,7 +4,9 @@ Use this workflow when creating the editable carousel package.
 
 ## Starting the package
 
-Do not improvise the skeleton. Copy `assets/template/` into the package (`index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` if the CTA has to be regenerated) and `assets/fonts/*.ttf` into `<package>/assets/fonts/`, then add the per-slide layouts. The template already carries the footer with its optical corrections, the safe-area constants, and the `layoutExceptions` field — rebuilding those from scratch is how they get re-broken.
+Do not improvise the skeleton. Copy `assets/template/` into the package (`index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` if the CTA has to be regenerated) and the font files into `<package>/assets/fonts/`, then add the per-slide layouts. The template already carries the footer with its optical corrections, the safe-area constants, and the `layoutExceptions` field — rebuilding those from scratch is how they get re-broken.
+
+**If the brand is not La Casa**, the template's header lists the six things that must change before the first render: the `@font-face` block plus the brand's actual font files, the `:root` palette, `footerBrand` / `footerSwipe` in `slide-data.js`, the cover's two families and two colours, the CTA asset, and the density bands (or the `density-budget` exception). Take all six from that brand's `preset.md` — never from this file and never from La Casa's values.
 
 ## Files
 
@@ -15,7 +17,7 @@ Create:
 - `slide-data.js`: structured slide data.
 - `manifest.json`: platform, size, slide order, CTA status, source, and export directories.
 - `carousel-brief.md`: source, angle decisions, slide plan, caveats.
-- `post-descriptions.md`: captions and hashtags after humanizer pass.
+- `caption.txt` inside the delivery folder: the caption, plain text, nothing else in the file.
 
 ## Rendering
 
@@ -32,7 +34,7 @@ Use `deviceScaleFactor: 1` and the exact viewport size:
 - TikTok: `1080x1920`
 - Instagram: `1080x1440` (3:4)
 
-Write working files to `exports/` and clean upload files to `exports-ready/`.
+Write the PNGs straight into the delivery folder, named `<YYYY-MM-DD>-<tema-en-kebab-case>-<ig|tt>` (pass it with `--out`). That folder holds the PNGs and `caption.txt` and nothing else: the user drags it into Drive as it is. There is no separate `exports/` — it was a byte-for-byte copy of the same files.
 
 Stop the temporary server after rendering.
 
@@ -87,7 +89,7 @@ Fixed assets cannot be reflowed at render time, so anything composed on top (a c
 
 ## Contact sheet
 
-`scripts/contact-sheet.mjs` builds it from `exports/`:
+`scripts/contact-sheet.mjs` finds the delivery folder on its own (the one with `01.png`, `02.png`, ...) and builds the sheet from it:
 
 ```powershell
 node "<skill-dir>/scripts/contact-sheet.mjs"

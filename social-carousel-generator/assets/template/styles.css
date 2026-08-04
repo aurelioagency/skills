@@ -3,7 +3,19 @@
    footer con centrado optico compensado, safe area por tamano, y balance de texto.
 
    Los colores y familias son los de La Casa de Aurelio (references/la-casa-preset.md).
-   Para otra marca, reemplaza el bloque :root y los @font-face. */
+
+   SI LA MARCA NO ES LA CASA, hay que tocar estas seis cosas. Ninguna es opcional:
+     1. Los @font-face de aca abajo + copiar los archivos de fuente de la marca a
+        assets/fonts/ del paquete. Una fuente que no carga es red issue.
+     2. El bloque :root entero: neutros y las cuatro familias de acento.
+     3. El footer: `footerBrand` en slide-data.js (el texto de abajo a la izquierda)
+        y el texto de swipe si la marca usa otro.
+     4. La portada: familia y color del titular y del giro (.s-cover h1 y .twist).
+        Tienen que ser dos familias y dos colores distintos.
+     5. El asset de CTA: el de la marca, en assets/, referenciado desde slide-data.js.
+     6. Las bandas de densidad de render-and-audit.mjs, o la excepcion 'density-budget'.
+   Todo eso se decide una sola vez y queda escrito en el preset de la marca
+   (social-carousels/brands/<marca>/preset.md). */
 
 @font-face {
   font-family: 'Archivo Black';

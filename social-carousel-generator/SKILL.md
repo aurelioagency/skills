@@ -12,19 +12,19 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 ## Core Workflow
 
 1. Resolve the preset, platform, language, and CTA mode.
-   Completion criterion: the active preset, slide size, language, footer behavior, and CTA behavior are explicit.
+   Completion criterion: the active preset, slide size, language, footer behavior, and CTA behavior are explicit, and the preset carries no unfilled placeholder in any section this carousel will use.
 2. Extract the source into shareable angles.
    Completion criterion: source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content.
 3. Recommend the carousel split, present two hook options per carousel, and ask for confirmation.
    Completion criterion: the user has confirmed, reduced, or changed the number of carousels, and picked or edited a hook for each one, before any slide is drafted.
 4. Draft the slides and get the copy approved.
-   Completion criterion: each carousel has 3-6 content slides, each slide has one job, passages are concise enough for mobile reading, and the user has approved the full slide copy as plain text before any HTML is built.
+   Completion criterion: each carousel has 3-6 content slides, each slide has one job, passages are concise enough for mobile reading, each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
-   Completion criterion: `exports/` and `exports-ready/` contain ordered platform-size PNGs, with CTA appended only when the active preset says so.
+   Completion criterion: the delivery folder (`<YYYY-MM-DD>-<tema>-<ig|tt>`) contains ordered platform-size PNGs, with CTA appended only when the active preset says so.
 6. Run visual QA from contact sheets.
    Completion criterion: every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
 7. Humanize captions and deliver.
-   Completion criterion: `post-descriptions.md`, `manifest.json`, `carousel-brief.md`, ready exports, a ready-to-paste caption block, and a short validation summary are present.
+   Completion criterion: the delivery folder holds the ordered PNGs **and `caption.txt`** and nothing else, the editable source is in place, and a short validation summary is given.
 
 When the user brings an existing carousel to convert to another platform or size, steps 2-4 are replaced by Adaptation Mode below: verbatim transcription and faithful rebuild, never re-angling or rewriting approved content.
 
@@ -32,21 +32,58 @@ When the user brings an existing carousel to convert to another platform or size
 
 Before planning content, ask which brand the carousel is for, unless the user already said so in their request:
 
-`¿Este carrusel es para La Casa de Aurelio o para otra marca?`
+`¿Para qué marca es este carrusel?`
 
-If the answer is La Casa de Aurelio, Agencia Aurelio, or this workspace, read `references/la-casa-preset.md` and use that preset. That preset ships a fixed CTA in two variants, so ask which one this carousel closes with — normal (`Guarda este post`) or comment (`Comenta AURELIO` to receive the skill by DM) — unless the user already said. Nothing else about the CTA is up for discussion.
+Then resolve the preset in this order — **never start the interview without checking first**:
 
-If it is for another brand, run the setup interview before planning content:
+1. **A workspace preset for that brand.** Look for `<workspace>/social-carousels/brands/<brand-slug>/preset.md`. If it exists, read it and use it, whatever the brand is. Do not re-interview; ask only what the preset marks as per-carousel (platform, CTA variant). This wins over anything bundled, so a brand the user has edited keeps its edits.
+2. **La Casa de Aurelio** (also Agencia Aurelio, Aurelio, or this workspace) with no workspace preset: read the bundled `references/la-casa-preset.md`. It ships a fixed CTA in two variants, so ask which one closes this carousel — normal (`Guarda este post`) or comment (`Comenta AURELIO` to receive the skill by DM). Nothing else about the CTA is up for discussion.
+3. **A new brand**: run the setup interview below, and finish it by **writing that brand's preset**.
+
+La Casa is bundled because it is the worked example, not because it is special. To edit it the way any other brand is edited, eject it into the workspace once — copy `references/la-casa-preset.md` to `social-carousels/brands/la-casa/preset.md` along with the fonts and the CTA assets it uses — and edit there. From then on step 1 picks it up and skill updates stop overwriting your changes.
+
+### Setup interview (new brand only)
 
 1. Ask this bilingual language question exactly:
    `Default language is Spanish. Lenguaje es español. ¿Lo quieres cambiar o seguimos así?`
 2. Ask for platform if not implied: TikTok or Instagram.
    2026 sizes: TikTok carousel is `1080x1920`. Instagram carousel is `1080x1440` (3:4).
-3. Ask whether to use a fixed CTA frame or generate a CTA each run. Recommend fixed CTA.
-4. If fixed CTA is selected, ask for CTA copy, brand/logo asset, and CTA layout reference. Do not ask this again once the active preset explicitly sets a fixed CTA.
-5. Ask for visual references: URLs, screenshots, images, brand pages, or sample posts. If none are provided, ask only the minimum questions needed for palette, tone, audience, and footer text.
+3. Ask for visual references first: URLs, screenshots, images, brand pages, or sample posts. **Derive values from them instead of asking** — pull the hex codes off the images, identify the fonts, read the footer. Ask only what the references cannot answer: palette gaps, tone, audience, footer text.
+4. Ask for the brand's **font files** and copy them into the brand folder. A web font that silently falls back to a system sans is a red issue, so this cannot be left for later.
+5. Ask whether to use a fixed CTA frame or generate a CTA each run. Recommend fixed. If fixed, ask for the CTA copy, the logo/brand asset and a layout reference, build the asset once in HTML at each size the brand publishes, and save it in the brand folder with its `.html` source.
 
 Do not run a long questionnaire. When the user answers `default`, apply the recommended defaults for the active context.
+
+### Writing the brand preset
+
+The interview ends by filling `references/brand-preset-template.md` and saving it as:
+
+```text
+<workspace>/social-carousels/brands/<brand-slug>/
+  preset.md            # the filled template
+  fonts/               # the brand's font files
+  cta-<size>.png       # fixed CTA per size and variant, if any
+  cta.html             # the source that produced them
+```
+
+Show the filled preset to the user and get it approved before drafting slides — it is the document every future carousel of that brand will obey.
+
+**A preset is never delivered with placeholders left in it.** Before using one — the brand's or the bundled one — scan it for unfilled `<…>` fields. Every section the carousel touches must be resolved, and two are wrong to leave open because the rest of the pipeline reads them directly: the **caption template** (the fixed blocks must be written out verbatim, or the caption cannot be assembled) and the **density budget** (either the brand's own bands, copied into `slide-data.js` as `densityBudget`, or the `density-budget` exception with its reason). If a field is still a placeholder when you need it, stop and ask the user for that value — never guess it and never fall back to another brand's.
+
+### Editing a preset
+
+A preset is a plain markdown file in the user's workspace. They can edit it by hand, or ask for a change in the chat and the agent edits it. Either way:
+
+- Changes apply to the **next** carousel; already-delivered packages keep the values they were built with.
+- Skill updates never touch it, because it lives outside the skill folder.
+- When a change contradicts something already recorded (a colour, a footer, a CTA), update the preset first and say what it means for future carousels — never let the preset and the rendered work drift apart.
+
+**It lives in the workspace, never inside the skill folder.** Re-installing the skill replaces its files: a preset saved into `~/.claude/skills/…` disappears on the next update. The bundled `references/la-casa-preset.md` is the worked example to imitate, not the place to write.
+
+Two things a new brand must decide explicitly, because inheriting La Casa's answer is wrong:
+
+- **The density budget.** The bands in `scripts/render-and-audit.mjs` were measured on La Casa's published set. Another brand either measures its own and updates the table, or lists `density-budget` under `layoutExceptions` with the reason in `manifest.json`. Judging a brand by another brand's density produces red issues that mean nothing.
+- **The cover formula.** Which family and colour carry the headline, which different family and colour carry the twist line, and what graphic the cover uses.
 
 ## Source Intake
 
@@ -161,7 +198,17 @@ Recommendation: [which and why, one line]
 
 Before building any HTML, show the user the complete copy of every slide as plain text — kicker, headline, body, labels, and any verdict line — numbered by slide. Wait for approval, edits, or replacements.
 
-Rendering before this gate wastes work and hides copy problems inside images, where they are slower to spot and slower to fix.
+**The asset plan is part of this same gate.** For every slide, show which asset from the brand's bank goes on it and **which other bank assets could also work**, so the user chooses instead of discovering the agent's pick inside a rendered image:
+
+```text
+Slide 2 — asset propuesto: personaje/tiburon-agobiado-cubierto-de-postits.png (es el slide del problema)
+          tambien podrian ir: personaje/tiburon-preocupado-rascandose-la-cabeza.png · iconos/pila-de-papeles.png
+Slide 4 — sin asset (el diagrama de pasos comunica mejor) · podria ir: iconos/engranajes-conectados.png
+```
+
+List every viable alternative the bank actually has for that slide's job — if there is only one candidate, or none, say that. Do not build a single slide until the user has approved copy **and** assets together; swapping an asset costs nothing at this stage and a re-render round after.
+
+Rendering before this gate wastes work and hides copy and asset problems inside images, where they are slower to spot and slower to fix.
 
 ## Copy Accuracy
 
@@ -184,9 +231,9 @@ After any change to a fixed asset or a shared layout, prove the rest did not mov
 
 Use supporting imagery on every carousel:
 
-- Generated images when they add meaning, especially for AI, Codex, software, and abstract workflow topics.
-- Diagrams, cards, charts, flow boards, visual metaphors, icons, or product screenshots when they communicate better than generated art.
-- Text overlays rendered in HTML/CSS, not baked into generated images.
+- **Image files come only from the brand's asset bank** — read `references/asset-bank.md`. The bank is a folder of finished PNGs (local or a git repo) whose **fully descriptive filenames are the selection mechanism**: the agent reads the names, matches them against each slide's job, opens only the shortlisted candidate to confirm, and proposes the pairing at the copy gate. Nothing fits → the slide goes without an asset, and the user is told what would have served. Never pull images from outside the bank or generate them on the fly.
+- Diagrams, cards, charts, flow boards, visual metaphors, and icons built in HTML/CSS when they communicate better than an image — or always, for a brand with no bank.
+- Text overlays rendered in HTML/CSS, not baked into images.
 
 Hard QA rules:
 
@@ -217,7 +264,9 @@ An exception is valid when all three are true:
 2. Its id is listed in `slide-data.js` under `layoutExceptions`, with a comment naming the decision and its date.
 3. `manifest.json` carries the same id under `layout_exceptions`, with the reason.
 
-Valid ids: `cover-hook-centered`, `vertical-balance`, `counter-centered`, `optical-padding`. A listed exception drops that check from red issue to informational note, so the rest of the QA keeps blocking normally.
+Valid ids: `cover-hook-centered`, `vertical-balance`, `counter-centered`, `optical-padding`, `density-budget`. A listed exception drops that check from red issue to informational note, so the rest of the QA keeps blocking normally.
+
+`density-budget` is the one a new brand is most likely to need: the density bands are La Casa's, measured on its published set. A brand with a different visual weight either measures its own bands or takes this exception — see the brand preset template.
 
 Never add an exception on your own judgment to make a render pass. If a rule is in the way and the user has not ruled on it, ask.
 
@@ -242,13 +291,24 @@ social-carousels/<slug>/
   styles.css
   slide-data.js
   carousel-brief.md
-  post-descriptions.md
   manifest.json
   assets/
-  references/
-  exports/
-  exports-ready/
+  2026-08-03-claude-piloto-automatico-ig/    # la carpeta de entrega
 ```
+
+### The delivery folder
+
+One folder per carousel, named so the user can drag it straight into Drive without renaming anything:
+
+```text
+<YYYY-MM-DD>-<tema-en-kebab-case>-<ig|tt>
+```
+
+The date is the delivery date, the middle is the carousel's topic (the package slug), and the platform uses the abbreviation people actually use: `ig` for Instagram, `tt` for TikTok.
+
+Inside it, **only two kinds of file**: the ordered PNGs (`01.png`, `02.png`, …) and `caption.txt`. Nothing else ever goes in there — no report, no contact sheet, no working copy. Render straight into it with `--out <carpeta>`.
+
+`qa-report.json` and `contact-sheet.png` are working files: produced during the job, read during QA, and **deleted before delivery**. There is no `exports/` (it was a byte-for-byte duplicate) and no `post-descriptions.md` — the caption ships as `caption.txt` inside the delivery folder, and whatever is worth remembering about it goes in `carousel-brief.md`.
 
 Read `references/html-rendering.md` when implementing the static HTML screenshot workflow or visual QA.
 
@@ -257,6 +317,10 @@ Read `references/html-rendering.md` when implementing the static HTML screenshot
 Always generate post descriptions with hashtags.
 
 If the active preset defines a caption template, follow it exactly: fixed blocks (greetings, service lines, links, fixed hashtags) are reproduced verbatim and never adapted to the topic; only the blocks the template marks as written change per carousel. Deliver the caption as one plain-text block, clearly labelled and ready to paste with no further editing.
+
+Check the template is actually filled before writing a single caption. A preset whose caption section still carries `<…>` placeholders, or that has no caption section at all, is not usable: ask the user for the greeting, the fixed lines, the links and the fixed hashtags, write them into the preset, and only then assemble the caption. Shipping a caption invented around a placeholder is worse than asking.
+
+**Ship the caption as a file, not only as chat text.** Write it to `caption.txt` inside the delivery folder — plain text, UTF-8, no markdown, no headings, no code fences, nothing but the caption itself, ready to select-all and paste. It sits next to the PNGs because that is the folder the user opens to publish. Paste it in the chat too.
 
 Use `$humanizer` on each slide passage and each post description before final export. If `$humanizer` is not installed, ask to install it globally with the skill installer when available. If installation is not available, continue only after applying the built-in humanizer pass:
 
@@ -269,14 +333,19 @@ Use `$humanizer` on each slide passage and each post description before final ex
 
 ## Deliverable
 
-Return the ready export folders and a short validation summary.
+Return the delivery folder and a short validation summary.
 
-Each final package must include:
+What the user actually publishes — everything else is working material:
 
-- Ordered PNG exports.
-- Editable HTML/CSS/data source.
-- `carousel-brief.md`.
-- `manifest.json`.
-- `post-descriptions.md`.
-- A ready-to-paste caption block in the active preset's template.
-- A visual QA note confirming size, readability, centered layout, CTA behavior, and any remaining caveat.
+- Ordered PNG exports in `<YYYY-MM-DD>-<tema>-<ig|tt>/`.
+- `caption.txt` in that same folder — the caption alone, plain text, ready to paste.
+
+What the package keeps so the carousel can be fixed later without rebuilding it:
+
+- Editable HTML/CSS/data source plus `assets/`.
+- `manifest.json` (platform, size, CTA variant, layout exceptions).
+- `carousel-brief.md` — short: source, angles, decisions, caveats. Not a report.
+
+Nothing else ships. `qa-report.json` and `contact-sheet.png` are deleted after the QA pass; there is no `exports/` and no `post-descriptions.md`.
+
+And in the chat: the caption pasted in full, plus a visual QA note confirming size, readability, centered layout, CTA behavior, and any remaining caveat.

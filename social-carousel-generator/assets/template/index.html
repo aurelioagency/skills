@@ -23,12 +23,15 @@ const CONTOURS = `
 </svg>`;
 
 // El contador cuenta TODAS las imagenes, incluida la CTA final.
+// La marca y el swipe salen de slide-data.js: no los escribas en duro aca, o el
+// primer carrusel de otra marca sale con el footer de esta.
 function footer(i, total) {
+  const d = window.CAROUSEL;
   return `
   <div class="footer">
-    <div class="brand">aurelioagency.com</div>
+    <div class="brand">${d.footerBrand}</div>
     <div class="counter">${i + 1}/${total}</div>
-    <div class="swipe">← Desliza</div>
+    <div class="swipe">${d.footerSwipe || '← Desliza'}</div>
   </div>`;
 }
 

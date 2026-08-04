@@ -115,9 +115,13 @@ for (let i = 1; i <= count; i++) {
     };
 
     const exceptions = (window.CAROUSEL && window.CAROUSEL.layoutExceptions) || [];
+    // Bandas de densidad propias de la marca, si su preset las define. Sin esto, se
+    // usan las de La Casa, que estan medidas sobre SU set publicado.
+    const densityBudget = (window.CAROUSEL && window.CAROUSEL.densityBudget) || null;
     const slideEl = document.querySelector('.slide');
     const slideCls = (slideEl && typeof slideEl.className === 'string') ? slideEl.className : '';
     const isCTA = /\bs-cta\b/.test(slideCls);
+    const isCover = /\bs-cover\b/.test(slideCls);
 
     // 1) fuentes realmente cargadas (solo las que usa algun texto de la slide)
     const used = new Set();
@@ -262,7 +266,7 @@ for (let i = 1; i <= count; i++) {
       });
     });
 
-    return { exceptions, isCTA, fixedAsset, fontsMissing, small, outside, orphans, overflow, brokenImages, hook, balance, counter, chrome };
+    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, fontsMissing, small, outside, orphans, overflow, brokenImages, hook, balance, counter, chrome };
   }, { W, H });
 
   // El PNG se saca siempre: el chequeo optico se hace sobre pixeles reales.
@@ -319,6 +323,42 @@ for (let i = 1; i <= count; i++) {
       }, { b64: shot.toString('base64'), boxes: audit.chrome })
     : [];
 
+  // Densidad: se mide sobre el PNG, que es lo que ve quien scrollea. Tres metricas
+  // independientes de la tipografia: cobertura de tinta, renglones y bloques visuales.
+  const density = audit.isCTA ? null : await page.evaluate(async ({ b64 }) => {
+    const img = new Image();
+    img.src = 'data:image/png;base64,' + b64;
+    await img.decode();
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+    const W2 = c.width, H2 = c.height;
+    const d = ctx.getImageData(0, 0, W2, H2).data;
+    const rows = [];
+    let total = 0;
+    for (let y = 0; y < H2; y += 2) {
+      let n = 0;
+      for (let x = 0; x < W2; x += 2) {
+        const i = (y * W2 + x) * 4;
+        if ((d[i] + d[i + 1] + d[i + 2]) / 3 > 110) n++;
+      }
+      total += n;
+      if (n > 2) rows.push(y);
+    }
+    const runs = (gap) => {
+      if (!rows.length) return 0;
+      let k = 1;
+      for (let i = 1; i < rows.length; i++) if (rows[i] - rows[i - 1] > gap) k++;
+      return k;
+    };
+    return {
+      coverage: +(total / ((W2 / 2) * (H2 / 2)) * 100).toFixed(1),
+      lines: runs(8),
+      blocks: runs(30)
+    };
+  }, { b64: shot.toString('base64') });
+
   // Overlay sobre asset fijo: la artwork no se puede reflowear, asi que el overlay tiene
   // que caer en zona vacia. Miramos el anillo alrededor del contador en el PNG ya compuesto.
   let overlayClash = null;
@@ -349,13 +389,54 @@ for (let i = 1; i <= count; i++) {
   }
 
   delete audit.chrome;
-  report.push({ slide: i, ...audit, optical, overlayClash });
+  report.push({ slide: i, ...audit, optical, overlayClash, density });
 }
 await browser.close();
 
 fs.writeFileSync(path.join(pkg, 'qa-report.json'), JSON.stringify(report, null, 2));
 
 const scale = W / 1080;
+
+// PRESUPUESTO DE DENSIDAD — banda con piso Y techo, no solo techo. Un slide vacio es
+// tan poco entregable como un muro, y corregir en una direccion sin limite en la otra
+// es como se llega al problema opuesto.
+//
+// Derivado de los percentiles del set publicado de La Casa (44 slides, 1080x1920):
+//   contenido  cobertura p10 4,2 / p50 5,2 / p90 11,2 / max 12,1
+//              renglones 10 / 13 / 18 / 19      bloques 6 / 8 / 11 / 14
+//   portada    cobertura p10 6,1 / p50 6,5 / p90 8,2 / max 8,3
+//              renglones 8 / 12 / 16 / 16       bloques 6 / 8 / 8 / 8
+//
+// Fuera de la banda = aviso. Fuera del limite duro = red issue, en las dos direcciones.
+// La cobertura escala con el area del lienzo (el mismo contenido en 3:4 cubre ~33% mas);
+// los conteos de renglones y bloques no escalan, son contenido.
+//
+// NOTA: la banda de cobertura para 1080x1440 esta DERIVADA por area, no medida. Cuando
+// haya set publicado de Instagram, medilo con el mismo metodo y reemplaza estos numeros.
+const areaFactor = (1080 * 1920) / (W * H);
+// Bandas por defecto: las de La Casa de Aurelio, medidas sobre SU set publicado.
+// Otra marca no se juzga con estas. Su preset define las propias en slide-data.js:
+//   densityBudget: { cover: {...}, content: {...} }
+// y lo que declare pisa solo esas claves. Si no las midio todavia, la salida honesta
+// es la excepcion documentada 'density-budget', no heredar estos numeros en silencio.
+const DEFAULT_BUDGET = {
+  // El piso de cobertura de portada es 4,0 y no 4,5 (el p10 del set) por un principio:
+  // el set del que se deriva la banda no puede quedar rechazado por ella. A 4,5 una
+  // portada publicada caia en rojo por 0,01 puntos. Validacion sobre las 44 slides:
+  // 73% limpias, 25% aviso, 0% rojo.
+  cover:   { cov: [6.0, 8.5],  covHard: [4.0, 10.5], lines: [8, 16],  linesHard: [6, 20], blocks: [6, 8],  blocksHard: [4, 11] },
+  content: { cov: [4.0, 11.5], covHard: [3.0, 13.5], lines: [10, 18], linesHard: [7, 22], blocks: [6, 11], blocksHard: [4, 14] }
+};
+const customBudget = report[0]?.densityBudget || null;
+const BUDGET = {
+  cover:   { ...DEFAULT_BUDGET.cover,   ...(customBudget?.cover   || {}) },
+  content: { ...DEFAULT_BUDGET.content, ...(customBudget?.content || {}) }
+};
+if (customBudget) {
+  const keys = [...new Set([...Object.keys(customBudget.cover || {}), ...Object.keys(customBudget.content || {})])];
+  console.log(`Presupuesto de densidad propio de la marca (${keys.join(', ') || 'sin claves'}); el resto sale de las bandas por defecto.`);
+}
+
 const red = [];
 const warn = [];
 const notes = [];
@@ -404,6 +485,27 @@ for (const r of report) {
     if (r.counter.size > 30 * scale) {
       at(warn, `contador a ${r.counter.size}px: el cromo numerico va chico (24-26px a 1080 de ancho)`);
     }
+  }
+
+  // densidad: ni muro ni pagina vacia
+  if (r.density) {
+    const B = r.isCover ? BUDGET.cover : BUDGET.content;
+    const band = (b) => [b[0] * areaFactor, b[1] * areaFactor];
+    const check = (val, soft, hard, name, unit) => {
+      const over = val > hard[1], under = val < hard[0];
+      if (over || under) {
+        const msg = over
+          ? `${name} ${val}${unit}: pasa el limite de ${hard[1].toFixed(1)}${unit}. Saca una capa de informacion o parti el slide en dos. No bajes el cuerpo ni aprietes margenes.`
+          : `${name} ${val}${unit}: por debajo de ${hard[0].toFixed(1)}${unit}, el slide quedo vacio. Agranda el contenido o sumale una capa.`;
+        at(excepted('density-budget') ? notes : red, msg);
+      } else if (val > soft[1] || val < soft[0]) {
+        at(warn, `${name} ${val}${unit} fuera de la banda del set publicado (${soft[0].toFixed(1)}-${soft[1].toFixed(1)}${unit}): ` +
+                 (val > soft[1] ? 'va cargado.' : 'va flojo.'));
+      }
+    };
+    check(r.density.coverage, band(B.cov), band(B.covHard), 'cobertura de tinta', '%');
+    check(r.density.lines, B.lines, B.linesHard, 'renglones', '');
+    check(r.density.blocks, B.blocks, B.blocksHard, 'bloques visuales', '');
   }
 
   // centrado optico dentro de cajas de cromo

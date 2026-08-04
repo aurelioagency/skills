@@ -7,13 +7,26 @@ window.CAROUSEL = {
   width: 1080,
   height: 1440,
   brand: 'La Casa de Aurelio',
+  // Footer: salen de aca, no del HTML. Cambialos al armar un carrusel de otra marca.
+  footerBrand: 'aurelioagency.com',
+  footerSwipe: '← Desliza',
 
   // Excepciones de layout DOCUMENTADAS. Solo van si el usuario las decidio, y ademas
   // se registran en manifest.json > layout_exceptions con el motivo. Bajan el chequeo
   // correspondiente de red issue a nota informativa. Ids validos:
   //   'cover-hook-centered' | 'vertical-balance' | 'counter-centered' | 'optical-padding'
+  //   | 'density-budget'   <- el que suele necesitar una marca que no sea La Casa:
+  //                           las bandas de densidad estan medidas sobre el set de La Casa
   // Vacio por defecto: no agregues una excepcion para hacer callar al audit.
   layoutExceptions: [],
+
+  // Bandas de densidad propias de la marca, copiadas de su preset.md. Lo que declares
+  // pisa solo esas claves; el resto sale de las de La Casa. Si la marca todavia no las
+  // midio, no inventes numeros: usa la excepcion 'density-budget' de arriba.
+  // densityBudget: {
+  //   cover:   { cov: [6.0, 8.5],  covHard: [4.0, 10.5], lines: [8, 16],  blocks: [6, 8] },
+  //   content: { cov: [4.0, 11.5], covHard: [3.0, 13.5], lines: [10, 18], blocks: [6, 11] }
+  // },
 
   slides: [
     {

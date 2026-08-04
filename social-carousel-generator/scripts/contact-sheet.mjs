@@ -8,6 +8,7 @@
 //
 // Flags:
 //   --package <dir>  carpeta del paquete (default: cwd)
+//   --from <dir>     carpeta de PNGs (default: la carpeta de entrega, detectada sola)
 //   --cols <n>       columnas de la grilla (default: 4)
 //   --out <archivo>  salida (default: <package>/contact-sheet.png)
 import fs from 'node:fs';
@@ -46,8 +47,34 @@ const pkg = path.resolve(arg('package', process.cwd()));
 const cols = Number(arg('cols', 4));
 const out = path.resolve(arg('out', path.join(pkg, 'contact-sheet.png')));
 
-const dir = path.join(pkg, 'exports');
-const files = fs.readdirSync(dir).filter(f => f.toLowerCase().endsWith('.png')).sort();
+// La carpeta de entrega tiene nombre propio por carrusel (<fecha>-<tema>-<ig|tt>), asi
+// que se detecta por contenido: la que tenga los PNG numerados. `exports-ready` y
+// `exports` siguen reconociendose para los paquetes viejos.
+const isSlide = f => /^\d+\.png$/i.test(f);
+function findDeliveryDir() {
+  const named = ['exports-ready', 'exports']
+    .map(d => path.join(pkg, d))
+    .find(d => fs.existsSync(d) && fs.readdirSync(d).some(isSlide));
+  if (named) return named;
+  const found = fs.readdirSync(pkg, { withFileTypes: true })
+    .filter(e => e.isDirectory() && e.name !== 'assets' && !e.name.startsWith('.'))
+    .map(e => path.join(pkg, e.name))
+    .filter(d => fs.readdirSync(d).some(isSlide));
+  if (found.length === 1) return found[0];
+  if (found.length > 1) {
+    console.error(`Hay ${found.length} carpetas con PNG numerados. Elegi una con --from:\n  ` +
+      found.map(d => path.basename(d)).join('\n  '));
+    process.exit(1);
+  }
+  return null;
+}
+const from = arg('from', null);
+const dir = from ? path.resolve(from) : findDeliveryDir();
+if (!dir) {
+  console.error(`No encontre la carpeta de entrega en ${pkg} (una carpeta con 01.png, 02.png, ...)`);
+  process.exit(1);
+}
+const files = fs.readdirSync(dir).filter(isSlide).sort();
 if (!files.length) {
   console.error(`No hay PNG en ${dir}`);
   process.exit(1);
