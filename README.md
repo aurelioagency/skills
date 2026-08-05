@@ -6,7 +6,7 @@ A collection of reusable skills for AI coding agents (Claude Code, Codex, and si
 
 | Skill | Description |
 |---|---|
-| [brand-mascot](brand-mascot/) | Creates a reusable brand mascot and consistent new poses from one canonical master, with measured color correction, protected props, strict transparency, and five visual QA gates before delivering a single ready-to-use PNG. |
+| [brand-mascot](brand-mascot/) | **Codex only.** Creates a reusable brand mascot and consistent new poses from one canonical master, using Codex ImageGen plus local Python color correction, protected props, strict transparency, and five visual QA gates. |
 | [fable-5-protocol](fable-5-protocol/) | Cost-aware quality protocol that raises cheaper Claude models (Haiku / Sonnet / Opus) toward Fable 5 discipline: answer structure, verification habits, and project/API instructions to cut spend without cutting rigor. |
 | [heygen-ai-avatar-video](heygen-ai-avatar-video/) | Modular short-video production (TikTok / Reels / Shorts): HeyGen avatar openings/outro + HyperFrames animated body, ElevenLabs TTS, word-level captions, approval gates, encode budget, and QA/verification gates. |
 | [post-for-me-mcp-setup](post-for-me-mcp-setup/) | One-paste setup of the official Post for Me MCP server for social publishing: OS and path detection, safe config editing with backups and atomic writes, app-restart handling, read-only verification, uninstall, and a diagnostic reference. Never publishes anything. |

@@ -1,6 +1,6 @@
 # Brand Mascot
 
-An agent skill for creating a reusable brand mascot and generating new poses without letting the character's identity, anatomy, proportions, colors, or internal layout drift.
+A Codex skill for creating a reusable brand mascot and generating new poses without letting the character's identity, anatomy, proportions, colors, or internal layout drift.
 
 ```text
 brand brief → transparent master → measured character sheet → consistent pose → color correction → visual QA → transparent PNG
@@ -8,7 +8,16 @@ brand brief → transparent master → measured character sheet → consistent p
 
 The workflow keeps one canonical `master.png` per mascot. Every new pose starts from that master—not from a previous pose—and passes deterministic color correction, transparency checks, and a visual comparison before delivery.
 
-Works with file-based agent harnesses that can generate images and run local Python scripts, including Codex and similarly capable local agents.
+## Codex only
+
+This skill is designed exclusively for **Codex with local file and command access**. Its workflow depends on both capabilities being available in the same agent:
+
+- Codex's built-in image generator, including reference-image input for keeping the mascot consistent;
+- local Python execution for color measurement and correction, protected-prop masking, transparency validation, and regression tests;
+- local file access for maintaining `master.png`, `CHARACTER.md`, `catalog.md`, finished poses, and temporary production files;
+- image inspection in Codex Desktop for the required visual QA gates.
+
+Claude Code can run local scripts, but it does not include the image generator this workflow requires. ChatGPT on the web can generate images, but it does not provide the persistent local filesystem and script-execution pipeline required by this skill. Installing the folder in either environment does not provide the complete workflow.
 
 ## What's in this folder
 
@@ -30,32 +39,29 @@ Works with file-based agent harnesses that can generate images and run local Pyt
 
 ## Installation
 
-**Option A — let your agent install it (recommended).** Open a local coding agent and paste:
+**Option A — let Codex install it (recommended).** Open Codex with local workspace access and paste:
 
 ```text
 Install the brand-mascot skill from https://github.com/aurelioagency/skills :
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
 2. Inside it, run: git sparse-checkout set brand-mascot
-3. Copy the brand-mascot/ folder into my active personal skills directory as brand-mascot/.
+3. Copy the brand-mascot/ folder into ~/.codex/skills/brand-mascot/.
 4. Delete the temporary clone and confirm SKILL.md loads.
-5. Check the requirements: Python 3, NumPy, Pillow, and a callable image-generation tool.
+5. Confirm that Codex ImageGen is callable, then check Python 3, NumPy, and Pillow.
    Install anything missing (ask me to approve each install command).
 6. Run: python scripts/test_mascot.py
 7. Explain how to create my first mascot and ask whether we should start now.
 ```
 
-The agent fetches only this skill, installs it permanently for future chats, validates the bundled script, and walks you into the first mascot brief.
+Codex fetches only this skill, installs it permanently for future Codex tasks, validates the bundled script, and walks you into the first mascot brief.
 
 **Option B — manual.** Clone the repo and use the bundled installer:
 
 ```powershell
 git clone https://github.com/aurelioagency/skills.git
 cd skills
-node install-skills.mjs brand-mascot          # Claude Code
-node install-skills.mjs brand-mascot --codex  # Codex
+node install-skills.mjs brand-mascot --codex
 ```
-
-Any other file-based harness can point directly at this folder's `SKILL.md`.
 
 ## Updating
 
@@ -63,14 +69,12 @@ Improvements land in this repo; an installed copy does not update itself. Re-run
 
 ```powershell
 git pull
-node install-skills.mjs brand-mascot
 node install-skills.mjs brand-mascot --codex
 ```
 
 Check whether an update is available without installing it:
 
 ```powershell
-node install-skills.mjs brand-mascot --check
 node install-skills.mjs brand-mascot --codex --check
 ```
 
@@ -81,7 +85,6 @@ The installer replaces only the installed skill folder. Mascot project folders, 
 From a clone of the repo:
 
 ```powershell
-node install-skills.mjs brand-mascot --remove
 node install-skills.mjs brand-mascot --codex --remove
 ```
 
@@ -91,7 +94,7 @@ Removing the skill does not remove any mascot project or generated asset.
 
 - **Python 3** on `PATH`.
 - **NumPy** and **Pillow** for measurement, correction, masking, and PNG validation.
-- **A callable image-generation tool** that accepts a reference image. Native transparent output is preferred; controlled flat-chroma output is supported.
+- **Codex ImageGen** with reference-image input. Native transparent output is preferred; controlled flat-chroma output is supported.
 - **Local file access** so the agent can maintain each mascot's master, character sheet, pose catalog, and temporary work folder.
 
 Run the regression suite with:
