@@ -25,13 +25,18 @@ const CONTOURS = `
 // El contador cuenta TODAS las imagenes, incluida la CTA final.
 // La marca y el swipe salen de slide-data.js: no los escribas en duro aca, o el
 // primer carrusel de otra marca sale con el footer de esta.
+//
+// ?video=1 omite el prompt de swipe: en un Short no hay nada que deslizar, y la
+// linea queda como un residuo del carrusel. build-short.mjs renderiza con este
+// flag; el carrusel se renderiza sin el y no cambia.
+const VIDEO = new URLSearchParams(location.search).has('video');
 function footer(i, total) {
   const d = window.CAROUSEL;
   return `
   <div class="footer">
     <div class="brand">${d.footerBrand}</div>
     <div class="counter">${i + 1}/${total}</div>
-    <div class="swipe">${d.footerSwipe || '← Desliza'}</div>
+    ${VIDEO ? '' : `<div class="swipe">${d.footerSwipe || '← Desliza'}</div>`}
   </div>`;
 }
 

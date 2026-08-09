@@ -23,8 +23,10 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
    Completion criterion: the delivery folder (`<YYYY-MM-DD>-<tema>-<ig|tt>`) contains ordered platform-size PNGs, with CTA appended only when the active preset says so.
 6. Run visual QA from contact sheets.
    Completion criterion: every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
-7. Humanize captions and deliver.
-   Completion criterion: the delivery folder holds the ordered PNGs **and `caption.txt`** and nothing else, the editable source is in place, and a short validation summary is given.
+7. Build the vertical Short and get the music approved.
+   Completion criterion: `short.mp4` is built from the approved slides, and the user has seen the chosen track — already cut to the video's length — and approved it. Nothing is published before that yes.
+8. Humanize captions and deliver.
+   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, the editable source is in place, and a short validation summary is given.
 
 When the user brings an existing carousel to convert to another platform or size, steps 2-4 are replaced by Adaptation Mode below: verbatim transcription and faithful rebuild, never re-angling or rewriting approved content.
 
@@ -306,11 +308,80 @@ One folder per carousel, named so the user can drag it straight into Drive witho
 
 The date is the delivery date, the middle is the carousel's topic (the package slug), and the platform uses the abbreviation people actually use: `ig` for Instagram, `tt` for TikTok.
 
-Inside it, **only two kinds of file**: the ordered PNGs (`01.png`, `02.png`, …) and `caption.txt`. Nothing else ever goes in there — no report, no contact sheet, no working copy. Render straight into it with `--out <carpeta>`.
+Inside it, **only three kinds of file**: the ordered PNGs (`01.png`, `02.png`, …), `caption.txt` and `short.mp4`. Nothing else ever goes in there — no report, no contact sheet, no working copy. Render straight into it with `--out <carpeta>`.
 
 `qa-report.json` and `contact-sheet.png` are working files: produced during the job, read during QA, and **deleted before delivery**. There is no `exports/` (it was a byte-for-byte duplicate) and no `post-descriptions.md` — the caption ships as `caption.txt` inside the delivery folder, and whatever is worth remembering about it goes in `carousel-brief.md`.
 
 Read `references/html-rendering.md` when implementing the static HTML screenshot workflow or visual QA.
+
+## The vertical Short (MP4)
+
+Every carousel also ships a `1080x1920` video built from the same approved slides, so the
+same work covers YouTube Shorts. Build it with `scripts/build-short.mjs` after the visual QA
+passes — never from unapproved slides.
+
+```bash
+node <skill-dir>/scripts/build-short.mjs --port 8765 --out <carpeta-de-entrega>/short.mp4
+```
+
+- **Frames are re-rendered with `?video=1`**, which drops the swipe prompt. In a Short there
+  is nothing to swipe, and the line reads as leftover carousel chrome. The PNGs the user
+  publishes as a carousel are not touched.
+- **Slide duration is shared out by how much text each slide carries**, mapped onto `3-8s`
+  against that carousel's own lightest and heaviest slide. The CTA gets `3s`. The music is
+  then cut to exactly that total — there is no fixed video length.
+- The slides sit centered on the taller canvas and the bands are filled with the brand's
+  field colour, not black, so the seam does not show.
+
+**The video does not promise legibility.** A slide carrying a methodological note cannot be
+read in 8 seconds. The Short invites the viewer to pause; it does not replace the carousel.
+Say that to the user rather than stretching the video until it is unwatchable — a carousel
+like the OpenAI one needs ~92s to actually be read, and that is not a Short any more.
+
+### Music
+
+`scripts/fetch-music.mjs` picks an instrumental background track from archive.org. No
+account, no API key, no browser.
+
+**The methodology is fixed — do not "improve" it into fetching more:** one page of results
+chosen at random, 20 rows, filter those 20, pick one at random among the survivors. The next
+run lands on a different page, so the pool rotates.
+
+- The query carries **genre terms only**. Never add `background music` on its own: it drags
+  in corporate, epic, Christmas, horror stock and 1950s department-store muzak, all of which
+  pass any decency filter and none of which sets a mood.
+- Title filters drop covers and compilations of other people's songs, type beats, YouTube
+  rips, vocals, stingers, explicit content, and wrong genres.
+- **No language, alphabet or country filters, and do not add any.** Lofi is not any
+  country's national music: if the search returns country-tagged material, the query is
+  wrong, not the language. Measured over 200 candidates with the genre query, rules for
+  Cyrillic/CJK/Thai/Arabic caught exactly zero. What did show up was foreign pop relabelled
+  as lofi, and the "version or compilation of another song" rule catches that in any language.
+- Tracks must run **1 to 5 minutes**. Below that there is nothing to choose from; above it
+  they stop being songs and become hour-long mixes.
+- The track is downloaded whole and its loudness profile measured end to end, then the
+  steadiest window of the video's length is cut, normalised to `-16 LUFS` with fades.
+
+**Show the chosen track to the user and wait for a yes before publishing.** This gate is not
+optional and cannot be automated away: the filters read titles, so a track can be named well
+and sound wrong, and nothing in the pipeline can listen to it.
+
+### Gotchas that already cost a debugging round
+
+- `ebur128` only emits its per-frame profile with `-loglevel verbose`. Without it there are
+  zero samples and the window picker silently falls back to a fixed offset — which looks like
+  a working measurement until you notice every track lands on the same percentage.
+- ffmpeg writes that profile to **stderr and exits 0**, so `execFileSync` inside a `try/catch`
+  never sees it. Use `spawnSync` and read `.stderr` unconditionally.
+- The profile line reads `t: 1.0  TARGET:-23 LUFS  M:-14.2`. A pattern expecting `t:` directly
+  followed by `M:` never matches.
+- Do **not** compute slide durations as "reading speed, then clamp to a maximum": every
+  content slide overshoots the cap, so they all come out at exactly the maximum and the
+  share-out shares nothing.
+- ffmpeg cannot seek cleanly into an arbitrary point of a long MP3 — it reads forward.
+  Measured on an 8-hour, 1 GB file: jumping to minute 10 took 19s, jumping to hour 7 never
+  finished. The duration ceiling is what keeps the download cheap.
+- archive.org returns a file's `length` sometimes as `MM:SS` and sometimes as seconds.
 
 ## Captions
 
@@ -339,6 +410,7 @@ What the user actually publishes — everything else is working material:
 
 - Ordered PNG exports in `<YYYY-MM-DD>-<tema>-<ig|tt>/`.
 - `caption.txt` in that same folder — the caption alone, plain text, ready to paste.
+- `short.mp4` in that same folder — the vertical video, same caption, for YouTube Shorts.
 
 What the package keeps so the carousel can be fixed later without rebuilding it:
 
