@@ -99,7 +99,14 @@ delete `work/`.**
   `master-final`, `master-transparent-clean`. Approving a new one replaces
   `master.png` and the previous file is deleted. If nothing was approved, nothing
   is saved outside `work/`.
-- **One pose request produces one file** in `poses/`, named after the pose.
+- **One pose request produces one file** in `poses/`. Give it a descriptive
+  lowercase hyphenated filename using this structure: **character + action +
+  distinctive object or context**. This is an acceptance gate, not a suggestion:
+  before saving, verify that all three components are present in the basename.
+  Include the prop or setting that makes the pose recognizable; avoid vague
+  names that mention only a broad concept. Example:
+  `tiburon-presionando-boton-de-automatizacion.png`, not
+  `tiburon-automatizacion.png`.
 - **Never keep the chroma version or the pre-correction cut.** Once the corrected
   PNG exists they are worthless.
 - **Never show an image the user did not ask for.** One request, one image on
@@ -436,6 +443,28 @@ closed small smile, pursed playful mouth or tiny tongue gesture. Reject:
 - half-lidded sideways eyes plus a smirk — suspicion/arrogance
 
 Judge the combined eyes + brows + mouth, not any feature in isolation.
+
+**Expression is contextual, never automatic.** Treat this as an acceptance gate
+for every pose. Infer the emotion from the scene's narrative meaning and exact
+moment, translate it into observable eyes, mouth and posture, and write those
+signals explicitly into the generation prompt. Never default to the master's
+smile, rotate expressions for variety, or require the mascot to smile in every
+image. Teeth are permitted only when the chosen expression has a genuinely open
+mouth; a closed-mouth smile must show neither teeth nor mouth interior.
+
+Choose the expression from the **narrative meaning and exact moment of the
+requested pose**, not from a rotation, variety quota, recent-pose count, or the
+master's default expression. First state what the character should emotionally
+feel in that scene; then translate it into observable eyes, mouth and posture.
+For example, a before-and-after transformation from disorder to organization
+calls for relief or quiet satisfaction—relaxed eyes and a small closed-mouth
+smile—not an exuberant open promotional grin. Celebration may justify a broad
+open smile; diagnosis calls for concentration; an unresolved problem may call
+for concern. Repeating an expression is acceptable when separate contexts
+genuinely call for it, and changing it merely for variety is not. Never copy the
+master's smile just because the master is the identity reference. Specify the
+chosen eyes-and-mouth treatment explicitly in the prompt. Teeth appear only
+when the mouth is open enough to reveal them.
 
 **3. Generate a single image**, with `master.png` as the reference and a short
 prompt. The likeness is held by the reference image, not by the amount of text;
