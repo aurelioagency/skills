@@ -1,25 +1,30 @@
 # Brand preset — fill-in template
 
-Copy this file to `<workspace>/social-carousels/brands/<brand-slug>/preset.md` and fill it in
-with the user during the setup interview. From then on that brand costs the same as a
-bundled one: the interview never runs again.
+Copy this file to `references/<brand-slug>-preset.md` **in the repo checkout** and fill it in
+with the user during the setup interview. From then on that brand costs the same as any
+other: the interview never runs again.
 
 `references/la-casa-preset.md` is the worked example — read it to see the level of detail
 each section needs. **Measure values, never estimate them.** "A warm off-white" is not a
 value; `#F6F2E9` is.
 
-> Brand presets live in the workspace, **never inside the skill folder**. Re-installing the
-> skill replaces its files, so a preset written into `~/.claude/skills/…` is lost on the next
-> update.
+> Brand presets live **with the skill**, versioned in the repo, so they travel to every
+> machine and survive a reinstall. Edit them in the checkout and publish with
+> `node install-skills.mjs social-carousel-generator`. A change made only in the installed
+> copy under `~/.claude/skills/…` is overwritten by the next install, silently.
+
+> **A preset holds brand decisions only.** Size, carousel length and text density are
+> skill-wide rules in `SKILL.md` (*Format, length and density*) — identical for every brand.
+> Do not restate them here. Override one only if this brand genuinely needs it, and then
+> name the rule and give the reason.
 
 ## Brand folder layout
 
 ```text
-social-carousels/brands/<brand-slug>/
-  preset.md            # this file, filled in
+references/<brand-slug>-preset.md   # this file, filled in
+assets/brands/<brand-slug>/
   fonts/               # the brand's .ttf/.woff2 — copied into each package
-  cta-1080x1440.png    # fixed CTA per size, if the brand uses one
-  cta-1080x1920.png
+  cta-<variant>.png    # fixed CTA per variant, if the brand uses one
   cta.html             # the HTML source that produced them
   logo.png             # only if the CTA artwork needs it
 ```
@@ -29,8 +34,6 @@ social-carousels/brands/<brand-slug>/
 ## Defaults
 
 - Brand name: `<as the user writes it>`
-- Platform default: `<TikTok | Instagram>` — ask once per carousel anyway.
-- Sizes: TikTok `1080x1920`, Instagram `1080x1440` (3:4).
 - Language: `<es | en | …>`
 - Voice: `<3-6 words: how it talks, what it refuses to sound like>`
 - Audience: `<who reads this>`
@@ -108,11 +111,11 @@ See `references/asset-bank.md` for the full contract (what goes in, how the agen
 ## CTA
 
 - Mode: `<fixed asset | generated per carousel>`
-- If fixed, one asset per size and variant:
+- If fixed, one asset per variant, all at `1080x1440`:
 
-  | | `1080x1920` | `1080x1440` |
-  |---|---|---|
-  | `<variant name>` | `<path>` | `<path>` |
+  | `<variant name>` | `<path>` |
+  |---|---|
+  | `<variant name>` | `<path>` |
 
 - Copy in each variant: `<verbatim>`
 - The counter pill is composed on top at render time, so the asset serves any carousel

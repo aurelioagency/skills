@@ -11,16 +11,16 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 
 ## Core Workflow
 
-1. Resolve the preset, platform, language, and CTA mode.
-   Completion criterion: the active preset, slide size, language, footer behavior, and CTA behavior are explicit, and the preset carries no unfilled placeholder in any section this carousel will use.
+1. Resolve the preset, language, and CTA mode. Size is fixed and never asked (see Format, length and density).
+   Completion criterion: the active preset, language, footer behavior, and CTA behavior are explicit, and the preset carries no unfilled placeholder in any section this carousel will use.
 2. Extract the source into shareable angles.
    Completion criterion: source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content.
 3. Recommend the carousel split, present two hook options per carousel, and ask for confirmation.
    Completion criterion: the user has confirmed, reduced, or changed the number of carousels, and picked or edited a hook for each one, before any slide is drafted.
 4. Draft the slides and get the copy approved.
-   Completion criterion: each carousel has 3-6 content slides, each slide has one job, passages are concise enough for mobile reading, each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
+   Completion criterion: each carousel has 6-9 content slides, each slide has one job and stays inside the density budget below, each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
-   Completion criterion: the delivery folder (`<YYYY-MM-DD>-<tema>-<ig|tt>`) contains ordered platform-size PNGs, with CTA appended only when the active preset says so.
+   Completion criterion: the delivery folder (`<YYYY-MM-DD>-<tema>-ig`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
 6. Run visual QA from contact sheets.
    Completion criterion: every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
 7. Build the vertical Short and get the music approved.
@@ -38,18 +38,17 @@ Before planning content, ask which brand the carousel is for, unless the user al
 
 Then resolve the preset in this order — **never start the interview without checking first**:
 
-1. **A workspace preset for that brand.** Look for `<workspace>/social-carousels/brands/<brand-slug>/preset.md`. If it exists, read it and use it, whatever the brand is. Do not re-interview; ask only what the preset marks as per-carousel (platform, CTA variant). This wins over anything bundled, so a brand the user has edited keeps its edits.
-2. **La Casa de Aurelio** (also Agencia Aurelio, Aurelio, or this workspace) with no workspace preset: read the bundled `references/la-casa-preset.md`. It ships a fixed CTA in two variants, so ask which one closes this carousel — normal (`Guarda este post`) or comment (`Comenta AURELIO` to receive the skill by DM). Nothing else about the CTA is up for discussion.
-3. **A new brand**: run the setup interview below, and finish it by **writing that brand's preset**.
+1. **A preset that ships with the skill.** Look for `references/<brand-slug>-preset.md` — e.g. `references/la-casa-preset.md`. If it exists, read it and use it. Do not re-interview; ask only what the preset marks as per-carousel (CTA variant). **This is the copy that governs**: it is versioned with the skill, so it travels to every machine and survives a reinstall.
+2. **A workspace preset**, only for brands the skill does not carry: `<workspace>/social-carousels/brands/<brand-slug>/preset.md`. Read it the same way. If a brand has both, the skill's copy wins and the workspace one is stale — say so instead of silently picking one.
+3. **A new brand**: run the setup interview below, and finish it by **writing that brand's preset** into `references/`.
 
-La Casa is bundled because it is the worked example, not because it is special. To edit it the way any other brand is edited, eject it into the workspace once — copy `references/la-casa-preset.md` to `social-carousels/brands/la-casa/preset.md` along with the fonts and the CTA assets it uses — and edit there. From then on step 1 picks it up and skill updates stop overwriting your changes.
+**Presets live with the skill, in the repo.** That is deliberate: they are the document every future carousel obeys, so they belong under version control next to the code that reads them, not in a folder that exists on one machine. The consequence to respect: edit the preset **in the repo checkout** and re-run `node install-skills.mjs <skill-name>` to publish it. Editing the installed copy under `~/.claude/skills/` works until the next install, which overwrites it.
 
 ### Setup interview (new brand only)
 
 1. Ask this bilingual language question exactly:
    `Default language is Spanish. Lenguaje es español. ¿Lo quieres cambiar o seguimos así?`
-2. Ask for platform if not implied: TikTok or Instagram.
-   2026 sizes: TikTok carousel is `1080x1920`. Instagram carousel is `1080x1440` (3:4).
+2. Do not ask for platform or size — every carousel is `1080x1440` (see Format, length and density below).
 3. Ask for visual references first: URLs, screenshots, images, brand pages, or sample posts. **Derive values from them instead of asking** — pull the hex codes off the images, identify the fonts, read the footer. Ask only what the references cannot answer: palette gaps, tone, audience, footer text.
 4. Ask for the brand's **font files** and copy them into the brand folder. A web font that silently falls back to a system sans is a red issue, so this cannot be left for later.
 5. Ask whether to use a fixed CTA frame or generate a CTA each run. Recommend fixed. If fixed, ask for the CTA copy, the logo/brand asset and a layout reference, build the asset once in HTML at each size the brand publishes, and save it in the brand folder with its `.html` source.
@@ -61,10 +60,10 @@ Do not run a long questionnaire. When the user answers `default`, apply the reco
 The interview ends by filling `references/brand-preset-template.md` and saving it as:
 
 ```text
-<workspace>/social-carousels/brands/<brand-slug>/
-  preset.md            # the filled template
+<skill>/references/<brand-slug>-preset.md   # the filled template — the copy that governs
+<skill>/assets/brands/<brand-slug>/
   fonts/               # the brand's font files
-  cta-<size>.png       # fixed CTA per size and variant, if any
+  cta-<variant>.png    # fixed CTA per variant, if any
   cta.html             # the source that produced them
 ```
 
@@ -74,13 +73,14 @@ Show the filled preset to the user and get it approved before drafting slides �
 
 ### Editing a preset
 
-A preset is a plain markdown file in the user's workspace. They can edit it by hand, or ask for a change in the chat and the agent edits it. Either way:
+A preset is a plain markdown file in the skill's `references/`. The user can edit it by hand, or ask for a change in the chat and the agent edits it. Either way:
 
 - Changes apply to the **next** carousel; already-delivered packages keep the values they were built with.
-- Skill updates never touch it, because it lives outside the skill folder.
 - When a change contradicts something already recorded (a colour, a footer, a CTA), update the preset first and say what it means for future carousels — never let the preset and the rendered work drift apart.
 
-**It lives in the workspace, never inside the skill folder.** Re-installing the skill replaces its files: a preset saved into `~/.claude/skills/…` disappears on the next update. The bundled `references/la-casa-preset.md` is the worked example to imitate, not the place to write.
+**Edit it in the repo checkout, then re-install.** The installed copy under `~/.claude/skills/…` is a build output: the next `node install-skills.mjs` overwrites it. A change made only there is lost, and worse, it is lost silently — the carousel after the reinstall obeys the old values without anyone noticing.
+
+**A preset holds brand decisions only** — palette, typography, components, CTA, caption template, asset bank. Size, carousel length and text density are skill-wide rules in Format, length and density above, identical for every brand. A preset may override one of those, but only by naming it and giving the reason; a preset that silently restates them is how the two documents start to contradict each other.
 
 Two things a new brand must decide explicitly, because inheriting La Casa's answer is wrong:
 
@@ -142,7 +142,36 @@ Confirm, reduce, or change the split?
 
 Include the two hook options per carousel (see Hooks) in the same confirmation message, so split and hooks get approved together.
 
-Keep each carousel to 3-6 content slides. If the preset has a fixed CTA frame, append it as an extra final slide. A 3-slide carousel with a fixed CTA exports 4 images.
+Slide count, size and text budget are fixed by the skill — see Format, length and density below.
+
+## Format, length and density
+
+These three are skill-wide quality rules, not brand taste. They apply to every carousel regardless of the preset. A brand may override one only by saying so explicitly in its preset, with the reason.
+
+### One size
+
+Every carousel is **`1080x1440` (3:4)**. There is no platform question, no TikTok variant and no `1080x1920` carousel: the same export is published to Instagram and to TikTok, which displays it fine. The delivery folder ends in `-ig` as the size label, not as a restriction on where it is posted.
+
+The only `1080x1920` left in the pipeline is `short.mp4`, the vertical video, which centers the slides on the taller canvas. That is not a carousel.
+
+### 7 to 10 exported images
+
+**6 to 9 content slides**, plus the fixed CTA frame when the preset has one. The page counter counts every exported image, so 8 content slides plus CTA run `1/9` to `9/9`.
+
+The reason for the range is density, not length: more slides, each doing one job with less text on it, beats a short carousel of crowded slides. A longer carousel does cost reach on the last slides — which is where the CTA lives — so use the range, do not default to its top.
+
+### 120 to 220 characters per content slide
+
+Counted over all visible copy on the slide: kicker, headline, body, list items, card labels and verdict line, added together. That is roughly 20 to 36 words in Spanish.
+
+**Count characters, not words.** Thirty short words and thirty long words do not occupy the same space, and what decides whether copy fits the canvas at the typography floor is real length. A word count reads as a budget and behaves as a guess.
+
+- **One idea per slide, never two.** If a slide's text reads like a paragraph, it does not belong there: split it across two slides or move it to the caption.
+- **Cover: 40 characters maximum per line**, counted separately for the headline and for the twist line. The limit is per line, not for the block — two lines do not fit in 40 characters, and the cover needs both.
+- **Final check:** if a slide is not understood in 2-3 seconds of reading, it is overloaded even when it sits inside the band.
+- **Reference carousels** (checklist, comparison, template) tolerate more density, because the goal is that people save them and come back, not that they read them at speed. Never assume it — the user declares it when confirming the split, and it is recorded in `manifest.json`.
+
+This budget is what governs while writing. The pixel bands in `scripts/render-and-audit.mjs` stay as the safety net that catches a slide which ends up a wall or a blank after rendering.
 
 ## Slide Grammar
 
@@ -151,11 +180,15 @@ Use this default grammar unless the source demands a different structure:
 1. Hook or claim.
 2. Context or problem.
 3. Key insight.
-4. Example, framework, chart, or comparison.
-5. Practical takeaway.
-6. Optional content close.
+4. Evidence: the number, the study, the measured result.
+5. Example, framework, chart, or comparison.
+6. The counter-case, limit, or caveat.
+7. Practical takeaway.
+8. Optional content close.
 
-Prefer fewer, clearer slides over dense slides. Each slide gets one job.
+Steps 4 to 6 are where a carousel grows into the 6-9 range without padding: they split one crowded slide into the claim and the thing that backs it. If a step has nothing real to say, drop the step — never invent a slide to reach a number.
+
+Prefer more, clearer slides over dense ones. Each slide gets one job.
 
 ## Hooks
 
@@ -239,7 +272,7 @@ Use supporting imagery on every carousel:
 
 Hard QA rules:
 
-- Export every slide at the selected platform size.
+- Export every slide at `1080x1440`.
 - Enforce a typography floor. On any `1080px`-wide export, every user-facing word must have a computed font size of at least `40px`. Body copy, labels, captions, sources, caveats, methodological notes, footer brand text, and swipe text are not exempt. Only page counters made entirely of numbers and purely decorative single-character marks may use `24px`. Scale these floors proportionally when the export width is not `1080px`.
 - Never shrink text below the typography floor to make content fit. Shorten the copy, split the content across slides, reflow the layout, or remove low-value detail instead.
 - Treat any user-facing word below the typography floor as a red issue that blocks delivery.
@@ -247,7 +280,7 @@ Hard QA rules:
 - Balance the vertical composition. The gap above the first content pixel and the gap below the last must be within `4%` of the canvas height of each other. This is the check that catches dead space nobody meant to leave: when you remove an element, revisit every layout constant that existed to accommodate it. A stage offset that once cleared a badge keeps pushing content down long after the badge is gone. Fixed CTA assets are exempt.
 - Center chrome optically, not just geometrically. Symmetric CSS padding does not produce symmetric-looking boxes: a font's line box reserves dead space above the cap height that does not exist below the baseline, and emoji carry their own side bearing. Verify pills, chips, buttons, and counters by measuring the actual background margin around the ink in the rendered PNG, then compensate with asymmetric padding or a `translateY` on the text. The correction belongs to that element's font size and box height — never copy a working `translateY` onto a different pill. `scripts/render-and-audit.mjs` measures this automatically; in the footer it is a red issue.
 - Size chrome for its role. Page counters, decorative marks, and similar non-reading elements sit at `24-26px` on a `1080px`-wide export. The `40px` floor is a minimum for text the reader is meant to read, not a target for every glyph on the canvas.
-- Keep all readable content inside a central safe area with `5%` clearance from the left and right edges and `10%` clearance from the top and bottom edges. At `1080x1920` this means `x=54..1026` and `y=192..1728`; at `1080x1440` it means `x=54..1026` and `y=144..1296`. Approved fixed CTA assets are exempt.
+- Keep all readable content inside a central safe area with `5%` clearance from the left and right edges and `10%` clearance from the top and bottom edges. At `1080x1440` this means `x=54..1026` and `y=144..1296`. Approved fixed CTA assets are exempt.
 - Expand the composition deliberately within that safe area. Increase type, reflow visual elements, and use the available width and height before accepting large empty regions around small content. An unnecessarily small composition surrounded by avoidable empty space is a red issue.
 - Center the main information inside the canvas.
 - Keep every text element fully visible.
@@ -303,10 +336,10 @@ social-carousels/<slug>/
 One folder per carousel, named so the user can drag it straight into Drive without renaming anything:
 
 ```text
-<YYYY-MM-DD>-<tema-en-kebab-case>-<ig|tt>
+<YYYY-MM-DD>-<tema-en-kebab-case>-ig
 ```
 
-The date is the delivery date, the middle is the carousel's topic (the package slug), and the platform uses the abbreviation people actually use: `ig` for Instagram, `tt` for TikTok.
+The date is the delivery date and the middle is the carousel's topic (the package slug). The `-ig` suffix is the size label — there is only one size — and does not mean the package is for Instagram only: the same files go to TikTok.
 
 Inside it, **only three kinds of file**: the ordered PNGs (`01.png`, `02.png`, …), `caption.txt` and `short.mp4`. Nothing else ever goes in there — no report, no contact sheet, no working copy. Render straight into it with `--out <carpeta>`.
 
@@ -408,14 +441,14 @@ Return the delivery folder and a short validation summary.
 
 What the user actually publishes — everything else is working material:
 
-- Ordered PNG exports in `<YYYY-MM-DD>-<tema>-<ig|tt>/`.
+- Ordered PNG exports in `<YYYY-MM-DD>-<tema>-ig/`.
 - `caption.txt` in that same folder — the caption alone, plain text, ready to paste.
 - `short.mp4` in that same folder — the vertical video, same caption, for YouTube Shorts.
 
 What the package keeps so the carousel can be fixed later without rebuilding it:
 
 - Editable HTML/CSS/data source plus `assets/`.
-- `manifest.json` (platform, size, CTA variant, layout exceptions).
+- `manifest.json` (size, CTA variant, layout exceptions).
 - `carousel-brief.md` — short: source, angles, decisions, caveats. Not a report.
 
 Nothing else ships. `qa-report.json` and `contact-sheet.png` are deleted after the QA pass; there is no `exports/` and no `post-descriptions.md`.

@@ -29,12 +29,9 @@ python -m http.server 8765 --bind 127.0.0.1
 
 Use Playwright or an available Chromium browser to capture each slide at the target viewport. Prefer installed Chrome if bundled Playwright browsers are missing.
 
-Use `deviceScaleFactor: 1` and the exact viewport size:
+Use `deviceScaleFactor: 1` and the only viewport size: `1080x1440` (3:4). Carousels have one size — see *Format, length and density* in `SKILL.md`. The `1080x1920` viewport belongs to `short.mp4`, not to slides.
 
-- TikTok: `1080x1920`
-- Instagram: `1080x1440` (3:4)
-
-Write the PNGs straight into the delivery folder, named `<YYYY-MM-DD>-<tema-en-kebab-case>-<ig|tt>` (pass it with `--out`). That folder holds the PNGs and `caption.txt` and nothing else: the user drags it into Drive as it is. There is no separate `exports/` — it was a byte-for-byte copy of the same files.
+Write the PNGs straight into the delivery folder, named `<YYYY-MM-DD>-<tema-en-kebab-case>-ig` (pass it with `--out`). That folder holds the PNGs and `caption.txt` and nothing else: the user drags it into Drive as it is. There is no separate `exports/` — it was a byte-for-byte copy of the same files.
 
 Stop the temporary server after rendering.
 
@@ -53,7 +50,7 @@ It renders every slide at the platform viewport and fails (exit code 3) on any o
 - Any readable element outside the `5%` side / `10%` top-bottom safe area, measured by bounding box.
 - Orphan lines: a text block whose last line is under `22%` of its widest line.
 - Images or assets that failed to load (`naturalWidth === 0`).
-- Canvas overflow beyond the platform size.
+- Canvas overflow beyond `1080x1440`.
 - A cover hook that is not horizontally centered.
 - Vertical imbalance: the gap above the first content pixel versus below the last differs by more than `4%` of canvas height. Catches dead space left behind when an element is removed but its layout offset survives.
 - A page counter not centered on the canvas.
@@ -146,7 +143,7 @@ Inspect computed styles before delivery. Do not rely only on whether text fits i
 
 On the first content slide, inspect the primary hook block's bounding box and computed `text-align`. Fail QA unless the block is horizontally centered in the canvas and the title text is center-aligned. The only way around this rule is a Documented Layout Exception (SKILL.md): decided by the user, recorded in `slide-data.js` and `manifest.json`. Never assume it.
 
-Use the central safe area bounded by `5%` side clearances and `10%` top/bottom clearances. At `1080x1920`, validate every readable element against `x=54..1026` and `y=192..1728`; at `1080x1440`, against `x=54..1026` and `y=144..1296`. Within that area, expand the composition before accepting avoidable empty space.
+Use the central safe area bounded by `5%` side clearances and `10%` top/bottom clearances. At `1080x1440`, validate every readable element against `x=54..1026` and `y=144..1296`. Within that area, expand the composition before accepting avoidable empty space.
 
 ## Common layout patterns
 

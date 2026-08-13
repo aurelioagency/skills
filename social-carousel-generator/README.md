@@ -1,12 +1,12 @@
 # Social Carousel Generator — Branded Carousel Skill
 
-An agent skill for turning source material into platform-ready social carousels (Instagram 1080×1440 / TikTok 1080×1920) with an editable architecture:
+An agent skill for turning source material into ready-to-post social carousels — one size, `1080×1440`, published to both Instagram and TikTok — with an editable architecture:
 
 ```
 source (PDF / URL / YouTube / text / screenshots) → angles → hooks → slides → HTML package → PNG + caption
 ```
 
-It covers the full pipeline: source extraction, angle selection, hook craft, slide drafting, an editable HTML/CSS package rendered to platform-size PNGs via browser screenshot, programmatic visual QA (typography floor, safe areas, centered hook, density budget), humanized captions, and a fixed brand CTA — with explicit approval gates before anything renders.
+It covers the full pipeline: source extraction, angle selection, hook craft, slide drafting, an editable HTML/CSS package rendered to `1080×1440` PNGs via browser screenshot, programmatic visual QA (typography floor, safe areas, centered hook, density budget), humanized captions, and a fixed brand CTA — with explicit approval gates before anything renders.
 
 Works with agent harnesses that support file-based skills (Claude Code, Codex, and similar).
 
@@ -141,48 +141,49 @@ Open a Claude Code session anywhere and describe the job in your own words, for 
 
 The skill triggers automatically by matching your request. From there it drives everything and asks for what it needs:
 
-1. Asks the **brand**, the **platform** (Instagram or TikTok) and **which CTA** closes it — skipping anything you already answered in your request. For the brand it looks for a saved preset first (`social-carousels/brands/<brand>/preset.md`), falls back to the bundled La Casa one, and only interviews you if the brand is new — then saves its preset so it never asks again.
+1. Asks the **brand** and **which CTA** closes it — skipping anything you already answered in your request. There is no platform question: every carousel is `1080×1440` and the same files go to Instagram and TikTok. For the brand it reads its preset from `references/<brand>-preset.md`, and only interviews you if the brand is new — then writes its preset so it never asks again.
 2. Extracts the source (article text, YouTube transcript, PDF, screenshots) and captures facts and candidate angles in a brief — nothing invented.
 3. Proposes the **carousel split** plus **two hook options** per carousel, and waits for your pick before drafting a single slide.
-4. Drafts 3–6 content slides, one job per slide, and shows you the **complete copy as plain text for approval** before building any HTML.
-5. Builds the editable HTML package and renders ordered PNGs at platform size.
+4. Drafts 6–9 content slides — 7 to 10 exported images with the CTA — one job per slide and 120–220 characters on it, and shows you the **complete copy as plain text for approval** before building any HTML.
+5. Builds the editable HTML package and renders ordered `1080×1440` PNGs.
 6. Runs `scripts/render-and-audit.mjs` first, then the contact-sheet pass by eye for what a machine cannot judge: meaning, overlap, rhythm. Every red issue is fixed in source and re-rendered before delivery — PNGs are never patched.
 7. Delivers the folder you drag into Drive, plus a short validation summary.
 
 ### Setting up your own brand (once)
 
-The first time you ask for a brand the skill does not know, it runs a short setup interview: platform, language, your visual references, your font files, and how the CTA works. It reads what it can straight off your references — hex values, fonts, footer text — instead of asking you to describe them, and it only asks what the references cannot answer.
+The first time you ask for a brand the skill does not know, it runs a short setup interview: language, your visual references, your font files, and how the CTA works. It reads what it can straight off your references — hex values, fonts, footer text — instead of asking you to describe them, and it only asks what the references cannot answer. It never asks about size or slide count: those are fixed by the skill.
 
-It ends by filling [references/brand-preset-template.md](references/brand-preset-template.md) and saving it as `social-carousels/brands/<your-brand>/preset.md`, together with your fonts and your CTA asset. You approve that document before any slide is drafted; from then on every carousel of that brand obeys it and the interview never runs again.
+It ends by filling [references/brand-preset-template.md](references/brand-preset-template.md) and saving it as `references/<your-brand>-preset.md`, together with your fonts and your CTA asset. You approve that document before any slide is drafted; from then on every carousel of that brand obeys it and the interview never runs again.
 
 Two decisions the template forces you to make, because inheriting them from the bundled brand would be wrong: your **cover formula** (which family and colour carry the headline, which different family and colour carry the twist line) and your **density budget** (measure your own bands and declare them as `densityBudget` in `slide-data.js`, or take the documented `density-budget` exception).
 
-**Presets are editable.** They are plain markdown in your workspace: change them by hand or ask for the change in the chat. Edits apply to the next carousel, already-delivered packages keep what they were built with, and a skill update never touches them. That last part is why they live outside the skill folder — and why the bundled La Casa preset can be *ejected* into `brands/la-casa/` if you want to edit it the same way: a workspace preset always wins over the bundled one.
+**Presets are editable, and they live with the skill.** They are plain markdown in `references/`, versioned in this repo: change them by hand or ask for the change in the chat. Edits apply to the next carousel and already-delivered packages keep what they were built with. Edit them **in your checkout** and publish with `node install-skills.mjs social-carousel-generator` — a change made only in the installed copy under `~/.claude/skills/` is overwritten by the next install.
+
+A preset holds brand decisions only: palette, typography, components, CTA, caption template, asset bank. Size, carousel length and text density are skill-wide rules that apply to every brand.
 
 ### Mode 2 — adapt a carousel you already published
 
-Point the skill at your own carousel (its package folder, or just the final PNGs) and ask for the other size:
+Point the skill at your own carousel (its package folder, or just the final PNGs) and ask for the rebuild — typically an older `1080×1920` carousel brought to the current size:
 
-> Adaptá este carrusel de TikTok a Instagram: `<carpeta o PNGs>`
+> Adaptá este carrusel al tamaño actual: `<carpeta o PNGs>`
 
 Angle extraction, the split and the hook gate are all skipped. The copy comes from the original — transcribed verbatim from the PNGs and shown to you for approval when there is no editable source — and the slides are rebuilt in HTML at the target size. Originals are never scaled, cropped or letterboxed, and the chrome (footer, counter, CTA) comes from the preset rather than from the old images.
 
 ### Package output
 
 ```text
-social-carousels/
-  brands/
-    mi-marca/
-      preset.md                    # your brand's rules — survives skill updates
-      fonts/                       # your brand's font files
-      cta-1080x1440.png            # your fixed CTA, if you use one
-      asset-bank/                  # your imagery: transparent PNGs (or a cloned git repo)
-  <slug>/
-    index.html                     # editable slide source
+<skill>/references/mi-marca-preset.md   # your brand's rules — versioned with the skill
+<skill>/assets/brands/mi-marca/
+  fonts/                           # your brand's font files
+  cta-1080x1440.png                # your fixed CTA, if you use one
+  asset-bank/                      # your imagery: transparent PNGs (or a cloned git repo)
+
+social-carousels/<slug>/
+  index.html                       # editable slide source
   styles.css                       # visual system
   slide-data.js                    # slide content data
   carousel-brief.md                # source, angles, decisions
-  manifest.json                    # platform, size, slide order, CTA variant
+  manifest.json                    # size, slide order, CTA variant
   assets/                          # fonts and the CTA frame used
   2026-08-03-mi-tema-ig/           # ← the delivery folder
       01.png … 06.png

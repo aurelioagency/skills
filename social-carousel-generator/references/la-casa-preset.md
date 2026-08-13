@@ -2,27 +2,18 @@
 
 Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aurelio, or the local default carousel style.
 
-> **Ejemplo trabajado que viaja con la skill.** No es la copia que manda: la que gobierna los carruseles es la del workspace, en `social-carousels/brands/la-casa/preset.md`, y esa gana siempre sobre este archivo. Este se mantiene al día para que una instalación nueva arranque con los valores correctos y para que sirva de modelo al escribir el preset de otra marca. Editarlo acá no cambia nada en una máquina que ya tenga su copia de workspace.
+> **Esta es la copia que manda.** Vive con la skill, versionada en el repo, así que viaja a cualquier máquina y sobrevive a una reinstalación. Se edita acá, en el checkout, y se publica corriendo `node install-skills.mjs social-carousel-generator`. Editar la copia instalada en `~/.claude/skills/` sirve hasta la próxima instalación y después se pierde en silencio.
+>
+> Este archivo guarda **solo decisiones de marca**. Tamaño, largo del carrusel y densidad de texto son reglas de la skill y viven en `SKILL.md`.
 
 ## Defaults
 
-- **Un solo tamaño: `1080x1440` (3:4). No se pregunta la plataforma (decisión del 2026-08-13).** La Casa sube el mismo archivo a Instagram y a TikTok, así que la distinción TikTok/Instagram dejó de existir para esta marca: no hay pregunta de plataforma, no hay variante de tamaño, no hay `1080x1920` de carrusel. Si alguna vez hace falta otro tamaño, se decide explícitamente en el momento y se anota acá.
-  - La carpeta de entrega termina siempre en `-ig` y `manifest.json` sigue diciendo `instagram`. Es la etiqueta del tamaño, no una restricción de dónde publicar: ese mismo paquete se sube a TikTok tal cual.
-  - El único `1080x1920` que queda es el del video vertical (`short.mp4`), que se arma con los slides centrados sobre el lienzo más alto. Eso no es un carrusel y no cambia.
+- Tamaño, largo del carrusel y densidad de texto **no se definen acá**: son reglas de la skill, iguales para toda marca. Están en `SKILL.md`, sección *Format, length and density* — un solo tamaño `1080x1440`, de 7 a 10 imágenes exportadas, y de 120 a 220 caracteres por slide de contenido. La Casa no las pisa.
 - Language: Spanish by default.
 - Voice: practical, sharp, useful, human. Prefer clear Spanish. Use voseo only when the surrounding La Casa voice calls for it.
 - Audience: builders, operators, founders, AI-system users, Codex users, and people learning agent workflows.
 - Content density: useful, not encyclopedic.
-- **Densidad de texto por slide (regla de marca, 2026-08-13).**
-  - Cada slide de contenido: **120 a 220 caracteres** de copy visible — kicker, titular, cuerpo, ítems, etiquetas de tarjetas y línea de veredicto, todo sumado. Son unas 20 a 36 palabras (medido sobre el set publicado: 6,1 caracteres por palabra). Se cuenta en caracteres y no en palabras porque el largo real es lo que decide si entra en el lienzo, y treinta palabras cortas y treinta largas no ocupan lo mismo.
-  - Referencia de dónde venimos: los 37 slides publicados hasta hoy promedian 225 caracteres. La banda nueva afloja un poco, para que los slides extra del carrusel más largo aligeren de verdad en vez de sumar carga.
-  - **Una sola idea por slide**, nunca dos. Si el texto de un slide parece un párrafo, no va ahí: se parte en dos slides o se manda al caption.
-  - **Portada: máximo 40 caracteres por línea**, contados por separado en el titular Archivo Black y en el remate Georgia itálica. Las portadas publicadas van de 23 a 45 caracteres de titular, así que esto describe la práctica real; el límite no es para el bloque entero, porque en 40 caracteres no entran las dos líneas que el preset exige.
-  - **Chequeo final:** si un slide no se entiende en 2-3 segundos de lectura, está sobrecargado aunque esté dentro de la banda.
-  - **Excepción de carrusel de referencia** (checklist, comparativa, template): tolera más densidad, porque el objetivo es que lo guarden y vuelvan, no que lo lean al vuelo. Nunca se asume — la declara el usuario al confirmar el split, y queda anotada en `manifest.json`.
-- **Largo del carrusel (override de marca, 2026-08-13).** La Casa publica **7 a 10 imágenes exportadas**: 6 a 9 slides de contenido más el frame fijo de CTA. Esto pisa el `3-6 content slides` de SKILL.md, que queda como default de la skill y no aplica a esta marca. El motivo es repartir la densidad: más slides, cada uno con un solo trabajo y menos texto encima, en lugar de pocos slides cargados.
-  - El piso de densidad sigue mandando. Repartir no habilita slides finitos: cada slide de contenido tiene que sostener las bandas de `render-and-audit.mjs` (mínimo duro 7 renglones, 4 bloques visuales y 3,0% de cobertura de tinta). Un slide que no llega a eso se fusiona con el vecino, no se entrega.
-  - El contador sigue contando todas las imágenes exportadas: 8 slides de contenido más CTA corren `1/9` a `9/9`.
+- Cómo se aplica el presupuesto de caracteres de la skill en esta marca: la portada usa el máximo de 40 caracteres por línea sobre el titular Archivo Black y sobre el remate Georgia itálica por separado, que es lo que muestra el set publicado (titulares de 23 a 45 caracteres). Referencia histórica: los 37 slides publicados hasta el 2026-08-13 promedian 225 caracteres, es decir por encima de la banda actual — los carruseles nuevos salen más repartidos que los viejos.
 
 ## Brand system (canonical values)
 
@@ -156,7 +147,7 @@ The La Casa preset has a fixed final CTA frame enabled, in **two variants**. Ask
   |---|---|
   | Comentario | `assets/la-casa-cta-ig-aurelio.png` |
 
-- Los dos assets `1080x1920` (`la-casa-cta.png` y `la-casa-cta-aurelio.png`) quedaron **fuera de uso** desde la decisión de tamaño único del 2026-08-13. Siguen en la carpeta de la marca por si alguna vez vuelve a hacer falta ese tamaño; no se usan en carruseles nuevos y no se recortan ni estiran para llenar el lugar del asset de `1080x1440`.
+- Los dos assets `1080x1920` (`la-casa-cta.png` y `la-casa-cta-aurelio.png`) quedaron **fuera de uso** desde la decisión de tamaño único del 2026-08-13. Siguen versionados en `assets/` por si alguna vez vuelve a hacer falta ese tamaño; no se usan en carruseles nuevos y no se recortan ni estiran para llenar el lugar del asset de `1080x1440`.
 
 - Copy in the normal variant: `Guarda este post` / `y sígueme para más`. In the comment variant: `Comenta AURELIO` / `y te enviamos la skill por DM`. Both sit over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature, in the same layout.
 - When the comment variant is used, the word to comment must also appear in the caption's written paragraph. If it ever changes, it changes in both places.
