@@ -1,0 +1,4 @@
+interface:
+  display_name: "Post for Me"
+  short_description: "Publish to social networks with Post for Me, and set up its MCP"
+  default_prompt: "Use $post-for-me to install the Post for Me MCP server in my Claude, verify it with a read-only account check, and tell me which files it touched. Do not publish anything as a test — once it is installed I will ask you to publish when I actually want something to go out."

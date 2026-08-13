@@ -6,6 +6,8 @@ Inventory for the final report. Tell the person what **actually happened** in th
 
 Exactly one file is modified. Everything else is either a backup or a file Claude creates on its own when it starts the server. There is no installer, no services, no registry entries, and nothing is written to Program Files or `/Applications`.
 
+Publishing writes nothing to the machine. The one exception is the marking step, which renames or moves a folder the person named themselves — never anything else, and never without a successful post first.
+
 ## 1. The only file that is modified
 
 | OS | Path |

@@ -1,16 +1,19 @@
-# Post for Me MCP Setup — Social Publishing for Claude
+# Post for Me — Social Publishing for Claude
 
-An agent skill that installs, verifies and troubleshoots the official [Post for Me](https://www.postforme.dev/) MCP server, so Claude can publish to your social accounts:
+An agent skill for both halves of publishing with [Post for Me](https://www.postforme.dev/): getting its MCP server installed, and then actually posting with it.
 
 ```
-you describe the post  →  Claude uploads the media, targets the accounts, publishes, reports back
+you describe the post  →  Claude confirms the accounts and caption with you  →  publishes
+                       →  reports the live links  →  marks the folder the files came from
 ```
 
-It covers the whole setup path: OS and path detection, Node/npx checks, safe JSON editing with backups and atomic writes, restart handling, read-only verification, and a diagnostic reference for every failure mode that actually shows up in practice. You never edit a config file by hand.
+**Setup** covers OS and path detection, Node/npx checks, safe JSON editing with backups and atomic writes, restart handling, read-only verification, and a diagnostic reference for every failure mode that shows up in practice. You never edit a config file by hand.
+
+**Publishing** covers uploading local media, targeting the right accounts, per-platform options, a confirmation gate before anything goes out, reading the per-account results, and marking the delivery folder with its real publication date.
 
 Works with agent harnesses that support file-based skills (Claude Code, Codex, and similar).
 
-> **Note — this skill never publishes anything.** It installs and verifies, and that is all. Your connected accounts are real, a post is public the moment it lands, and Post for Me cannot retract it afterwards — you would have to delete it by hand on every network. Verification is done with a read-only `GET`. Publishing is something you ask for later, deliberately.
+> **Note — nothing is published unless you asked for it and confirmed it.** Your connected accounts are real, a post is public the moment it lands, and Post for Me cannot retract it — you would have to delete it by hand on every network. So: no test posts, no drafts "just to see", and no fanning out to every connected account because you said "everywhere". Before any post goes out you get the accounts, the full caption, the media and the timing, and it waits for your yes. Verifying the install is done with a read-only `GET`.
 
 > **Note — run the install in Claude Code (terminal).** Claude Desktop rewrites its own config file whenever it saves a preference, so the config has to be edited while the app is closed. From a terminal session that is trivial. If you paste the prompt inside the desktop app instead, the skill still works — it just has to stop and ask you to close the app, then hand you the command to finish.
 
@@ -20,6 +23,7 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 |---|---|
 | [SKILL.md](SKILL.md) | The skill itself: install flow, restart handling, verification, hard rules |
 | [references/files-touched.md](references/files-touched.md) | Every file created or modified, per OS, and how to revert |
+| [references/marking.md](references/marking.md) | Rule template for marking a delivery folder after publishing |
 | [references/troubleshooting.md](references/troubleshooting.md) | Known failures with symptom, evidence and fix |
 | [scripts/install_mcp.py](scripts/install_mcp.py) | Idempotent cross-platform installer with backup and validation |
 | [scripts/verify_mcp.py](scripts/verify_mcp.py) | Read-only verification, including an optional API key check |
@@ -27,12 +31,14 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 
 ## Key features
 
-- **Never publishes** — no test post, no draft, no "scheduled just to try it". Verification is a read-only account listing, so nothing ever reaches your audience by accident.
+- **Publishes only what you confirmed** — no test post, no draft, no "scheduled just to try it", and no expanding "post it everywhere" into every connected account. You see the accounts, the full caption, the media and the timing before anything leaves. Verifying the install is a read-only account listing.
 - **Safe config editing** — timestamped backup before writing, atomic write, JSON validated before and after, automatic restore if the result is broken. Your existing preferences are untouched.
 - **Refuses to write while Claude is open** — the desktop app rewrites its config on every preference save and silently overwrites manual edits. This is the single most common reason an MCP install "doesn't work", and the installer simply blocks it.
 - **Absolute `npx` path** — the official docs use a bare `"npx"`, which cannot launch on Windows because `npx` is a `.cmd` shim. The installer resolves the real path on every OS, which also survives an app whose `PATH` differs from your terminal's.
 - **Idempotent** — re-running updates the entry instead of duplicating it. Safe to run as many times as you like.
 - **Honest log reading** — a non-empty server log is normal (it stores informational traffic), and `Server disconnected` is a normal app shutdown. The verifier checks whether the most recent startup came after the most recent real failure, instead of guessing from file size.
+- **Marks what you published** — building and publishing happen in different chats, so a delivery folder normally never learns that its content went out. After every account comes back successful, the skill renames (or moves, or logs) the folder using the real publication date from the API, and refuses to mark a partial publish.
+- **Knows the traps** — local files need uploading before they can be posted, `stories` with several media makes one post per item rather than one story, YouTube and TikTok need a `title` and not just a caption, and a caption written as a multi-line template literal ships with every paragraph indented.
 - **Reports what it touched** — every run ends with a plain-language summary of the files modified and how to undo them.
 
 ## Installation
@@ -52,10 +58,10 @@ You do **not** need to download the Post for Me documentation, look up the packa
 Open Claude Code and paste:
 
 ```text
-Install the post-for-me-mcp-setup skill from https://github.com/aurelioagency/skills :
+Install the post-for-me skill from https://github.com/aurelioagency/skills :
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
-2. Inside it, run: git sparse-checkout set post-for-me-mcp-setup
-3. Copy the post-for-me-mcp-setup/ folder into ~/.claude/skills/post-for-me-mcp-setup/
+2. Inside it, run: git sparse-checkout set post-for-me
+3. Copy the post-for-me/ folder into ~/.claude/skills/post-for-me/
 4. Delete the temporary clone and confirm the skill loads.
 5. Check the requirements: Python 3.8+ and Node.js 18+. Install anything missing
    (ask me to approve each install command).
@@ -77,8 +83,8 @@ Clone the repo and run the bundled installer:
 ```powershell
 git clone https://github.com/aurelioagency/skills.git
 cd skills
-node install-skills.mjs post-for-me-mcp-setup          # Claude Code
-node install-skills.mjs post-for-me-mcp-setup --codex  # Codex
+node install-skills.mjs post-for-me          # Claude Code
+node install-skills.mjs post-for-me --codex  # Codex
 ```
 
 Any other harness: point it at this folder's `SKILL.md`.
@@ -88,12 +94,12 @@ Any other harness: point it at this folder's `SKILL.md`.
 Improvements land in this repo; your installed copy never updates itself. To update, re-run the installer — it replaces the installed skill cleanly, records the installed commit in `.installed-from.json`, and prints the old and new commits. Open Claude Code and paste:
 
 ```text
-Update my installed post-for-me-mcp-setup skill from https://github.com/aurelioagency/skills :
+Update my installed post-for-me skill from https://github.com/aurelioagency/skills :
 1. If I have a clone of the repo, run git pull in it; otherwise make a temporary
    sparse clone like in the install prompt.
-2. In the clone, run: node install-skills.mjs post-for-me-mcp-setup
+2. In the clone, run: node install-skills.mjs post-for-me
 3. The installer prints the previous and new commit. Summarize what changed
-   between them (git log --oneline <old>..<new> -- post-for-me-mcp-setup) in my language.
+   between them (git log --oneline <old>..<new> -- post-for-me) in my language.
 4. Confirm the skill still loads. Delete the temporary clone if you made one.
 5. My Post for Me MCP config is NOT part of the skill, so it is untouched by this
    update — confirm it still works by running scripts/verify_mcp.py --check-api.
@@ -104,7 +110,7 @@ Updating the skill never touches your MCP configuration: the skill lives in `~/.
 To find out whether you are behind without installing anything, run this in an up-to-date clone:
 
 ```powershell
-node install-skills.mjs post-for-me-mcp-setup --check
+node install-skills.mjs post-for-me --check
 ```
 
 It compares the commit recorded in your installed copy against the checkout, counting only commits that touch this skill (exit code 3 means an update is available).
@@ -113,17 +119,17 @@ It compares the commit recorded in your installed copy against the checkout, cou
 
 There are two separate things you may want to remove, and it is worth knowing which is which:
 
-- **The skill** — the folder `~/.claude/skills/post-for-me-mcp-setup/`. Removing it means Claude no longer knows how to install or diagnose the MCP. It does **not** disconnect anything.
+- **The skill** — the folder `~/.claude/skills/post-for-me/`. Removing it means Claude loses the publishing protocol and the diagnostics. The MCP tools keep working, so posts still go out — just without the confirmation gate or the folder marking. It does **not** disconnect anything.
 - **The MCP** — the `post_for_me_api` entry inside Claude's config file. Removing it is what actually disconnects Claude from your social accounts.
 
 Open Claude Code and paste whichever you want:
 
 ```text
-Remove the post-for-me-mcp-setup skill and the Post for Me MCP from my machine:
+Remove the post-for-me skill and the Post for Me MCP from my machine:
 1. Use the skill to uninstall the MCP first: close Claude Desktop completely,
    remove the "post_for_me_api" entry from my claude_desktop_config.json,
    validate the JSON, and leave every other setting untouched.
-2. Then delete the folder ~/.claude/skills/post-for-me-mcp-setup/.
+2. Then delete the folder ~/.claude/skills/post-for-me/.
 3. Confirm the skill no longer loads. Do not touch my other installed skills,
    any clone of the skills repo, or anything in my Post for Me account —
    my connected social accounts and published posts must stay exactly as they are.
@@ -132,7 +138,7 @@ Remove the post-for-me-mcp-setup skill and the Post for Me MCP from my machine:
 To remove **only the skill** and keep publishing working, use this instead:
 
 ```text
-Delete the folder ~/.claude/skills/post-for-me-mcp-setup/ and confirm the skill no
+Delete the folder ~/.claude/skills/post-for-me/ and confirm the skill no
 longer loads. Leave my claude_desktop_config.json alone — I want the Post for Me
 MCP to keep working, I just don't need the installer skill anymore.
 ```
@@ -140,7 +146,7 @@ MCP to keep working, I just don't need the installer skill anymore.
 Or manually — from a clone of the repo:
 
 ```powershell
-node install-skills.mjs post-for-me-mcp-setup --remove
+node install-skills.mjs post-for-me --remove
 ```
 
 (which only deletes the installed copy, never the repo folder). Nothing else is left behind: this skill has no installer, no services, no registry entries, and installs no global packages. Your Post for Me account, connected accounts and published posts are never affected by any of this.
@@ -156,22 +162,39 @@ The key is stored in plain text in Claude's config file, which is how MCP config
 
 ## Usage
 
-Once installed, the skill lives in `~/.claude/skills/post-for-me-mcp-setup/` and is available in **every** Claude Code session on the machine. It triggers on its own whenever you mention installing, configuring or repairing Post for Me — you can also invoke it explicitly with `/post-for-me-mcp-setup`.
+Once installed, the skill lives in `~/.claude/skills/post-for-me/` and is available in **every** Claude Code session on the machine. It triggers on its own whenever you ask to publish or schedule something through Post for Me, and whenever you mention installing, configuring or repairing it — you can also invoke it explicitly with `/post-for-me`.
 
-It is good for four things. Installing is the one that brings people here, but it is the one you do least:
+It is good for five things. Installing is the one that brings people here, but it is the one you do least:
 
 | What for | What you say | How often |
 |---|---|---|
 | **Install** | *"install the Post for Me MCP, my key is pfm_live_…"* | Once per machine |
 | **Diagnose and repair** | *"the server shows an error"*, *"it worked yesterday and now it's gone"* | Every time something breaks |
 | **Verify** | *"is my Post for Me connection still working?"* | Whenever you are unsure |
+| **Set up marking** | *"mark my folders when I publish them"* | Once, if you want it |
 | **Uninstall** | *"remove the Post for Me MCP"* | Moving machines, or dropping it |
 
 Diagnosing is the one that repeats. Installing happens once; things breaking does not — which is why `references/troubleshooting.md` is the largest file in the skill.
 
 It also handles reconfiguration without a full reinstall: pin a version instead of `@latest` (`--version`), install into Claude Code as well as the desktop app (`--target both`), rotate your API key (just run it again — it updates rather than duplicates), or rename the server (`--name`).
 
-What it does **not** do is publish. Once the MCP is running, this skill steps out of the way: you ask Claude to upload a video and the MCP handles it directly.
+### Publishing
+
+Once the MCP is installed its tools are available in every chat, so you can already publish by asking. What this skill adds at that moment is the protocol around the call:
+
+> Publish the carousel in this folder on Instagram and TikTok
+
+It lists your connected accounts and shows which ones it intends to use, uploads any local media (Post for Me fetches by URL — it cannot see your disk), applies the per-platform options that matter, and then stops: accounts, full caption, media, timing. Nothing goes out until you say yes.
+
+Afterwards it reads `socialPostResults` per account and reports the live links, or names exactly which account failed and why.
+
+### Marking folders you have published
+
+The problem: you build a deliverable in one chat and publish it from another, days later, so the folder never learns its content went out — and months later nothing tells you what already shipped.
+
+The publish is the only moment that knows both halves, so the marking happens there. After every account comes back successful, the folder gets renamed to `YYYY-MM-DD-<slug>_POST` using the real publication date from the API. Already marked folders are left alone, and a partial publish is never marked.
+
+Renaming is just the common choice — moving to a `published/` folder or appending to a log file work the same way. If you have no convention yet, the skill asks once and then uses your answer. Templates and a worked example in [references/marking.md](references/marking.md).
 
 ### Installing the MCP
 
@@ -187,7 +210,7 @@ Point it at the symptom — *"my Post for Me server shows an error"*, *"it worke
 
 ### What it changes on your machine
 
-One file is modified, ever:
+One file is modified by the install:
 
 | OS | File |
 |---|---|
@@ -197,6 +220,8 @@ One file is modified, ever:
 
 An `mcpServers` entry is **added** to it; everything already in the file stays as it was. A timestamped backup is written next to it first.
 
+Publishing writes nothing to your machine. The one exception is the marking step, which renames or moves the delivery folder you named — never anything else, and never before a post has actually succeeded.
+
 Two things then appear on their own, created by Claude rather than by this skill: the npx cache folder where the server is downloaded (`_npx` inside your npm cache), and two log files in `logs/`, next to the config.
 
 That's the whole footprint. No installer, no services, no registry entries, no global packages, nothing in Program Files or Applications. Full inventory and revert steps in [references/files-touched.md](references/files-touched.md).
@@ -204,7 +229,7 @@ That's the whole footprint. No installer, no services, no registry entries, no g
 ### Verifying at any time
 
 ```powershell
-python ~/.claude/skills/post-for-me-mcp-setup/scripts/verify_mcp.py --check-api
+python ~/.claude/skills/post-for-me/scripts/verify_mcp.py --check-api
 ```
 
 Read-only. It reports the config entry, the resolved command, Node, running processes, the log state, and — with `--check-api` — how many accounts are connected, by platform. It never writes and never posts.
