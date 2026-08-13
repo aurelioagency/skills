@@ -183,20 +183,51 @@ to copy: translate it and make it sound natural.
 The character sheet you write is for the user, so write it in their language
 too. The script prints in English; relay what matters, translated.
 
-## The character folder
+## Storage contract — choose the asset bank first
 
-Each mascot lives in its own folder inside the project:
+For a new mascot, ask **one short storage question before generating anything**:
+"¿En qué carpeta querés guardar el banco de imágenes finales de esta mascota?"
+Do not choose an invisible technical path on the user's behalf. If the user has
+already supplied a destination, use it without asking again. If they do not know,
+propose a visible project-local `asset-bank/` path and obtain confirmation.
+
+Record the resolved absolute asset-bank path in `CHARACTER.md` and report it
+after creating the master and after the first pose. Reuse it on every follow-up;
+never ask again unless the path is missing or inaccessible.
+
+Keep user-facing assets separate from internal control files:
 
 ```
-<mascot>/
+<mascot-system>/
   master.png        the reference. Exactly one, always this name.
   CHARACTER.md      who the character is, in words, and what to check
-  poses/            finished poses, one file per request
-  catalog.md        which poses already exist
+  catalog.md        authoritative detailed pose registry
   work/             attempts and intermediates. Deleted as soon as they are done.
+
+<asset-bank>/
+  00-<character>-pose-neutra-master.png
+  01-<character>-<action>-<distinctive-context>.png
+  02-...
+  listado-poses.txt  simple user-facing index synchronized with the files
 ```
 
-On start, look for that folder. If it does not exist or has no `master.png`,
+`master.png` is both the identity source and a usable final asset. Keep the sole
+identity source at `<mascot-system>/master.png`; also copy it to the asset bank as
+number `00` with a descriptive name. Every approved pose is saved directly in
+the asset bank with the next available zero-padded number. Never make the user
+search a technical output folder or manually consolidate assets afterward.
+
+`catalog.md` is the internal source of truth. For every approved asset, record
+its number, exact filename, action, props/context, expression, generation source,
+and validation result. `listado-poses.txt` is the simple user index derived from
+that catalog and contains one numbered exact filename per line. After every
+master approval, pose, replacement, deletion, or accepted variant, update both
+files in the same operation and verify all three agree: numeric prefix, catalog
+entry, and real filename. Never renumber silently; replacements keep their
+number, and a new accepted variant receives the next number.
+
+On start, look for the system folder and recorded asset bank. If the system
+folder does not exist or has no `master.png`,
 that is FLOW A. If it is complete, FLOW B. Do not ask which one applies: look
 and go.
 
@@ -209,7 +240,8 @@ that.
 
 ### Starting point — ask this first
 
-**How much is already decided, and whether they have images.** Do not open a
+**First resolve the asset-bank destination using the storage contract above.**
+Then establish how much is already decided and whether they have images. Do not open a
 questionnaire before knowing: if they already know what they want, half of this
 flow is unnecessary.
 
@@ -361,9 +393,14 @@ That is what drafts are for: comparing attempt 2 against attempt 3.
 
 **The moment they approve one, do this, in this order, without asking:**
 
-1. Move the approved file to `<mascot>/master.png`. Move, not copy.
-2. Delete `work/` entirely.
-3. There is now exactly one master. No `master-v2`, no `master-final`, no
+1. Move the approved file to `<mascot-system>/master.png`. Move, not copy.
+2. Copy that approved transparent master to the recorded asset bank as
+   `00-<character>-pose-neutra-master.png`.
+3. Create or update its `catalog.md` entry and regenerate `listado-poses.txt`.
+4. Verify the number and exact filename agree across the asset bank, catalog and
+   text index.
+5. Delete `work/` entirely.
+6. There is now exactly one identity master. No `master-v2`, no `master-final`, no
    `master-transparent-clean`.
 
 A rejected attempt has no use left: nobody will ever ask for a pose based on one.
@@ -510,9 +547,9 @@ without a verified mask does not proceed to correction.
 **4. Correct the color:**
 
 ```
-python scripts/mascot.py <mascot>/master.png pose.png -o <mascot>/poses/<name>.png
-python scripts/mascot.py <mascot>/master.png pose.png \
-  --protect-mask work/prop-mask.png -o <mascot>/poses/<name>.png
+python scripts/mascot.py <mascot-system>/master.png pose.png -o work/corrected.png
+python scripts/mascot.py <mascot-system>/master.png pose.png \
+  --protect-mask work/prop-mask.png -o work/corrected.png
 ```
 
 Use the first command only when there is no one-off prop. Use the protected form
@@ -560,14 +597,22 @@ makes it unusable. Confirm the final is RGBA, its alpha contains both 0 and 255,
 its corners are transparent, and its contour passes on light and dark proofs.
 Record whether transparency was native or produced from controlled flat chroma.
 
-**6. Record and clean up.** Write the pose into `catalog.md`, then, without
+**6. Record, publish and clean up.** Determine the next available number, prepend
+it to the descriptive basename, and write the detailed pose entry into
+`catalog.md`. Then, without
 asking:
 
-1. Move the corrected file to `<mascot>/poses/<name>.png`.
-2. Delete `work/` entirely — raw generations, masks, proofs
+1. Move the corrected file directly to
+   `<asset-bank>/<NN>-<character>-<action>-<distinctive-context>.png`.
+2. Regenerate `<asset-bank>/listado-poses.txt` from the catalog, using the exact
+   numbered filename on one line per asset.
+3. Verify every line resolves to a real file and the numeric prefix matches the
+   line number; also verify the new catalog entry uses that exact filename.
+4. Delete `work/` entirely — raw generations, masks, proofs
    and any retry. Also delete generator-default copies after the selected final
-   has been saved in the character folder.
-3. Show the user **one** image: the final one.
+   has been saved in the asset bank.
+5. Show the user **one** image: the final one, and report both the asset-bank path
+   and the `listado-poses.txt` path.
 
 Deliver the PNG with the final dE on one line. Every delivered pose is a PNG with
 a real alpha channel, ready to drop onto any background.
@@ -675,6 +720,11 @@ Write it in the user's language.
 # <NAME>
 
 WHAT IT IS: <one line>
+
+## Storage
+Asset bank (absolute path): <path chosen and confirmed by the user>
+Identity master: <absolute path to mascot-system/master.png>
+User index: <absolute path to asset-bank/listado-poses.txt>
 
 ## Identity — what never changes
 - head and face:
