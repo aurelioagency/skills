@@ -2,20 +2,27 @@
 
 Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aurelio, or the local default carousel style.
 
-> This file ships with the skill, so **a skill update overwrites it**. It is also the worked example for `references/brand-preset-template.md`. If you want to edit La Casa's rules and keep the edits, eject it into the workspace once — copy this file to `social-carousels/brands/la-casa/preset.md`, together with the fonts and CTA assets it references — and edit there. A workspace preset always wins over the bundled one.
+> **Ejemplo trabajado que viaja con la skill.** No es la copia que manda: la que gobierna los carruseles es la del workspace, en `social-carousels/brands/la-casa/preset.md`, y esa gana siempre sobre este archivo. Este se mantiene al día para que una instalación nueva arranque con los valores correctos y para que sirva de modelo al escribir el preset de otra marca. Editarlo acá no cambia nada en una máquina que ya tenga su copia de workspace.
 
 ## Defaults
 
-- Platform: always ask before planning content, even when this preset is active. Ask exactly once, in Spanish:
-  `¿Para qué plataforma es este carrusel? ¿TikTok o Instagram?`
-  If the user already named the platform in their request, skip the question and use it. If the user answers `default`, use TikTok. In Adaptation Mode the target platform comes with the request; never re-ask it.
-- 2026 sizes:
-  - TikTok: `1080x1920`.
-  - Instagram: `1080x1440` (3:4).
+- **Un solo tamaño: `1080x1440` (3:4). No se pregunta la plataforma (decisión del 2026-08-13).** La Casa sube el mismo archivo a Instagram y a TikTok, así que la distinción TikTok/Instagram dejó de existir para esta marca: no hay pregunta de plataforma, no hay variante de tamaño, no hay `1080x1920` de carrusel. Si alguna vez hace falta otro tamaño, se decide explícitamente en el momento y se anota acá.
+  - La carpeta de entrega termina siempre en `-ig` y `manifest.json` sigue diciendo `instagram`. Es la etiqueta del tamaño, no una restricción de dónde publicar: ese mismo paquete se sube a TikTok tal cual.
+  - El único `1080x1920` que queda es el del video vertical (`short.mp4`), que se arma con los slides centrados sobre el lienzo más alto. Eso no es un carrusel y no cambia.
 - Language: Spanish by default.
 - Voice: practical, sharp, useful, human. Prefer clear Spanish. Use voseo only when the surrounding La Casa voice calls for it.
 - Audience: builders, operators, founders, AI-system users, Codex users, and people learning agent workflows.
 - Content density: useful, not encyclopedic.
+- **Densidad de texto por slide (regla de marca, 2026-08-13).**
+  - Cada slide de contenido: **120 a 220 caracteres** de copy visible — kicker, titular, cuerpo, ítems, etiquetas de tarjetas y línea de veredicto, todo sumado. Son unas 20 a 36 palabras (medido sobre el set publicado: 6,1 caracteres por palabra). Se cuenta en caracteres y no en palabras porque el largo real es lo que decide si entra en el lienzo, y treinta palabras cortas y treinta largas no ocupan lo mismo.
+  - Referencia de dónde venimos: los 37 slides publicados hasta hoy promedian 225 caracteres. La banda nueva afloja un poco, para que los slides extra del carrusel más largo aligeren de verdad en vez de sumar carga.
+  - **Una sola idea por slide**, nunca dos. Si el texto de un slide parece un párrafo, no va ahí: se parte en dos slides o se manda al caption.
+  - **Portada: máximo 40 caracteres por línea**, contados por separado en el titular Archivo Black y en el remate Georgia itálica. Las portadas publicadas van de 23 a 45 caracteres de titular, así que esto describe la práctica real; el límite no es para el bloque entero, porque en 40 caracteres no entran las dos líneas que el preset exige.
+  - **Chequeo final:** si un slide no se entiende en 2-3 segundos de lectura, está sobrecargado aunque esté dentro de la banda.
+  - **Excepción de carrusel de referencia** (checklist, comparativa, template): tolera más densidad, porque el objetivo es que lo guarden y vuelvan, no que lo lean al vuelo. Nunca se asume — la declara el usuario al confirmar el split, y queda anotada en `manifest.json`.
+- **Largo del carrusel (override de marca, 2026-08-13).** La Casa publica **7 a 10 imágenes exportadas**: 6 a 9 slides de contenido más el frame fijo de CTA. Esto pisa el `3-6 content slides` de SKILL.md, que queda como default de la skill y no aplica a esta marca. El motivo es repartir la densidad: más slides, cada uno con un solo trabajo y menos texto encima, en lugar de pocos slides cargados.
+  - El piso de densidad sigue mandando. Repartir no habilita slides finitos: cada slide de contenido tiene que sostener las bandas de `render-and-audit.mjs` (mínimo duro 7 renglones, 4 bloques visuales y 3,0% de cobertura de tinta). Un slide que no llega a eso se fusiona con el vecino, no se entrega.
+  - El contador sigue contando todas las imágenes exportadas: 8 slides de contenido más CTA corren `1/9` a `9/9`.
 
 ## Brand system (canonical values)
 
@@ -103,6 +110,13 @@ This list is closed on purpose. If an element is not in the components above, it
 
 In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take the chrome from here.
 
+## Asset bank
+
+- Location: `social-carousels/brands/la-casa/asset-bank/` (carpeta local). PNG de fondo transparente, terminados; subcarpetas libres (iconos, personaje, ilustraciones, lo que haga falta). **El nombre de archivo es la única descripción del asset y tiene que decir completo qué muestra la imagen**, en kebab-case: `tiburon-agobiado-cubierto-de-postits.png`, nunca `final2.png`. Reglas completas: `references/asset-bank.md` de la skill.
+- **El estado del banco se lee, nunca se declara acá.** Listá la carpeta en el momento de elegir assets: este archivo no registra cuántos hay ni qué contienen, porque quedaría desactualizado con el primer archivo que entre o salga. Si la carpeta está vacía, ese carrusel sale con gráficos HTML/CSS; si tiene archivos, se elige por nombre.
+- Producción de assets nuevos (pipeline propio de la marca, fuera de esta skill): la mascota se genera con la skill `aurelio-personaje` (ChatGPT web + postprocess); iconos, dibujos e ilustraciones, por el camino que corresponda. Al banco solo entran archivos terminados.
+- Placement: defaults del contrato (uno por slide, dentro del safe area, nunca detrás del texto).
+
 ## Content slides
 
 - Background: black editorial field per the canonical palette above.
@@ -114,9 +128,7 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
   - Twist line: **Georgia italic** in the cover's dominant accent (ochre, dusty pink, or sage — the published set uses all three), in sentence case. Italic caps lose the contrast against the headline, which is the whole point of the second line.
   - One accent per cover. The kicker takes that same accent.
 - The cover also carries **one simple, direct graphic** — never text alone. The default pattern is a fan-out: a cream node with the system's name, a stem, a distribution bracket and a row of pills for the destinations (`.fanout` in `assets/template/styles.css`). Any equally simple graphic works; a crowded illustration does not.
-- Content clearance: keep all readable content at least `5%` from the left and right edges and `10%` from the top and bottom edges. Per size:
-  - `1080x1920`: `x=54..1026`, `y=192..1728`.
-  - `1080x1440`: `x=54..1026`, `y=144..1296`.
+- Content clearance: keep all readable content at least `5%` from the left and right edges and `10%` from the top and bottom edges. En `1080x1440`, el único tamaño: `x=54..1026`, `y=144..1296`.
 - No on-screen source line. Traceability lives in `carousel-brief.md`, not on the slides.
 - Composition scale: expand content inside the safe area with larger type and reflowed visual elements. Do not accept a small composition surrounded by avoidable empty space.
 - Accents: only the canonical accent values from the brand system above — never eyeballed approximations.
@@ -136,18 +148,19 @@ The La Casa preset has a fixed final CTA frame enabled, in **two variants**. Ask
 
 `¿CTA normal ("Guarda este post") o CTA de comentario ("Comenta AURELIO" para recibir la skill por DM)?`
 
-- Append it after the 3-6 content slides.
+- Append it after the content slides.
 - Do not include a swipe prompt on the CTA frame.
-- Fixed CTA assets, one per size and variant — use the matching one, never crop or stretch across sizes:
+- Fixed CTA assets a `1080x1440`, uno por variante:
 
-  | | TikTok `1080x1920` | Instagram `1080x1440` |
-  |---|---|---|
-  | Normal | `assets/la-casa-cta.png` | `assets/la-casa-cta-ig.png` |
-  | Comentario | `assets/la-casa-cta-aurelio.png` | `assets/la-casa-cta-ig-aurelio.png` |
+  | Normal | `assets/la-casa-cta-ig.png` |
+  |---|---|
+  | Comentario | `assets/la-casa-cta-ig-aurelio.png` |
+
+- Los dos assets `1080x1920` (`la-casa-cta.png` y `la-casa-cta-aurelio.png`) quedaron **fuera de uso** desde la decisión de tamaño único del 2026-08-13. Siguen en la carpeta de la marca por si alguna vez vuelve a hacer falta ese tamaño; no se usan en carruseles nuevos y no se recortan ni estiran para llenar el lugar del asset de `1080x1440`.
 
 - Copy in the normal variant: `Guarda este post` / `y sígueme para más`. In the comment variant: `Comenta AURELIO` / `y te enviamos la skill por DM`. Both sit over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature, in the same layout.
 - When the comment variant is used, the word to comment must also appear in the caption's written paragraph. If it ever changes, it changes in both places.
-- All four assets carry the same field as the content slides: dot grid, both glows and the contour lines. None of them is flat.
+- Los cuatro assets llevan el mismo campo que los slides de contenido: grilla de puntos, los dos glows y las curvas. Ninguno es plano.
 - Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
 - If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here.
 - **Sources.** `assets/template/cta-ig.html` and `cta-ig-aurelio.html` produce the two `1080x1440` assets; render them with `assets/template/make-cta.mjs`. The two `1080x1920` assets have **no HTML source**: that artwork predates this repo and its colour strokes are hand-drawn, slightly rotated (bounding boxes 23/18/17/11px tall against the flat 9px bars of the Instagram asset). They cannot be re-rendered without inventing them, so they are maintained by compositing — new field underneath, original artwork on top through a luminance mask. If the TikTok CTA ever needs a copy change, expect to redraw by hand whatever the old text was painted over: under the glyphs there is no artwork left to recover (the comment variant's pink underline had to be redrawn from its measured geometry, 630x9px centered at 576.5/823.5, rotated -1.18°).
