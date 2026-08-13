@@ -144,7 +144,7 @@ The skill triggers automatically by matching your request. From there it drives 
 1. Asks the **brand** and **which CTA** closes it — skipping anything you already answered in your request. There is no platform question: every carousel is `1080×1440` and the same files go to Instagram and TikTok. For the brand it reads its preset from `references/<brand>-preset.md`, and only interviews you if the brand is new — then writes its preset so it never asks again.
 2. Extracts the source (article text, YouTube transcript, PDF, screenshots) and captures facts and candidate angles in a brief — nothing invented.
 3. Proposes the **carousel split** plus **two hook options** per carousel, and waits for your pick before drafting a single slide.
-4. Drafts 6–9 content slides — 7 to 10 exported images with the CTA — one job per slide and 120–220 characters on it, and shows you the **complete copy as plain text for approval** before building any HTML.
+4. Drafts as many content slides as the material supports — up to 9, plus the CTA — one job per slide and 120–220 characters on it, and shows you the **complete copy as plain text for approval** before building any HTML. The count is proposed with the split, so you change it before anything is written.
 5. Builds the editable HTML package and renders ordered `1080×1440` PNGs.
 6. Runs `scripts/render-and-audit.mjs` first, then the contact-sheet pass by eye for what a machine cannot judge: meaning, overlap, rhythm. Every red issue is fixed in source and re-rendered before delivery — PNGs are never patched.
 7. Delivers the folder you drag into Drive, plus a short validation summary.

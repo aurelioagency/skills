@@ -18,7 +18,7 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 3. Recommend the carousel split, present two hook options per carousel, and ask for confirmation.
    Completion criterion: the user has confirmed, reduced, or changed the number of carousels, and picked or edited a hook for each one, before any slide is drafted.
 4. Draft the slides and get the copy approved.
-   Completion criterion: each carousel has 6-9 content slides, each slide has one job and stays inside the density budget below, each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
+   Completion criterion: each carousel has as many content slides as its material supports and no more than 9, each slide has one job and stays inside the density budget below, each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
    Completion criterion: the delivery folder (`<YYYY-MM-DD>-<tema>-ig`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
 6. Run visual QA from contact sheets.
@@ -142,7 +142,7 @@ Confirm, reduce, or change the split?
 
 Include the two hook options per carousel (see Hooks) in the same confirmation message, so split and hooks get approved together.
 
-Slide count, size and text budget are fixed by the skill — see Format, length and density below.
+**State the slide count you are proposing for each carousel, and why that number** — it is part of what the user is confirming here, and it is far cheaper to change now than after the copy is drafted. Size and the text budget per slide are fixed by the skill; the count is not. See Format, length and density below.
 
 ## Format, length and density
 
@@ -154,11 +154,19 @@ Every carousel is **`1080x1440` (3:4)**. There is no platform question, no TikTo
 
 The only `1080x1920` left in the pipeline is `short.mp4`, the vertical video, which centers the slides on the taller canvas. That is not a carousel.
 
-### 7 to 10 exported images
+### Up to 10 exported images
 
-**6 to 9 content slides**, plus the fixed CTA frame when the preset has one. The page counter counts every exported image, so 8 content slides plus CTA run `1/9` to `9/9`.
+**The ceiling is the rule; there is no floor.**
 
-The reason for the range is density, not length: more slides, each doing one job with less text on it, beats a short carousel of crowded slides. A longer carousel does cost reach on the last slides — which is where the CTA lives — so use the range, do not default to its top.
+- **Hard ceiling: 10 exported images** — at most 9 content slides plus the fixed CTA frame when the preset has one. Past that, the last slides lose most of their audience and the CTA is one of them. If the material does not fit, it is two carousels, not a longer one.
+- **No minimum.** The count comes from the content: as many slides as the material actually supports, each doing one job inside the density budget. Three solid slides beat seven where four were padding. **Never invent a slide to reach a number** — that is the failure the density budget exists to prevent, arrived at from the other direction.
+- **Typical, not mandatory:** an explainer built on a document, a study or a process usually lands at 6-9 content slides, because that is what it takes to separate claim from evidence. A single sharp point is often 3-4. Both are correct carousels.
+
+The page counter counts every exported image, so 8 content slides plus CTA run `1/9` to `9/9`.
+
+A brand whose format is more settled can declare its habitual range in its preset — that is a brand decision and it narrows the guidance, never the ceiling. Whatever the range, the actual count for a given carousel is proposed with the split and confirmed by the user before any slide is drafted.
+
+The reason to lean long rather than short is density: more slides, each doing one job with less text on it, beats a short carousel of crowded slides. The reason not to lean too long is reach. Between the two, the content decides.
 
 ### 120 to 220 characters per content slide
 
@@ -186,7 +194,7 @@ Use this default grammar unless the source demands a different structure:
 7. Practical takeaway.
 8. Optional content close.
 
-Steps 4 to 6 are where a carousel grows into the 6-9 range without padding: they split one crowded slide into the claim and the thing that backs it. If a step has nothing real to say, drop the step — never invent a slide to reach a number.
+Steps 4 to 6 are where a carousel earns extra slides without padding: they split one crowded slide into the claim and the thing that backs it. If a step has nothing real to say, drop the step. A source that only supports steps 1, 3 and 7 makes a three-slide carousel, and that is a finished carousel, not a short one.
 
 Prefer more, clearer slides over dense ones. Each slide gets one job.
 

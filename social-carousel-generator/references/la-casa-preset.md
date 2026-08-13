@@ -8,7 +8,8 @@ Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aure
 
 ## Defaults
 
-- Tamaño, largo del carrusel y densidad de texto **no se definen acá**: son reglas de la skill, iguales para toda marca. Están en `SKILL.md`, sección *Format, length and density* — un solo tamaño `1080x1440`, de 7 a 10 imágenes exportadas, y de 120 a 220 caracteres por slide de contenido. La Casa no las pisa.
+- Tamaño y densidad de texto **no se definen acá**: son reglas de la skill, iguales para toda marca. Están en `SKILL.md`, sección *Format, length and density* — un solo tamaño `1080x1440` y de 120 a 220 caracteres por slide de contenido. La Casa no las pisa.
+- **Largo habitual de La Casa: 7 a 10 imágenes exportadas** (6 a 9 slides de contenido más el CTA). Esto es formato de marca, no una regla de la skill: el techo de 10 lo pone `SKILL.md` y no se toca, pero el piso de 6 es de acá, porque los temas que publica La Casa —papers, procesos, comparativas— casi siempre necesitan separar afirmación de evidencia. Si un carrusel puntual no da para tanto, sale más corto: nunca se rellena para llegar al piso.
 - Language: Spanish by default.
 - Voice: practical, sharp, useful, human. Prefer clear Spanish. Use voseo only when the surrounding La Casa voice calls for it.
 - Audience: builders, operators, founders, AI-system users, Codex users, and people learning agent workflows.

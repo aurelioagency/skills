@@ -13,10 +13,15 @@ value; `#F6F2E9` is.
 > `node install-skills.mjs social-carousel-generator`. A change made only in the installed
 > copy under `~/.claude/skills/…` is overwritten by the next install, silently.
 
-> **A preset holds brand decisions only.** Size, carousel length and text density are
-> skill-wide rules in `SKILL.md` (*Format, length and density*) — identical for every brand.
-> Do not restate them here. Override one only if this brand genuinely needs it, and then
-> name the rule and give the reason.
+> **A preset holds brand decisions only.** Size and text density are skill-wide rules in
+> `SKILL.md` (*Format, length and density*) — identical for every brand. Do not restate them
+> here. Override one only if this brand genuinely needs it, and then name the rule and give
+> the reason.
+>
+> Carousel length is the one that is partly yours: the ceiling of 10 exported images belongs
+> to the skill and does not move, but a brand that always publishes in a certain range can
+> say so in Defaults below. Leave it out and the count simply follows the content, carousel
+> by carousel.
 
 ## Brand folder layout
 
@@ -34,6 +39,8 @@ assets/brands/<brand-slug>/
 ## Defaults
 
 - Brand name: `<as the user writes it>`
+- Carousel length: `<habitual range, e.g. 7-10 exported images — or delete this line to let the
+  content decide each time. The skill's ceiling of 10 applies either way.>`
 - Language: `<es | en | …>`
 - Voice: `<3-6 words: how it talks, what it refuses to sound like>`
 - Audience: `<who reads this>`
