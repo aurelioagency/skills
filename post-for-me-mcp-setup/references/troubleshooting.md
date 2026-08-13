@@ -11,6 +11,7 @@ Real problems, with the evidence that tells them apart. Look at the data before 
 5. npx does not resolve
 6. Permissions
 7. How to read each log
+8. Publishing errors
 
 ---
 
@@ -144,6 +145,54 @@ If that line is there and there are no error lines, the server came up fine no m
 `Server disconnected` appears every time Claude closes. It is a normal shutdown, not a failure — what matters is whether the most recent startup came after the most recent real error.
 
 Seeing **2 tools** is correct and not a sign of a partial install: this server uses the "Code Mode" scheme, where the model writes code against the SDK instead of exposing one tool per endpoint.
+
+---
+
+## 8. Publishing errors
+
+These fail *after* the post is created, so the SDK call returns a healthy-looking
+`status: "processing"` and the failure only shows up in the post results.
+
+Always read the outcome instead of trusting the create call:
+
+```ts
+const res = await client.socialPostResults.list({ limit: 20, offset: 0 });
+res.data.filter(r => r.post_id === '<id>').map(r => ({ ok: r.success, error: r.error }));
+```
+
+A failed result means the platform rejected it and **nothing was published on that
+account**. Retrying does not create a duplicate. The failed attempt does stay in the
+dashboard as an error row, which is worth mentioning to the user so they do not read
+it as a double post.
+
+### YouTube — "Cannot bind a list to map for field 'localizations'"
+
+`platform_configurations.youtube` requires `localizations`: leave it out and the code
+does not even typecheck (`Property 'localizations' is missing in type ... but required
+in type 'YoutubeConfigurationDto'`).
+
+The trap is what you put in it. YouTube's API wants a **map**, not a list, so
+`localizations: []` satisfies TypeScript, creates the post, and only then fails against
+Google with a 400:
+
+```
+Invalid value at 'resource' (Map), Cannot bind a list to map for field 'localizations'.
+```
+
+An empty map is correct, and it needs no cast:
+
+```ts
+platform_configurations: {
+  youtube: {
+    title: 'Título del video',
+    privacy_status: 'public',
+    made_for_kids: false,
+    localizations: {}
+  }
+}
+```
+
+Vertical video under a minute lands as a Short on its own — there is no Shorts flag to set.
 
 ---
 

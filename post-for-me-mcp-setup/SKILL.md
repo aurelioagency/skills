@@ -123,6 +123,8 @@ Tell the person explicitly that **their Post for Me account, connected accounts 
 
 Read `references/troubleshooting.md`. It covers what actually happens: the config that deletes itself, the server that will not start, invalid JSON, `npx` not resolving, the Microsoft Store packaged app and its duplicated paths, permissions, and what each log file means.
 
+It also covers failures at publish time, which look different: the create call returns `status: "processing"` and the platform rejects the post afterwards, so the error only exists in the post results. Read those before telling anyone a post went out.
+
 One piece of advice that applies to all of them: look at the evidence before proposing a cause. Comparing the config file's creation time against its modification time tells you whether it was recreated. The server log's most recent startup versus its most recent failure tells you the current state. Diagnosing from data instead of hypotheses saves a lot of back and forth.
 
 ## References
