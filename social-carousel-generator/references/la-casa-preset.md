@@ -4,7 +4,7 @@ Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aure
 
 > **Esta es la copia que manda.** Vive con la skill, versionada en el repo, así que viaja a cualquier máquina y sobrevive a una reinstalación. Se edita acá, en el checkout, y se publica corriendo `node install-skills.mjs social-carousel-generator`. Editar la copia instalada en `~/.claude/skills/` sirve hasta la próxima instalación y después se pierde en silencio.
 >
-> Este archivo guarda **solo decisiones de marca**. Tamaño, largo del carrusel y densidad de texto son reglas de la skill y viven en `SKILL.md`.
+> Este archivo guarda **solo decisiones de marca**. Tamaño y densidad de texto son reglas de la skill y viven en `SKILL.md`; del largo, acá solo se declara el rango habitual de La Casa, nunca el techo.
 
 ## Defaults
 
