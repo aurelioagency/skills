@@ -136,9 +136,12 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
 
 ## Fixed CTA
 
-The La Casa preset has a fixed final CTA frame enabled, in **two variants**. Ask once per carousel, in Spanish, unless the user already said which one they want:
+La Casa tiene el frame de CTA fijo activado, en **dos variantes**. **No se pregunta cuál va: se deduce del carrusel.**
 
-`¿CTA normal ("Guarda este post") o CTA de comentario ("Comenta AURELIO" para recibir la skill por DM)?`
+- **Normal** (`Guarda este post`) es el default y cubre la enorme mayoría de los casos: un paper, un artículo, un video, un proceso, una comparativa, cualquier contenido explicativo. Se usa sin preguntar nada.
+- **Comentario** (`Comenta AURELIO` y te enviamos la skill por DM) solo corresponde cuando **el carrusel entrega algo por DM** — una skill, un template, un prompt, un recurso descargable — y ese algo es el tema del carrusel, no una mención al pasar. Ahí no se pregunta tampoco: se propone junto con el split, en una línea, y el usuario dice que no si no va.
+
+Preguntar la variante en cada carrusel es ruido: la respuesta ya está en el material. Solo se pregunta si el propio usuario deja la intención ambigua — por ejemplo, si pide un carrusel sobre una skill pero no aclara si la va a regalar.
 
 - Append it after the content slides.
 - Do not include a swipe prompt on the CTA frame.
@@ -158,7 +161,7 @@ The La Casa preset has a fixed final CTA frame enabled, in **two variants**. Ask
 - **Sources.** `assets/template/cta-ig.html` and `cta-ig-aurelio.html` produce the two `1080x1440` assets; render them with `assets/template/make-cta.mjs`. The two `1080x1920` assets have **no HTML source**: that artwork predates this repo and its colour strokes are hand-drawn, slightly rotated (bounding boxes 23/18/17/11px tall against the flat 9px bars of the Instagram asset). They cannot be re-rendered without inventing them, so they are maintained by compositing — new field underneath, original artwork on top through a luminance mask. If the TikTok CTA ever needs a copy change, expect to redraw by hand whatever the old text was painted over: under the glyphs there is no artwork left to recover (the comment variant's pink underline had to be redrawn from its measured geometry, 630x9px centered at 576.5/823.5, rotated -1.18°).
 - **Regenerating an existing CTA asset:** the current asset at that size is the reference, not the other platform's artwork. Keep its block layout (positions and widths) and change only what was asked. Verify with `scripts/compare-blocks.mjs` against the previous file before replacing it, and keep the counter band free of artwork — the asset cannot be reflowed once the counter is composed on top. A pure background change must report `+0% +0px` on **every** block; a copy change may only move the text blocks.
 
-Ask which of the two variants goes on this carousel. Never ask to design a new CTA when this preset is active — only if the user explicitly wants to replace it.
+Nunca ofrecer diseñar un CTA nuevo mientras este preset esté activo — solo si el usuario pide explícitamente reemplazarlo.
 
 ## Caption template (Instagram / TikTok)
 

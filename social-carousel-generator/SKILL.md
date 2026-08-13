@@ -38,7 +38,7 @@ Before planning content, ask which brand the carousel is for, unless the user al
 
 Then resolve the preset in this order — **never start the interview without checking first**:
 
-1. **A preset that ships with the skill.** Look for `references/<brand-slug>-preset.md` — e.g. `references/la-casa-preset.md`. If it exists, read it and use it. Do not re-interview; ask only what the preset marks as per-carousel (CTA variant). **This is the copy that governs**: it is versioned with the skill, so it travels to every machine and survives a reinstall.
+1. **A preset that ships with the skill.** Look for `references/<brand-slug>-preset.md` — e.g. `references/la-casa-preset.md`. If it exists, read it and use it. Do not re-interview, and do not re-ask what the preset already answers — a preset that says how to pick its CTA has answered it, so deduce instead of asking. **This is the copy that governs**: it is versioned with the skill, so it travels to every machine and survives a reinstall.
 2. **A workspace preset**, only for brands the skill does not carry: `<workspace>/social-carousels/brands/<brand-slug>/preset.md`. Read it the same way. If a brand has both, the skill's copy wins and the workspace one is stale — say so instead of silently picking one.
 3. **A new brand**: run the setup interview below, and finish it by **writing that brand's preset** into `references/`.
 
