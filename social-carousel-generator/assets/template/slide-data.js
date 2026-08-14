@@ -15,6 +15,7 @@ window.CAROUSEL = {
   // se registran en manifest.json > layout_exceptions con el motivo. Bajan el chequeo
   // correspondiente de red issue a nota informativa. Ids validos:
   //   'cover-hook-centered' | 'vertical-balance' | 'counter-centered' | 'optical-padding'
+  //   | 'slide-grammar'    <- solo si un slide de contenido va sin kicker o sin titular
   //   | 'density-budget'   <- el que suele necesitar una marca que no sea La Casa:
   //                           las bandas de densidad estan medidas sobre el set de La Casa
   // Vacio por defecto: no agregues una excepcion para hacer callar al audit.

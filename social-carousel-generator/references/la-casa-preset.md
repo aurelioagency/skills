@@ -113,7 +113,7 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
 
 - Background: black editorial field per the canonical palette above.
 - Typography: per the typography roles above — large off-white sans headlines, mono labels, serif italic support.
-- Typography floor at `1080px` width: `40px` for every readable word, including diagram labels, card text, source lines, caveats, methodological notes, footer brand text, and swipe text. Use `24px` only for the numeric page counter and decorative single-character marks. Never shrink copy below the floor to make it fit.
+- Typography floor at `1080px` width: `40px` for every readable word, including card text, source lines, caveats, methodological notes, footer brand text, and swipe text. Never shrink copy below the floor to make it fit. Two exceptions, both from `SKILL.md`: the numeric page counter and decorative single-character marks at `24px`, and the reference layer inside a chart or diagram (axis titles, scale marks, position labels, legends) at `24px`, in a container marked `chart` or `diagram`.
 - First content slide: center the primary hook block horizontally and center-align the title text. A left-aligned cover headline is only allowed as a Documented Layout Exception (see SKILL.md) — decided by the user and recorded in both `slide-data.js` and `manifest.json`.
 - Cover hook follows the two-part structure defined in SKILL.md (Hooks), and the cover is built on a fixed contrast — **two fonts and two colours, both centered**:
   - Setup line: Archivo Black in `#F6F2E9`, ALL CAPS, the largest type on the canvas.

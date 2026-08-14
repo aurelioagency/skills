@@ -40,14 +40,49 @@ function footer(i, total) {
   </div>`;
 }
 
+// GRAMATICA DE LA MARCA, no un helper opcional:
+//   kicker -> titular -> cuerpo chico -> componente -> veredicto
+// Todo slide de contenido pasa por aca. Sin titular, render-and-audit.mjs lo marca
+// como red issue (excepcion documentada: 'slide-grammar'). El titular puede ser una
+// cifra dominante de 90px o mas, pero no un cuerpo inflado.
 function head(s) {
   return `
     <div class="head-block">
       <div class="kicker ${s.accent || ''}">${s.kicker}</div>
-      <h1>${s.headline}</h1>
+      <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
+      ${s.body ? `<div class="body-copy">${s.body}</div>` : ''}
       ${s.serif ? `<div class="serif-line">${s.serif}</div>` : ''}
     </div>`;
 }
+
+// Componentes del set publicado. Usalos antes de inventar uno nuevo.
+const verdict = s => s.verdict ? `<div class="verdict">${s.verdict}</div>` : '';
+const mascot  = s => s.mascot ? `<div class="mascot-row"><img class="mascot" src="${s.mascot}" alt=""></div>` : '';
+
+// Tres barras de acento, anchos decrecientes.
+const BARS = `<div class="bars"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>`;
+
+// Checklist: items con marca de color.
+const checklist = items =>
+  `<div class="checklist">${items.map(t => `<div class="ci"><span class="mk"></span><div class="tx">${t}</div></div>`).join('')}</div>`;
+
+// Flujo vertical de cajas con flecha hacia abajo. Clases de caja: trigger | agent | human.
+const flow = steps => `
+  <div class="flow">
+    ${steps.map((f, k) => `
+      <div class="fbox ${f.cls}">
+        <div class="lbl">${f.lbl}</div>
+        <div class="t">${f.t}</div>
+        ${f.s ? `<div class="s">${f.s}</div>` : ''}
+      </div>
+      ${k < steps.length - 1 ? '<div class="fdown">↓</div>' : ''}`).join('')}
+  </div>`;
+
+// Grilla 2x2 de tarjetas.
+const grid = cards => `
+  <div class="dec-grid">
+    ${cards.map(c => `<div class="dc"><div class="lbl">${c.lbl}</div><div class="t">${c.t}</div></div>`).join('')}
+  </div>`;
 
 function render(s, i, total) {
   const isCTA = s.type === 'cta';
@@ -76,7 +111,22 @@ function render(s, i, total) {
       </div>`;
   }
 
-  // ...un bloque por cada tipo de slide del carrusel...
+  // ...un bloque por cada tipo de slide del carrusel.
+  // Patron: head(s) + un componente + verdict(s). Ejemplo:
+  //
+  //   if (s.type === 'mecanismo') {
+  //     inner = `
+  //       <div class="stage">
+  //         ${head(s)}
+  //         <div class="spacer"></div>
+  //         ${flow(s.flow)}
+  //         <div class="spacer"></div>
+  //         ${verdict(s)}
+  //       </div>`;
+  //   }
+  //
+  // Un grafico propio va dentro de un contenedor `chart` o `diagram`: eso es lo que
+  // habilita el piso de 24px para sus rotulos, marcas de escala y referencias.
 
   if (isCTA) {
     inner = `<img class="cta-base" src="${s.asset}" alt="CTA">

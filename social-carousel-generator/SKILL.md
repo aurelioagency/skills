@@ -198,6 +198,10 @@ Steps 4 to 6 are where a carousel earns extra slides without padding: they split
 
 Prefer more, clearer slides over dense ones. Each slide gets one job.
 
+**A slide that looks empty is missing content, not size.** Add a fact from the source — the number behind the claim, the counter-case, the second experiment — or accept the air. Never fill a slide by enlarging what is already on it. Scaling type or graphics to occupy the canvas produces a slide that is bigger and says the same, and it is how a carousel drifts out of the brand: the type outgrows the headline level, the graphics turn into walls, and every later correction is about size. If the source has nothing more to say on that slide, the slide is finished at the size the content needs.
+
+There is deliberately **no minimum fill metric**. `measure-stage.mjs` reports slack and flags overflow; it does not judge how full a slide is, because a threshold there gets chased and the chase is the defect.
+
 ## Hooks
 
 The hook is the first slide's only job: stop the scroll. Write and approve hooks before drafting any other slide.
@@ -281,13 +285,16 @@ Use supporting imagery on every carousel:
 Hard QA rules:
 
 - Export every slide at `1080x1440`.
-- Enforce a typography floor. On any `1080px`-wide export, every user-facing word must have a computed font size of at least `40px`. Body copy, labels, captions, sources, caveats, methodological notes, footer brand text, and swipe text are not exempt. Only page counters made entirely of numbers and purely decorative single-character marks may use `24px`. Scale these floors proportionally when the export width is not `1080px`.
+- Enforce a typography floor. On any `1080px`-wide export, every user-facing word must have a computed font size of at least `40px`. Body copy, labels, captions, sources, caveats, methodological notes, footer brand text, and swipe text are not exempt. Scale these floors proportionally when the export width is not `1080px`. Two narrow exceptions, and only these:
+  - **Page counters** made entirely of numbers, and purely decorative single-character marks: `24px`.
+  - **Text inside a chart or diagram** — axis titles, scale marks, position labels, legends, reference notes: `24px`. Mark the container with the class `chart` or `diagram`; the audit reads that, nothing else. This exists because a chart label at the same size as a subheading competes with it, collides with the next column, and forces the real damage: **deleting words to dodge the floor**. Shortening published copy to satisfy a size rule is worse than the rule. The exception covers the reference layer of a graphic, never the slide's own copy — headline, body, verdict, checklist, footer and CTA stay at `40px`.
+- **Every content slide carries a kicker and a headline.** That is the brand grammar, and it is checked. The headline may be an actual headline or a dominant figure (a stat at `90px+` plays the same role), but a slide built as `kicker + paragraph` is a red issue: without the headline level the slide reads empty, and the easy fix is to inflate the body, which is not the fix. Exception id: `slide-grammar`.
 - Never shrink text below the typography floor to make content fit. Shorten the copy, split the content across slides, reflow the layout, or remove low-value detail instead.
 - Treat any user-facing word below the typography floor as a red issue that blocks delivery.
 - Always center the primary hook block on the first content slide. Its bounding box must be horizontally centered in the canvas and its text must use centered alignment. A left-aligned or edge-anchored cover hook is a red issue **unless the user decides otherwise** — see Documented Layout Exceptions below.
 - Balance the vertical composition. The gap above the first content pixel and the gap below the last must be within `4%` of the canvas height of each other. This is the check that catches dead space nobody meant to leave: when you remove an element, revisit every layout constant that existed to accommodate it. A stage offset that once cleared a badge keeps pushing content down long after the badge is gone. Fixed CTA assets are exempt.
 - Center chrome optically, not just geometrically. Symmetric CSS padding does not produce symmetric-looking boxes: a font's line box reserves dead space above the cap height that does not exist below the baseline, and emoji carry their own side bearing. Verify pills, chips, buttons, and counters by measuring the actual background margin around the ink in the rendered PNG, then compensate with asymmetric padding or a `translateY` on the text. The correction belongs to that element's font size and box height — never copy a working `translateY` onto a different pill. `scripts/render-and-audit.mjs` measures this automatically; in the footer it is a red issue.
-- Size chrome for its role. Page counters, decorative marks, and similar non-reading elements sit at `24-26px` on a `1080px`-wide export. The `40px` floor is a minimum for text the reader is meant to read, not a target for every glyph on the canvas.
+- Size chrome for its role. Page counters, decorative marks, and similar non-reading elements sit at `24-26px` on a `1080px`-wide export. The `40px` floor is a minimum for text the reader is meant to read, not a target for every glyph on the canvas — and a chart's reference layer is not reading text either (see the floor exceptions above).
 - Keep all readable content inside a central safe area with `5%` clearance from the left and right edges and `10%` clearance from the top and bottom edges. At `1080x1440` this means `x=54..1026` and `y=144..1296`. Approved fixed CTA assets are exempt.
 - Expand the composition deliberately within that safe area. Increase type, reflow visual elements, and use the available width and height before accepting large empty regions around small content. An unnecessarily small composition surrounded by avoidable empty space is a red issue.
 - Center the main information inside the canvas.
@@ -307,7 +314,7 @@ An exception is valid when all three are true:
 2. Its id is listed in `slide-data.js` under `layoutExceptions`, with a comment naming the decision and its date.
 3. `manifest.json` carries the same id under `layout_exceptions`, with the reason.
 
-Valid ids: `cover-hook-centered`, `vertical-balance`, `counter-centered`, `optical-padding`, `density-budget`. A listed exception drops that check from red issue to informational note, so the rest of the QA keeps blocking normally.
+Valid ids: `cover-hook-centered`, `vertical-balance`, `counter-centered`, `optical-padding`, `density-budget`, `slide-grammar`. A listed exception drops that check from red issue to informational note, so the rest of the QA keeps blocking normally.
 
 `density-budget` is the one a new brand is most likely to need: the density bands are La Casa's, measured on its published set. A brand with a different visual weight either measures its own bands or takes this exception — see the brand preset template.
 

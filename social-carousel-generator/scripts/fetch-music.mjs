@@ -173,7 +173,19 @@ export async function prepararMusica({ seconds = NEED, out = OUT } = {}) {
   fs.mkdirSync(path.dirname(out), { recursive: true });
   const raw = out.replace(/\.mp3$/i, '') + '-full.mp3';
 
-  const res = await fetch(pick.url, { headers: UA });
+  // archive.org/download/<id>/<archivo> es un redirect que se cae con HTTP 500 por
+  // periodos largos (medido: fallaba en todos los items probados, incluido el de
+  // ejemplo de la propia archive.org). La URL directa del nodo, que sale de
+  // /metadata como server + dir, sirve el mismo archivo y responde 200.
+  let res = await fetch(pick.url, { headers: UA });
+  if (!res.ok) {
+    const id = pick.page.split('/details/')[1];
+    const md = await (await fetch(`https://archive.org/metadata/${id}`, { headers: UA })).json();
+    if (md && md.server && md.dir) {
+      const directa = `https://${md.server}${md.dir}/${encodeURIComponent(pick.archivo)}`;
+      res = await fetch(directa, { headers: UA });
+    }
+  }
   if (!res.ok) throw new Error('no pude bajar la pista: HTTP ' + res.status);
   fs.writeFileSync(raw, Buffer.from(await res.arrayBuffer()));
 

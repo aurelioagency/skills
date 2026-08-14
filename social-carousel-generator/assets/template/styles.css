@@ -282,5 +282,181 @@ h1 {
 .nets span b { display: block; line-height: 1; font-weight: 600; }
 .nets span.last { border-color: var(--ochre-dark); color: var(--ochre); }
 
+
+/* ===========================================================================
+   COMPONENTES DE SLIDE DE CONTENIDO
+   Portados del set publicado. NO son opcionales ni decorativos: son la gramatica
+   de la marca. Todo slide de contenido se arma como
+        kicker  ->  titular  ->  cuerpo chico  ->  componente  ->  veredicto
+   y el titular no se saltea. Un carrusel salio una vez con `kicker + parrafo`,
+   paso tamano, piso, safe area y balance, y aun asi no era la marca; despues el
+   cuerpo se inflo de 52 a 70px para tapar el hueco que dejaba el nivel faltante.
+   render-and-audit.mjs ahora lo marca como red issue.
+
+   Un slide que se ve vacio le falta CONTENIDO, no tamano. Se agrega un dato de
+   la fuente o se acepta el aire. Agrandar lo que ya esta es como se rompe.
+   =========================================================================== */
+.head-block { flex: 0 0 auto; text-align: center; }
+.head-block .kicker { margin-bottom: 20px; }
+.head-block .body-copy { margin-top: 22px; }
+
+/* Las tres barras de acento del original: anchos decrecientes, centradas. */
+.bars { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.bars i { display: block; height: 10px; border-radius: 5px; }
+.bars .b1 { width: 500px; background: var(--sage); }
+.bars .b2 { width: 356px; background: var(--terracotta); }
+.bars .b3 { width: 240px; background: var(--ochre); }
+
+
+.flow { flex: 0 0 auto; display: flex; flex-direction: column; align-items: stretch; }
+.fbox { border-radius: 14px; padding: 12px 26px 14px; }
+.fbox .lbl {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--terracotta);
+  text-transform: uppercase;
+}
+.fbox .t {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin-top: 8px;
+}
+.fbox .s {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.1;
+  margin-top: 8px;
+}
+/* trigger: caja punteada neutra. agent: tarjeta crema. humano: caja punteada
+   terracota con relleno tenue — los tres estados del original. */
+.fbox.trigger { border: 2px dashed #3a3634; background: rgba(25, 23, 22, 0.75); }
+.fbox.trigger .t { color: var(--ink); }
+.fbox.trigger .s { color: rgba(246, 242, 233, 0.6); }
+.fbox.agent { background: var(--cream); }
+.fbox.agent .lbl { color: var(--terracotta-dark); }
+.fbox.agent .t { color: #14110f; }
+.fbox.agent .s { color: rgba(20, 17, 15, 0.62); }
+.fbox.human { border: 2px dashed var(--terracotta); background: rgba(150, 79, 58, 0.16); }
+.fbox.human .t { color: var(--ink); }
+.fbox.human .s { color: rgba(246, 242, 233, 0.66); }
+/* El audit lee la flecha como texto: se queda en el piso de 40px. */
+.fdown {
+  font-family: 'Inter', sans-serif;
+  font-size: 40px;
+  line-height: 1;
+  text-align: center;
+  color: rgba(246, 242, 233, 0.55);
+  padding: 0;
+}
+
+
+/* veredicto: barra de acento a la izquierda, como en el original */
+.verdict {
+  flex: 0 0 auto;
+  border-left: 8px solid var(--terracotta);
+  border-radius: 12px;
+  background: rgba(150, 79, 58, 0.16);
+  padding: 22px 32px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+
+.checklist { flex: 0 0 auto; display: flex; flex-direction: column; gap: 44px; }
+/* La slide sin personaje reparte el aire en la propia lista en vez de dejar un
+   hueco entre bloques: mismo cuerpo de texto, mas respiro entre items. */
+.checklist.wide { gap: 88px; }
+.ci { display: flex; align-items: center; gap: 30px; }
+.ci .mk {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--sage);
+  border: 3px solid #4b2c22;
+}
+.ci .tx {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 44px;
+  line-height: 1.16;
+  color: var(--ink);
+}
+
+
+.mascot-row { flex: 0 0 auto; display: flex; justify-content: flex-end; }
+/* ~20% del alto del canvas: se lee sin competir con el texto. */
+.mascot { display: block; height: 282px; width: auto; }
+
+
+.dec-grid {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.dec-grid .dc {
+  background: var(--panel);
+  border: 1.5px solid var(--panel-2);
+  border-radius: 14px;
+  padding: 20px 18px 22px;
+}
+.dec-grid .lbl {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--terracotta);
+  text-transform: uppercase;
+}
+.dec-grid .t {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 40px;              /* a 42 "pasa muchas veces" parte y deja huerfana */
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-top: 12px;
+}
+
+/* ---------- grafico / diagrama ----------
+   El contenedor va marcado `chart` o `diagram`: es lo que lee el audit para
+   aplicar el piso de 24px a la capa de referencia (rotulos de eje, marcas de
+   escala, etiquetas de posicion, leyendas). El texto propio del slide -titular,
+   cuerpo, veredicto- NO va acá adentro: ese sigue en 40px. */
+.chart { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.chart .axis-title {
+  align-self: flex-start;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(246, 242, 233, 0.72);
+}
+.chart .tick { font-family: 'Roboto Mono', monospace; font-weight: 700; font-size: 24px; fill: rgba(246, 242, 233, 0.6); }
+.chart .xlabs { display: flex; width: 100%; }
+.chart .xc { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.chart .pos {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(246, 242, 233, 0.62);
+}
+.chart .what { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 24px; line-height: 1.1; color: rgba(246, 242, 233, 0.44); }
+
 /* ---------- CTA fija: asset + contador compuesto encima ---------- */
 .cta-base { position: absolute; inset: 0; width: 1080px; height: 1440px; display: block; }

@@ -97,11 +97,13 @@ for (const i of slides) {
 
   const used = out.contentH + out.gaps;
   const slack = out.stage.h - used;
+  // El desborde es un defecto medible: el contenido no entra. El aire sobrante NO lo es.
+  // Hubo un umbral de "composicion chica" al 14% del stage y salio caro: empuja a rellenar
+  // -texto mas grande, graficos mas grandes- en vez de agregar contenido, que es lo unico
+  // que llena un slide de verdad. Aca se reporta el numero y decide quien mira.
   const verdict = slack < 0
     ? `DESBORDA por ${-slack}px -> recorta`
-    : slack > out.stage.h * 0.14
-      ? `${slack}px libres -> composicion chica, expandila`
-      : `${slack}px libres -> ok`;
+    : `${slack}px libres`;
   console.log(`--- slide ${i} | stage ${out.stage.top}..${out.stage.bot} (${out.stage.h}px) | bloques ${out.contentH}px + margenes ${out.gaps}px = ${used}px | ${verdict}`);
   for (const r of out.rows) {
     console.log(`   ${String(r.h).padStart(4)}px  mt:${String(r.mt).padStart(6)}  ${r.top}..${r.bot}  ${r.cls}`);

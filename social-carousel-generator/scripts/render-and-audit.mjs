@@ -20,6 +20,7 @@
 // Excepciones documentadas: si `window.CAROUSEL.layoutExceptions` incluye el id de un
 // chequeo, ese chequeo baja a nota informativa. Ids validos:
 //   cover-hook-centered | vertical-balance | counter-centered | optical-padding
+//   | density-budget | slide-grammar
 // Toda excepcion tiene que estar decidida por el usuario y registrada en manifest.json
 // bajo `layout_exceptions`, con el motivo.
 import fs from 'node:fs';
@@ -85,6 +86,12 @@ for (let i = 1; i <= count; i++) {
     const scale = W / 1080;
     const FLOOR = 40 * scale;        // piso tipografico general
     const FLOOR_NUM = 24 * scale;    // solo contadores puramente numericos
+    // Etiquetas y referencias DENTRO de un grafico o diagrama: rotulos de eje, marcas
+    // de escala, leyendas. No son texto de lectura, son referencia de lo que se mira,
+    // y al mismo cuerpo que un subtitulo compiten con el y se chocan entre columnas.
+    // Se marca con la clase `chart` o `diagram` en el contenedor. Titular, cuerpo,
+    // veredicto, checklist, footer y CTA NO entran aca: esos siguen en 40.
+    const FLOOR_CHART = 24 * scale;
     const padX = W * 0.05;
     const padTop = H * 0.10;
     const padBot = H * 0.90;
@@ -144,7 +151,8 @@ for (let i = 1; i <= count; i++) {
           const size = parseFloat(getComputedStyle(p).fontSize);
           const txt = node.textContent.trim().slice(0, 40);
           const numericOnly = /^[0-9/]+$/.test(node.textContent.trim());
-          const floor = numericOnly ? FLOOR_NUM : FLOOR;
+          const inChart = !!(p.closest && p.closest('.chart, .diagram'));
+          const floor = numericOnly ? FLOOR_NUM : inChart ? FLOOR_CHART : FLOOR;
           if (size < floor - 0.5) small.push({ txt, size: Math.round(size), floor: Math.round(floor) });
 
           const r = p.getBoundingClientRect();
@@ -175,6 +183,23 @@ for (let i = 1; i <= count; i++) {
     const brokenImages = [...document.images]
       .filter(im => !im.complete || im.naturalWidth === 0)
       .map(im => im.getAttribute('src'));
+
+    // 6b) gramatica de la marca: kicker + titular en todo slide de contenido.
+    //     Es la regla que ningun otro chequeo ve. Un carrusel entero salio con
+    //     `kicker + parrafo` y sin titular, paso tamano, piso, safe area y balance,
+    //     y aun asi no era la marca. Se mide la presencia, no el contenido.
+    //     El titular no siempre es un <h1>: en los slides de cifra, la cifra grande
+    //     HACE de titular (un "25,6%" a 110px manda el slide igual que un titular).
+    //     Por eso cuenta como titular cualquier elemento de 90px o mas. Un cuerpo
+    //     inflado a 64-70px no llega, que es justo lo que hay que agarrar.
+    const bigType = [...document.querySelectorAll('.slide *')].some(el => {
+      if (!el.textContent || !el.textContent.trim()) return false;
+      return parseFloat(getComputedStyle(el).fontSize) >= 90 * scale;
+    });
+    const grammar = {
+      kicker: !!document.querySelector('.kicker'),
+      h1: !!document.querySelector('h1') || bigType
+    };
 
     // 7) hook de portada centrado
     let hook = null;
@@ -266,7 +291,7 @@ for (let i = 1; i <= count; i++) {
       });
     });
 
-    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, fontsMissing, small, outside, orphans, overflow, brokenImages, hook, balance, counter, chrome };
+    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, fontsMissing, small, outside, orphans, overflow, brokenImages, hook, balance, counter, chrome };
   }, { W, H });
 
   // El PNG se saca siempre: el chequeo optico se hace sobre pixeles reales.
@@ -401,31 +426,31 @@ const scale = W / 1080;
 // tan poco entregable como un muro, y corregir en una direccion sin limite en la otra
 // es como se llega al problema opuesto.
 //
-// Derivado de los percentiles del set publicado de La Casa (44 slides, 1080x1920):
-//   contenido  cobertura p10 4,2 / p50 5,2 / p90 11,2 / max 12,1
-//              renglones 10 / 13 / 18 / 19      bloques 6 / 8 / 11 / 14
-//   portada    cobertura p10 6,1 / p50 6,5 / p90 8,2 / max 8,3
-//              renglones 8 / 12 / 16 / 16       bloques 6 / 8 / 8 / 8
+// MEDIDO sobre el set publicado de La Casa en 1080x1440: 45 slides, 8 portadas y 37 de
+// contenido, de 8 carruseles. Percentiles:
+//   contenido  cobertura min 4,8 / p10 6,6 / p50 9,3 / p90 18,9 / max 20,9
+//              renglones 7 / 9,6 / 14 / 17 / 19      bloques 5 / 6 / 8 / 10 / 11
+//   portada    cobertura min 6,5 / p10 7,6 / p50 9,8 / p90 10,4 / max 10,6
+//              renglones 8 / 8,7 / 10,5 / 14,6 / 16  bloques 6 / 6 / 7,5 / 8,3 / 9
+//
+// Antes estas bandas eran las de 1080x1920 DERIVADAS por area, no medidas, y rechazaban
+// en rojo slides realmente publicados en 1080x1440. Ahora la referencia es 1080x1440 y
+// el factor de area escala hacia los otros tamanos, no desde ellos.
 //
 // Fuera de la banda = aviso. Fuera del limite duro = red issue, en las dos direcciones.
-// La cobertura escala con el area del lienzo (el mismo contenido en 3:4 cubre ~33% mas);
-// los conteos de renglones y bloques no escalan, son contenido.
-//
-// NOTA: la banda de cobertura para 1080x1440 esta DERIVADA por area, no medida. Cuando
-// haya set publicado de Instagram, medilo con el mismo metodo y reemplaza estos numeros.
-const areaFactor = (1080 * 1920) / (W * H);
+// La cobertura escala con el area del lienzo; los conteos de renglones y bloques no
+// escalan, son contenido.
+const areaFactor = (1080 * 1440) / (W * H);
 // Bandas por defecto: las de La Casa de Aurelio, medidas sobre SU set publicado.
 // Otra marca no se juzga con estas. Su preset define las propias en slide-data.js:
 //   densityBudget: { cover: {...}, content: {...} }
 // y lo que declare pisa solo esas claves. Si no las midio todavia, la salida honesta
 // es la excepcion documentada 'density-budget', no heredar estos numeros en silencio.
 const DEFAULT_BUDGET = {
-  // El piso de cobertura de portada es 4,0 y no 4,5 (el p10 del set) por un principio:
-  // el set del que se deriva la banda no puede quedar rechazado por ella. A 4,5 una
-  // portada publicada caia en rojo por 0,01 puntos. Validacion sobre las 44 slides:
-  // 73% limpias, 25% aviso, 0% rojo.
-  cover:   { cov: [6.0, 8.5],  covHard: [4.0, 10.5], lines: [8, 16],  linesHard: [6, 20], blocks: [6, 8],  blocksHard: [4, 11] },
-  content: { cov: [4.0, 11.5], covHard: [3.0, 13.5], lines: [10, 18], linesHard: [7, 22], blocks: [6, 11], blocksHard: [4, 14] }
+  // Principio que fija los limites duros: el set del que sale la banda no puede quedar
+  // rechazado por ella. Por eso cada `Hard` cubre el min y el max medidos con margen.
+  cover:   { cov: [7.0, 10.5], covHard: [6.0, 11.5], lines: [8, 16],  linesHard: [7, 18], blocks: [6, 9],  blocksHard: [5, 10] },
+  content: { cov: [6.0, 19.0], covHard: [4.5, 21.5], lines: [9, 17],  linesHard: [6, 20], blocks: [6, 10], blocksHard: [4, 12] }
 };
 const customBudget = report[0]?.densityBudget || null;
 const BUDGET = {
@@ -452,6 +477,19 @@ for (const r of report) {
   for (const o of r.orphans) at(red, `posible huerfana: "${o.txt}" — ultima linea ${o.lastLine}px vs ${o.widest}px`);
   for (const b of r.brokenImages) at(red, `asset no cargado: ${b}`);
   if (r.overflow.h > H + 1 || r.overflow.w > W + 1) at(red, `overflow ${r.overflow.w}x${r.overflow.h} (canvas ${W}x${H})`);
+
+  // gramatica de la marca: kicker + titular en todo slide de contenido.
+  // La portada y la CTA quedan afuera: la portada tiene su propia composicion y la CTA
+  // es un asset fijo.
+  if (!r.isCTA && !r.isCover && r.grammar) {
+    const falta = [!r.grammar.kicker && 'kicker', !r.grammar.h1 && 'titular'].filter(Boolean);
+    if (falta.length) {
+      at(excepted('slide-grammar') ? notes : red,
+         `slide de contenido sin ${falta.join(' ni ')}. La gramatica de la marca es ` +
+         `kicker + titular + cuerpo + componente; sin el titular el slide queda vacio y ` +
+         `la salida facil es agrandar el texto, que no es la salida.`);
+    }
+  }
 
   // hook de portada
   if (r.slide === 1 && r.hook && (r.hook.centerOffset > 2 || r.hook.align !== 'center')) {
