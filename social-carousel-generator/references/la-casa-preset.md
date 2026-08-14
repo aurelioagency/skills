@@ -171,9 +171,10 @@ Las entregas de La Casa viven acá, en la unidad compartida sincronizada en loca
 G:\Unidades compartidas\Aurelio\Carrouseles\
 ```
 
-Al terminar el carrusel, **copiá la carpeta de entrega adentro** — el usuario no arrastra nada.
-Se copia al final, nunca se renderiza directo ahí (el motivo está en *Copying it to Drive* en
-`SKILL.md`). Si ya existe una carpeta con ese nombre, no la pises: preguntá.
+**Copiá la carpeta de entrega adentro una vez que el usuario aprobó** — el carrusel y la pista —
+y no antes: la unidad es compartida, así que lo que entra ahí lo ve todo el equipo. Que la QA dé
+limpia no es aprobación. Nunca se renderiza directo a Drive, y nunca se pisa una carpeta que ya
+exista con ese nombre: preguntá. Los motivos, en *Copying it to Drive* de `SKILL.md`.
 
 Ahí conviven las entregas sin publicar, con el nombre del tema pelado, y las ya publicadas, que
 `post-for-me` renombra a `YYYY-MM-DD-<tema>_POST` con la fecha real de publicación. El log de

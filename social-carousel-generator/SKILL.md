@@ -26,7 +26,7 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 7. Build the vertical Short and get the music approved.
    Completion criterion: `short.mp4` is built from the approved slides, the user has seen the chosen track — already cut to the video's length — and approved it, and the track is recorded in `manifest.json` and appended to the brand's music log. Nothing is published before that yes.
 8. Humanize captions and deliver.
-   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, it has been copied into the brand's Drive folder if the preset names one, the editable source is in place, and a short validation summary is given.
+   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, it has been copied into the brand's Drive folder if the preset names one — and only after the user approved, never on the strength of a clean audit alone, the editable source is in place, and a short validation summary is given.
 
 When the user brings an existing carousel to convert to another platform or size, steps 2-4 are replaced by Adaptation Mode below: verbatim transcription and faithful rebuild, never re-angling or rewriting approved content.
 
@@ -402,15 +402,30 @@ Inside it, **only three kinds of file**: the ordered PNGs (`01.png`, `02.png`, �
 
 ### Copying it to Drive
 
-If the preset names a Drive folder, copy the finished delivery folder into it at the end, so the
-user does not have to drag anything. Check first whether a folder of that name is already there
-and **never overwrite one** — ask instead.
+If the preset names a Drive folder, copy the delivery folder into it so the user does not have to
+drag anything.
 
-**Copy at the end; do not render into Drive.** It is tempting to point `--out` straight at the
-synced folder and skip the copy, and it is wrong: a carousel gets re-rendered on every QA round
-and every correction — eight times in one real session — so Drive would sync seventy-odd PNGs to
-end up holding nine, and the user would watch intermediate versions appear and vanish. Render
-locally, deliver locally, copy once when it is finished.
+**Only after the user's approval — never before.** Drive is shared: whatever lands there is
+visible to everyone with access and syncs to their machines, so it is publication-adjacent, not
+a working directory. The copy happens when *all* of these are true:
+
+- the visual QA passes with no red issues;
+- the user has approved the track (the gate in *Music* above);
+- there is no correction pending — no open question, no "cambiá esto" waiting on an answer.
+
+Passing the automated audit is **not** approval. A carousel can be clean at the pixel level and
+still get five copy changes in the next message; that happened on the carousel this rule came
+from. If in doubt about whether the last round closed, ask before copying.
+
+**Copy once, at the end; never render into Drive.** It is tempting to point `--out` straight at
+the synced folder and skip the copy, and it is wrong: a carousel gets re-rendered on every QA
+round and every correction — eight times in one real session — so Drive would sync seventy-odd
+PNGs to end up holding nine, and the user would watch half-finished versions appear and vanish
+in a shared folder. Render locally, deliver locally, copy once when it is approved.
+
+Check first whether a folder of that name is already there and **never overwrite one** — ask
+instead. If the carousel changes after it was copied, re-copy it and say so, rather than leaving
+Drive holding a version the user already asked you to change.
 
 `qa-report.json` and `contact-sheet.png` are working files: produced during the job, read during QA, and **deleted before delivery**. There is no `exports/` (it was a byte-for-byte duplicate) and no `post-descriptions.md` — the caption ships as `caption.txt` inside the delivery folder, and whatever is worth remembering about it goes in `carousel-brief.md`.
 
