@@ -37,15 +37,30 @@ Four things, and none of them can be assumed:
 
 ### Local files have to be uploaded first
 
-Post for Me fetches media by URL; it cannot see the person's disk. For a local file:
+Post for Me fetches media by URL; it cannot see the person's disk. Neither can the `execute` tool — its code runs in a container with no filesystem access and no network beyond the SDK client. So the bytes cannot travel through `execute`. The upload is three stages, and only the middle one happens locally:
+
+**Stage 1 — mint the URLs, inside `execute`.** One call per file:
 
 ```ts
 const { upload_url, media_url } = await client.media.createUploadURL();
-// PUT the bytes to upload_url with the right Content-Type
-// then pass { url: media_url } in the post
 ```
 
-`media_url` expires in 24 hours if it goes unused. Upload as part of the publish, not hours ahead.
+The method is `createUploadURL`, with `URL` uppercase. `createUploadUrl` does not exist and fails typechecking.
+
+**`execute` times out at 25 seconds, and this is where it bites.** Each `createUploadURL` takes roughly 2 seconds, so a nine-slide carousel does not fit in one call — not sequentially, and not with `Promise.all` either, which times out just the same because the ceiling is wall-clock, not concurrency. Measured on a real nine-slide run: **batches of three complete in 7–8 seconds each**. Ask for three per call, repeat, and collect the pairs as you go. Return them from every call — variables do not persist between `execute` invocations, so a batch you do not return is a batch you have lost.
+
+**Stage 2 — PUT the bytes, from the local shell.** Bash with `curl`, one PUT per file, checking the status code rather than assuming:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" -X PUT \
+  -H "Content-Type: image/png" \
+  --data-binary "@slide.png" \
+  "<upload_url>"
+```
+
+`200` is success. Write the loop to print a line per file so a single silent failure in the middle cannot pass for a complete upload.
+
+**Stage 3 — build the post with the `media_url`s**, in slide order. The public `media_url` is a plain URL with no token; the *signed* `upload_url` is the one that expires — its token carries about a two-hour window. `media_url` expires in 24 hours if it goes unused. Upload as part of the publish, not hours ahead.
 
 ### The confirmation gate
 
@@ -79,7 +94,23 @@ Per-account overrides go in `account_configurations`, and they matter more than 
 - `title` — required-ish for YouTube, TikTok and Pinterest; the `caption` is not a title.
 - `privacy_status`, `made_for_kids`, `board_ids`, `is_draft` — platform-specific, read them off the docs rather than from memory.
 
-A typechecked call is not a valid call. `platform_configurations.youtube` requires `localizations`, and `localizations: []` satisfies TypeScript, creates the post, and only then fails against Google with a 400 — it has to be `{}`. That class of failure is invisible until you read the results, which is the next step. The full case is in `references/troubleshooting.md`.
+**`localizations` is required on every account configuration, not just YouTube's.** The SDK types `account_configurations[].configuration` as one shared `Configuration`, so a plain Instagram override fails to compile:
+
+```
+TS2741: Property 'localizations' is missing in type '{ placement: "timeline" }'
+but required in type 'Configuration'.
+```
+
+Pass `localizations: {}` on every entry, whatever the platform:
+
+```ts
+account_configurations: [
+  { social_account_id: 'spc_…', configuration: { placement: 'timeline', localizations: {} } },
+  { social_account_id: 'spc_…', configuration: { title: 'Título', localizations: {} } },
+]
+```
+
+An empty **map**, never `[]`. A typechecked call is not a valid call: `localizations: []` satisfies TypeScript, creates the post, and only then fails against Google with a 400. That class of failure is invisible until you read the results, which is the next step. The full case is in `references/troubleshooting.md`.
 
 ### Captions keep their line breaks only if you build them right
 
@@ -103,7 +134,25 @@ Check the platform's own limits too — Instagram in particular reads badly past
 const results = await client.socialPostResults.list({ post_id: post.id });
 ```
 
+The `post_id` filter is honoured server-side, so **an empty `data` means the networks have not answered yet — not that the filter is wrong**. Do not go hunting for a bug in the query: a multi-image carousel across several accounts can sit in `processing` for minutes. `updated_at` standing still is the confirmation that nothing has resolved yet. (`limit` on this endpoint is *not* reliably honoured — it can return more rows than asked for, so never infer "that's all of them" from a short list.)
+
 Each result carries `success`, `error`, and `platform_data.url` — the direct link to the published post. Report those links. If any account failed, say which and why; do not describe a partial publish as done, and do not mark anything.
+
+**Never report a publish as successful off the create call alone.** `socialPosts.create` returning an id proves the post was *accepted*, nothing more. Until the results come back per account, the honest status is "sent, confirmation pending" — say exactly that if the session ends before they land.
+
+### Retrying a publish without double-posting
+
+A publish that errors is ambiguous in the one way that matters: a permission denial, a timeout or a dropped connection can happen *before* the post was created or *after*. Retrying blind is how the same carousel goes out twice, and Post for Me cannot retract either copy.
+
+`external_id` is the way out, and it is why the field is worth setting every time. Before any retry, ask whether the post already exists:
+
+```ts
+const existing = await client.socialPosts.list({ external_id: 'delivery-folder-slug' });
+```
+
+A non-empty `data` means the post is already in flight — read its results, do not create it again. Only an empty result justifies re-sending.
+
+One distinction worth keeping straight: a result row with `success: false` is a **platform rejection**, and there retrying is safe, because nothing was published on that account. The failed attempt stays in the dashboard as an error row — mention it, so it is not misread as a double post.
 
 ### Marking the delivery folder
 

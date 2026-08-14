@@ -12,6 +12,8 @@ Real problems, with the evidence that tells them apart. Look at the data before 
 6. Permissions
 7. How to read each log
 8. Publishing errors
+9. The `execute` tool times out
+10. The permission layer denies the call
 
 ---
 
@@ -156,9 +158,17 @@ These fail *after* the post is created, so the SDK call returns a healthy-lookin
 Always read the outcome instead of trusting the create call:
 
 ```ts
-const res = await client.socialPostResults.list({ limit: 20, offset: 0 });
-res.data.filter(r => r.post_id === '<id>').map(r => ({ ok: r.success, error: r.error }));
+const res = await client.socialPostResults.list({ post_id: '<id>' });
+res.data.map(r => ({ ok: r.success, error: r.error, url: r.platform_data?.url }));
 ```
+
+The `post_id` filter is applied server-side — verified by comparing an unfiltered call
+(rows from many posts) against a filtered one (none). So **an empty `data` means the
+networks have not answered yet**, not that the filter failed. Carousels across several
+accounts can stay in `processing` for minutes; `updated_at` not moving confirms it.
+
+`limit` on this endpoint is not reliably honoured — a call with `limit: 5` came back
+with 16 rows. Never treat a short list as complete.
 
 A failed result means the platform rejected it and **nothing was published on that
 account**. Retrying does not create a duplicate. The failed attempt does stay in the
@@ -193,6 +203,80 @@ platform_configurations: {
 ```
 
 Vertical video under a minute lands as a Short on its own — there is no Shorts flag to set.
+
+---
+
+## 9. The `execute` tool times out
+
+**Symptom.** `The code tool execution timed out after 25 seconds.` No partial result
+comes back, and because variables do not persist between calls, whatever the code had
+already produced is gone.
+
+**Cause.** A hard 25-second wall-clock ceiling on the whole function. It is not a
+concurrency limit: nine `createUploadURL()` calls timed out sequentially *and* wrapped
+in `Promise.all`.
+
+**Fix.** Split the work and return every batch. Measured on a nine-slide carousel,
+each `createUploadURL` costs about 2 seconds and **three per call lands in 7–8 seconds**:
+
+```ts
+async function run(client) {
+  const results = await Promise.all(
+    Array.from({ length: 3 }, () => client.media.createUploadURL())
+  );
+  return results.map((u: any) => ({ upload_url: u.upload_url, media_url: u.media_url }));
+}
+```
+
+Three calls of three, collecting the pairs as they come back. Anything not returned is lost.
+
+**Related typo that costs a round trip.** The method is `createUploadURL`. Writing
+`createUploadUrl` fails typechecking with `Property 'createUploadUrl' does not exist on
+type 'Media'. Did you mean 'createUploadURL'?`
+
+---
+
+## 10. The permission layer denies the call
+
+**Symptom.** `Permission for this action was denied by the Claude Code auto mode
+classifier.` It arrives with no prompt shown to the user, and it is **intermittent**:
+in one observed session the same `execute` tool ran four times, was denied on the call
+that creates the post, was allowed on the retry, then denied on a read-only results
+query, then allowed again.
+
+**Cause.** This is the harness, not Post for Me and not the API. The classifier judges
+what the action *does*, not which tool runs it, so publishing — public, irreversible,
+fanning out to several accounts — is what it stops. In a **non-interactive session** no
+approval dialog can be raised, so an action it will not wave through can only be denied.
+
+**What this means for the work, and it is the important part.** A denial on the create
+call means **nothing was created** — the call never ran. But do not assume that about
+every error: see §8 on `external_id`, and check before re-sending. Never re-issue a
+publish on the assumption that the first one did not go through.
+
+**Fix.** An explicit rule in `permissions.allow` outranks the classifier. In
+`~/.claude/settings.json`:
+
+```json
+"permissions": {
+  "allow": [
+    "mcp__post_for_me_api__execute"
+  ]
+}
+```
+
+It takes effect in a new session, not the current one.
+
+**Claude cannot apply this fix itself, and should not try.** Editing the file that
+grants its own permissions is denied by the same classifier — correctly. Hand the user
+the exact line and let them paste it.
+
+**Say the cost out loud when proposing it.** That rule covers the *whole* tool, reads
+and writes alike, so publishing loses its automatic brake. What remains is the
+confirmation gate in `SKILL.md` — accounts, caption, media, timing — which is a
+protocol Claude follows, not something the harness enforces. Anyone who wants a machine
+check on publishing specifically should leave the setting alone and publish from an
+interactive session, where the prompt actually appears.
 
 ---
 
