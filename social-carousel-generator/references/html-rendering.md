@@ -31,7 +31,7 @@ Use Playwright or an available Chromium browser to capture each slide at the tar
 
 Use `deviceScaleFactor: 1` and the only viewport size: `1080x1440` (3:4). Carousels have one size — see *Format, length and density* in `SKILL.md`. The `1080x1920` viewport belongs to `short.mp4`, not to slides.
 
-Write the PNGs straight into the delivery folder, named `<YYYY-MM-DD>-<tema-en-kebab-case>-ig` (pass it with `--out`). That folder holds the PNGs and `caption.txt` and nothing else: the user drags it into Drive as it is. There is no separate `exports/` — it was a byte-for-byte copy of the same files.
+Write the PNGs straight into the delivery folder, named `<tema-en-kebab-case>` — the topic alone, no date and no platform suffix (pass it with `--out`). That folder holds the PNGs and `caption.txt` and nothing else: the user drags it into Drive as it is. There is no separate `exports/` — it was a byte-for-byte copy of the same files.
 
 Stop the temporary server after rendering.
 

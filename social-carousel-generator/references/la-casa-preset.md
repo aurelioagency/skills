@@ -178,21 +178,24 @@ https://www.aurelioagency.com/es
 Únete a la comunidad:
 https://www.skool.com/la-casa-de-aurelio-2061
 
-#claude #ia #Automatizacion #AIWorkflows #LaCasaDeAurelio <2-3 hashtags dinamicos>
+<4 hashtags dinamicos segun el tema> #LaCasaDeAurelio
 ```
 
 Rules:
 
 - The greeting, the services paragraph, and both links are **fixed**. Never reword, translate, shorten, or adapt them to the carousel's topic.
 - The only written paragraph is the second block: it restates the carousel's strongest idea or figure in 2-4 lines. No filler, no recap of every slide.
-- The five fixed hashtags always appear first, in this order: `#claude #ia #Automatizacion #AIWorkflows #LaCasaDeAurelio`.
-- Then add 2-3 dynamic hashtags chosen by the carousel's central topic:
-  - Agents / task automation → `#AIAgents #Agentic`
-  - n8n / workflows → `#n8n #NoCode #WorkflowAutomation`
-  - OpenAI / specific models → `#OpenAI #Codex #GPT`
-  - Productivity / business → `#Productividad #FutureOfWork #PYMES`
-  - Development / code → `#DevTools #SoftwareEngineering`
-  - No category fits → build 2-3 specific hashtags from literal keywords in the carousel (tool names, technical concepts).
+- **Exactly 5 hashtags, siempre.** El tope de 5 es de plataforma y está en `SKILL.md`; acá se define cómo se reparten esos 5 en esta marca.
+- **Uno solo es fijo: `#LaCasaDeAurelio`,** y va al final, como firma.
+- **Los otros cuatro son dinámicos**, elegidos por el tema central del carrusel. Referencias por categoría:
+  - Agentes / automatización de tareas → `#AIAgents #Agentic #Automatizacion #AIWorkflows`
+  - n8n / workflows → `#n8n #NoCode #WorkflowAutomation #Automatizacion`
+  - OpenAI / modelos puntuales → `#OpenAI #Codex #GPT #IA`
+  - Claude / Anthropic → `#Claude #Anthropic #IA #AIWorkflows`
+  - Productividad / negocio → `#Productividad #FutureOfWork #PYMES #IA`
+  - Desarrollo / código → `#DevTools #SoftwareEngineering #IA`
+  - Ninguna categoría encaja → construí los cuatro con palabras literales del carrusel (nombres de herramientas, conceptos técnicos).
+- Un hashtag fuera de tema resta más de lo que suma: `#claude` en un carrusel que no habla de Claude es ruido. `#claude`, `#ia`, `#Automatizacion` y `#AIWorkflows` **dejaron de ser fijos** el 2026-08-14 justamente por eso — siguen disponibles como dinámicos cuando el tema los pide.
 - Blank lines between blocks exactly as shown.
 - The humanizer pass applies to the written paragraph only; fixed blocks pass through untouched.
 

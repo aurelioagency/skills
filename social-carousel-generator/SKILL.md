@@ -18,9 +18,9 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 3. Recommend the carousel split, present two hook options per carousel, and ask for confirmation.
    Completion criterion: the user has confirmed, reduced, or changed the number of carousels, and picked or edited a hook for each one, before any slide is drafted.
 4. Draft the slides and get the copy approved.
-   Completion criterion: each carousel has as many content slides as its material supports and no more than 9, each slide has one job and stays inside the density budget below, each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
+   Completion criterion: each carousel has as many content slides as its material supports and no more than 9, each slide has one job and stays inside the density budget below, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
-   Completion criterion: the delivery folder (`<YYYY-MM-DD>-<tema>-ig`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
+   Completion criterion: the delivery folder (`<tema-en-kebab-case>`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
 6. Run visual QA from contact sheets.
    Completion criterion: every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
 7. Build the vertical Short and get the music approved.
@@ -150,7 +150,7 @@ These three are skill-wide quality rules, not brand taste. They apply to every c
 
 ### One size
 
-Every carousel is **`1080x1440` (3:4)**. There is no platform question, no TikTok variant and no `1080x1920` carousel: the same export is published to Instagram and to TikTok, which displays it fine. The delivery folder ends in `-ig` as the size label, not as a restriction on where it is posted.
+Every carousel is **`1080x1440` (3:4)**. There is no platform question, no TikTok variant and no `1080x1920` carousel: the same export is published to Instagram and to TikTok, which displays it fine. The delivery folder carries no size or platform suffix at all — see *The delivery folder* below.
 
 The only `1080x1920` left in the pipeline is `short.mp4`, the vertical video, which centers the slides on the taller canvas. That is not a carousel.
 
@@ -257,11 +257,48 @@ List every viable alternative the bank actually has for that slide's job — if 
 
 Rendering before this gate wastes work and hides copy and asset problems inside images, where they are slower to spot and slower to fix.
 
+The copy shown here has already passed the filter in *Grounding Technical Terms* below: every term the argument depends on is readable on its own slide, and nothing is explained that did not need to be.
+
 ## Copy Accuracy
 
 - Proper nouns are copied verbatim from the source: product names, company names, feature names, people. Never assemble a name by combining a company with a topic (`Anthropic` + `Cowork` is not the product's name; the source says `Claude Cowork`). When a kicker names a product, use the product's real name.
 - Every slide must stand alone. When a slide compresses a quote or a long passage, read the result cold: if it no longer states a complete, understandable idea, rewrite it. Compression that loses the logical connector is a defect, not a style choice.
 - Numbers, percentages, dates, and limits are transcribed exactly. If a figure needs rounding for the layout, say so on the slide.
+
+## Grounding Technical Terms
+
+The goal is that most readers follow the carousel end to end without stopping at a word they do not know. That is not the same as explaining everything: a carousel that defines every term reads like a glossary and loses the argument.
+
+Apply this filter **term by term**, not to the carousel as a whole:
+
+- **The slide's argument holds even if the reader does not know the word → do not explain it.** It is background: the thing being talked about, not the thing being explained. On a carousel about prompting, `modelo`, `LLM` and `prompt` are background. Same for a term that only appears in passing — if `api key` shows up in one line of a carousel about something else, it is not this carousel's job to explain it.
+- **The slide's argument depends on the word → ground it in the same slide, the first time it appears.** `MÁS CAPAS, MÁS SESGO` says nothing to someone who does not know what a `capa` is: there the term is the axis of the slide.
+- **The word is one item in a list of options and the point is "these alternatives exist" → rename it by what it does, or leave it.** `Codificaciones posicionales` became `Atar cada palabra a sus vecinas más cercanas`. Nobody needed the technical name to understand that four levers exist.
+
+### Change the words, do not add a definition
+
+This is the part that goes wrong first, and it goes wrong while feeling helpful. The reflex is to stick a definition in front of the term — *"Una capa es…"* — and a definition eats the whole line, sounds like a manual, and stops the story. Almost always the same meaning fits **inside the sentence that was already there**, just written differently:
+
+| Definition (the wrong reflex) | Same idea, just written differently |
+|---|---|
+| *Una regla del modelo: cada palabra solo puede mirar a las anteriores.* | *Cada palabra solo puede mirar a las anteriores: lo que viene después le queda tapado.* — "tapado" is what makes the headline `LA MÁSCARA CAUSAL` land. |
+| *Una capa es cada pasada del modelo sobre el texto.* | *Relee el texto capa por capa, y cada pasada hereda lo que la anterior priorizó.* — capa ≈ pasada, by context, without a definition. |
+| *Le dicen "perdido en el medio".* | *Se pierde justo cuando queda en el medio.* — translates the English headline `LOST IN THE MIDDLE` without announcing that it is translating it. |
+
+Evaluate case by case: a short gloss does earn its place sometimes. What is never right is reaching for one by default. **The term keeps its real name** — the máscara causal is still called máscara causal; what changes is that the sentence around it makes it obvious.
+
+**A graphic's label is the cheapest place to ground a term**, because it has to name the object anyway. `Todo lo que le pegás, de principio a fin` over the cover's context bar grounds `contexto` without spending a single sentence of body copy.
+
+### When it does not fit
+
+Cutting the concept is the **last** option, not the first. Before dropping anything, try, in this order:
+
+1. Reword it shorter — most of the time the sentence was carrying dead weight anyway.
+2. Move the grounding to the graphic's label, where it costs no body copy.
+3. Split the idea across two slides. There is room: the ceiling is 10 exported images.
+4. Move the detail to the caption, which has no density budget.
+
+Only if none of those work does the concept come out of the carousel, and even then say so to the user instead of dropping it silently — it may be worth its own carousel.
 
 ## Fixing a Reported Defect
 
@@ -343,7 +380,7 @@ social-carousels/<slug>/
   carousel-brief.md
   manifest.json
   assets/
-  2026-08-03-claude-piloto-automatico-ig/    # la carpeta de entrega
+  claude-piloto-automatico/                  # la carpeta de entrega
 ```
 
 ### The delivery folder
@@ -351,10 +388,15 @@ social-carousels/<slug>/
 One folder per carousel, named so the user can drag it straight into Drive without renaming anything:
 
 ```text
-<YYYY-MM-DD>-<tema-en-kebab-case>-ig
+<tema-en-kebab-case>
 ```
 
-The date is the delivery date and the middle is the carousel's topic (the package slug). The `-ig` suffix is the size label — there is only one size — and does not mean the package is for Instagram only: the same files go to TikTok.
+**The topic and nothing else** — no date prefix, no platform or size suffix. It is the same string as the package slug, so the delivery folder repeats its parent's name; that is expected, not a mistake.
+
+Both extras were dropped on 2026-08-14 because they cost more than they gave:
+
+- **No date.** The delivery date is already in `manifest.json`, and the one date worth having on the folder is the *publication* date, which `post-for-me` stamps on when it actually publishes (`<folder>` → `YYYY-MM-DD-<folder>_POST`). With a date already in the name that rename produced two of them.
+- **No `-ig`.** There is only one carousel size and it goes to Instagram and TikTok alike, so the suffix labelled nothing and read as a restriction that does not exist.
 
 Inside it, **only three kinds of file**: the ordered PNGs (`01.png`, `02.png`, …), `caption.txt` and `short.mp4`. Nothing else ever goes in there — no report, no contact sheet, no working copy. Render straight into it with `--out <carpeta>`.
 
@@ -435,6 +477,8 @@ and sound wrong, and nothing in the pipeline can listen to it.
 
 Always generate post descriptions with hashtags.
 
+**Never more than 5 hashtags, on any platform.** This is a platform limit, not brand taste, so it holds for every preset and outranks a caption template that asks for more: if the template's fixed tags plus its dynamic ones add up past 5, the template is wrong and gets fixed before the caption is written — never trimmed silently at the last moment. How the 5 are split between fixed and per-topic tags is a brand decision and lives in the preset.
+
 If the active preset defines a caption template, follow it exactly: fixed blocks (greetings, service lines, links, fixed hashtags) are reproduced verbatim and never adapted to the topic; only the blocks the template marks as written change per carousel. Deliver the caption as one plain-text block, clearly labelled and ready to paste with no further editing.
 
 Check the template is actually filled before writing a single caption. A preset whose caption section still carries `<…>` placeholders, or that has no caption section at all, is not usable: ask the user for the greeting, the fixed lines, the links and the fixed hashtags, write them into the preset, and only then assemble the caption. Shipping a caption invented around a placeholder is worse than asking.
@@ -456,7 +500,7 @@ Return the delivery folder and a short validation summary.
 
 What the user actually publishes — everything else is working material:
 
-- Ordered PNG exports in `<YYYY-MM-DD>-<tema>-ig/`.
+- Ordered PNG exports in `<tema-en-kebab-case>/`.
 - `caption.txt` in that same folder — the caption alone, plain text, ready to paste.
 - `short.mp4` in that same folder — the vertical video, same caption, for YouTube Shorts.
 

@@ -39,7 +39,7 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 - **Safe-area QA** — all readable content stays ≥ `5%` from the side edges and ≥ `10%` from top/bottom (app overlay zones); the first-slide hook must be horizontally centered; small compositions floating in empty space are rejected.
 - **Documented layout exceptions** — a brand's approved layout sometimes contradicts a rule. Listing a check id in `slide-data.js` under `layoutExceptions` (and recording the reason in `manifest.json`) drops that one check to an informational note while everything else keeps blocking. Never a shortcut the agent takes on its own.
 - **Fixed brand CTA, two variants** — La Casa appends a fixed CTA frame after the content slides and asks which one closes the carousel: normal (`Guarda este post`) or comment (`Comenta AURELIO` to get something by DM). Two bundled assets per size; the page counter is composed on top at render time, so the same asset serves a carousel of any length, and assets are never cropped or stretched across sizes.
-- **A delivery folder you can drag as-is** — the PNGs and `caption.txt` land in a folder named `<YYYY-MM-DD>-<tema>-<ig|tt>`, holding nothing else. Drag it into Drive without renaming anything.
+- **A delivery folder you can drag as-is** — the PNGs and `caption.txt` land in a folder named after the topic (`<tema-en-kebab-case>`), holding nothing else. Drag it into Drive without renaming anything.
 - **Humanized captions** — every slide passage and the caption pass a humanizer step (no generic AI phrasing, no filler, no dictionary tone) before delivery.
 - **Adaptation mode** — bring an existing carousel of your own (final PNGs or its editable package) and convert it to another platform or size. Copy is transcribed verbatim and confirmed with you, slides are rebuilt in HTML at the target size (originals are never scaled or cropped), and any copy that cannot fit the typography floor in the new ratio is adjusted only with your approval. Third-party carousels are never cloned: their screenshots enter the normal creation flow as information sources, and the copy is written from scratch in your brand's voice.
 
@@ -185,12 +185,12 @@ social-carousels/<slug>/
   carousel-brief.md                # source, angles, decisions
   manifest.json                    # size, slide order, CTA variant
   assets/                          # fonts and the CTA frame used
-  2026-08-03-mi-tema-ig/           # ← the delivery folder
+  mi-tema/                         # ← the delivery folder
       01.png … 06.png
       caption.txt
 ```
 
-The delivery folder is named `<YYYY-MM-DD>-<tema>-<ig|tt>` and holds the images and the caption, nothing else — drag it into Drive as it is. Working files (`qa-report.json`, `contact-sheet.png`) are produced during the job and deleted before delivery.
+The delivery folder is named `<tema-en-kebab-case>` — the topic alone, no date and no platform suffix — and holds the images and the caption, nothing else — drag it into Drive as it is. Working files (`qa-report.json`, `contact-sheet.png`) are produced during the job and deleted before delivery.
 
 ### Multiple carousels and fixes
 
