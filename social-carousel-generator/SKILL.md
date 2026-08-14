@@ -24,9 +24,9 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 6. Run visual QA from contact sheets.
    Completion criterion: every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
 7. Build the vertical Short and get the music approved.
-   Completion criterion: `short.mp4` is built from the approved slides, the user has seen the chosen track — already cut to the video's length — and approved it, and the track is recorded in `manifest.json` plus the brand's music log row handed over ready to paste. Nothing is published before that yes.
+   Completion criterion: `short.mp4` is built from the approved slides, the user has seen the chosen track — already cut to the video's length — and approved it, and the track is recorded in `manifest.json` and appended to the brand's music log. Nothing is published before that yes.
 8. Humanize captions and deliver.
-   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, the editable source is in place, and a short validation summary is given.
+   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, it has been copied into the brand's Drive folder if the preset names one, the editable source is in place, and a short validation summary is given.
 
 When the user brings an existing carousel to convert to another platform or size, steps 2-4 are replaced by Adaptation Mode below: verbatim transcription and faithful rebuild, never re-angling or rewriting approved content.
 
@@ -399,6 +399,18 @@ Both extras were dropped on 2026-08-14 because they cost more than they gave:
 - **No `-ig`.** There is only one carousel size and it goes to Instagram and TikTok alike, so the suffix labelled nothing and read as a restriction that does not exist.
 
 Inside it, **only three kinds of file**: the ordered PNGs (`01.png`, `02.png`, …), `caption.txt` and `short.mp4`. Nothing else ever goes in there — no report, no contact sheet, no working copy. Render straight into it with `--out <carpeta>`.
+
+### Copying it to Drive
+
+If the preset names a Drive folder, copy the finished delivery folder into it at the end, so the
+user does not have to drag anything. Check first whether a folder of that name is already there
+and **never overwrite one** — ask instead.
+
+**Copy at the end; do not render into Drive.** It is tempting to point `--out` straight at the
+synced folder and skip the copy, and it is wrong: a carousel gets re-rendered on every QA round
+and every correction — eight times in one real session — so Drive would sync seventy-odd PNGs to
+end up holding nine, and the user would watch intermediate versions appear and vanish. Render
+locally, deliver locally, copy once when it is finished.
 
 `qa-report.json` and `contact-sheet.png` are working files: produced during the job, read during QA, and **deleted before delivery**. There is no `exports/` (it was a byte-for-byte duplicate) and no `post-descriptions.md` — the caption ships as `caption.txt` inside the delivery folder, and whatever is worth remembering about it goes in `carousel-brief.md`.
 

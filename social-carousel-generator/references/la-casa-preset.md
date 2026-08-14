@@ -163,6 +163,22 @@ Preguntar la variante en cada carrusel es ruido: la respuesta ya está en el mat
 
 Nunca ofrecer diseñar un CTA nuevo mientras este preset esté activo — solo si el usuario pide explícitamente reemplazarlo.
 
+## Carpeta de Drive
+
+Las entregas de La Casa viven acá, en la unidad compartida sincronizada en local:
+
+```text
+G:\Unidades compartidas\Aurelio\Carrouseles\
+```
+
+Al terminar el carrusel, **copiá la carpeta de entrega adentro** — el usuario no arrastra nada.
+Se copia al final, nunca se renderiza directo ahí (el motivo está en *Copying it to Drive* en
+`SKILL.md`). Si ya existe una carpeta con ese nombre, no la pises: preguntá.
+
+Ahí conviven las entregas sin publicar, con el nombre del tema pelado, y las ya publicadas, que
+`post-for-me` renombra a `YYYY-MM-DD-<tema>_POST` con la fecha real de publicación. El log de
+pistas vive en esa misma carpeta.
+
 ## Registro de pistas de música
 
 La Casa lleva un log de la música usada en cada Short, para no repetir tema y para poder rastrear
@@ -174,7 +190,7 @@ sin API, sin paso manual. Un Sheet nativo no se puede: en el disco es un `.gshee
 que solo apunta al archivo real, que vive en los servidores de Google.
 
 ```text
-G:\Unidades compartidas\Aurelio\Carrouseles\Pistas de musica - Carruseles La Casa de Aurelio.xlsx
+G:\Unidades compartidas\Aurelio\Carrouseles\Carruseles La Casa de Aurelio.xlsx
 ```
 
 Se escribe con `openpyxl` (ya instalado): `load_workbook` → `ws.append(fila)` → `wb.save()`.
