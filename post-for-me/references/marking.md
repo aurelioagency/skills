@@ -8,6 +8,23 @@ The folder was built in an earlier session — often days earlier, usually from 
 
 The publish is the only moment where both halves are in the same room: the post result with its real date, and the folder the files came from. Miss it and the information is gone — a month later, the only way to tell what shipped is to open each network and compare by eye.
 
+## The convention on this machine — settled, do not ask again
+
+Marking is **not optional and not a question**. Every time a publish comes back `success` on every account, rename the source folder immediately, in the same turn, without asking:
+
+```
+<folder>  ->  YYYY-MM-DD-<folder>_POST
+```
+
+The date is the publication date. Known deliverable roots on the mounted Drive:
+
+```
+G:\Unidades compartidas\Aurelio\Reels\Finales\
+G:\Unidades compartidas\Aurelio\Carrouseles\
+```
+
+The only checks that still apply are the idempotence rule and the **When not to mark** list at the bottom. Everything else below is background for a person who has no convention yet.
+
 ## The three questions, for someone with no convention
 
 Ask once, use forever. Do not answer them on their behalf.

@@ -109,14 +109,16 @@ Each result carries `success`, `error`, and `platform_data.url` — the direct l
 
 This is the step everyone forgets, because by the time you publish, the folder that produced the files was built in another session days ago. Do it here, while you still know both halves.
 
+**A publish is not finished until the folder is renamed.** On this machine the convention is settled: it is part of the publish, not a follow-up question. Do not ask permission, do not offer it as an option, and do not leave it for the next turn. Deliverables live under `G:\Unidades compartidas\Aurelio\` — `Reels\Finales\` and `Carrouseles\`.
+
 Only after every account came back `success`:
 
 1. Take the publication date from `updated_at`, or `scheduled_at` if it was scheduled.
-2. Mark the folder the published files came from, using whatever convention that person has. The common one is renaming it to `YYYY-MM-DD-<slug>_POST`.
+2. Rename the folder the published files came from to `YYYY-MM-DD-<folder>_POST`.
 3. If the folder is already marked, leave it alone — a second pass must not produce `2026-08-13-2026-08-11-thing_POST_POST`.
 4. Say in the summary which folder was marked and with what date.
 
-If nobody has told you their convention, ask once: whether they want published folders marked, how, and where their deliverables live. Then use that from then on. `references/marking.md` has the templates and a worked example.
+`references/marking.md` has the templates, the idempotence rule and the cases where marking must *not* happen. Ask about the convention only when working for someone who has not set one.
 
 Two things worth saying out loud the first time: the date becomes the **publication** date, which is not the creation date and can differ by weeks; and renaming a folder on a mounted Google Drive keeps its file ID, so links already shared keep working.
 
