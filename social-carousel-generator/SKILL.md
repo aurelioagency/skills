@@ -24,7 +24,7 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 6. Run visual QA from contact sheets.
    Completion criterion: every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
 7. Build the vertical Short and get the music approved.
-   Completion criterion: `short.mp4` is built from the approved slides, and the user has seen the chosen track — already cut to the video's length — and approved it. Nothing is published before that yes.
+   Completion criterion: `short.mp4` is built from the approved slides, the user has seen the chosen track — already cut to the video's length — and approved it, and the track is recorded in `manifest.json` plus the brand's music log row handed over ready to paste. Nothing is published before that yes.
 8. Humanize captions and deliver.
    Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, the editable source is in place, and a short validation summary is given.
 
@@ -455,6 +455,29 @@ run lands on a different page, so the pool rotates.
 **Show the chosen track to the user and wait for a yes before publishing.** This gate is not
 optional and cannot be automated away: the filters read titles, so a track can be named well
 and sound wrong, and nothing in the pipeline can listen to it.
+
+### Logging the approved track
+
+Once the user says yes, the track gets recorded in **two** places. Neither is optional, and a
+carousel is not delivered until both are done.
+
+1. **`manifest.json > short.music`**, with `title`, `artist`, `source` (the archive.org page) and
+   `window` (how many seconds from where). This is the copy that survives: a package whose
+   manifest has no music block cannot have its track recovered later. It has already happened —
+   `openai-jornada-reemplazo` is logged as `SIN REGISTRO` forever because of exactly this.
+2. **The brand's music log**, if the preset names one. Its URL and column list live in the
+   preset, because which log a brand keeps is a brand decision.
+
+**The agent cannot write to a Google Sheet.** The Drive connector reads spreadsheets but only
+edits file metadata — title and parent folder, never cells. So the skill's job here is to emit
+the row **ready to paste**, tab-separated in the log's exact column order, and hand it to the
+user with the sheet link. Say plainly that pasting it is their step.
+
+Do **not** work around this by rebuilding the sheet with `create_file`: a new file is a new ID,
+which breaks every existing link to the log and throws away its formatting and revision history.
+If automatic writing is ever wanted, it needs a Sheets connector with write scope or an Apps
+Script endpoint — that is a setup task to raise with the user, not something to improvise
+mid-carousel.
 
 ### Gotchas that already cost a debugging round
 

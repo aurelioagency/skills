@@ -163,6 +163,36 @@ Preguntar la variante en cada carrusel es ruido: la respuesta ya está en el mat
 
 Nunca ofrecer diseñar un CTA nuevo mientras este preset esté activo — solo si el usuario pide explícitamente reemplazarlo.
 
+## Registro de pistas de música
+
+La Casa lleva un log de la música usada en cada Short, para no repetir tema y para poder rastrear
+de dónde salió cualquier pista publicada.
+
+**Sheet:** [Pistas de musica - Carruseles La Casa de Aurelio](https://docs.google.com/spreadsheets/d/16mJbl0P7s8yL5OyJpj5m7VUgFzVmNRZCSfeRB1pCcBc/edit)
+
+Columnas, **en este orden exacto** — la fila se entrega separada por tabulaciones para pegar de
+una en la primera celda vacía:
+
+| # | Columna | Qué va |
+|---|---|---|
+| A | `Carrusel` | El slug del paquete. |
+| B | `Fecha` | Fecha de entrega, `YYYY-MM-DD`. |
+| C | `Carpeta de entrega` | El nombre de la carpeta de entrega (hoy: el tema pelado). |
+| D | `Pista` | Título del tema, tal como lo devuelve `fetch-music.mjs`. |
+| E | `Artista / Album` | `<artista> - <album> (tema de <N>s)`. |
+| F | `Link` | La página de archive.org **del tema**. |
+| G | `Tramo usado` | `<N>s desde <m:ss>`. |
+| H | `Duracion video` | Largo del `short.mp4`. |
+| I | `Estado` | `Listo para publicar` o `Ya publicado`. |
+| J | `Fuente` | **El link de la fuente del carrusel** — el artículo, paper o video del que salió el contenido. No confundir con `Link`, que es el del tema musical. |
+
+`Fuente` se agregó el 2026-08-14 y por eso las filas anteriores a esa fecha la tienen vacía. No
+hay que rellenarlas hacia atrás salvo que el usuario lo pida.
+
+Recordá que el agente **no puede escribir en el sheet** (ver *Logging the approved track* en
+`SKILL.md`): se entrega la fila lista para pegar junto con el link de arriba, y se dice que
+pegarla es el paso del usuario.
+
 ## Caption template (Instagram / TikTok)
 
 Every carousel ships a ready-to-publish caption in this exact structure, written to `caption.txt` inside the delivery folder (plain text, UTF-8, nothing but the caption) and also pasted in the chat, with nothing left for the user to edit.
