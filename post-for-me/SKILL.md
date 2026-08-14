@@ -158,11 +158,11 @@ One distinction worth keeping straight: a result row with `success: false` is a 
 
 This is the step everyone forgets, because by the time you publish, the folder that produced the files was built in another session days ago. Do it here, while you still know both halves.
 
-**A successful publish is not finished until the folder is renamed.** On this machine the convention is settled: it is part of the publish, not a follow-up question. Do not ask permission, do not offer it as an option, and do not leave it for the next turn. Deliverables live under `G:\Unidades compartidas\Aurelio\` — `Reels\Finales\` and `Carrouseles\`.
+**A publish is not finished until the folder is renamed.** On this machine the convention is settled: it is part of the publish, not a follow-up question. Do not ask permission, do not offer it as an option, and do not leave it for the next turn. Deliverables live under `G:\Unidades compartidas\Aurelio\` — `Reels\Finales\` and `Carrouseles\`.
 
-That emphasis is about *not treating a completed publish as a question*. It is not a licence to mark regardless of outcome — the gate below is real, and a post that never confirms is not marked. When you skip the step, **say so in the same summary and say why**, otherwise the omission reads as forgetting a step the convention insists on. See `references/marking.md` for the stuck-post case.
+**Mark it once the post is created. Do not wait for the per-account results.** The owner of this machine decided that explicitly: `processing` with no results yet still gets marked, because the post was sent and the results routinely confirm later, after the session is over. Waiting means the folder never gets marked at all. Report the pending confirmation in the summary — but rename first, in the same turn.
 
-Only after every account came back `success`:
+Steps:
 
 1. Take the publication date from `updated_at`, or `scheduled_at` if it was scheduled.
 2. Rename the folder the published files came from to `YYYY-MM-DD-<folder>_POST`.
