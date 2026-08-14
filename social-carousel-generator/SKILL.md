@@ -468,16 +468,27 @@ carousel is not delivered until both are done.
 2. **The brand's music log**, if the preset names one. Its URL and column list live in the
    preset, because which log a brand keeps is a brand decision.
 
-**The agent cannot write to a Google Sheet.** The Drive connector reads spreadsheets but only
-edits file metadata — title and parent folder, never cells. So the skill's job here is to emit
-the row **ready to paste**, tab-separated in the log's exact column order, and hand it to the
-user with the sheet link. Say plainly that pasting it is their step.
+**A native Google Sheet cannot be written to, a synced `.xlsx` can.** The Drive connector reads
+spreadsheets but only edits file metadata — title and parent folder, never cells. And the local
+Drive mount does not help by itself: a native Sheet lands on disk as a `.gsheet` stub of about
+190 bytes that merely points at the real file on Google's servers, so writing over it destroys
+the shortcut and changes nothing.
 
-Do **not** work around this by rebuilding the sheet with `create_file`: a new file is a new ID,
-which breaks every existing link to the log and throws away its formatting and revision history.
-If automatic writing is ever wanted, it needs a Sheets connector with write scope or an Apps
-Script endpoint — that is a setup task to raise with the user, not something to improvise
-mid-carousel.
+What does work, and is what La Casa uses: keep the log as a real `.xlsx` inside the synced Drive
+folder. It is an ordinary file on disk, so the agent opens it, appends the row and saves, and
+Drive syncs it up. Google Sheets opens and edits `.xlsx` the same as a native sheet. Check the
+preset for the brand's log path and column order.
+
+Two things not to do:
+
+- Do **not** rebuild a native sheet with `create_file` to fake a write. A new file is a new ID,
+  which breaks every existing link to the log and throws away its formatting and history.
+- Do **not** write to a synced file the user may have open in the browser without saying so
+  first — Drive resolves that into a conflicted copy. Mention it, or ask.
+
+If a brand insists on a native Sheet, the row is emitted **ready to paste** instead:
+tab-separated, in the log's exact column order, handed over with the sheet link and a plain
+statement that pasting it is the user's step.
 
 ### Gotchas that already cost a debugging round
 

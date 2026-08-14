@@ -168,30 +168,43 @@ Nunca ofrecer diseñar un CTA nuevo mientras este preset esté activo — solo s
 La Casa lleva un log de la música usada en cada Short, para no repetir tema y para poder rastrear
 de dónde salió cualquier pista publicada.
 
-**Sheet:** [Pistas de musica - Carruseles La Casa de Aurelio](https://docs.google.com/spreadsheets/d/16mJbl0P7s8yL5OyJpj5m7VUgFzVmNRZCSfeRB1pCcBc/edit)
+**El log es un `.xlsx`, no un Sheet nativo, y eso es a propósito.** Vive en la carpeta de Drive
+sincronizada en local, así que el agente lo abre, le agrega la fila y lo guarda — sin conector,
+sin API, sin paso manual. Un Sheet nativo no se puede: en el disco es un `.gsheet` de 191 bytes
+que solo apunta al archivo real, que vive en los servidores de Google.
 
-Columnas, **en este orden exacto** — la fila se entrega separada por tabulaciones para pegar de
-una en la primera celda vacía:
+```text
+G:\Unidades compartidas\Aurelio\Carrouseles\Pistas de musica - Carruseles La Casa de Aurelio.xlsx
+```
+
+Se escribe con `openpyxl` (ya instalado): `load_workbook` → `ws.append(fila)` → `wb.save()`.
+Google Sheets abre y edita el `.xlsx` igual que uno nativo.
+
+**Antes de escribir, avisá si el archivo puede estar abierto.** Si el usuario lo tiene abierto en
+el navegador mientras Drive sincroniza una escritura local, se genera un archivo en conflicto.
+Ante la duda, preguntá.
+
+Columnas, **en este orden exacto**:
 
 | # | Columna | Qué va |
 |---|---|---|
-| A | `Carrusel` | El slug del paquete. |
-| B | `Fecha` | Fecha de entrega, `YYYY-MM-DD`. |
-| C | `Carpeta de entrega` | El nombre de la carpeta de entrega (hoy: el tema pelado). |
-| D | `Pista` | Título del tema, tal como lo devuelve `fetch-music.mjs`. |
-| E | `Artista / Album` | `<artista> - <album> (tema de <N>s)`. |
-| F | `Link` | La página de archive.org **del tema**. |
-| G | `Tramo usado` | `<N>s desde <m:ss>`. |
-| H | `Duracion video` | Largo del `short.mp4`. |
-| I | `Estado` | `Listo para publicar` o `Ya publicado`. |
-| J | `Fuente` | **El link de la fuente del carrusel** — el artículo, paper o video del que salió el contenido. No confundir con `Link`, que es el del tema musical. |
+| A | `N` | Número de fila correlativo. |
+| B | `Fuente` | **El link de la fuente del carrusel** — el artículo, paper o video del que salió el contenido. No confundir con `Link`, que es el del tema musical. |
+| C | `Carrusel` | El slug del paquete. |
+| D | `Fecha` | Fecha de entrega, `YYYY-MM-DD`. |
+| E | `Carpeta de entrega` | El nombre de la carpeta de entrega (hoy: el tema pelado). |
+| F | `Pista` | Título del tema, tal como lo devuelve `fetch-music.mjs`. |
+| G | `Artista / Album` | `<artista> - <album> (tema de <N>s)`. |
+| H | `Link` | La página de archive.org **del tema**. |
+| I | `Tramo usado` | `<N>s desde <m:ss>`. |
+| J | `Duracion video` | Largo del `short.mp4`. |
+| K | `Estado` | `Listo para publicar` o `Ya publicado`. |
 
-`Fuente` se agregó el 2026-08-14 y por eso las filas anteriores a esa fecha la tienen vacía. No
-hay que rellenarlas hacia atrás salvo que el usuario lo pida.
+`Fuente` se agregó el 2026-08-14; las filas anteriores la tienen vacía y no se rellenan hacia
+atrás salvo pedido. Los decimales van con coma (`50,1s`), como el resto del log.
 
-Recordá que el agente **no puede escribir en el sheet** (ver *Logging the approved track* en
-`SKILL.md`): se entrega la fila lista para pegar junto con el link de arriba, y se dice que
-pegarla es el paso del usuario.
+El Sheet nativo original (`16mJbl0P7s8yL5OyJpj5m7VUgFzVmNRZCSfeRB1pCcBc`) quedó en la misma
+carpeta como histórico hasta el 2026-08-14. No se le escribe más.
 
 ## Caption template (Instagram / TikTok)
 
