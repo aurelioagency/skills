@@ -71,3 +71,31 @@ claude-nueva-cosa  ->  2026-08-13-claude-nueva-cosa_POST
 - The post is scheduled and has not gone out yet — `status` is `scheduled`, not `processed`.
 - It was created with `isDraft`.
 - You are not certain which folder produced the files. Ask; do not guess and rename the wrong one.
+- **The post is stuck in `processing` with no results at all.** See below — this one does not look like the others.
+
+## The stuck post, which is the case that causes the argument
+
+`success: false` is easy: it failed, do not mark. The hard case is the post that never
+answers — `status: "processing"`, `results: []`, and it stays that way.
+
+**The tell is `updated_at` equal to `created_at`.** A post that is genuinely working
+through several accounts moves that timestamp. One where both stamps are identical
+minutes later never got dispatched at all. Check it before concluding anything:
+
+```ts
+const post = await client.socialPosts.retrieve(id);
+post.created_at === post.updated_at   // nothing has happened yet
+```
+
+**Do not mark it, and say why in one sentence.** Marking writes a publication date into
+the folder name, and a wrong date there is worse than no date: every later session
+trusts that name and nobody re-checks the network.
+
+Say it explicitly, because otherwise the omission reads as forgetting the step — and the
+convention above is emphatic that the step is not optional, which makes silence look
+like a mistake. The sentence to use: *"no marqué la carpeta porque el post sigue sin
+confirmar en ninguna cuenta"*. Then give the state and let the user decide.
+
+If the user asks for the rename anyway, do it — it is their record and their call — but
+state that the mark is going on an unconfirmed publish, and that the folder has to go
+back to its plain name if the post turns out not to have gone out.
