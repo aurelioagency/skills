@@ -134,7 +134,11 @@ Check the platform's own limits too — Instagram in particular reads badly past
 const results = await client.socialPostResults.list({ post_id: post.id });
 ```
 
-The `post_id` filter is honoured server-side, so **an empty `data` means the networks have not answered yet — not that the filter is wrong**. Do not go hunting for a bug in the query: a multi-image carousel across several accounts can sit in `processing` for minutes. `updated_at` standing still is the confirmation that nothing has resolved yet. (`limit` on this endpoint is *not* reliably honoured — it can return more rows than asked for, so never infer "that's all of them" from a short list.)
+The `post_id` filter is honoured server-side, so **an empty `data` means the networks have not answered yet — not that the filter is wrong**. Do not go hunting for a bug in the query: a multi-image carousel across several accounts can sit in `processing` for a long time — an hour is normal, not a symptom. (`limit` on this endpoint is *not* reliably honoured — it can return more rows than asked for, so never infer "that's all of them" from a short list.)
+
+**`updated_at` is not a progress signal. Do not read it as one.** It stays equal to `created_at` even on posts that finished and published successfully — verified on three separate posts, two of them `processed` with live URLs. A post whose timestamps match has *not* necessarily stalled, and telling the user it "never got dispatched" on that basis is wrong.
+
+The only two signals that mean anything are `status` reaching `processed` and the per-account results arriving. Everything else is noise. Until they land, the honest answer is "sent, not confirmed yet" — never "it looks stuck".
 
 Each result carries `success`, `error`, and `platform_data.url` — the direct link to the published post. Report those links. If any account failed, say which and why; do not describe a partial publish as done, and do not mark anything.
 
