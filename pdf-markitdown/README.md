@@ -147,7 +147,9 @@ Tesseract ships with English only. For other languages, drop the `.traineddata` 
 curl -L -o tessdata/spa.traineddata https://github.com/tesseract-ocr/tessdata_fast/raw/main/spa.traineddata
 ```
 
-The language codes are set in `ocr.py` (`IDIOMAS`, default `spa+eng`).
+The language codes are set in `ocr.py` (`LANGUAGES`, default `spa+eng`).
+
+The token report is printed in English; the skill instructs the agent to present it in whatever language the user writes in.
 
 ## Usage
 

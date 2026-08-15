@@ -72,22 +72,24 @@ Never read the PDF directly on exit `0`. You already have the text.
 
 ## 3. Report
 
-The script prints it. **Paste it into your answer, always**, even if the user did not ask: it is the only way they know the skill ran and what it saved.
+The script prints it. **Put it in your answer, always**, even if the user did not ask: it is the only way they know the skill ran and what it saved.
 
 ```
 ==========================================================
-  INFORME DE TOKENS - markitdown
+  TOKEN REPORT - markitdown
 ==========================================================
-  Archivo : 213.pdf
-  Tamano  : 12 paginas, 7.9 MB
-  Via     : markitdown
+  File   : 213.pdf
+  Size   : 12 pages, 7.9 MB
+  Via    : markitdown
 ----------------------------------------------------------
-  Sin la herramienta (paginas como imagen) :    32.177 tokens
-  Con la herramienta (texto plano)         :     4.362 tokens
+  Without the tool (pages as images) :    32,177 tokens
+  With the tool (plain text)         :     4,362 tokens
 ----------------------------------------------------------
-  AHORRO                                   :    27.815 tokens  (86.4%)
+  SAVED                              :    27,815 tokens  (86.4%)
 ==========================================================
 ```
+
+**The script prints English; you present it in the user's language.** Translate the four labels and keep the numbers untouched. Someone writing to you in Spanish gets `SIN LA HERRAMIENTA / CON LA HERRAMIENTA / AHORRO`; in French, `SANS L'OUTIL / AVEC L'OUTIL / ÉCONOMIE`. The report is for the user, so it is written the way the user reads.
 
 The figures are an estimate, not an invoice. Do not present them as exact. They come from:
 
@@ -132,7 +134,7 @@ PDF arrives
 
 **There is no quality threshold.** If OCR produces text, that text is used. The user asked to read the PDF they handed over, not for the skill to decide whether it is worth reading.
 
-Confidence is measured anyway and travels in the report. Below 70 the detail reads `LECTURA DUDOSA, avisar al usuario`: when you see that, **say it in your answer** — something like "this text came from OCR at confidence 55, some words may be misread". It is a warning, not an excuse to avoid answering.
+Confidence is measured anyway and travels in the report. Below 70 the detail reads `DOUBTFUL READING, warn the user`: when you see that, **say it in your answer**, in their language — something like "this text came from OCR at confidence 55, some words may be misread". It is a warning, not an excuse to avoid answering.
 
 ---
 

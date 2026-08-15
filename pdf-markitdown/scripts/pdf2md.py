@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Convierte un PDF a Markdown con markitdown y reporta cuantos tokens se ahorraron
-frente a leer el PDF directo (cada pagina entra como imagen).
+Convert a PDF to Markdown with markitdown and report how many tokens that
+saved against reading the PDF directly (every page entering as an image).
 
-Uso:
-    python pdf2md.py <archivo.pdf> [--out salida.md]
+Usage:
+    python pdf2md.py <file.pdf> [--out output.md]
 
-Salida:
-    - Escribe el .md
-    - Imprime el informe de tokens
-    - Exit 0 = ok | 3 = PDF sin capa de texto (escaneado) | 1 = error
+Output:
+    - Writes the .md
+    - Prints the token report
+    - Exit 0 = ok | 3 = no usable text (read it directly) | 1 = error
 """
 
 import argparse
@@ -17,182 +17,181 @@ import os
 import sys
 import tempfile
 
-# --- Constantes del calculo -------------------------------------------------
-# Anthropic: tokens de una imagen ~= (ancho * alto) / 750
-PX_POR_TOKEN = 750
-# El lado largo de una imagen se capea en 1568 px antes de tokenizar
-LADO_MAX = 1568
-# Render asumido de una pagina PDF antes del capeo
-DPI_RENDER = 150
-# Estimador de texto -> tokens. ~3.8 chars/token para mezcla espanol/ingles.
-CHARS_POR_TOKEN = 3.8
+# --- Accounting constants ---------------------------------------------------
+# Anthropic: an image costs about (width * height) / 750 tokens
+PX_PER_TOKEN = 750
+# An image's long edge is capped at 1568 px before tokenizing
+MAX_EDGE = 1568
+# Assumed render resolution of a PDF page before that cap
+RENDER_DPI = 150
+# Text-to-token estimate. ~3.8 chars per token for mixed Spanish/English.
+CHARS_PER_TOKEN = 3.8
 
 EXIT_OK = 0
 EXIT_ERROR = 1
-EXIT_SIN_TEXTO = 3
+EXIT_NO_TEXT = 3
 
 
-def paginas_del_pdf(path):
-    """Devuelve [(ancho_pt, alto_pt), ...] de cada pagina."""
+def pdf_pages(path):
+    """Return [(width_pt, height_pt), ...] for every page."""
     from pdfminer.pdfpage import PDFPage
 
-    cajas = []
+    boxes = []
     with open(path, "rb") as f:
         for page in PDFPage.get_pages(f):
             x0, y0, x1, y1 = page.mediabox
-            cajas.append((abs(x1 - x0), abs(y1 - y0)))
-    return cajas
+            boxes.append((abs(x1 - x0), abs(y1 - y0)))
+    return boxes
 
 
-def tokens_de_pagina(ancho_pt, alto_pt):
-    """Tokens que cuesta una pagina renderizada como imagen."""
-    if ancho_pt <= 0 or alto_pt <= 0:
+def page_tokens(width_pt, height_pt):
+    """Tokens one page costs when rendered as an image."""
+    if width_pt <= 0 or height_pt <= 0:
         return 0.0
-    escala = DPI_RENDER / 72.0
-    w = ancho_pt * escala
-    h = alto_pt * escala
-    largo = max(w, h)
-    if largo > LADO_MAX:
-        factor = LADO_MAX / largo
+    scale = RENDER_DPI / 72.0
+    w = width_pt * scale
+    h = height_pt * scale
+    long_edge = max(w, h)
+    if long_edge > MAX_EDGE:
+        factor = MAX_EDGE / long_edge
         w *= factor
         h *= factor
-    return (w * h) / PX_POR_TOKEN
+    return (w * h) / PX_PER_TOKEN
 
 
-def tokens_de_texto(texto):
-    return len(texto) / CHARS_POR_TOKEN
+def text_tokens(text):
+    return len(text) / CHARS_PER_TOKEN
 
 
-def convertir(path):
-    """Devuelve el markdown extraido por markitdown."""
+def convert(path):
+    """Return the markdown markitdown extracted from the file."""
     try:
         from markitdown import MarkItDown
     except ImportError:
         sys.stderr.write(
-            "markitdown no esta instalado.\n"
-            'Instalalo con:  python -m pip install "markitdown[all]"\n'
+            "markitdown is not installed.\n"
+            'Install it with:  python -m pip install "markitdown[all]"\n'
         )
         sys.exit(EXIT_ERROR)
 
-    resultado = MarkItDown().convert(path)
-    return getattr(resultado, "text_content", None) or getattr(resultado, "markdown", "") or ""
+    result = MarkItDown().convert(path)
+    return getattr(result, "text_content", None) or getattr(result, "markdown", "") or ""
 
 
-def extraer(path):
+def extract(path):
     """
-    Saca el texto del PDF por el mejor camino disponible.
+    Get the text out of the PDF by the best route available.
 
-    Devuelve (texto, origen, detalle):
-        origen 'markitdown' -> el PDF tenia capa de texto
-        origen 'ocr'        -> escaneado, pero el OCR salio confiable
-        origen None         -> no hay texto usable, hay que leer la pagina
+    Returns (text, source, detail):
+        source 'markitdown' -> the PDF had a text layer
+        source 'ocr'        -> a scan, but OCR produced text
+        source None         -> no usable text, the page has to be read directly
     """
-    texto = convertir(path)
-    if texto.strip():
-        return texto, "markitdown", ""
+    text = convert(path)
+    if text.strip():
+        return text, "markitdown", ""
 
     try:
         import ocr
     except ImportError:
-        return "", None, "el modulo de OCR no esta disponible"
+        return "", None, "the OCR module is unavailable"
 
-    if not ocr.disponible():
-        return "", None, "Tesseract no esta instalado"
+    if not ocr.available():
+        return "", None, "Tesseract is not installed"
 
-    texto, paginas, truncado, confianza = ocr.extraer(path)
-    if ocr.usable(texto, confianza):
-        detalle = f"confianza {confianza}"
-        if ocr.dudosa(confianza):
-            detalle += " - LECTURA DUDOSA, avisar al usuario"
-        if truncado:
-            detalle += f", solo las primeras {paginas} paginas"
-        return texto, "ocr", detalle
+    text, pages, truncated, confidence = ocr.extract(path)
+    if ocr.usable(text, confidence):
+        detail = f"confidence {confidence}"
+        if ocr.doubtful(confidence):
+            detail += " - DOUBTFUL READING, warn the user"
+        if truncated:
+            detail += f", first {pages} pages only"
+        return text, "ocr", detail
 
-    return "", None, "el OCR tampoco saco texto"
-
-
-def miles(n):
-    """12345 -> 12.345 (formato es-AR)."""
-    return f"{int(round(n)):,}".replace(",", ".")
+    return "", None, "OCR produced no text either"
 
 
-def informe(nombre, n_paginas, mb, sin_tool, con_tool, origen="markitdown", detalle=""):
-    ahorro = sin_tool - con_tool
-    pct = (ahorro / sin_tool * 100) if sin_tool else 0.0
-    ancho = 58
-    etiqueta = "markitdown" if origen == "markitdown" else "OCR (Tesseract)"
-    via = etiqueta + (f" - {detalle}" if detalle else "")
-    lineas = [
+def grouped(n):
+    """12345 -> 12,345"""
+    return f"{int(round(n)):,}"
+
+
+def report(name, n_pages, mb, without_tool, with_tool, source="markitdown", detail=""):
+    saved = without_tool - with_tool
+    pct = (saved / without_tool * 100) if without_tool else 0.0
+    width = 58
+    label = "markitdown" if source == "markitdown" else "OCR (Tesseract)"
+    via = label + (f" - {detail}" if detail else "")
+    lines = [
         "",
-        "=" * ancho,
-        "  INFORME DE TOKENS - markitdown",
-        "=" * ancho,
-        f"  Archivo : {nombre}",
-        f"  Tamano  : {n_paginas} paginas, {mb:.1f} MB",
-        f"  Via     : {via}",
-        "-" * ancho,
-        f"  Sin la herramienta (paginas como imagen) : {miles(sin_tool):>9} tokens",
-        f"  Con la herramienta (texto plano)         : {miles(con_tool):>9} tokens",
-        "-" * ancho,
-        f"  AHORRO                                   : {miles(ahorro):>9} tokens  ({pct:.1f}%)",
-        "=" * ancho,
+        "=" * width,
+        "  TOKEN REPORT - markitdown",
+        "=" * width,
+        f"  File   : {name}",
+        f"  Size   : {n_pages} pages, {mb:.1f} MB",
+        f"  Via    : {via}",
+        "-" * width,
+        f"  Without the tool (pages as images) : {grouped(without_tool):>9} tokens",
+        f"  With the tool (plain text)         : {grouped(with_tool):>9} tokens",
+        "-" * width,
+        f"  SAVED                              : {grouped(saved):>9} tokens  ({pct:.1f}%)",
+        "=" * width,
         "",
     ]
-    return "\n".join(lineas)
+    return "\n".join(lines)
 
 
 def main():
-    ap = argparse.ArgumentParser(description="PDF -> Markdown con informe de tokens")
-    ap.add_argument("pdf", help="ruta del PDF")
-    ap.add_argument("-o", "--out", help="ruta del .md de salida")
+    ap = argparse.ArgumentParser(description="PDF -> Markdown with a token report")
+    ap.add_argument("pdf", help="path to the PDF")
+    ap.add_argument("-o", "--out", help="path of the output .md")
     args = ap.parse_args()
 
     path = os.path.abspath(args.pdf)
     if not os.path.isfile(path):
-        sys.stderr.write(f"No existe el archivo: {path}\n")
+        sys.stderr.write(f"No such file: {path}\n")
         sys.exit(EXIT_ERROR)
 
     try:
-        cajas = paginas_del_pdf(path)
+        boxes = pdf_pages(path)
     except Exception as e:
-        sys.stderr.write(f"No se pudo leer la estructura del PDF: {e}\n")
-        cajas = []
+        sys.stderr.write(f"Could not read the PDF structure: {e}\n")
+        boxes = []
 
-    texto, origen, detalle = extraer(path)
+    text, source, detail = extract(path)
 
-    con_tool = tokens_de_texto(texto)
-    # Leer el PDF directo cuesta las imagenes de cada pagina + el texto que traen
-    sin_tool = sum(tokens_de_pagina(w, h) for w, h in cajas) + con_tool
+    with_tool = text_tokens(text)
+    # Reading the PDF directly costs the page images plus the text they carry
+    without_tool = sum(page_tokens(w, h) for w, h in boxes) + with_tool
 
     mb = os.path.getsize(path) / (1024 * 1024)
-    nombre = os.path.basename(path)
+    name = os.path.basename(path)
 
-    if not texto.strip():
+    if not text.strip():
         sys.stderr.write(
-            f"\n[!] {nombre}: no se pudo sacar texto usable.\n"
-            f"    markitdown devolvio 0 caracteres (no tiene capa de texto) y "
-            f"{detalle}.\n"
-            "    Hay que leer la pagina directo.\n\n"
+            f"\n[!] {name}: no usable text could be extracted.\n"
+            f"    markitdown returned 0 characters (no text layer) and {detail}.\n"
+            "    The page has to be read directly.\n\n"
         )
-        sys.exit(EXIT_SIN_TEXTO)
+        sys.exit(EXIT_NO_TEXT)
 
     if args.out:
-        destino = os.path.abspath(args.out)
+        target = os.path.abspath(args.out)
     else:
-        carpeta = os.path.join(tempfile.gettempdir(), "markitdown")
-        os.makedirs(carpeta, exist_ok=True)
-        # El sufijo .ocr.md deja registrado de donde salio el texto, para que
-        # el hook no etiquete como markitdown algo que vino del OCR.
-        sufijo = ".md" if origen == "markitdown" else ".ocr.md"
-        destino = os.path.join(carpeta, os.path.splitext(nombre)[0] + sufijo)
+        folder = os.path.join(tempfile.gettempdir(), "markitdown")
+        os.makedirs(folder, exist_ok=True)
+        # The .ocr.md suffix records where the text came from, so the hook
+        # never labels an OCR result as markitdown.
+        suffix = ".md" if source == "markitdown" else ".ocr.md"
+        target = os.path.join(folder, os.path.splitext(name)[0] + suffix)
 
-    os.makedirs(os.path.dirname(destino), exist_ok=True)
-    with open(destino, "w", encoding="utf-8") as f:
-        f.write(texto)
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    with open(target, "w", encoding="utf-8") as f:
+        f.write(text)
 
-    print(f"Markdown escrito en: {destino}")
-    print(f"Caracteres extraidos: {miles(len(texto))}")
-    print(informe(nombre, len(cajas), mb, sin_tool, con_tool, origen, detalle))
+    print(f"Markdown written to: {target}")
+    print(f"Characters extracted: {grouped(len(text))}")
+    print(report(name, len(boxes), mb, without_tool, with_tool, source, detail))
     sys.exit(EXIT_OK)
 
 
