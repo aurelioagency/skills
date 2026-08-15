@@ -1,38 +1,38 @@
 ---
 name: pdf-markitdown
-description: Convertir cualquier PDF a Markdown con markitdown (Microsoft) ANTES de leerlo, para no gastar tokens leyendo las páginas como imágenes. Usar siempre que el usuario adjunte, suba o arrastre un archivo PDF al chat, o pase la ruta de un .pdf — aunque solo diga "leé esto", "resumime esto", "qué dice acá" o no diga nada. También al pedir extraer texto, tablas o contenido de un PDF, convertir PDF a Markdown o a texto, o procesar varios PDFs en lote. Devuelve siempre el informe de tokens ahorrados.
+description: Convert any PDF to Markdown with markitdown (Microsoft) BEFORE reading it, so pages never enter the context as images. Use whenever the user attaches, uploads or drags a PDF into the chat, or passes the path of a .pdf — even if they only say "read this", "summarize this", "what does this say", or say nothing at all. Spanish phrasings trigger it the same way: "leé esto", "resumime esto", "qué dice acá", "analizá el archivo". Also use when asked to extract text, tables or content from a PDF, convert a PDF to Markdown or plain text, or process several PDFs in batch. Always return the token savings report.
 ---
 
-# PDF → Markdown con markitdown
+# PDF → Markdown with markitdown
 
-Un PDF que entra al chat **no se lee directo**. Se convierte primero con markitdown y se lee el `.md` resultante.
+A PDF that enters the chat is **never read directly**. It is converted with markitdown first, and the resulting `.md` is what gets read.
 
-## Por qué existe esta skill
+## Why this skill exists
 
-Leer un PDF directo mete cada página como imagen: ~2.300 tokens por página, mire lo que mire. markitdown extrae solo el texto: un catálogo de 12 páginas pasa de 32.000 tokens a 4.400. Mismo contenido útil, 86% menos contexto.
+Reading a PDF directly puts every page into the context as an image: ~2,300 tokens per page, whatever it contains. markitdown extracts only the text: a 12-page catalog drops from 32,000 tokens to 4,400. Same useful content, 86% less context.
 
-El problema es que sin esta skill el camino barato no se toma nunca, porque leer el PDF directo funciona y no avisa lo que costó. La skill fuerza el paso y muestra el número.
-
----
-
-## El hook llega primero
-
-Hay un hook `PreToolUse` sobre `Read` en `~/.claude/settings.json` que apunta a `scripts/hook_pdf_read.py`. Ante cualquier intento de leer un PDF —incluido el automático cuando el usuario lo adjunta con `@`— convierte el archivo y **cancela** la lectura directa.
-
-Cuando eso pasa, vas a recibir un error que empieza con `[pdf-markitdown]` y trae la ruta del `.md` y el informe ya calculado. No es una falla: es la skill funcionando. Leé ese `.md` y **pegá el informe en tu respuesta**. No hace falta que corras `pdf2md.py` de nuevo.
-
-Si el hook devolvió el aviso de "sin capa de texto", la lectura directa siguió adelante: avisale al usuario que en ese archivo no hubo ahorro.
-
-El resto del flujo aplica cuando el hook no intervino — por ejemplo si el usuario pide convertir un PDF a `.md` sin leerlo, o si procesás varios en lote.
+The problem is that without this skill the cheap path is never taken, because reading the PDF directly works and never reports what it cost. The skill forces the step and shows the number.
 
 ---
 
-## Flujo
+## The hook gets there first
 
-1. **Preflight.** Cierra cuando markitdown responde.
-2. **Convertir.** Cierra con el `.md` escrito y el exit code leído.
-3. **Informe.** Cierra cuando el usuario vio las tres cifras de tokens.
-4. **Leer el `.md`.** Cierra cuando el pedido original está respondido.
+A `PreToolUse` hook on `Read` in `~/.claude/settings.json` points at `scripts/hook_pdf_read.py`. On any attempt to read a PDF, it converts the file and **cancels** the direct read.
+
+When that happens you receive an error starting with `[pdf-markitdown]` carrying the path of the `.md` and the report already computed. That is not a failure — it is the skill working. Read that `.md` and **paste the report into your answer**. There is no need to run `pdf2md.py` again.
+
+If the hook returned the "no usable text" notice instead, the direct read went ahead: tell the user there was no saving on that file.
+
+The rest of the flow applies when the hook did not intervene — for example if the user asks to convert a PDF to `.md` without reading it, or when processing a batch.
+
+---
+
+## Flow
+
+1. **Preflight.** Closes when markitdown answers.
+2. **Convert.** Closes with the `.md` written and the exit code read.
+3. **Report.** Closes when the user has seen the three token figures.
+4. **Read the `.md`.** Closes when the original request is answered.
 
 ---
 
@@ -42,37 +42,37 @@ El resto del flujo aplica cuando el hook no intervino — por ejemplo si el usua
 python -c "import markitdown; print(markitdown.__version__)"
 ```
 
-Si falla, instalá — el proyecto es https://github.com/microsoft/markitdown.git:
+If it fails, install it — the project is https://github.com/microsoft/markitdown.git:
 
 ```bash
 python -m pip install "markitdown[all]"
 ```
 
-`[all]` trae los extras: PDF, Office, imágenes, audio, HTML. Sin eso, PDF no funciona.
+`[all]` brings the extras: PDF, Office, images, audio, HTML. Without it there is no PDF support.
 
-## 2. Convertir
+## 2. Convert
 
 ```bash
-python scripts/pdf2md.py "<ruta del pdf>"
+python scripts/pdf2md.py "<pdf path>"
 ```
 
-El `.md` va a `%TEMP%\markitdown\<nombre>.md` salvo que pases `-o <ruta>`. Si el usuario pidió el archivo para él, usá `-o` y dejalo donde lo quiera.
+The `.md` goes to `%TEMP%\markitdown\<name>.md` unless you pass `-o <path>`. If the user asked for the file itself, use `-o` and leave it where they want it.
 
-**Los exit codes mandan:**
+**The exit codes decide:**
 
-| Exit | Qué pasó | Qué hacer |
+| Exit | What happened | What to do |
 |---|---|---|
-| `0` | Texto extraído, sea por markitdown o por OCR | Seguir al paso 3 |
-| `3` | Ni markitdown ni el OCR sacaron texto usable | Decírselo al usuario y leer el PDF directo. No es un error tuyo ni de la skill |
-| `1` | Error real | Mostrar el mensaje, no improvisar |
+| `0` | Text extracted, by markitdown or by OCR | Go to step 3 |
+| `3` | Neither markitdown nor OCR got usable text | Tell the user and read the PDF directly. Not your failure, not the skill's |
+| `1` | A real error | Show the message, do not improvise |
 
-El informe trae una línea `Via:` que dice de dónde salió el texto — `markitdown` o `OCR (Tesseract)` con su confianza. Si vino del OCR, decilo: el texto puede tener errores de reconocimiento y el usuario tiene que saberlo antes de confiar en un número o un nombre propio.
+The report carries a `Via:` line naming where the text came from — `markitdown` or `OCR (Tesseract)` with its confidence. If it came from OCR, say so: the text may contain recognition errors and the user needs to know that before trusting a figure or a proper name.
 
-Nunca leas el PDF directo con exit `0`. Ya tenés el texto.
+Never read the PDF directly on exit `0`. You already have the text.
 
-## 3. Informe
+## 3. Report
 
-El script lo imprime. **Pegalo en la respuesta, siempre**, aunque el usuario no lo haya pedido: es la única forma de que sepa que la skill corrió y cuánto le ahorró.
+The script prints it. **Paste it into your answer, always**, even if the user did not ask: it is the only way they know the skill ran and what it saved.
 
 ```
 ==========================================================
@@ -80,34 +80,35 @@ El script lo imprime. **Pegalo en la respuesta, siempre**, aunque el usuario no 
 ==========================================================
   Archivo : 213.pdf
   Tamano  : 12 paginas, 7.9 MB
+  Via     : markitdown
 ----------------------------------------------------------
   Sin la herramienta (paginas como imagen) :    32.177 tokens
-  Con markitdown (texto plano)             :     4.362 tokens
+  Con la herramienta (texto plano)         :     4.362 tokens
 ----------------------------------------------------------
   AHORRO                                   :    27.815 tokens  (86.4%)
 ==========================================================
 ```
 
-Las cifras son una estimación, no una factura. No las presentes como exactas. Salen de:
+The figures are an estimate, not an invoice. Do not present them as exact. They come from:
 
-- **Sin la herramienta** = imágenes de cada página + el texto. Imagen ≈ `(ancho × alto) / 750`, con el lado largo capeado a 1568 px, que es como tokeniza Anthropic. Las medidas reales de cada página salen del PDF.
-- **Con markitdown** = `caracteres / 3.8`, el promedio para mezcla español/inglés.
+- **Without the tool** = each page as an image + the text. An image costs ≈ `(width × height) / 750`, long edge capped at 1568 px, which is how Anthropic tokenizes images. Each page's real dimensions come from the PDF.
+- **With the tool** = `characters / 3.8`, the average for mixed Spanish/English.
 
-## 4. Leer el `.md`
+## 4. Read the `.md`
 
-Recién ahora leés el archivo y respondés lo que el usuario pidió. Si el `.md` es enorme, buscá adentro con grep en vez de leerlo entero — para eso lo convertimos.
+Only now do you read the file and answer what was asked. If the `.md` is huge, grep inside it instead of reading it whole — that is what the conversion was for.
 
 ---
 
-## Varios PDFs
+## Several PDFs
 
-Un `.md` por PDF, y un total al final. No leas ninguno hasta terminar de convertir todos.
+One `.md` per PDF, and a total at the end. Do not read any of them until every conversion is done.
 
 ```bash
 for f in *.pdf; do python scripts/pdf2md.py "$f"; done
 ```
 
-En PowerShell:
+In PowerShell:
 
 ```powershell
 Get-ChildItem *.pdf | ForEach-Object { python scripts/pdf2md.py $_.FullName }
@@ -115,31 +116,31 @@ Get-ChildItem *.pdf | ForEach-Object { python scripts/pdf2md.py $_.FullName }
 
 ---
 
-## La compuerta
+## The gate
 
 ```
-PDF entra
+PDF arrives
  │
- ├─ markitdown saca texto ────────────► usar el .md              (ahorro)
+ ├─ markitdown extracts text ─────────► use the .md              (saving)
  │
- └─ 0 caracteres: es escaneado
+ └─ 0 characters: it is a scan
       │
-      ├─ OCR saca texto ──────────────► usar el .md del OCR      (ahorro)
+      ├─ OCR extracts text ───────────► use the OCR .md          (saving)
       │
-      └─ OCR tampoco saca nada ───────► lectura directa          (sin ahorro)
+      └─ OCR extracts nothing ────────► direct read              (no saving)
 ```
 
-**No hay umbral de calidad.** Si el OCR saca texto, se usa. El usuario pidió leer el PDF que pasa, no que la skill decida si vale la pena.
+**There is no quality threshold.** If OCR produces text, that text is used. The user asked to read the PDF they handed over, not for the skill to decide whether it is worth reading.
 
-La confianza se mide igual y viaja en el informe. Debajo de 70 el detalle dice `LECTURA DUDOSA, avisar al usuario`: cuando veas eso, **decíselo en la respuesta** — algo como "el texto salió de un OCR con confianza 55, puede tener palabras mal leídas". Es un aviso, no una excusa para no responder.
+Confidence is measured anyway and travels in the report. Below 70 the detail reads `LECTURA DUDOSA, avisar al usuario`: when you see that, **say it in your answer** — something like "this text came from OCR at confidence 55, some words may be misread". It is a warning, not an excuse to avoid answering.
 
 ---
 
-## Límites
+## Limits
 
-- **El OCR de manuscrita tiene errores.** Se usa igual, con el aviso. No lo descartes por tu cuenta.
-- **El OCR es lento.** ~1,5 s por página. Tope de 50 páginas por archivo.
-- **No extrae imágenes.** Si lo que importa del PDF es una foto, un plano o un gráfico, el texto no alcanza y hay que leerlo directo.
-- **Las tablas quedan aplanadas.** pdfminer devuelve el texto en orden de lectura, no reconstruye la grilla. Para una tabla crítica, verificá contra el PDF.
-- **No detecta títulos.** La salida es texto plano en un `.md`, sin jerarquía de headings.
-- **Solo donde hay shell.** En un chat de claude.ai sin terminal no hay markitdown posible.
+- **Handwriting OCR contains errors.** It is used anyway, with the warning. Do not discard it on your own.
+- **OCR is slow.** ~1.5 s per page. Capped at 50 pages per file.
+- **No images extracted.** If what matters in the PDF is a photo, a plan or a chart, the text is not enough and it has to be read directly.
+- **Tables come out flattened.** pdfminer returns text in reading order; it does not rebuild the grid. Verify any critical table against the PDF.
+- **No heading detection.** The output is plain text inside a `.md`, with no heading hierarchy.
+- **Only where there is a shell.** In a claude.ai chat without a terminal, markitdown cannot run.
