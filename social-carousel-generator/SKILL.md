@@ -264,6 +264,12 @@ The copy shown here has already passed the filter in *Grounding Technical Terms*
 - Proper nouns are copied verbatim from the source: product names, company names, feature names, people. Never assemble a name by combining a company with a topic (`Anthropic` + `Cowork` is not the product's name; the source says `Claude Cowork`). When a kicker names a product, use the product's real name.
 - Every slide must stand alone. When a slide compresses a quote or a long passage, read the result cold: if it no longer states a complete, understandable idea, rewrite it. Compression that loses the logical connector is a defect, not a style choice.
 - Numbers, percentages, dates, and limits are transcribed exactly. If a figure needs rounding for the layout, say so on the slide.
+- **Never turn a descriptor into a name.** The source's *"the ultra capability setting in ChatGPT"* is not a product called "modo ultra". Translating a description into a proper noun invents a product.
+- **A third-party name earns its place only if the slide can say who it is without spending a line.** A company the audience cannot place — sitting in the kicker or the verdict, the most visible line — costs attention and returns nothing. Keep the fact, drop the name, and record it in `carousel-brief.md` with its quote. Apply it to every such name in the carousel or to none: one named startup among three anonymous ones reads as an oversight.
+- **A description the reader cannot resolve is worse than a proper noun.** "El modelo grande" names nothing; `GPT-5.5` does. When a model, tool or product needs its size or role understood, attach it to the name in the same sentence, or in the graphic's label.
+- **Every fact on a slide comes from the same passage.** An example borrowed from another section, dropped onto a slide about a specific company, reads as that company's example. That is misattribution even when both facts are true.
+- **Name the action the source describes.** *"After enabling retained reasoning"* is enabling, not implementing: a checklist item that says "guardá lo que el modelo pensó" invents manual work that does not exist.
+- **Body copy is sentences, not notes.** Two fragments without a subject ("Encontrar datos difíciles en la web. La misma prueba, tres meses después.") read as an outline. If a line has no verb and no subject, it is not finished.
 
 ## Grounding Technical Terms
 
@@ -319,6 +325,13 @@ Use supporting imagery on every carousel:
 - Diagrams, cards, charts, flow boards, visual metaphors, and icons built in HTML/CSS when they communicate better than an image — or always, for a brand with no bank.
 - Text overlays rendered in HTML/CSS, not baked into images.
 
+**Before drawing any chart or diagram, read `references/data-encoding.md`.** It covers what
+the automated QA cannot check: one metric per chart, one colour per series, labels naming
+what varies rather than what stays constant, no bar height where the source publishes no
+figure, a shared baseline, and the rule that a number belongs to exactly one slide. A
+miscoded chart renders cleanly and passes every check while saying something the source
+does not.
+
 Hard QA rules:
 
 - Export every slide at `1080x1440`.
@@ -326,7 +339,7 @@ Hard QA rules:
   - **Page counters** made entirely of numbers, and purely decorative single-character marks: `24px`.
   - **Text inside a chart or diagram** — axis titles, scale marks, position labels, legends, reference notes: `24px`. Mark the container with the class `chart` or `diagram`; the audit reads that, nothing else. This exists because a chart label at the same size as a subheading competes with it, collides with the next column, and forces the real damage: **deleting words to dodge the floor**. Shortening published copy to satisfy a size rule is worse than the rule. The exception covers the reference layer of a graphic, never the slide's own copy — headline, body, verdict, checklist, footer and CTA stay at `40px`.
 - **Every content slide carries a kicker and a headline.** That is the brand grammar, and it is checked. The headline may be an actual headline or a dominant figure (a stat at `90px+` plays the same role), but a slide built as `kicker + paragraph` is a red issue: without the headline level the slide reads empty, and the easy fix is to inflate the body, which is not the fix. Exception id: `slide-grammar`.
-- Never shrink text below the typography floor to make content fit. Shorten the copy, split the content across slides, reflow the layout, or remove low-value detail instead.
+- Never shrink text below the typography floor to make content fit. Shorten the copy, split the content across slides, reflow the layout, or remove low-value detail instead. **The kicker is reading text and has no exemption**, and neither does any other element the reader is meant to read: the only exemptions are the two listed above. Do not add a per-slide size override field (`ksize` and friends) to the slide data — a field that exists to make one long label fit becomes the way the floor gets broken everywhere else.
 - Treat any user-facing word below the typography floor as a red issue that blocks delivery.
 - Always center the primary hook block on the first content slide. Its bounding box must be horizontally centered in the canvas and its text must use centered alignment. A left-aligned or edge-anchored cover hook is a red issue **unless the user decides otherwise** — see Documented Layout Exceptions below.
 - Balance the vertical composition. The gap above the first content pixel and the gap below the last must be within `4%` of the canvas height of each other. This is the check that catches dead space nobody meant to leave: when you remove an element, revisit every layout constant that existed to accommodate it. A stage offset that once cleared a badge keeps pushing content down long after the badge is gone. Fixed CTA assets are exempt.
@@ -437,6 +450,10 @@ Every carousel also ships a `1080x1920` video built from the same approved slide
 same work covers YouTube Shorts. Build it with `scripts/build-short.mjs` after the visual QA
 passes — never from unapproved slides.
 
+**A clean QA is not sign-off.** Build the video only once the user has said the images are
+finished. Any slide that changes afterwards invalidates the frames, and rebuilding fetches a
+different track, so the approval round starts over. It happened twice in one session.
+
 ```bash
 node <skill-dir>/scripts/build-short.mjs --port 8765 --out <carpeta-de-entrega>/short.mp4
 ```
@@ -478,6 +495,30 @@ run lands on a different page, so the pool rotates.
   they stop being songs and become hour-long mixes.
 - The track is downloaded whole and its loudness profile measured end to end, then the
   steadiest window of the video's length is cut, normalised to `-16 LUFS` with fades.
+
+### Cuando el buscador de archive.org se cae
+
+Pasa, y pasa entero: `advancedsearch.php` devuelve **HTTP 200 con
+`{"error":"[BACKEND_ERROR] ..."}`** mientras `/metadata` y las descargas siguen
+funcionando perfectamente. Probar si el dominio responde no sirve para detectarlo.
+
+El carrusel no se queda sin video por eso. La cadena, en orden:
+
+1. **Búsqueda normal.** Lo de arriba.
+2. **`--item <id>`**, que saltea el buscador y toma la pista de un item conocido —
+   misma criba de títulos, mismo rango de duración, misma ventana medida. El
+   identificador sale de `manifest.json > short.music.source` de cualquier carrusel
+   anterior, o de la URL del item. Lo aceptan `fetch-music.mjs` y `build-short.mjs`:
+
+   ```bash
+   node <skill-dir>/scripts/build-short.mjs --port 8765 --item jamendo-464313 --out <carpeta>/short.mp4
+   ```
+3. **Reusar un recorte local** (`<paquete>/assets/music.mp3` de otro carrusel), solo si
+   dura al menos lo que el video nuevo. Es el último recurso porque el recorte ya está
+   normalizado y con fades: no se le puede elegir otra ventana.
+
+**Repetir música entre carruseles no es problema** — decisión de La Casa, 2026-08-16.
+No hace falta buscar una pista nueva a toda costa; una ya aprobada sirve igual.
 
 **Show the chosen track to the user and wait for a yes before publishing.** This gate is not
 optional and cannot be automated away: the filters read titles, so a track can be named well

@@ -9,6 +9,13 @@
 //   --seconds <n>      largo del recorte = largo del video (obligatorio en la practica)
 //   --json <archivo>   escribe ahi los datos de la pista elegida (para el manifest)
 //   --dry              elige y reporta sin bajar ni cortar
+//   --item <id>        SALTEA EL BUSCADOR y usa ese item de archive.org
+//
+// El buscador (advancedsearch.php) se cae solo, y cuando se cae las descargas y
+// /metadata siguen funcionando perfectamente. Paso el 2026-08-16 y dejo un carrusel
+// sin video. Con --item se elige un tema de un item conocido sin tocar el buscador:
+//   node fetch-music.mjs --item jamendo-464313 --seconds 52.9 --out assets/music.mp3
+// El identificador sale de la URL: archive.org/details/<id>.
 //
 // METODOLOGIA (decidida con el usuario, no improvisar):
 //   1. Una pagina AL AZAR de resultados, 20 por pagina.
@@ -23,6 +30,7 @@ const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i === -
 const OUT = path.resolve(arg('out', 'music.mp3'));
 const NEED = Number(arg('seconds', 30));
 const JSONOUT = arg('json', null);
+const ITEM = arg('item', null);
 const DRY = process.argv.includes('--dry');
 
 const UA = { 'User-Agent': 'social-carousel-generator/1.0' };
@@ -86,13 +94,23 @@ const secs = (v) => {
   return parseFloat(s) || 0;
 };
 
+// OJO: cuando el buscador de archive.org se cae, NO devuelve un HTTP de error.
+// Devuelve 200 con un cuerpo {"error":"[BACKEND_ERROR] Invalid or no response from
+// Elasticsearch"}. Sin este chequeo, `j.response?.docs` queda en [], los 25 intentos
+// caen todos en `continue`, y el script termina diciendo "no encontre pista despues
+// de 25 intentos" — que manda a revisar los filtros cuando el problema es que el
+// servicio esta caido. Paso el 2026-08-16 y costo media hora de diagnostico.
+// El resto de archive.org (metadata, descarga) sigue funcionando durante esa caida,
+// asi que no alcanza con probar si el dominio responde.
 async function pagina(p) {
   const u = 'https://archive.org/advancedsearch.php?q=' + encodeURIComponent(QUERY) +
     '&fl%5B%5D=identifier&fl%5B%5D=title&rows=20&page=' + p + '&output=json';
   const r = await fetch(u, { headers: UA });
   if (!r.ok) throw new Error('archive.org HTTP ' + r.status);
   const j = await r.json();
-  return { docs: j.response?.docs || [], total: j.response?.numFound || 0 };
+  if (j.error) throw new Error('BUSCADOR_CAIDO: archive.org respondio 200 con error: ' + j.error);
+  if (!j.response) throw new Error('BUSCADOR_CAIDO: archive.org respondio sin `response`: ' + JSON.stringify(j).slice(0, 200));
+  return { docs: j.response.docs || [], total: j.response.numFound || 0 };
 }
 
 // Perfil de volumen del tema completo y eleccion del tramo mas parejo.
@@ -132,6 +150,35 @@ function mejorTramo(file, total, need) {
     : { s: Math.max(0, total * 0.3), medido: false };
 }
 
+// Elige un tema dentro de UN item conocido. Misma criba de titulos y mismo rango de
+// duracion que el camino normal: lo unico que se saltea es el buscador.
+export async function pistaDeItem(identifier, { seconds = NEED } = {}) {
+  const mr = await fetch(`https://archive.org/metadata/${identifier}`, { headers: UA });
+  if (!mr.ok) throw new Error(`metadata de ${identifier}: HTTP ${mr.status}`);
+  const meta = await mr.json();
+  if (!meta.files) throw new Error(`${identifier} no existe o no tiene archivos`);
+  const temas = (meta.files || []).filter((f) => {
+    if (!/\.mp3$/i.test(f.name)) return false;
+    if (rechazo(f.title || f.name)) return false;
+    const d = secs(f.length);
+    return d >= Math.max(MIN_TRACK, seconds + 20) && d <= MAX_TRACK;
+  });
+  if (!temas.length) {
+    throw new Error(`${identifier} no tiene ningun mp3 de ${Math.max(MIN_TRACK, seconds + 20)}s a ${MAX_TRACK}s que pase la criba`);
+  }
+  const tema = rnd(temas);
+  return {
+    identifier,
+    album: meta.metadata?.title || identifier,
+    tema: tema.title || tema.name,
+    archivo: tema.name,
+    duracion: Math.round(secs(tema.length)),
+    via: 'item directo (sin buscador)',
+    url: `https://archive.org/download/${identifier}/${encodeURIComponent(tema.name)}`,
+    page: `https://archive.org/details/${identifier}`
+  };
+}
+
 export async function elegirPista({ seconds = NEED } = {}) {
   const primera = await pagina(1);
   const paginas = Math.max(1, Math.ceil(primera.total / 20));
@@ -165,11 +212,16 @@ export async function elegirPista({ seconds = NEED } = {}) {
       page: `https://archive.org/details/${album.identifier}`
     };
   }
-  throw new Error('no encontre pista despues de 25 intentos');
+  // Si se llega aca es que el buscador respondio bien 25 veces y ninguna pagina dejo
+  // candidatos: ahi si el problema son los filtros o el largo pedido. La caida del
+  // buscador ya salio por excepcion mucho antes, en pagina().
+  throw new Error(
+    `no encontre pista despues de 25 intentos (el buscador respondio OK: revisa los filtros ` +
+    `o el largo pedido — se necesitan temas de ${Math.max(MIN_TRACK, seconds + 20)}s a ${MAX_TRACK}s)`);
 }
 
-export async function prepararMusica({ seconds = NEED, out = OUT } = {}) {
-  const pick = await elegirPista({ seconds });
+export async function prepararMusica({ seconds = NEED, out = OUT, item = ITEM } = {}) {
+  const pick = item ? await pistaDeItem(item, { seconds }) : await elegirPista({ seconds });
   fs.mkdirSync(path.dirname(out), { recursive: true });
   const raw = out.replace(/\.mp3$/i, '') + '-full.mp3';
 
@@ -204,8 +256,11 @@ export async function prepararMusica({ seconds = NEED, out = OUT } = {}) {
 }
 
 if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}` || process.argv[1].endsWith('fetch-music.mjs')) {
-  const r = DRY ? await elegirPista({ seconds: NEED }) : await prepararMusica({ seconds: NEED, out: OUT });
-  console.log(`pozo: ${r.pozo} items · pagina ${r.pagina}/${r.de} · ${r.limpios}/${r.candidatos} candidatos limpios`);
+  const r = DRY
+    ? (ITEM ? await pistaDeItem(ITEM, { seconds: NEED }) : await elegirPista({ seconds: NEED }))
+    : await prepararMusica({ seconds: NEED, out: OUT, item: ITEM });
+  if (r.via) console.log(`via: ${r.via}`);
+  else console.log(`pozo: ${r.pozo} items · pagina ${r.pagina}/${r.de} · ${r.limpios}/${r.candidatos} candidatos limpios`);
   console.log(`pista: ${r.tema}`);
   console.log(`album: ${r.album}  (${r.duracion}s)`);
   console.log(r.page);

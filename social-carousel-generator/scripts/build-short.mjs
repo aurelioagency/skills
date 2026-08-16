@@ -10,6 +10,7 @@
 //   --port <n>        puerto del server local (default: 8765)
 //   --out <archivo>   MP4 de salida (default: <package>/short.mp4)
 //   --music <archivo> usa esta pista en vez de buscar una
+//   --item <id>       toma la pista de ese item de archive.org, sin usar el buscador
 //   --seconds-per <n> fuerza N segundos fijos por slide (apaga el reparto por texto)
 //   --no-music        deja el video mudo
 //
@@ -41,6 +42,11 @@ const pkg = path.resolve(arg('package', process.cwd()));
 const port = Number(arg('port', 8765));
 const OUT = path.resolve(arg('out', path.join(pkg, 'short.mp4')));
 const MUSIC = arg('music', null);
+// --item <id> saltea el buscador de archive.org y toma la pista de un item conocido.
+// Existe porque el buscador se cae solo mientras las descargas siguen andando: sin
+// esto, una caida del buscador deja el carrusel sin video. El identificador sale de
+// la URL del item (archive.org/details/<id>) o del manifest de un carrusel anterior.
+const ITEM = arg('item', null);
 const FIXED = arg('seconds-per', null);
 const NOMUSIC = process.argv.includes('--no-music');
 
@@ -107,7 +113,7 @@ console.log(`frames renderizados (?video=1, sin prompt de swipe)`);
 let music = MUSIC, info = null;
 if (!NOMUSIC && !music) {
   music = path.join(pkg, 'assets', 'music.mp3');
-  info = await prepararMusica({ seconds: TOTAL, out: music });
+  info = await prepararMusica({ seconds: TOTAL, out: music, item: ITEM });
   console.log(`\nmusica: ${info.tema}`);
   console.log(`album:  ${info.album} (${info.duracion}s)`);
   console.log(`tramo:  ${info.segundos}s desde ${info.desde}s ${info.medido ? '(medido)' : '(FALLBACK)'}`);
