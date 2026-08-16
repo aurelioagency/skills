@@ -325,6 +325,17 @@ Use supporting imagery on every carousel:
 - Diagrams, cards, charts, flow boards, visual metaphors, and icons built in HTML/CSS when they communicate better than an image — or always, for a brand with no bank.
 - Text overlays rendered in HTML/CSS, not baked into images.
 
+**Do not invent visual conventions.** The preset is the whole vocabulary: palette, type,
+components, CTA. Anything you introduce that is not in it — a colour that means "before", a
+shape that means "worse", a name for something the source leaves unnamed — is invention,
+even when it is consistent across the carousel and even when it looks right. It reads as
+brand while it lasts, and it does not survive to the next carousel, so the set drifts.
+
+If a carousel needs a convention the preset does not have, say so and ask. If the user
+wants it, it goes into the preset and becomes a rule; otherwise the carousel works with
+what the preset already provides. Never establish one silently — a convention applied
+across four slides looks decided, and nobody will think to question it later.
+
 **Before drawing any chart or diagram, read `references/data-encoding.md`.** It covers what
 the automated QA cannot check: one metric per chart, one colour per series, labels naming
 what varies rather than what stays constant, no bar height where the source publishes no
