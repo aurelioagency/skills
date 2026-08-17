@@ -26,6 +26,26 @@ Two rules follow, and neither is negotiable:
 
 **Never guess the target accounts.** "Post it everywhere" and "all platforms" are not instructions to fan out to every connected account — those lists routinely mix a brand's accounts with someone's personal ones, and a brand post on a personal profile is the exact mistake that cannot be undone. List the accounts, show which ones you intend to use, and get a yes on that list.
 
+That rule is about *guessing*, and it expires the moment the person stops leaving it to you. **Once they name the set — "all of them", "including the personal one", "todas las cuentas es a todas las cuentas" — that is the answer, and it overrides any standing exclusion you are carrying.** Flag the conflict once, inside the gate, on one line: *"X was never used before and your saved rule excluded it — going in because you asked."* Then publish it. Do not spend a turn on it, do not offer to leave it out, do not raise it again after they answer. Someone repeating an instruction is not someone who misunderstood it.
+
+### Do the homework before the gate, not across three turns
+
+Every lookup you need happens **before** the gate is shown. The gate is the one place the person is asked to read carefully, so it has to be complete and final when it appears. Discovering a detail afterwards and coming back with "one more thing" turns a single confirmation into an interrogation, and it is the fastest way to burn the trust that makes the gate work at all.
+
+Prior posts are the best available spec and they cost one call. `client.socialPosts.list()`, then `retrieve()` on the closest match, shows the exact account set, the `placement` per platform, the `title` overrides, and whether the video shipped as its own post. A folder that follows the same shape as a previous delivery should be published the same way. Match it instead of asking.
+
+### The delivery folder is finished work, not a draft to review
+
+When someone points at a folder and says publish it, **everything in that folder is the content.** They put it there, they finished it, and they are not asking you to audit the contents. A `short.mp4` next to ten PNGs is not an anomaly worth a question — it is the video cut of that carousel, and it ships.
+
+What you owe them is *routing*, not permission. Sorting the assets by what each platform accepts is your job to do silently:
+
+- **Images-only carousel** → Instagram, TikTok, LinkedIn, Facebook, Threads, X, Pinterest.
+- **YouTube takes video only.** There is no image-post type; PNGs sent there fail after `processing`. The short is what goes to YouTube, as its own post, with its own `title`.
+- **One asset per account, never both.** If the carousel already reached Instagram, the video cut of that same carousel does not also go there as a reel. The split exists so every account gets the content once.
+
+State the split in the gate as a decision — "YouTube gets the short because it cannot take the images" — and move on. It is a fact about the platform, not a choice the person needs to make.
+
 ### Before you build the call
 
 Four things, and none of them can be assumed:
