@@ -1,5 +1,5 @@
 ---
-name: generador-de-ganchos
+name: hook-generator
 description: Genera ganchos (hooks, enganches, aperturas) para contenido a partir de un tema, usando 10 estructuras psicológicas distintas y evaluando cuáles encajan mejor con ese tema en particular. Usar siempre que el usuario pida ganchos, hooks, enganches, aperturas, primeras líneas, títulos que retengan, o cuando pregunte cómo arrancar un reel, video, carrusel, post, blog o newsletter. Usar también cuando pase un tema en cualquier formato (texto, imagen, PDF, documento, link, transcript) y quiera saber cómo abrirlo, o cuando pida variantes de apertura para A/B testing. No hace falta que diga la palabra "gancho" — si el pedido es "hacé que esto enganche", "necesito que pare el scroll" o "cómo empiezo esto", también aplica. Aplica igual en cualquier idioma: "give me hooks", "how do I open this", "make this stop the scroll" disparan lo mismo.
 ---
 

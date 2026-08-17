@@ -1,4 +1,4 @@
-# Generador de Ganchos — Hook Generator Skill
+# Hook Generator
 
 An agent skill that turns a topic into written hooks — one per known hook structure — and tells you which ones actually fit that topic:
 
@@ -71,10 +71,10 @@ Each type in `SKILL.md` carries its mechanism, its structure, a *worked well / w
 **Option A — let your agent install it (recommended).** Open Claude Code and paste:
 
 ```text
-Install the generador-de-ganchos skill from https://github.com/aurelioagency/skills :
+Install the hook-generator skill from https://github.com/aurelioagency/skills :
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
-2. Inside it, run: git sparse-checkout set generador-de-ganchos
-3. Copy the generador-de-ganchos/ folder into ~/.claude/skills/generador-de-ganchos/
+2. Inside it, run: git sparse-checkout set hook-generator
+3. Copy the hook-generator/ folder into ~/.claude/skills/hook-generator/
 4. Delete the temporary clone and confirm the skill loads.
 5. Explain how to use the skill, tell me where its files ended up on my machine,
    and ask me if we write my first hooks now.
@@ -87,8 +87,8 @@ There is no requirements step: this skill installs nothing and needs nothing.
 ```powershell
 git clone https://github.com/aurelioagency/skills.git
 cd skills
-node install-skills.mjs generador-de-ganchos          # Claude Code
-node install-skills.mjs generador-de-ganchos --codex  # Codex
+node install-skills.mjs hook-generator          # Claude Code
+node install-skills.mjs hook-generator --codex  # Codex
 ```
 
 Any other harness: point it at this folder's `SKILL.md`.
@@ -99,24 +99,24 @@ Improvements land in the repo; your installed copy never updates itself. To upda
 
 ```powershell
 git pull
-node install-skills.mjs generador-de-ganchos
+node install-skills.mjs hook-generator
 ```
 
 To find out whether you are behind without installing anything:
 
 ```powershell
-node install-skills.mjs generador-de-ganchos --check
+node install-skills.mjs hook-generator --check
 ```
 
 ## Uninstalling
 
-The installed skill is one file in one folder: `~/.claude/skills/generador-de-ganchos/`. Removing it touches nothing else. From a clone:
+The installed skill is one file in one folder: `~/.claude/skills/hook-generator/`. Removing it touches nothing else. From a clone:
 
 ```powershell
-node install-skills.mjs generador-de-ganchos --remove
+node install-skills.mjs hook-generator --remove
 ```
 
-Or simply delete `~/.claude/skills/generador-de-ganchos/` yourself.
+Or simply delete `~/.claude/skills/hook-generator/` yourself.
 
 ## Requirements
 
