@@ -1,11 +1,13 @@
 ---
-name: heygen-ai-avatar-video
-description: HeyGen AI avatar video operator for script-to-video and repair workflows. Use for modular videos built from a script with ElevenLabs audio/captions, HeyGen avatar/lip-sync intros or outros, HyperFrames animated middle sections, segment rendering/assembly, paid HeyGen asset freezing, direct-audio HeyGen runs, source-video voice conversion, caption creation, or verification/repair. Do not use for Floyo/Wan Animate.
+name: social-video-producer
+description: Short vertical social video producer (TikTok/Reels/Shorts, 1080x1920). Use for modular videos built from a script with ElevenLabs audio and word-level captions, avatar/lip-sync openings or outros via HeyGen, HyperFrames animated middle sections, segment rendering and assembly, assembling a video from clips the user already filmed, burning subtitles into a video that already exists, background music sourcing, paid provider asset freezing, direct-audio avatar runs, source-video voice conversion, or verification and repair of a bad segment, caption, or render. Do not use for Floyo/Wan Animate.
 ---
 
-# HeyGen AI Avatar Video
+# Social Video Producer
 
-Operate HeyGen avatar video jobs end to end. Default to a modular segment-first pipeline for script-driven videos: generate and freeze avatar sections, render shared animation sections separately, then assemble final variants without recapturing unchanged segments.
+Produce short vertical videos end to end. Default to a modular segment-first pipeline for script-driven videos: generate and freeze avatar sections, render shared animation sections separately, then assemble final variants without recapturing unchanged segments.
+
+Provider names in this document — HeyGen for avatar lip-sync, ElevenLabs for speech — are the tools currently used for two specific steps, not the identity of the skill. Several branches, including burn-in captions and assembly from the user's own clips, call no paid provider at all.
 
 Video Cutter Lab is an optional local dependency used for direct runs. Locate its root on the current machine first (referred to below as `<video-cutter-lab-root>`). If it does not exist on this machine, report it as an optional dependency to install or locate; never assume a fixed absolute path from another user or machine.
 

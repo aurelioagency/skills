@@ -1,12 +1,12 @@
-Use the global skill `heygen-ai-avatar-video`.
+Use the global skill `social-video-producer`.
 
 If it is not installed on this machine, install it yourself first:
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git
    into a temporary folder.
-2. Inside it, run: git sparse-checkout set heygen-ai-avatar-video
-3. Copy the `heygen-ai-avatar-video/` folder into the agent skills directory
-   (Claude Code: `~/.claude/skills/heygen-ai-avatar-video/`;
-   Codex: `~/.codex/skills/heygen-ai-avatar-video/`).
+2. Inside it, run: git sparse-checkout set social-video-producer
+3. Copy the `social-video-producer/` folder into the agent skills directory
+   (Claude Code: `~/.claude/skills/social-video-producer/`;
+   Codex: `~/.codex/skills/social-video-producer/`).
 4. Delete the temporary clone and read the installed `SKILL.md` before doing
    anything else.
 5. Check the requirements (Node 18+, ffmpeg, Playwright) and install anything
@@ -116,7 +116,7 @@ Hard rules:
 - Preserve all provided source assets locally.
 - Keep everything in one project folder.
 - Use HyperFrames for the animated body/middle.
-- Use the same modular structure and QA style from the `heygen-ai-avatar-video` skill.
+- Use the same modular structure and QA style from the `social-video-producer` skill.
 - Follow:
   <SKILL_DIR>\references\video-production-guidelines.md
 

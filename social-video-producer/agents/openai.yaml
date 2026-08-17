@@ -1,0 +1,4 @@
+interface:
+  display_name: "Social Video Producer"
+  short_description: "Produce short vertical videos, from script or from footage you already have"
+  default_prompt: "Use $social-video-producer to turn this script into modular short vertical video variants with generated audio, word-level captions, an animated middle section, and verified final MP4s."

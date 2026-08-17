@@ -1,12 +1,14 @@
-# HeyGen AI Avatar Video — Modular Video Skill
+# Social Video Producer — Modular Short-Form Video Skill
 
 An agent skill for producing short vertical videos (TikTok / Reels / Shorts, 1080×1920) with a modular architecture:
 
 ```
-opening (HeyGen avatar) + body (HyperFrames animation) + outro (HeyGen avatar)
+opening (avatar) + body (HyperFrames animation) + outro (avatar)
 ```
 
 It covers the full pipeline: script parsing, ElevenLabs TTS, HeyGen avatar/lip-sync segments, locally rendered animated body, word-level captions, segment assembly, and QA/verification gates — while protecting paid provider usage (plan audits, job queues, frozen assets) and video quality (strict encode budget).
+
+That is the flagship path, not the only one. The skill also assembles a video from footage you already filmed, burns word-level subtitles into a video that already exists, sources and licence-checks background music, and repairs a bad segment without redoing the rest. **HeyGen and ElevenLabs are the tools used for two specific steps — avatar lip-sync and speech — not what the skill is.** Several branches call no paid provider at all.
 
 Works with agent harnesses that support file-based skills (Claude Code, Codex, and similar).
 
@@ -36,10 +38,10 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 **Option A — let your agent install it (recommended).** Open Claude Code and paste:
 
 ```text
-Install the heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
+Install the social-video-producer skill from https://github.com/aurelioagency/skills :
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
-2. Inside it, run: git sparse-checkout set heygen-ai-avatar-video
-3. Copy the heygen-ai-avatar-video/ folder into ~/.claude/skills/heygen-ai-avatar-video/
+2. Inside it, run: git sparse-checkout set social-video-producer
+3. Copy the social-video-producer/ folder into ~/.claude/skills/social-video-producer/
 4. Delete the temporary clone and confirm the skill loads.
 5. Check the requirements: Node 18+, ffmpeg, and Playwright. Install anything
    missing (ask me to approve each install command).
@@ -54,8 +56,8 @@ The agent fetches only this skill (not the whole collection), installs it perman
 ```powershell
 git clone https://github.com/aurelioagency/skills.git
 cd skills
-node install-skills.mjs heygen-ai-avatar-video          # Claude Code
-node install-skills.mjs heygen-ai-avatar-video --codex  # Codex
+node install-skills.mjs social-video-producer          # Claude Code
+node install-skills.mjs social-video-producer --codex  # Codex
 ```
 
 Any other harness: point it at this folder's `SKILL.md`.
@@ -65,12 +67,12 @@ Any other harness: point it at this folder's `SKILL.md`.
 Improvements land in this repo; your installed copy never updates itself. To update, re-run the installer — it replaces the installed skill cleanly, **preserves the `node_modules` you installed inside it** (Playwright keeps working), records the installed commit in `.installed-from.json`, and prints the old and new commits. Open Claude Code and paste:
 
 ```text
-Update my installed heygen-ai-avatar-video skill from https://github.com/aurelioagency/skills :
+Update my installed social-video-producer skill from https://github.com/aurelioagency/skills :
 1. If I have a clone of the repo, run git pull in it; otherwise make a temporary
    sparse clone like in the install prompt.
-2. In the clone, run: node install-skills.mjs heygen-ai-avatar-video
+2. In the clone, run: node install-skills.mjs social-video-producer
 3. The installer prints the previous and new commit. Summarize what changed
-   between them (git log --oneline <old>..<new> -- heygen-ai-avatar-video) in my language.
+   between them (git log --oneline <old>..<new> -- social-video-producer) in my language.
 4. Confirm the skill still loads and that Playwright still resolves from the
    installed skill's scripts. Delete the temporary clone if you made one.
 ```
@@ -78,7 +80,7 @@ Update my installed heygen-ai-avatar-video skill from https://github.com/aurelio
 To find out whether you are behind without installing anything, run this in an up-to-date clone:
 
 ```powershell
-node install-skills.mjs heygen-ai-avatar-video --check
+node install-skills.mjs social-video-producer --check
 ```
 
 It compares the commit recorded in your installed copy against the checkout, counting only commits that touch this skill (exit code 3 means an update is available). Teams working on the repo can keep a permanent clone: updating is just `git pull` + the installer command.
@@ -87,11 +89,11 @@ It compares the commit recorded in your installed copy against the checkout, cou
 
 ## Uninstalling
 
-The installed skill lives entirely in one folder: `~/.claude/skills/heygen-ai-avatar-video/`. Removing it never touches your video projects (they live in their own folders, e.g. `Documents\videos\<video-name>\`), other installed skills, or any clone of this repo. Open Claude Code and paste:
+The installed skill lives entirely in one folder: `~/.claude/skills/social-video-producer/`. Removing it never touches your video projects (they live in their own folders, e.g. `Documents\videos\<video-name>\`), other installed skills, or any clone of this repo. Open Claude Code and paste:
 
 ```text
-Remove the heygen-ai-avatar-video skill from my machine:
-1. Delete the folder ~/.claude/skills/heygen-ai-avatar-video/ (all of it,
+Remove the social-video-producer skill from my machine:
+1. Delete the folder ~/.claude/skills/social-video-producer/ (all of it,
    including its node_modules).
 2. Confirm the skill no longer loads. Do not touch my video project folders,
    other installed skills, or any clone of the skills repo.
@@ -100,10 +102,10 @@ Remove the heygen-ai-avatar-video skill from my machine:
 Or manually — from a clone of the repo:
 
 ```powershell
-node install-skills.mjs heygen-ai-avatar-video --remove
+node install-skills.mjs social-video-producer --remove
 ```
 
-(which only deletes the installed copy, never the repo folder), or simply delete `~/.claude/skills/heygen-ai-avatar-video/` yourself. You can reinstall at any time with the [Installation](#installation) prompt; only remember to reinstall Playwright afterwards (`npm i playwright` inside the installed skill) since it is removed along with the folder.
+(which only deletes the installed copy, never the repo folder), or simply delete `~/.claude/skills/social-video-producer/` yourself. You can reinstall at any time with the [Installation](#installation) prompt; only remember to reinstall Playwright afterwards (`npm i playwright` inside the installed skill) since it is removed along with the folder.
 
 ## Requirements
 
@@ -120,7 +122,7 @@ The assembly-only workflow in [PROMPT-template.md](PROMPT-template.md) requires 
 
 ## Usage
 
-Once installed, the skill lives in `~/.claude/skills/heygen-ai-avatar-video/` and is available in **every** Claude Code session on the machine, forever. Nothing is re-installed per video. Videos themselves never go there: each job gets its own project folder (default `Documents\videos\<video-name>\`), created automatically by the skill.
+Once installed, the skill lives in `~/.claude/skills/social-video-producer/` and is available in **every** Claude Code session on the machine, forever. Nothing is re-installed per video. Videos themselves never go there: each job gets its own project folder (default `Documents\videos\<video-name>\`), created automatically by the skill.
 
 There are two ways to use it:
 
@@ -130,7 +132,7 @@ Open a Claude Code session anywhere and describe the job in your own words, for 
 
 > Turn `C:\...\script.md` into a modular vertical video: 3 openings, animated body, outro. HeyGen avatar `<id>`, ElevenLabs voice `<id>`.
 
-The skill triggers automatically by matching your request (you can also invoke it explicitly with `/heygen-ai-avatar-video`). From there it drives everything and asks for what it needs:
+The skill triggers automatically by matching your request (you can also invoke it explicitly with `/social-video-producer`). From there it drives everything and asks for what it needs:
 
 1. Shows you a **creative proposal** (color palette, transitions, caption style, end card, act structure) and waits for your approval — nothing is generated or spent before this.
 2. Creates the project folder with its full structure (source, manifests, assets, renders, snapshots).
@@ -143,7 +145,7 @@ The skill triggers automatically by matching your request (you can also invoke i
 
 Use [PROMPT-template.md](PROMPT-template.md) when the avatar clips and body audio **already exist** and you only need the animated body plus final assembly — zero paid API calls. This is a deliberate manual copy-paste flow, so you see and control the exact work order before sending it:
 
-1. Open `PROMPT-template.md` — it is installed with the skill, so it is already on your machine at `~/.claude/skills/heygen-ai-avatar-video/PROMPT-template.md` — and fill in what you can. **You don't need to type any file paths**: leave them as placeholders and the agent creates the whole project structure plus a `raws\` folder, then tells you to drop this video's files in there (descriptive names like `intro`, `body`, `outro` help but aren't required). If your files already live somewhere else — or you drag them into the chat — the agent copies them into `raws\` for you. Either way it probes each file and shows you its proposed opening/body/outro mapping for confirmation before touching anything, your originals are never modified, and the finished videos come back in the same project under `renders\final\`. Do fill the brand names / proper nouns: nobody can guess those.
+1. Open `PROMPT-template.md` — it is installed with the skill, so it is already on your machine at `~/.claude/skills/social-video-producer/PROMPT-template.md` — and fill in what you can. **You don't need to type any file paths**: leave them as placeholders and the agent creates the whole project structure plus a `raws\` folder, then tells you to drop this video's files in there (descriptive names like `intro`, `body`, `outro` help but aren't required). If your files already live somewhere else — or you drag them into the chat — the agent copies them into `raws\` for you. Either way it probes each file and shows you its proposed opening/body/outro mapping for confirmation before touching anything, your originals are never modified, and the finished videos come back in the same project under `renders\final\`. Do fill the brand names / proper nouns: nobody can guess those.
 2. Copy the whole text and paste it as your **first message** in a Claude Code session. That paste *is* the invocation — the header even installs the skill first if the machine doesn't have it yet.
 3. The same approval gates still apply (transcript, creative proposal) before anything renders.
 

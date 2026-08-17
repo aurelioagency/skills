@@ -27,6 +27,8 @@ function globalNodeModulesParent() {
   }
 }
 
+const PACKAGES = ['playwright', 'playwright-core'];
+
 function skillFoldersCarryingPlaywright() {
   const home = os.homedir();
   const roots = [
@@ -48,7 +50,7 @@ function skillFoldersCarryingPlaywright() {
       if (!entry.isDirectory()) continue;
       const base = path.join(root, entry.name);
       if (base === SKILL_ROOT) continue;
-      if (fs.existsSync(path.join(base, 'node_modules', 'playwright'))) found.push(base);
+      if (PACKAGES.some((pkg) => fs.existsSync(path.join(base, 'node_modules', pkg)))) found.push(base);
     }
   }
   return found;
@@ -68,10 +70,13 @@ export async function loadChromium() {
   ].filter(Boolean);
 
   for (const base of bases) {
-    try {
-      const mod = createRequire(path.join(base, 'noop.js'))('playwright'); // playwright es CJS
-      if (mod?.chromium) return mod.chromium;
-    } catch { /* siguiente base */ }
+    const req = createRequire(path.join(base, 'noop.js'));
+    for (const pkg of PACKAGES) {
+      try {
+        const mod = req(pkg); // playwright es CJS
+        if (mod?.chromium) return mod.chromium;
+      } catch { /* siguiente paquete */ }
+    }
   }
 
   console.error(`No encontre Playwright.\n${installHint()}`);
