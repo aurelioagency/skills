@@ -20,23 +20,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
-import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
 import { prepararMusica } from './fetch-music.mjs';
 
-async function loadChromium() {
-  const here = path.dirname(fileURLToPath(import.meta.url));
-  for (const base of [process.cwd(), path.join(here, '..'), here,
-    path.join(os.homedir(), '.claude', 'skills', 'heygen-ai-avatar-video')]) {
-    try {
-      const mod = createRequire(path.join(base, 'noop.js'))('playwright');
-      if (mod?.chromium) return mod.chromium;
-    } catch { /* siguiente */ }
-  }
-  console.error('No encontre Playwright. Instalalo con:  npm i playwright');
-  process.exit(1);
-}
 
+import { loadChromium } from './lib/load-chromium.mjs';
 const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i === -1 ? d : process.argv[i + 1]; };
 const pkg = path.resolve(arg('package', process.cwd()));
 const port = Number(arg('port', 8765));

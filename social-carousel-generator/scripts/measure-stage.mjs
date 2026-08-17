@@ -19,28 +19,8 @@
 //   Spacers grandes y simetricos significan que la composicion quedo chica: expandila.
 import fs from 'node:fs';
 import path from 'node:path';
-import os from 'node:os';
-import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
 
-async function loadChromium() {
-  const here = path.dirname(fileURLToPath(import.meta.url));
-  const bases = [
-    process.cwd(),
-    path.join(here, '..'),
-    here,
-    path.join(os.homedir(), '.claude', 'skills', 'heygen-ai-avatar-video')
-  ];
-  for (const base of bases) {
-    try {
-      const req = createRequire(path.join(base, 'noop.js'));
-      const mod = req('playwright');
-      if (mod?.chromium) return mod.chromium;
-    } catch { /* siguiente base */ }
-  }
-  console.error('No encontre Playwright. Instalalo con:  npm i playwright');
-  process.exit(1);
-}
+import { loadChromium } from './lib/load-chromium.mjs';
 const chromium = await loadChromium();
 
 function arg(name, dflt) {
