@@ -19,6 +19,7 @@ Completion means the run has final MP4 output, segment outputs, audio, transcrip
 
 - Use **script-to-video modular** when the user provides a script, skill file, multiple hooks/openings, a shared animated middle, or a shared outro. This is the default for new edited videos.
 - Use **direct HeyGen avatar** when the user provides a final MP3/M4A/WAV and wants one avatar/lip-sync output.
+- Use **burn-in captions** when the user hands over a video that is already shot and edited and only wants subtitles on it. There is no script, no TTS, and no paid provider work in this branch.
 - Use **source-video conversion** only when the source video's audio must first be converted before HeyGen.
 - Use **repair** when the user reports bad pronunciation, wrong captions, a frozen rendered frame, desync, overflow, wrong title text, or a bad segment. Repair the smallest segment possible.
 
@@ -474,6 +475,67 @@ Use `--submit-only` only when the user wants to create HeyGen jobs without waiti
 
 When changing Video Cutter Lab workflow behavior or debugging an unexpected run, read `README.md`, `CONTEXT.md`, `docs/adr/0004-ai-avatar-video-provider-neutral-workflow.md`, and `docs/implementation/ai-avatar-video-workflow.md`. Run `npm.cmd run check`, `npm.cmd test`, and `node .\bin\video-cutter.js doctor` when code changed or reliability matters. Confirm `HEYGEN_API_KEY` is set without printing it.
 
+## Burn-In Captions Branch
+
+Use this branch when the video already exists — the user shot and edited it — and the only job is putting subtitles on it. No script, no TTS, no HeyGen, no paid provider work. Do not route this through the script-to-video modular workflow: there is nothing to segment and nothing to assemble.
+
+Captions here are burned in with libass, not rendered as an HTML composition. The pixels already exist, so the encode budget allows exactly **one** pass, and every caption decision lives in the `.ass` file.
+
+1. Set up the project and keep the original untouched.
+
+```powershell
+node "<skill-dir>\scripts\init-project.mjs" --project "<project>" --slug "<slug>"
+```
+
+Copy the user's file into `<project>\raws\` and work from that copy. Record the original path in `manifests\project.json`. Leave `source\script.md`, the avatar id, and the voice id null — this branch has none.
+
+2. Transcribe the real audio.
+
+```powershell
+node "<skill-dir>\scripts\transcribe-media.mjs" --input "raws\<video>.mp4" --out-audio "assets\voice\<slug>.wav" --out-transcript "assets\voice\<slug>.transcript.json" --language es
+```
+
+The script reports `lowConfidence` words. Read the transcript from the JSON file with a UTF-8 reader, never from terminal output.
+
+3. **Transcript Approval Gate (blocking).** Show the user the full text and flag every suspicious word — proper nouns, brand and product names, low-confidence tokens, and any form that clashes with the register of the rest (a `puedes` inside an otherwise voseo script is a misrecognition, not a style choice). Wait for explicit approval. Write the approved fixes to a corrections file:
+
+```json
+[{ "at": 4.72, "from": "puedes", "to": "podés" }]
+```
+
+4. **Caption Style Gate (blocking).** Freeze the caption font into `assets\fonts\` with its licence, then render 2-3 style candidates as single frames over real frames of the video and let the user choose from the images. Stills are cheap; a wrong style discovered after the burn is not. Confirm font, size, colours, and reveal mode before generating the full `.ass`.
+
+5. Generate the subtitle file.
+
+```powershell
+node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.transcript.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --size 104 --accent "#30D5FF" --corrections "source\corrections.json" --accent-terms "<key terms>"
+```
+
+6. Run the width gate before encoding.
+
+```powershell
+node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --output "manifests\audits\caption-width.json"
+```
+
+Treat a failure as a hard stop. `check-overflow.cjs` inspects DOM boxes and cannot see burned-in captions at all.
+
+7. Burn once, then verify.
+
+```powershell
+node "<skill-dir>\scripts\burn-in-captions.mjs" --input "raws\<video>.mp4" --ass "renders\<slug>.ass" --output "renders\final\<slug>-subs.mp4" --fonts-dir "assets\fonts"
+node "<skill-dir>\scripts\verify-render.mjs" --file "renders\final\<slug>-subs.mp4" --expect-width 1080 --expect-height 1920
+```
+
+Then extract frames from the FINAL file at several timestamps — at minimum one talking-head frame, one graphic/screen-recording frame, and one wrapped two-line caption — and look at them.
+
+### libass Behaviour That Costs A Render Cycle
+
+- **The font family name is not the file name.** `Inter-Black.ttf` declares the family `Inter Black`; asking for `Inter` makes libass fall back to another font *silently* and the captions render at the wrong weight. `build-burn-in-captions.mjs` reads the family from the TTF name table, so let it auto-detect instead of passing `--font-name` by hand.
+- **`\pos` and `\move` disable margin-based wrapping.** Once an event carries either tag, `MarginL`/`MarginR` no longer bound the line and long text runs straight off the frame. Line breaks must be inserted explicitly as `\N`, decided by measuring against the real font metrics.
+- **ASS colour is `&HBBGGRR&`,** the reverse of CSS hex. Reversing it turns the accent into its complement, which is easy to miss on a warm frame.
+- **Escape the Windows drive letter inside a filter argument** (`C\:/path/file.ass`), or ffmpeg reads the colon as the next filter option.
+- Always pass `--fonts-dir`, so the burn uses the frozen project font rather than whatever the machine happens to have installed.
+
 ## Caption Contract
 
 - Captions must follow actual spoken audio, not the earlier script.
@@ -488,6 +550,14 @@ Caption positioning over video with people:
 - Minimum horizontal padding: 120px per side at 1080px width.
 - `overflow: hidden` on every caption container.
 - Chunks of at most 2 words for word-by-word captions; chunk-cut gap threshold: 0.35s (with 3-word chunks and a larger threshold, a chunk can hide before its last word appears).
+- The face rule outranks "captions centered in the middle of the screen" in the production guide. In a normal selfie or talking-head shot the face *is* in the middle, so the lower third is the correct answer and the centered-in-frame guidance does not apply. Centered-in-frame is for sections where nothing important sits behind the caption band.
+
+Caption reveal, when stability and centering collide:
+
+- Two rules pull apart with multi-word chunks: existing words must not move when a new word appears, and the visible text must actually look centered. Reserving the chunk's full width holds the first rule but renders a lone first word off-centre; re-centering each state holds the second but makes the earlier word jump sideways.
+- **Centering wins.** Default to chunk-level reveal: the whole chunk enters at once, always centred, never reflowing. Mark emphasis with colour on the words that matter rather than on "the word being spoken".
+- Word-by-word reveal is still correct with one-word chunks, which satisfy both rules at once, at the cost of a much busier rhythm.
+- Never ship the third option — re-centering on every word — however natural it looks in a still frame.
 
 Platform safe zone for TikTok/Reels/Shorts (1080x1920):
 
@@ -537,6 +607,10 @@ node "<skill-dir>\scripts\snapshot-qa.cjs" --project "<project>" --variant "open
 node "<skill-dir>\scripts\check-overflow.cjs" --project "<project>" --at "32.35,32.95"
 node "<skill-dir>\scripts\scan-text-inventory.mjs" --file "<project>\public\index.html"
 node "<skill-dir>\scripts\verify-render.mjs" --file "<project>\renders\final\video-opening2.mp4" --expect-width 1080 --expect-height 1920
+node "<skill-dir>\scripts\transcribe-media.mjs" --input "<project>\raws\source.mp4" --out-audio "<project>\assets\voice\source.wav" --out-transcript "<project>\assets\voice\source.transcript.json" --language es
+node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\assets\voice\source.transcript.json" --output "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --size 104 --accent "#30D5FF"
+node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --output "<project>\manifests\audits\caption-width.json"
+node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.mp4" --ass "<project>\renders\source.ass" --output "<project>\renders\final\source-subs.mp4" --fonts-dir "<project>\assets\fonts"
 ```
 
 - `init-project.mjs`: create the canonical one-folder project layout and starter manifests without overwriting existing files.
@@ -552,8 +626,12 @@ node "<skill-dir>\scripts\verify-render.mjs" --file "<project>\renders\final\vid
 - `render-segment.cjs`: render the current HyperFrames `public/index.html` with seek-safe video capture and storyboard audio mixing.
 - `assemble-variants.mjs`: assemble final videos from segment MP4s by concat copy or final encode, then optionally apply final speed and background music from `manifests\assemble.json`.
 - `snapshot-qa.cjs`: capture exact timestamps for visual review.
-- `check-overflow.cjs`: inspect visible DOM boxes for clipped/off-frame text.
+- `check-overflow.cjs`: inspect visible DOM boxes for clipped/off-frame text. Browser compositions only — it cannot see burned-in captions.
 - `scan-text-inventory.mjs`: catch leaked metadata strings such as `question hook`.
+- `transcribe-media.mjs`: extract speech audio from any video/audio file and produce a word-level transcript, reporting low-confidence words to take to the Transcript Approval Gate.
+- `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
+- `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.
+- `burn-in-captions.mjs`: burn an `.ass` file into a video in a single encode pass, copying the original audio.
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 
 If an existing project still has older local tools such as `render-local.cjs`, `snapshot-qa.cjs`, or `check-overflow.cjs`, those may be used for that project, but migrate repeated behavior back into the bundled scripts.
@@ -565,7 +643,7 @@ Before reporting completion:
 - Run a text inventory over generated HTML/source for leaked metadata such as `OpenAI skill`, `question hook`, `Pregunta hook`, file titles, or internal labels.
 - Before launching the full frame-by-frame caption render, render the caption HTML at 3-5 representative timestamps (screenshots on a dark background) and verify: spelling (against the transcript approved at the Transcript Approval Gate), position (does not cover the face, inside safe zones), and that no word overflows horizontally. An error caught here costs seconds; caught after the render it costs the full cycle.
 - Snapshot affected timestamps before final render or assembly.
-- Run overflow/layout checks on affected timestamps.
+- Run overflow/layout checks on affected timestamps. For burned-in captions this means `audit-caption-width.mjs`, which must pass before the encode; `check-overflow.cjs` cannot see them.
 - After rendering or assembly, verify each final MP4 has:
   - expected duration;
   - `1080x1920` unless the user requested another format;

@@ -110,8 +110,11 @@ node install-skills.mjs heygen-ai-avatar-video --remove
 - **Node.js 18+** (bundled scripts are plain `node`, no install step).
 - **ffmpeg** on `PATH`, or set `FFMPEG_PATH`, or pass `--ffmpeg` to the scripts.
 - **Playwright** (for HyperFrames rendering, snapshots, and overflow checks): `npm i playwright` where the scripts run.
+- **Python 3** with `faster-whisper` and `Pillow` — only for the burn-in captions branch (transcription and caption width measurement): `pip install faster-whisper Pillow`.
 - **ElevenLabs**: set `ELEVENLABS_API_KEY` (env var or a `.env` in the project folder) — only for TTS branches.
 - **HeyGen**: set `HEYGEN_API_KEY` — only for avatar-generation branches.
+
+Putting subtitles on a video you already shot needs **no paid provider keys and no Playwright** — only Node, ffmpeg, and the two Python packages above.
 
 The assembly-only workflow in [PROMPT-template.md](PROMPT-template.md) requires **no paid provider keys** at all.
 

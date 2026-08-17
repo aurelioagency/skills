@@ -102,7 +102,8 @@ These rules capture generic production taste and QA decisions established across
   - audio duration probing and padding/tempo repair;
   - HeyGen asset download/freezing;
   - HyperFrames snapshot capture at exact timestamps;
-  - overflow/layout inspection;
+  - overflow/layout inspection, both DOM boxes for browser compositions and measured text width for burned-in captions;
+  - subtitle file generation and single-pass burn-in;
   - local render with seek-safe video frame capture;
   - final stream/duration verification.
 - Keep reusable tools parameterized by project root, segment id, provider ids, and output paths. Avoid hardcoding a one-off opening or script unless the tool is explicitly a repair script for that job.
@@ -146,7 +147,9 @@ These rules capture generic production taste and QA decisions established across
 - Correct obvious transcript display errors without changing timing, such as:
   - dropped leading letters in proper nouns (ASR often truncates names);
   - wrong pluralization like `ochentas` -> `ochenta`;
-  - project-specific names, brand names, and technical terms the user listed in the project vocabulary.
+  - project-specific names, brand names, and technical terms the user listed in the project vocabulary;
+  - forms that clash with the register of the surrounding speech, such as a `puedes` sitting inside an otherwise voseo script. That is a misrecognition to raise with the user, not a style choice to preserve.
+- ASR mis-transcribes proper nouns and product names systematically, and it does so with high confidence. Check them against something real — a visible screen recording, the user's own files, the project vocabulary — before assuming the transcript is right.
 - Do not show redundant subtitles that repeat a graphic already communicating the same point, such as an unnecessary `80 preguntas` subtitle under an `80 preguntas` card.
 
 ## TTS Encoding And Spanish Audio QA
@@ -176,8 +179,9 @@ These rules capture generic production taste and QA decisions established across
 ## Caption Placement And Typography
 
 - Captions must never be tiny. If the viewer is on a phone, the text still needs to be readable at normal viewing distance.
+- Locate the speaker's face first, from real frames, and let that decide the band. Not covering the face outranks every other placement preference here. In an ordinary selfie or talking-head shot the face sits in the middle of the frame, so the answer is the lower third above the platform safe zone, and the "centered in the middle of the screen" guidance below simply does not apply.
 - Avatar/talking-head sections:
-  - captions should be centered in the middle of the screen unless the user asks otherwise;
+  - captions may be centered in the middle of the screen when nothing important sits behind that band — otherwise use the lower third;
   - use text only, without a large card around it;
   - use large type, roughly comparable to the avatar head/hand scale;
   - show words one after another;
@@ -200,6 +204,30 @@ These rules capture generic production taste and QA decisions established across
 - The tremble must be transform-only. It must not cause layout shifts or push other words around.
 - Existing words should stay stable while the new word appears.
 - Space words evenly side by side. No jumping gaps.
+
+### When Stability And Centering Collide
+
+With chunks of more than one word, "existing words stay stable" and "the visible text is actually centered" cannot both hold during a word-by-word reveal. Reserving the chunk's full width keeps the earlier word still but leaves a lone first word rendering off-centre; re-centering on every word keeps it centred but makes the earlier word slide sideways.
+
+- **Centering wins.** Default to revealing the whole chunk at once: always centred, never reflowing.
+- Carry emphasis with colour on the words that carry meaning — names, products, numbers — instead of on "whichever word is being spoken". The accent then means something, rather than being a cursor.
+- One-word chunks satisfy both rules and remain a valid choice when the busier rhythm suits the piece.
+- Re-centering on each new word is never the answer, however well it reads in a still frame.
+
+## Burned-In Captions (libass/ASS)
+
+Everything else in this guide describes captions built as an HTML/GSAP composition and captured frame by frame. That is the right tool when the video is being generated. It is the wrong tool when the video already exists: re-rendering finished footage through a browser throws away quality for nothing. Burn the captions in with libass instead — one filter, one encode.
+
+- The whole caption design lives in the `.ass` file: font, size, colours, position, wrapping, fades, motion. Never chain extra ffmpeg passes to add caption features; that spends the encode budget on nothing.
+- Freeze the caption font into the project (`assets\fonts\`) together with its licence, and pass `fontsdir` at burn time. Never depend on a font that merely happens to be installed on this machine.
+- The font family name comes from the TTF's name table, not from the file name. `Inter-Black.ttf` declares `Inter Black`. Requesting the wrong family makes libass substitute another font without any warning, and the captions come out at the wrong weight.
+- `\pos` and `\move` disable margin-based line wrapping. Any event carrying either tag ignores `MarginL`/`MarginR` for wrapping, so long lines run off the frame. Decide the breaks yourself: measure each line against the real font metrics and insert `\N`.
+- Measure width before encoding, not after. An overflow found in a delivered MP4 costs the entire render.
+- ASS colours are `&HBBGGRR&`, reversed from CSS hex, and style colours carry a leading alpha byte (`&HAABBGGRR&`).
+- On Windows, escape the drive-letter colon inside a filter argument: `ass='C\:/path/captions.ass'`.
+- Bottom-anchored text (`\an2`) grows upward, so a chunk wrapping to two lines keeps its baseline and stays inside the safe zone. Prefer that over shrinking the type to force one line.
+- Copy the original audio stream rather than re-encoding it. The audio was never touched.
+- Keep the generator and the corrections file in the project `source\`, so the captions can be regenerated and reburned in seconds when the user wants a colour, size, or wording change.
 
 ## Cards And Space
 

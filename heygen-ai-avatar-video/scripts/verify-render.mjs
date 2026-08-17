@@ -26,16 +26,29 @@ function parseArgs(argv) {
   return args;
 }
 
-function firstExisting(items) {
-  return items.find((item) => item && fs.existsSync(item));
+// A bare command name is resolved against PATH by spawn, but fs.existsSync would only
+// match a file of that name in the current directory. Walk PATH explicitly instead.
+function resolveOnPath(command) {
+  const exts = process.platform === 'win32'
+    ? (process.env.PATHEXT || '.EXE;.CMD;.BAT').split(';').map((ext) => ext.trim()).filter(Boolean)
+    : [''];
+  for (const dir of (process.env.PATH || '').split(path.delimiter).filter(Boolean)) {
+    for (const ext of exts) {
+      const candidate = path.join(dir.replace(/^"|"$/g, ''), command + ext);
+      if (fs.existsSync(candidate)) return candidate;
+    }
+  }
+  return null;
 }
 
 function findFfmpeg(explicit) {
-  const ffmpeg = explicit || process.env.FFMPEG_PATH || firstExisting([
-    'ffmpeg',
-  ]);
-  if (!ffmpeg) throw new Error('Could not find ffmpeg. Pass --ffmpeg or set FFMPEG_PATH.');
-  return ffmpeg;
+  const configured = explicit || process.env.FFMPEG_PATH;
+  if (configured) return configured;
+  const resolved = resolveOnPath('ffmpeg');
+  if (resolved) return resolved;
+  const probe = spawnSync('ffmpeg', ['-version'], { encoding: 'utf8', windowsHide: true });
+  if (!probe.error && probe.status === 0) return 'ffmpeg';
+  throw new Error('Could not find ffmpeg on PATH. Pass --ffmpeg or set FFMPEG_PATH.');
 }
 
 function runFfmpeg(ffmpeg, file) {
