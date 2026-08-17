@@ -161,7 +161,18 @@ Put subtitles on C:\path\to\my-video.mp4
 
 The agent copies your original into a project (never edits it in place), transcribes the real audio with word-level timing, and **stops to show you the transcript with the suspicious words flagged** — ASR reliably mangles proper nouns and product names, and fixing one there costs seconds instead of a whole re-render. It then freezes a caption font into the project, shows you 2–3 style candidates rendered over real frames of *your* video so you pick by looking rather than imagining, and burns the captions in a single encode pass so the picture is never re-compressed twice.
 
-Needs Python with `faster-whisper` and `Pillow` (`pip install faster-whisper Pillow`). The font comes from whatever heavy sans your machine already has, so this works offline on Windows, macOS, and Linux; point it at [Inter](https://github.com/rsms/inter/releases) or any other font if you'd rather.
+Needs Python with `faster-whisper` and `Pillow` (`pip install faster-whisper Pillow`). Nothing else — the skill ships its own caption fonts.
+
+**House style, and what you get without asking for anything:** Inter Black at 104px, white with the key words in cyan, two words at a time, sitting in the lower third clear of your face and above the platform UI. Four fonts ship with the skill, all SIL Open Font License, so a caption looks the same on every machine:
+
+| Font | When |
+|---|---|
+| **Inter Black** | The default. Neutral modern grotesque, reads clean over anything. |
+| Archivo Black | Wider and heavier — more shout per word. |
+| Anton | Condensed heavy, the classic social-caption look. |
+| Bebas Neue | Tall condensed caps, fits long words on one line. |
+
+Want something else entirely? `--system` uses the heaviest font already on your machine, and `--source` takes any font file or direct URL.
 
 ### Multiple videos and repairs
 

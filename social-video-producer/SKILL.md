@@ -52,6 +52,7 @@ videos\<script-slug>\
     avatar\
     logos\
     music\
+    fonts\
   public\
   renders\
     segments\
@@ -78,6 +79,7 @@ Keep this output contract:
 - `manifests\audits\` contains read-only gate reports such as `plan-audit.json`, animation QA notes, and final verification summaries.
 - `assets\voice\` and `assets\avatar\` are canonical reusable media assets.
 - `assets\music\` contains frozen background music selected for the project. Do not hotlink music during final assembly.
+- `assets\fonts\` contains the caption font frozen for the project, with its licence file. Never reference a system font path at render time.
 - `public\` is the active browser composition used by HyperFrames/Playwright. Do not mirror voice files into `public\`. Browser composition code in `public\index.html` must reference canonical project assets with paths such as `../assets/voice/<segment-id>.wav` or the `browserSrc` value in `manifests\audio-meta.json`.
 - `renders\segments\` contains reusable segment MP4s. `renders\final\` contains user-deliverable final MP4s.
 - `snapshots\` contains QA screenshots and overflow/layout reports.
@@ -496,7 +498,7 @@ Copy the user's file into `<project>\raws\` and work from that copy. Record the 
 2. Transcribe the real audio.
 
 ```powershell
-node "<skill-dir>\scriptsreeze-caption-font.mjs" --project "<project>" --system
+node "<skill-dir>\scriptsreeze-caption-font.mjs" --project "<project>"
 node "<skill-dir>\scripts\transcribe-media.mjs" --input "raws\<video>.mp4" --out-audio "assets\voice\<slug>.wav" --out-transcript "assets\voice\<slug>.transcript.json" --language es
 ```
 
@@ -511,12 +513,19 @@ The script reports `lowConfidence` words. Read the transcript from the JSON file
 4. Freeze a caption font into the project. Never point the burn at a system font path: it must come from `assets\fonts\` so the project stays reproducible on another machine.
 
 ```powershell
-node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>" --system
+node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>"
 ```
 
-`--system` picks the heaviest readable sans already installed and works offline on Windows, macOS, and Linux. Use `--list` to see the ranked candidates, or `--source <file-or-direct-url>` for a specific font — for example Inter Black, which the production guide prefers, from the individual TTFs in the [Inter release](https://github.com/rsms/inter/releases). `--source` takes a direct font file, never a zip. The helper records the family name and provenance next to the frozen file; confirm the licence yourself before the video is published.
+With no flag this freezes **Inter Black**, the skill default, from the fonts bundled in `assets\fonts\`. All bundled fonts are SIL Open Font License, and the licence text is copied next to the frozen file, so the project carries its own proof and looks identical on any machine.
+
+- `--list` shows the bundled set and the system candidates.
+- `--bundled <name>` picks another bundled font: `archivoblack` (wider, more shout), `anton` (condensed, classic social), `bebasneue` (tall condensed caps, good for long words).
+- `--system` copies the heaviest sans already installed instead, for a look the bundled set does not cover. Redistribution rights are then unverified, and the record says so.
+- `--source <file-or-direct-url>` freezes a specific font. Direct font file only, never a zip.
 
 Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video.
+
+**House default:** Inter Black at 104px, white with the key terms in cyan `#30D5FF`, chunk reveal. That is what the scripts produce with no style arguments, and it is the starting point to show at the gate below — offer alternatives from there rather than opening with a blank choice.
 
 5. **Caption Style Gate (blocking).** Render 2-3 style candidates as single frames over real frames of the video and let the user choose from the images. Stills are cheap; a wrong style discovered after the burn is not. Confirm font, size, colours, and reveal mode before generating the full `.ass`.
 
@@ -643,7 +652,7 @@ node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.m
 - `snapshot-qa.cjs`: capture exact timestamps for visual review.
 - `check-overflow.cjs`: inspect visible DOM boxes for clipped/off-frame text. Browser compositions only — it cannot see burned-in captions.
 - `scan-text-inventory.mjs`: catch leaked metadata strings such as `question hook`.
-- `freeze-caption-font.mjs`: copy a caption font into the project, either the best heavy sans already installed (`--system`, works offline on any OS) or a specific file/direct URL, recording family name and provenance.
+- `freeze-caption-font.mjs`: copy a caption font into the project. Defaults to the bundled Inter Black (SIL OFL, licence copied alongside); `--bundled` picks another shipped font, `--system` takes the heaviest sans installed on the machine, `--source` takes a file or direct URL.
 - `transcribe-media.mjs`: extract speech audio from any video/audio file and produce a word-level transcript, reporting low-confidence words to take to the Transcript Approval Gate.
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.

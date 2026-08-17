@@ -8,19 +8,57 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readFontFamily } from './lib/font-name.mjs';
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const BUNDLED_DIR = path.resolve(HERE, '..', 'assets', 'fonts');
+
+// Shipped with the skill, all under the SIL Open Font License, so a caption looks the
+// same on every machine instead of inheriting whatever that OS happens to install.
+// Ordered best-first; the first entry is the default.
+const BUNDLED = [
+  ['Inter-Black.ttf', 'Inter Black — neutral modern grotesque. The default.'],
+  ['ArchivoBlack-Regular.ttf', 'Archivo Black — wider and heavier, more shout per word.'],
+  ['Anton-Regular.ttf', 'Anton — condensed heavy, the classic social-caption look.'],
+  ['BebasNeue-Regular.ttf', 'Bebas Neue — tall condensed caps, fits long words on one line.'],
+];
 
 function usage() {
   console.error(`Usage:
+  node freeze-caption-font.mjs --project <project>
+  node freeze-caption-font.mjs --project <project> --bundled <name>
   node freeze-caption-font.mjs --project <project> --system
   node freeze-caption-font.mjs --project <project> --source <font.ttf | https://.../font.ttf>
       [--output "assets/fonts/<name>"]   defaults to assets/fonts/<original filename>
-      [--list]                           show the ranked candidates found and exit
+      [--list]                           show bundled and system candidates, then exit
 
---system  copies the best caption font already installed on this machine.
---source  freezes a specific font file or direct font URL (no zip archives).
+(no flag)  freezes the skill's default bundled font, ${BUNDLED[0][0]}.
+--bundled  picks another bundled font by name, e.g. --bundled anton.
+--system   copies the best caption font already installed on this machine instead.
+--source   freezes a specific font file or direct font URL (no zip archives).
 
 Caption fonts want a heavy weight: at 104px a Regular reads thin against video.`);
+}
+
+function bundledFonts() {
+  return BUNDLED
+    .map(([file, why]) => ({ file: path.join(BUNDLED_DIR, file), why }))
+    .filter((entry) => fs.existsSync(entry.file));
+}
+
+function pickBundled(name) {
+  const available = bundledFonts();
+  if (!available.length) throw new Error(`No bundled fonts found in ${BUNDLED_DIR}`);
+  if (!name) return available[0];
+  const needle = name.toLowerCase().replace(/[^a-z]/g, '');
+  const hit = available.find((entry) => path.basename(entry.file).toLowerCase().replace(/[^a-z]/g, '').includes(needle));
+  if (!hit) {
+    throw new Error(
+      `No bundled font matches "${name}". Available: ${available.map((e) => path.basename(e.file)).join(', ')}`,
+    );
+  }
+  return hit;
 }
 
 function parseArgs(argv) {
@@ -31,6 +69,7 @@ function parseArgs(argv) {
     else if (item === '--source') args.source = argv[++i];
     else if (item === '--output') args.output = argv[++i];
     else if (item === '--system') args.system = true;
+    else if (item === '--bundled') args.bundled = argv[++i];
     else if (item === '--list') args.list = true;
     else if (item === '--help' || item === '-h') args.help = true;
     else throw new Error(`Unknown argument: ${item}`);
@@ -130,18 +169,19 @@ async function main() {
 
   if (args.list) {
     const ranked = rankSystemFonts();
+    const bundled = bundledFonts();
     console.log(JSON.stringify({
-      ok: ranked.length > 0,
+      ok: bundled.length > 0 || ranked.length > 0,
       platform: process.platform,
-      searched: fontDirectories(),
-      candidates: ranked.slice(0, 10).map((c) => ({ file: c.file, why: c.why })),
+      bundled: bundled.map((entry, index) => ({
+        name: path.basename(entry.file),
+        why: entry.why,
+        default: index === 0,
+      })),
+      systemSearched: fontDirectories(),
+      systemCandidates: ranked.slice(0, 10).map((c) => ({ file: c.file, why: c.why })),
     }, null, 2));
-    process.exit(ranked.length ? 0 : 1);
-  }
-
-  if (!args.system && !args.source) {
-    usage();
-    process.exit(2);
+    process.exit(bundled.length || ranked.length ? 0 : 1);
   }
 
   const project = path.resolve(args.project);
@@ -165,6 +205,11 @@ async function main() {
     if (!fs.existsSync(sourceFile)) throw new Error(`Missing font file: ${sourceFile}`);
     sourceLabel = sourceFile;
     why = 'explicit local file';
+  } else if (!args.system) {
+    const chosen = pickBundled(args.bundled);
+    sourceFile = chosen.file;
+    sourceLabel = `bundled: ${path.basename(chosen.file)}`;
+    why = chosen.why;
   } else {
     const ranked = rankSystemFonts();
     if (!ranked.length) {
@@ -186,15 +231,24 @@ async function main() {
   fs.copyFileSync(sourceFile, output);
   if (tempSource) fs.rmSync(tempSource, { force: true });
 
+  // Bundled fonts ship with their licence file; copy it next to the frozen font so the
+  // project carries its own proof. Anything else has unverified redistribution rights.
+  const bundledLicence = path.join(BUNDLED_DIR, `${path.basename(sourceFile, path.extname(sourceFile))}.LICENSE.txt`);
+  let licence = 'UNVERIFIED — check the font licence before publishing or redistributing.';
+  if (!args.system && !args.source && fs.existsSync(bundledLicence)) {
+    fs.copyFileSync(bundledLicence, `${output}.LICENSE.txt`);
+    licence = 'SIL Open Font License 1.1 — licence text copied next to the font.';
+  }
+
   // Same provenance discipline the skill applies to background music: record where
-  // the asset came from, and be explicit that redistribution rights are unverified.
+  // the asset came from and under what terms.
   const record = {
     file: path.relative(project, output).split(path.sep).join('/'),
     fontFamily: family,
     source: sourceLabel,
     why,
     frozenAt: new Date().toISOString(),
-    licence: 'UNVERIFIED — check the font licence before publishing or redistributing.',
+    licence,
   };
   fs.writeFileSync(`${output}.source.json`, `${JSON.stringify(record, null, 2)}\n`, 'utf8');
 
