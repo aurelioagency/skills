@@ -481,6 +481,8 @@ When changing Video Cutter Lab workflow behavior or debugging an unexpected run,
 
 Use this branch when the video already exists — the user shot and edited it — and the only job is putting subtitles on it. No script, no TTS, no HeyGen, no paid provider work. Do not route this through the script-to-video modular workflow: there is nothing to segment and nothing to assemble.
 
+Needs Node, ffmpeg, and Python with `faster-whisper` (transcription) and `Pillow` (text measurement): `pip install faster-whisper Pillow`. No API keys and no Playwright. Check this before starting, not when a script fails halfway through.
+
 Captions here are burned in with libass, not rendered as an HTML composition. The pixels already exist, so the encode budget allows exactly **one** pass, and every caption decision lives in the `.ass` file.
 
 1. Set up the project and keep the original untouched.
@@ -494,6 +496,7 @@ Copy the user's file into `<project>\raws\` and work from that copy. Record the 
 2. Transcribe the real audio.
 
 ```powershell
+node "<skill-dir>\scriptsreeze-caption-font.mjs" --project "<project>" --system
 node "<skill-dir>\scripts\transcribe-media.mjs" --input "raws\<video>.mp4" --out-audio "assets\voice\<slug>.wav" --out-transcript "assets\voice\<slug>.transcript.json" --language es
 ```
 
@@ -505,15 +508,25 @@ The script reports `lowConfidence` words. Read the transcript from the JSON file
 [{ "at": 4.72, "from": "puedes", "to": "podés" }]
 ```
 
-4. **Caption Style Gate (blocking).** Freeze the caption font into `assets\fonts\` with its licence, then render 2-3 style candidates as single frames over real frames of the video and let the user choose from the images. Stills are cheap; a wrong style discovered after the burn is not. Confirm font, size, colours, and reveal mode before generating the full `.ass`.
+4. Freeze a caption font into the project. Never point the burn at a system font path: it must come from `assets\fonts\` so the project stays reproducible on another machine.
 
-5. Generate the subtitle file.
+```powershell
+node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>" --system
+```
+
+`--system` picks the heaviest readable sans already installed and works offline on Windows, macOS, and Linux. Use `--list` to see the ranked candidates, or `--source <file-or-direct-url>` for a specific font — for example Inter Black, which the production guide prefers, from the individual TTFs in the [Inter release](https://github.com/rsms/inter/releases). `--source` takes a direct font file, never a zip. The helper records the family name and provenance next to the frozen file; confirm the licence yourself before the video is published.
+
+Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video.
+
+5. **Caption Style Gate (blocking).** Render 2-3 style candidates as single frames over real frames of the video and let the user choose from the images. Stills are cheap; a wrong style discovered after the burn is not. Confirm font, size, colours, and reveal mode before generating the full `.ass`.
+
+6. Generate the subtitle file.
 
 ```powershell
 node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.transcript.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --size 104 --accent "#30D5FF" --corrections "source\corrections.json" --accent-terms "<key terms>"
 ```
 
-6. Run the width gate before encoding.
+7. Run the width gate before encoding.
 
 ```powershell
 node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --output "manifests\audits\caption-width.json"
@@ -521,7 +534,7 @@ node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "renders\<slug>.ass" --
 
 Treat a failure as a hard stop. `check-overflow.cjs` inspects DOM boxes and cannot see burned-in captions at all.
 
-7. Burn once, then verify.
+8. Burn once, then verify.
 
 ```powershell
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "raws\<video>.mp4" --ass "renders\<slug>.ass" --output "renders\final\<slug>-subs.mp4" --fonts-dir "assets\fonts"
@@ -630,6 +643,7 @@ node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.m
 - `snapshot-qa.cjs`: capture exact timestamps for visual review.
 - `check-overflow.cjs`: inspect visible DOM boxes for clipped/off-frame text. Browser compositions only — it cannot see burned-in captions.
 - `scan-text-inventory.mjs`: catch leaked metadata strings such as `question hook`.
+- `freeze-caption-font.mjs`: copy a caption font into the project, either the best heavy sans already installed (`--system`, works offline on any OS) or a specific file/direct URL, recording family name and provenance.
 - `transcribe-media.mjs`: extract speech audio from any video/audio file and produce a word-level transcript, reporting low-confidence words to take to the Transcript Approval Gate.
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.

@@ -151,6 +151,18 @@ Use [PROMPT-template.md](PROMPT-template.md) when the avatar clips and body audi
 
 If you'd rather not edit the file by hand, ask the agent to fill it with you: it will ask for each value conversationally, show you the completed prompt, and confirm before starting.
 
+### Mode 3 — subtitles for a video you already have
+
+The cheapest path in the skill: no script, no API keys, no Playwright. Just ask, pointing at the file:
+
+```text
+Put subtitles on C:\path\to\my-video.mp4
+```
+
+The agent copies your original into a project (never edits it in place), transcribes the real audio with word-level timing, and **stops to show you the transcript with the suspicious words flagged** — ASR reliably mangles proper nouns and product names, and fixing one there costs seconds instead of a whole re-render. It then freezes a caption font into the project, shows you 2–3 style candidates rendered over real frames of *your* video so you pick by looking rather than imagining, and burns the captions in a single encode pass so the picture is never re-compressed twice.
+
+Needs Python with `faster-whisper` and `Pillow` (`pip install faster-whisper Pillow`). The font comes from whatever heavy sans your machine already has, so this works offline on Windows, macOS, and Linux; point it at [Inter](https://github.com/rsms/inter/releases) or any other font if you'd rather.
+
 ### Multiple videos and repairs
 
 - Each video = its own project folder. Making video #2 creates a new folder and never touches video #1.
