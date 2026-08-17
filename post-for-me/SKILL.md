@@ -50,7 +50,7 @@ State the split in the gate as a decision — "YouTube gets the short because it
 
 Four things, and none of them can be assumed:
 
-1. **Which accounts.** `client.socialAccounts.list()`. Show `platform` and `username` for the ones you plan to use, never the tokens.
+1. **Which accounts.** `client.socialAccounts.list()`. Show **every connected account**, `platform` and `username`, never the tokens. If a confirmation-question tool caps the number of choices (e.g. 4 options), do not silently drop accounts to fit — list all of them as plain text first (numbered or bulleted), then let the person pick from that full list. An account left off the list because of a tool limit is a silent omission, not a decision the person made. YouTube is not a special case here: it takes video only and title is required-ish (see below), but it still gets a `caption` like every other platform — list it and ask for it exactly like the rest.
 2. **The caption.** Exactly as written. Do not improve it, do not translate it, do not append hashtags of your own.
 3. **The media.** A public URL Post for Me can fetch, or a local file — which has to be uploaded first, see below.
 4. **When.** Now, or `scheduled_at` as an ISO 8601 string. Confirm the timezone if they said something like "Friday at 9".
@@ -92,6 +92,30 @@ Before the call that publishes, show four lines and stop:
 - When it goes out: now, or the scheduled time
 
 Then ask, and wait for an explicit yes. Not "looks good?" — say that it will be public and cannot be retracted. If any part came from your own inference rather than from what they said, flag that line specifically.
+
+### If the publish call is denied by the permission layer
+
+`socialPosts.create` (and other `execute` calls) can come back with `Permission for
+this action was denied by the Claude Code auto mode classifier.` This is the harness,
+not Post for Me — see `references/troubleshooting.md` §10 for the full mechanism. It is
+intermittent: the same call can be denied, then succeed on a plain retry with no setting
+touched in between, so retrying once or twice when the person asks is normal and not a
+sign anything is broken.
+
+Do not hand the person a vague pointer like "check your permission settings" — give the
+exact line immediately, in the same turn as the denial:
+
+```json
+"permissions": {
+  "allow": ["mcp__post_for_me_api__execute"]
+}
+```
+
+Say where it goes (`~/.claude/settings.json`), that it takes effect in a new session
+(not the current one), and the cost: it covers the whole tool, reads and writes alike,
+so publishing loses this automatic brake — the confirmation gate above becomes the only
+check left. Claude cannot add this line itself; the same classifier denies self-editing
+permissions, correctly. Hand the exact line and let the person paste it.
 
 ### Building the post
 
