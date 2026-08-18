@@ -32,9 +32,13 @@ When the user brings an existing carousel to convert to another platform or size
 
 ## Preset Resolution
 
-Before planning content, ask which brand the carousel is for, unless the user already said so in their request:
+Before asking anything, list `references/*-preset.md`. That listing is the only source of truth for which brands exist — never answer "which brands are there" or "are there two presets" from memory, from filenames seen elsewhere (asset names, unrelated skills, prior conversations), or from a guess. If the user's request already names a brand, match it against that listing instead of asking.
+
+Only if the listing does not resolve it, ask which brand the carousel is for:
 
 `¿Para qué marca es este carrusel?`
+
+**Never offer two names as if they were two separate options unless each has its own distinct file in that listing.** A preset's opening line may name several aliases for the same one file (see `la-casa-preset.md`: "La Casa de Aurelio, Agencia Aurelio, Aurelio" all resolve to one preset) — those are one brand, not a choice between brands. Presenting aliases of the same preset as a multi-choice question invents a distinction that is not in the file and has to be walked back later.
 
 Then resolve the preset in this order — **never start the interview without checking first**:
 
