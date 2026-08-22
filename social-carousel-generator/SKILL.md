@@ -13,12 +13,12 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 
 1. Resolve the preset, language, and CTA mode. Size is fixed and never asked (see Format, length and density).
    Completion criterion: the active preset, language, footer behavior, and CTA behavior are explicit, and the preset carries no unfilled placeholder in any section this carousel will use.
-2. Extract the source into shareable angles.
-   Completion criterion: source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content.
+2. Understand the source, then extract it into shareable angles.
+   Completion criterion: source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content, and the `Lectura` — the source re-told in ordinary language (see *Understanding the topic before writing it*) — is written before any hook or slide copy.
 3. Recommend the carousel split, present two hook options per carousel, and ask for confirmation.
    Completion criterion: the user has confirmed, reduced, or changed the number of carousels, and picked or edited a hook for each one, before any slide is drafted.
 4. Draft the slides and get the copy approved.
-   Completion criterion: each carousel has as many content slides as its material supports and no more than 9, each slide has one job and stays inside the density budget below, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
+   Completion criterion: each carousel has as many content slides as its material supports and no more than 9, each slide has one job, each slide has its component declared (see *Copy Approval Gate*), each slide uses the density budget below rather than hugging its floor, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
    Completion criterion: the delivery folder (`<tema-en-kebab-case>`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
 6. Run visual QA from contact sheets.
@@ -111,6 +111,55 @@ For YouTube video links:
 
 For source material, extract one to three shareable angles. Do not summarize the whole document unless the user asks. The carousel should feel useful, not like a dictionary entry.
 
+## Understanding the topic before writing it
+
+A carousel is one person explaining something to someone who was not there. That only
+works if the explaining happened first — in full sentences, out of the source's own words,
+before a single line was cut to fit a slide.
+
+So before drafting anything, hook included, re-tell the source in `carousel-brief.md` under
+`Lectura`: what it says and what it changes, in ordinary language, addressed to someone who
+has not read it and does not work in the field. No character budget, no headline voice, no
+slide constraints. Prose.
+
+This is a comprehension step, not a writing step. What it produces is not copy — it is the
+proof that the topic was understood well enough to be told at all. Every line downstream is
+cut out of it.
+
+### When the reading is finished
+
+- **It does not lean on the source's vocabulary.** Re-telling something in the words it
+  arrived in is repeating, not understanding. If a sentence stops working once the source's
+  terms are taken out of it, the topic is not understood yet.
+- **Someone outside the subject follows it end to end.** Not a lighter version with the
+  point removed: the same point, in words that do not require the field.
+- **It says what changes, not what the source contains.** A re-telling that ends where the
+  source ends is a summary, and a summary leaves the reader with nothing.
+- **It survives being said out loud.** If it cannot be spoken to a person without
+  stumbling, it is not ready to be cut into a hook.
+
+### What it is not
+
+**It has no fixed shape, and nothing here prescribes one.** The reading of a study, of a
+product launch, of an argument, of a process and of a personal account look nothing alike.
+A source with no figures in it has a reading like any other. Whatever shape it takes comes
+from the source, never from how the last one went — the only constant is the demand:
+understood first, then told.
+
+Nor is it a simplification pass. Simplifying removes; this translates. The difficult part
+of a topic stays in. What changes is that it stops being said in the source's words.
+
+### The test
+
+**If the clearest sentence about this carousel ends up in conversation instead of on a
+slide, that is the defect** — not a lucky turn of phrase. It means the topic got understood
+after the drafting instead of before it. When you catch it, stop, write the reading, and
+cut the copy again from it.
+
+Run the same test at delivery: read the finished carousel and the conversation side by
+side. Anything said in the conversation that is clearer than what is on the slides belongs
+on a slide.
+
 ## Adaptation Mode (re-platform)
 
 Use this mode when the user provides an existing carousel — final PNGs or an editable package — and asks to adapt it to another platform or size. This mode replaces angle extraction, the series decision, and slide drafting; everything else (rendering, QA, delivery) applies unchanged.
@@ -180,10 +229,14 @@ Counted over all visible copy on the slide: kicker, headline, body, list items, 
 
 - **One idea per slide, never two.** If a slide's text reads like a paragraph, it does not belong there: split it across two slides or move it to the caption.
 - **Cover: 40 characters maximum per line**, counted separately for the headline and for the twist line. The limit is per line, not for the block — two lines do not fit in 40 characters, and the cover needs both.
-- **Final check:** if a slide is not understood in 2-3 seconds of reading, it is overloaded even when it sits inside the band.
+- **Use the range; do not park at its floor.** 120-220 is a working range, not a ceiling to hover safely under. Sitting near the bottom of it on every slide is not caution, it is how a carousel comes out with slides that are 40% empty canvas — and the fix for that is more content, which is exactly what the room between the floor and the ceiling was for.
+- **The upper bound is soft; the lower half is not a safe place to live.** A slide that lands somewhat over the top of the range and still reads cleanly is fine. The band exists to stop walls of text, not to be defended to the character. What decides it is the rendered slide, never the count.
+- **Final check:** if a slide is not understood in 2-3 seconds of reading, it is overloaded even when it sits inside the band. And the check runs the other way too: a slide read in half a second, with most of its canvas empty, is under-built even when the count says it fits.
 - **Reference carousels** (checklist, comparison, template) tolerate more density, because the goal is that people save them and come back, not that they read them at speed. Never assume it — the user declares it when confirming the split, and it is recorded in `manifest.json`.
 
 This budget is what governs while writing. The pixel bands in `scripts/render-and-audit.mjs` stay as the safety net that catches a slide which ends up a wall or a blank after rendering.
+
+**A character count is not a composition.** The budget measures how much someone reads; it says nothing about how much of the canvas is occupied. The same count is a full slide when it is carried by a chart, a set of cards or a list, and a near-empty one when it is four lines of prose. Treating the two as the same measure is what produces a carousel that passes the count and renders hollow.
 
 ## Slide Grammar
 
@@ -238,7 +291,9 @@ Recommendation: [which and why, one line]
 
 ### Quality criteria
 
-- Specific beats generic. A concrete number creates authority ("80.508 personas", "25,6%").
+- **A hook that catches and is not understood has failed.** Stopping the scroll is half the job; the other half is that the reader knows what was just claimed. Cut both lines out of the `Lectura` (see *Understanding the topic before writing it*). A hook assembled straight from the source — its figures, its findings, its vocabulary — comes out accurate and meaning nothing.
+- **The hook cannot depend on anything the reader does not already have.** Whatever it needs in order to be read the way it was meant, either the hook says it or the kicker does. A hook leaning on context the reader is missing does not read as incomplete — it reads as a different claim, and nothing signals that it was misread.
+- Specific beats generic. A concrete number creates authority ("80.508 personas", "25,6%"). But a figure the reader cannot attach a unit to is not specific, it is noise.
 - The two lines must create tension between them: contrast, contradiction, or a negated expectation ("La respuesta no fue...", "El estudio no dice X. Dice algo más útil...").
 - Techniques that work in this brand's published set: number + twist; expectation negation; contrast pairs (casa/trabajo, antes/después, modelo/método); direct challenge to the reader's current practice ("Tu empresa todavía la usa para escribir emails.").
 - Two valid flavors: broad/shareable vs operator/practical. Pick per the carousel's goal and say which in the rationale.
@@ -248,6 +303,10 @@ Recommendation: [which and why, one line]
 ## Copy Approval Gate
 
 Before building any HTML, show the user the complete copy of every slide as plain text — kicker, headline, body, labels, and any verdict line — numbered by slide. Wait for approval, edits, or replacements.
+
+**Every slide's component is declared here too, and this is the one that gets skipped.** For each slide, say what occupies it besides the text: a chart, a set of cards, a list, a table, a diagram, a mascot row — or nothing, deliberately. A slide whose component is never decided does not end up without one; it ends up with whatever the layout falls back to when nothing was chosen, and a carousel where that happens on most slides renders as a run of near-identical, half-empty frames. The symptom is unmistakable in the contact sheet and invisible in the copy, which is why it has to be settled here, in text, before anything is built.
+
+Deciding the component is also what makes the density budget reachable: prose spends the character budget without filling the canvas, while the same facts inside a component fill it and read faster. If a slide has nothing to put in a component, that is worth knowing at this gate — it usually means the slide is carrying less than it should.
 
 **The asset plan is part of this same gate.** For every slide, show which asset from the brand's bank goes on it and **which other bank assets could also work**, so the user chooses instead of discovering the agent's pick inside a rendered image:
 
