@@ -423,13 +423,22 @@ use, and every one of them still has to be read past when picking an asset.
 
 | What arrived | How it goes on the slide |
 |---|---|
-| PNG or SVG with a transparent background | Straight onto the field, no container. |
-| Anything opaque — JPG, PNG with a background, screenshot, photo, a published chart | Inside the safe-area width, with rounded corners. |
+| PNG or SVG with a transparent background | Straight onto the field, no container. It has no edge, so there is nothing to frame. |
+| Anything opaque — JPG, PNG with a background, screenshot, photo, a published chart | **Framed**: inside a container, inside the safe area. |
 
-An opaque image already carries its own background, so **it does not also need a card behind
-it** — a cream panel around a chart that is already on a light ground reads as two frames
-nested inside each other. Add a real container only when the image's own edge would read as a
-cut: a photo that bleeds, a screenshot with no margin of its own.
+That is the whole decision, and it is already made. **Do not offer variants of it.** Rendering
+the same image three ways and asking which one they like is not thoroughness — it re-opens a
+question that was settled and makes the person choose again. Frame it and show the slide.
+
+The frame is a real container, not just rounded corners: a dark panel with a thin border and a
+little padding, with the image inside it. Opaque artwork usually carries a light ground of its
+own, and without a container that pale rectangle sits on the field looking like it was dropped
+there. The container is what makes it read as a deliberate element.
+
+**Never bleed an opaque image to the canvas edge.** It breaks the side clearance every other
+element respects, and the extra width buys nothing: text baked into an image is unreadable at
+this canvas size either way (see below), so the pixels gained do not buy legibility — only a
+broken margin.
 
 Beyond that, the ordinary rules hold: inside the safe area, never under or over text, and it
 counts toward the slide's density like any other block.
