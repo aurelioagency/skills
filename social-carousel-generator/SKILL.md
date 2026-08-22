@@ -109,6 +109,8 @@ For YouTube video links:
 2. Treat the transcript as the source text. Capture key claims, numbers, and examples with enough context to quote them accurately.
 3. If the video has no transcript and no captions, ask the user for an alternative: key screenshots with on-screen text, their own notes, or a summary. Never reconstruct video content from memory or general knowledge of the topic or channel.
 
+**An image the user passes in — pasted into the chat or given as a path — is a slide asset, not just reference material.** Take it at face value: save it into the package's `assets/` and put it on a slide. A chart, a screenshot, a diagram, a photo, a logo, whatever it is. If it arrived in the chat and is not on disk, look for it (the downloads folder is the usual place) or ask for the path — never substitute something else for it. How it gets framed is in *Images the user supplies* under Visual Rules.
+
 For source material, extract one to three shareable angles. Do not summarize the whole document unless the user asks. The carousel should feel useful, not like a dictionary entry.
 
 ## Understanding the topic before writing it
@@ -384,9 +386,64 @@ After any change to a fixed asset or a shared layout, prove the rest did not mov
 
 Use supporting imagery on every carousel:
 
-- **Image files come only from the brand's asset bank** — read `references/asset-bank.md`. The bank is a folder of finished PNGs (local or a git repo) whose **fully descriptive filenames are the selection mechanism**: the agent reads the names, matches them against each slide's job, opens only the shortlisted candidate to confirm, and proposes the pairing at the copy gate. Nothing fits → the slide goes without an asset, and the user is told what would have served. Never pull images from outside the bank or generate them on the fly.
+- **Images the user supplies go on the slide as they are** — see *Images the user supplies* below. It is listed first because it outranks everything else in this section.
+- **Images the agent picks come only from the brand's asset bank** — read `references/asset-bank.md`. The bank is a folder of finished PNGs (local or a git repo) whose **fully descriptive filenames are the selection mechanism**: the agent reads the names, matches them against each slide's job, opens only the shortlisted candidate to confirm, and proposes the pairing at the copy gate. Nothing fits → the slide goes without an asset, and the user is told what would have served. Never pull images from outside the bank or generate them on the fly.
 - Diagrams, cards, charts, flow boards, visual metaphors, and icons built in HTML/CSS when they communicate better than an image — or always, for a brand with no bank.
 - Text overlays rendered in HTML/CSS, not baked into images.
+
+### Images the user supplies
+
+**An image the user hands over is used. That is the whole rule.** It arrives pasted into the
+chat or as a path on disk; either way it goes on the slide, framed per the table below. The
+asset-bank restriction in `references/asset-bank.md` governs images the *agent* chooses — it
+has never governed what the user brings, and it does not gate this.
+
+Save it into the package's `assets/` with a descriptive kebab-case filename and reference it
+from `slide-data.js`, the same as any other asset. It does not have to enter the brand's bank
+first.
+
+**Do not object to it, and do not offer to replace it.**
+
+- **Palette is not a reason.** A supplied image keeps its own colours — vendor blues, stock
+  greys, a screenshot's chrome. It will not match the brand's accents and that is fine. Do
+  not raise it, do not "harmonise" it, do not recolour it.
+- **Neither is branding inside the image.** A published chart carrying its author's logo or
+  wordmark is used with the logo. The preset's ban on logos and watermarks covers chrome the
+  *agent* would add to a slide, not the contents of an image the user chose to include.
+- **Never re-draw a chart the user supplied.** If they hand over the real chart, the real
+  chart is what ships.
+
+#### Framing
+
+| What arrived | How it goes on the slide |
+|---|---|
+| PNG or SVG with a transparent background | Straight onto the field, no container. |
+| Anything opaque — JPG, PNG with a background, screenshot, photo, a published chart | Inside the safe-area width, with rounded corners. |
+
+An opaque image already carries its own background, so **it does not also need a card behind
+it** — a cream panel around a chart that is already on a light ground reads as two frames
+nested inside each other. Add a real container only when the image's own edge would read as a
+cut: a photo that bleeds, a screenshot with no margin of its own.
+
+Beyond that, the ordinary rules hold: inside the safe area, never under or over text, and it
+counts toward the slide's density like any other block.
+
+#### The one thing still worth saying
+
+Text baked into an image cannot be measured or resized, so the typography floor cannot reach
+it and `render-and-audit.mjs` cannot see it — it reads the DOM, and an image is pixels.
+
+Say it **once**, as a fact, with the measured size, and move on:
+
+> *The axis labels in that chart land at ~10px on the final PNG; the floor for text the
+> reader must read is 40px. On a 1080px canvas no scaling fixes it — the image would have to
+> render about 4000px wide.*
+
+Then stop. **It is not a red issue, it does not block delivery, and it is not a reason to
+re-draw anything.** The distinction that actually matters, and the one to state if it helps:
+an image whose text the reader *must* read to follow the slide is doing work it cannot do,
+while an image that illustrates a claim the headline already makes is doing its job perfectly
+with unreadable labels. Which of the two it is is the user's call, not a rule.
 
 **Do not invent visual conventions.** The preset is the whole vocabulary: palette, type,
 components, CTA. Anything you introduce that is not in it — a colour that means "before", a
@@ -399,7 +456,9 @@ wants it, it goes into the preset and becomes a rule; otherwise the carousel wor
 what the preset already provides. Never establish one silently — a convention applied
 across four slides looks decided, and nobody will think to question it later.
 
-**Before drawing any chart or diagram, read `references/data-encoding.md`.** It covers what
+**A chart the source publishes is shown, not redrawn.** If the source ships the figure as an image and it matters to the carousel, that image is what goes on the slide. Rebuilding it in HTML is for when there is no published chart, or when the user asks for one. Redrawing a chart the user handed over is never right.
+
+**Before drawing a chart or diagram yourself, read `references/data-encoding.md`.** It covers what
 the automated QA cannot check: one metric per chart, one colour per series, labels naming
 what varies rather than what stays constant, no bar height where the source publishes no
 figure, a shared baseline, and the rule that a number belongs to exactly one slide. A

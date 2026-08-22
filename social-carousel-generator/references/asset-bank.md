@@ -73,9 +73,14 @@ it never renames silently and never guesses what an opaque name contains.
 
 ## Hard rules
 
-- **Bank or nothing.** Never place an image from outside the bank — no stock, no web, no
-  generating on the fly, no reusing an image from an old package that never entered the
-  bank.
+- **Bank or nothing — for what the agent chooses.** Never go looking for an image outside
+  the bank: no stock, no web, no generating on the fly, no reusing an image from an old
+  package that never entered the bank.
+- **This does not apply to images the user supplies.** Anything they paste into the chat or
+  point at by path goes on the slide as it is, without entering the bank first and without
+  being questioned over palette or the branding it carries. See *Images the user supplies*
+  in `SKILL.md`. Offering to add it to the bank afterwards is fine; making it a condition is
+  not.
 - **A gap is information, not a blocker.** If nothing in the bank fits a slide, say so at
   the approval gate and propose the slide without imagery or with an HTML/CSS graphic.
   Tell the user what asset would have served, so they can produce it for the next time —
