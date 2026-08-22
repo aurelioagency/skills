@@ -60,6 +60,17 @@ const verdict = s => s.verdict ? `<div class="verdict">${s.verdict}</div>` : '';
 const mascot  = s => s.mascot ? `<div class="mascot-row"><img class="mascot" src="${s.mascot}" alt=""></div>` : '';
 
 // Tres barras de acento, anchos decrecientes.
+// Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
+// elige ni se ofrece en variantes: transparente va directo sobre el campo, opaco va
+// enmarcado. `s.img` es la ruta dentro de assets/; `s.imgTransparent: true` marca el
+// PNG/SVG sin fondo.
+//
+// Un opaco a sangre NO es una opcion: rompe el margen lateral y el ancho extra no compra
+// legibilidad, porque el texto quemado es ilegible a este tamanio de lienzo igual.
+const userImg = s => !s.img ? '' : (s.imgTransparent
+  ? `<div class="ext-plain"><img src="${s.img}" alt=""></div>`
+  : `<div class="ext-card"><img src="${s.img}" alt=""></div>`);
+
 const BARS = `<div class="bars"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>`;
 
 // Checklist: items con marca de color.

@@ -460,3 +460,26 @@ h1 {
 
 /* ---------- CTA fija: asset + contador compuesto encima ---------- */
 .cta-base { position: absolute; inset: 0; width: 1080px; height: 1440px; display: block; }
+
+
+/* ---------------------------------------------------------------------------
+   IMAGEN DEL USUARIO — SKILL.md > Images the user supplies.
+   Dos casos y nada mas. Transparente: directo sobre el campo, no tiene borde
+   asi que no hay nada que enmarcar. Opaco: enmarcado, dentro del safe area.
+   El marco es contenedor real, no solo esquinas redondeadas — el arte opaco
+   trae fondo claro propio y sin contenedor ese rectangulo palido queda apoyado
+   sobre el campo como si se hubiera caido ahi.
+   Nunca a sangre: rompe el margen lateral y no compra legibilidad.
+   --------------------------------------------------------------------------- */
+.ext-plain { flex: 0 0 auto; width: 100%; }
+.ext-plain img { display: block; width: 100%; height: auto; }
+
+.ext-card {
+  flex: 0 0 auto;
+  width: 100%;
+  background: var(--panel);
+  border: 1.5px solid var(--panel-2);
+  border-radius: 18px;
+  padding: 16px;
+}
+.ext-card img { display: block; width: 100%; height: auto; border-radius: 10px; }

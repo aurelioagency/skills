@@ -443,6 +443,8 @@ broken margin.
 Beyond that, the ordinary rules hold: inside the safe area, never under or over text, and it
 counts toward the slide's density like any other block.
 
+**The component already exists**: `userImg(s)` in `assets/template/index.html`, with `.ext-plain` and `.ext-card` in the template stylesheet. Set `img` on the slide, plus `imgTransparent: true` when the file has no background, and it picks the right treatment. Do not rebuild it per carousel.
+
 #### The one thing still worth saying
 
 Text baked into an image cannot be measured or resized, so the typography floor cannot reach
