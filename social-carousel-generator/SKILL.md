@@ -399,8 +399,14 @@ asset-bank restriction in `references/asset-bank.md` governs images the *agent* 
 has never governed what the user brings, and it does not gate this.
 
 Save it into the package's `assets/` with a descriptive kebab-case filename and reference it
-from `slide-data.js`, the same as any other asset. It does not have to enter the brand's bank
-first.
+from `slide-data.js`, the same as any other asset.
+
+**It does not go into the brand's asset bank, and it is not offered to.** The bank holds
+reusable brand imagery — things that will serve some future carousel nobody has thought of
+yet. A chart from one article, a screenshot of one dashboard, a photo of one thing belongs to
+the carousel it arrived for and nowhere else. It lives in that package's `assets/` and that is
+its whole life. Putting one-off material in the bank fills it with files no later carousel can
+use, and every one of them still has to be read past when picking an asset.
 
 **Do not object to it, and do not offer to replace it.**
 
@@ -440,10 +446,24 @@ Say it **once**, as a fact, with the measured size, and move on:
 > render about 4000px wide.*
 
 Then stop. **It is not a red issue, it does not block delivery, and it is not a reason to
-re-draw anything.** The distinction that actually matters, and the one to state if it helps:
-an image whose text the reader *must* read to follow the slide is doing work it cannot do,
-while an image that illustrates a claim the headline already makes is doing its job perfectly
-with unreadable labels. Which of the two it is is the user's call, not a rule.
+re-draw anything.**
+
+#### The slide's text carries the point; the image shows it
+
+This is what makes the unreadable labels stop mattering, and it is a rule, not a judgement
+call. **Whatever the reader needs — the figure, who wins, what changed — goes in the slide's
+own copy, at full size.** The image then shows the shape of it: which bar is tallest, how far
+apart they are, what the trend does. The reader never has to decode the axis, because the
+answer was already given to them in type they can read.
+
+So a headline like `CODE QUALITY: 43.6% AGAINST 34.4%` over that chart works: the number is
+already delivered, and the chart backs it up at a glance. A headline like `LOOK AT THE
+DIFFERENCE` over the same chart does not, because it sends the reader into the image to find
+out what the difference is — and that is where the 10px labels live.
+
+Applied at the copy gate, this is one question per image: *if the reader could not see this
+picture at all, does the slide still say what it needs to say?* Yes → the image is doing its
+job. No → move the missing piece into the headline or the body. Never into the image.
 
 **Do not invent visual conventions.** The preset is the whole vocabulary: palette, type,
 components, CTA. Anything you introduce that is not in it — a colour that means "before", a

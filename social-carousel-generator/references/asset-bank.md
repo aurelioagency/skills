@@ -79,8 +79,12 @@ it never renames silently and never guesses what an opaque name contains.
 - **This does not apply to images the user supplies.** Anything they paste into the chat or
   point at by path goes on the slide as it is, without entering the bank first and without
   being questioned over palette or the branding it carries. See *Images the user supplies*
-  in `SKILL.md`. Offering to add it to the bank afterwards is fine; making it a condition is
-  not.
+  in `SKILL.md`.
+- **One-off material never enters the bank.** A chart from one article, a screenshot of one
+  dashboard, a photo of one thing: it belongs to the carousel it arrived for, lives in that
+  package's `assets/`, and stays there. The bank is for imagery that will serve carousels
+  nobody has planned yet — filling it with single-use files means every future pick has to
+  read past them. Do not add it, and do not offer to.
 - **A gap is information, not a blocker.** If nothing in the bank fits a slide, say so at
   the approval gate and propose the slide without imagery or with an HTML/CSS graphic.
   Tell the user what asset would have served, so they can produce it for the next time —
