@@ -1,0 +1,4 @@
+interface:
+  display_name: "KIE.ai MiniMax H3"
+  short_description: "Short visual-effect clips (4-15s) with MiniMax H3 on KIE.ai, with a cost gate and automatic verification"
+  default_prompt: "Use $kieai-minimax-h3 to build a short visual effect clip with MiniMax H3 on KIE.ai: help me pick the technique and the mode, write the prompt, show me the credit cost before spending anything, and verify the result."
