@@ -19,6 +19,47 @@ Create:
 - `carousel-brief.md`: source, angle decisions, slide plan, caveats.
 - `caption.txt` inside the delivery folder: the caption, plain text, nothing else in the file.
 
+## Available rendering tools
+
+Hand-drawn SVG/CSS stays the default for illustrative shapes (no real numbers behind them) and
+for anything already covered by an existing component in `styles.css`. These are the tools
+allowed **in addition**, for the cases below — never installed via `npm`, never a build step,
+just a file dropped in the package or markup pasted inline, the same way the brand's fonts and
+CTA assets already work.
+
+**Charts with real, plotted data — `d3-shape` + `d3-scale`.** Use these two modules only (not
+full D3) when a slide plots real numbers along a line, curve, or scale: they compute the pixel
+math (`d3.scaleLinear`, `d3.scaleLog`) and the curve interpolation (`d3.line().curve(d3.curveCatmullRom)`
+or `d3.curveNatural`) instead of hand-picked bezier control points, which is where manual charts
+go wrong (a curve that looks "off," an axis that doesn't line up with its ticks). Vendor the
+built file locally — `d3-shape` and `d3-scale` together are a few KB minified — into
+`<package>/assets/vendor/d3-shape-scale.min.js` and load it with a plain `<script>` tag; do not
+fetch it from a CDN at render time, for the same reason fonts are never loaded remotely (a
+render has to be identical on any machine, offline included). D3 outputs SVG, so it drops
+straight into the existing `.chart`/`.diagram` container and the screenshot pipeline sees it the
+same as any other inline SVG — no animation, no timing to wait on.
+
+**Do not reach for `Chart.js` for slides that get screenshotted.** It draws to `<canvas>`, and by
+default animates the draw-in; a screenshot taken before that animation settles captures a
+half-drawn chart, so every use requires disabling animation and confirming the canvas painted
+before Playwright captures the frame. If a request specifically needs `Chart.js` (an interactive
+preview outside this pipeline, for instance), it is available the same way — vendored locally,
+no CDN — but it is not the default reach for a static PNG export the way `d3-shape`/`d3-scale`
+is.
+
+**Static icons — Lucide or Tabler, fetched and inlined per slide.** Neither needs installing.
+Open the icon set's own site (lucide.dev, tabler.io/icons), find the icon that matches the
+slide's job, copy its raw `<svg>` markup, and paste it inline in that slide's HTML — the same
+way the cover's fan-out graphic or the background contours are inline SVG already. Set
+`stroke="currentColor"` (both sets ship stroke-based icons) and drive the colour from CSS
+(`color: var(--terracotta)` on the wrapping element) so it follows the slide's accent instead of
+carrying a hardcoded colour. **This is not the asset bank** — `references/asset-bank.md` governs
+the agent's own choice of *raster images*; a vector icon fetched live for one slide is picked in
+context, used once, and never saved to a brand folder. If a brand's preset wants a fixed
+stroke-width or corner style for consistency across its carousels, that preference lives in the
+brand's `preset.md`; which icon set is available at all is a skill-wide capability, not a brand
+decision.
+
 ## Rendering
 
 Start a local server from the package folder:

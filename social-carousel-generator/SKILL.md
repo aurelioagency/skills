@@ -389,6 +389,8 @@ Use supporting imagery on every carousel:
 - **Images the user supplies go on the slide as they are** — see *Images the user supplies* below. It is listed first because it outranks everything else in this section.
 - **Images the agent picks come only from the brand's asset bank** — read `references/asset-bank.md`. The bank is a folder of finished PNGs (local or a git repo) whose **fully descriptive filenames are the selection mechanism**: the agent reads the names, matches them against each slide's job, opens only the shortlisted candidate to confirm, and proposes the pairing at the copy gate. Nothing fits → the slide goes without an asset, and the user is told what would have served. Never pull images from outside the bank or generate them on the fly.
 - Diagrams, cards, charts, flow boards, visual metaphors, and icons built in HTML/CSS when they communicate better than an image — or always, for a brand with no bank.
+- **Static icons may be sourced live from an open icon set** (Lucide, Tabler) instead of drawn in CSS, when a slide's job calls for one — see *Available rendering tools* in `references/html-rendering.md`. This is not the asset bank: nothing gets saved to a brand folder, the icon is fetched and inlined per slide, on the spot.
+- **A real-data line, curve, or scaled chart may use `d3-shape`/`d3-scale`** instead of hand-picked bezier points — see the same section. Reach for it only when there are real numbers to plot; a purely illustrative shape (no data) stays hand-drawn SVG/CSS.
 - Text overlays rendered in HTML/CSS, not baked into images.
 
 ### Images the user supplies
