@@ -45,6 +45,22 @@ If they do not, ask — and stop at three questions, not ten:
 - **What should it feel like?** Then offer 2–4 techniques from the catalogue by name, each with its
   eyecannndy link, and say what each one would look like in their case.
 
+**Always show real examples, never just the family.** Naming a technique is not an answer — the user
+cannot picture it. Run the bundled index:
+
+```bash
+node scripts/find-reference.mjs phone portal
+node scripts/find-reference.mjs --tech object-portal --limit 5
+```
+
+It searches 6,399 catalogued clips by tag, title and technique, and returns each clip's **GIF URL —
+that is the effect itself**, plus its techniques and tags. Give the user 2–3 of those links.
+
+Two mistakes to avoid, both made before: do not hand over the clip's "original source" link (the
+full music video on YouTube or Vimeo) as if it were the effect — it is not, and those links go
+stale. And do not point at a technique page hoping the user will find the right clip in a grid of
+300; find the specific clips yourself.
+
 Offer techniques flagged **works** first. If they want one flagged **works with a rule**, say which
 clause it needs. If they want one flagged **does not work**, say so plainly and offer the closest
 thing that does, or the post-production route.

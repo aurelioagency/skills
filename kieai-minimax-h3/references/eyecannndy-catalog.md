@@ -7,6 +7,15 @@ bundled cache — it works in Claude Code and Codex alike, with no browser.
 Use the technique name **verbatim** in the prompt. The model recognises these names; describing the
 movement from scratch works worse.
 
+**This file names the techniques; it does not show them.** To show someone what a technique actually
+looks like, search the clip index — 6,399 catalogued clips with their tags, techniques and the GIF
+that *is* the effect:
+
+```bash
+node scripts/find-reference.mjs phone portal
+node scripts/find-reference.mjs --tech object-portal --limit 5
+```
+
 ## The three flags
 
 - **works** — write the name, it comes out

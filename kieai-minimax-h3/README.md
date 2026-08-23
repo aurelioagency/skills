@@ -10,6 +10,11 @@ What it does:
   Don't? Three questions — what it's for, whether it gets spliced into another video, what it should
   feel like — and then it offers techniques by name from a bundled
   [eyecannndy.com](https://eyecannndy.com) catalogue, with the link to each one.
+- **Shows you real clips, not just technique names.** It ships an index of **6,399 catalogued clips**
+  with their tags, techniques and year, searchable offline — `find-reference.mjs phone portal`
+  returns the GIF of each matching effect, which is the only permalink Eyecandy has for a clip. The
+  site 403s every programmatic request, so this index cannot be fetched on the fly; that is exactly
+  why it is bundled.
 - **Picks the right mode.** image-to-video (exact first and last frame, the only one that splices
   cleanly), reference-to-video (up to 9 images and 3 videos, no frame control), or text-to-video.
 - **Writes the prompt with the rules that this model needs** — the framing clause that stops it from
@@ -90,6 +95,14 @@ node scripts/kie.mjs create --job <dir> --yes     # submit (refuses without --ye
 node scripts/kie.mjs poll --job <dir>             # wait, then download the MP4
 node scripts/kie.mjs verify --job <dir>           # contact sheet + first/last frame
 node scripts/kie.mjs run --job <dir> --yes        # the whole pipeline
+```
+
+Plus the reference finder, which needs no key and no network:
+
+```bash
+node scripts/find-reference.mjs phone portal      # clips matching every term
+node scripts/find-reference.mjs --any phone mirror
+node scripts/find-reference.mjs --tech object-portal --limit 5
 ```
 
 A job folder looks like this:
