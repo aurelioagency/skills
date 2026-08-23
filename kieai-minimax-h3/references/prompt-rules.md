@@ -3,7 +3,7 @@
 Everything in this file was learned by burning credits on MiniMax H3, not by reading marketing
 copy. Treat it as the default. Deviating from it costs money.
 
-## The nine findings
+## The findings
 
 ### 1. The opening framing is the ceiling
 
@@ -90,7 +90,26 @@ traps that follow from that:
 When no technique names what the subject is doing — and often none does — describe the action
 plainly and keep whichever real technique names still apply (`motion blur`, `slow motion`).
 
-### 9. Nothing is reproducible
+### 9. Whatever the reference image does not show, the model invents
+
+The framing rule stops it inventing *scenery*. It does not stop it inventing parts of the
+**subject** that the input frame never showed. A man photographed from the front, turned 360° in his
+chair, came back with a hair bun on the back of his head that does not exist — the model never saw
+his nape, so it made one up.
+
+Anything the camera will eventually reveal but the source image does not contain — the back of a
+head, the far side of an object, what is behind a person — has to be described, or it will be
+invented. Add an IDENTITY block naming the traits that must survive the reveal:
+
+```text
+IDENTITY - It is the same person throughout the whole rotation: same hair, same beard,
+same grey hoodie, same white earphones.
+```
+
+That block did hold the face and clothing across a full turn. It said nothing about the nape, and
+that is exactly where the invention landed.
+
+### 10. Nothing is reproducible
 
 There is no seed. Same prompt, different video, every time. Two consequences:
 

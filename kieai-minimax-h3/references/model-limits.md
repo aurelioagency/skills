@@ -93,3 +93,13 @@ unless the user has approved 2K for that specific run.
 
 The consequence is structural, not bad luck: **a 768P take that came out right cannot be
 reproduced at 2K.** A 2K pass is a new roll of the dice. Say this to the user before they pay for it.
+
+## Measured, not documented
+
+- **`duration` is a request, not a contract.** Two runs at `duration: 4` both returned **4.458s**
+  (107 frames at 24 fps), not 4.000s. Budget for the overshoot: if the clip has to hit an exact
+  length for a splice, trim it in post rather than asking for a shorter duration.
+- **768P output is 1344x768** for a 16:9 input image.
+- **Generation time varies widely.** Two 4-second 768P clips, same account, minutes apart: one
+  finished in 41s, the other spent 3 minutes queued before generating and took 226s in total. The
+  poll timeout defaults to 20 minutes for that reason.
