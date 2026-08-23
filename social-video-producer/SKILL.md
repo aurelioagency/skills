@@ -1,6 +1,6 @@
 ---
 name: social-video-producer
-description: Short vertical social video producer (TikTok/Reels/Shorts, 1080x1920). Use for modular videos built from a script with ElevenLabs audio and word-level captions, avatar/lip-sync openings or outros via HeyGen, HyperFrames animated middle sections, segment rendering and assembly, assembling a video from clips the user already filmed, burning subtitles into a video that already exists, background music sourcing, paid provider asset freezing, direct-audio avatar runs, source-video voice conversion, or verification and repair of a bad segment, caption, or render. Do not use for Floyo/Wan Animate.
+description: Short vertical social video producer (TikTok/Reels/Shorts, 1080x1920). Use for modular videos built from a script with ElevenLabs audio and word-level captions, avatar/lip-sync openings or outros via HeyGen, HyperFrames animated middle sections, segment rendering and assembly, assembling a video from clips the user already filmed, burning subtitles into a video that already exists, adding motion-graphics overlays (kinetic text cards, step/roadmap checklists, punch-in emphasis text) generated from what a video actually says, background music sourcing, paid provider asset freezing, direct-audio avatar runs, source-video voice conversion, or verification and repair of a bad segment, caption, or render. Do not use for Floyo/Wan Animate.
 ---
 
 # Social Video Producer
@@ -22,6 +22,7 @@ Completion means the run has final MP4 output, segment outputs, audio, transcrip
 - Use **script-to-video modular** when the user provides a script, skill file, multiple hooks/openings, a shared animated middle, or a shared outro. This is the default for new edited videos.
 - Use **direct HeyGen avatar** when the user provides a final MP3/M4A/WAV and wants one avatar/lip-sync output.
 - Use **burn-in captions** when the user hands over a video that is already shot and edited and only wants subtitles on it. There is no script, no TTS, and no paid provider work in this branch.
+- Use **contextual overlays** when the user hands over a video that is already shot and wants motion-graphics overlays (kinetic text cards, step/roadmap checklists, punch-in emphasis text) generated from what is actually said in it — not subtitles, not a fixed template, not invented brand logos. There is no script, no TTS, and no paid provider work in this branch either.
 - Use **source-video conversion** only when the source video's audio must first be converted before HeyGen.
 - Use **repair** when the user reports bad pronunciation, wrong captions, a frozen rendered frame, desync, overflow, wrong title text, or a bad segment. Repair the smallest segment possible.
 
@@ -560,6 +561,73 @@ Then extract frames from the FINAL file at several timestamps — at minimum one
 - **Escape the Windows drive letter inside a filter argument** (`C\:/path/file.ass`), or ffmpeg reads the colon as the next filter option.
 - Always pass `--fonts-dir`, so the burn uses the frozen project font rather than whatever the machine happens to have installed.
 
+## Contextual Overlays Branch
+
+Use this branch when the video already exists and the ask is "add motion graphics / overlays" without a script, TTS, or paid provider. The deliverable is a set of animated kinetic-text elements (cards, step checklists, punch-in emphasis) composited onto the untouched source video in one final encode.
+
+**What this branch is not:** it is not a fixed template and it is not literally reusable between videos — the overlay *content* (what each card says, when, in what order) is bespoke to this one video's transcript and must be designed fresh every time. What is reusable is the *mechanism*: the animation template (`assets/overlay-template.html`) and the two driver scripts (`capture-overlay-frames.mjs`, `composite-overlays.mjs`). Never propose "saving this as a reusable overlay set" — propose using the mechanism again on the next video's own content.
+
+**Hard rule — no invented logos or brand icons.** Do not draw stand-in shapes for WhatsApp/Meta/n8n/any third-party product as if they were that product's logo; a generic icon that isn't the real mark reads as broken, not branded, and at overlay size it usually isn't legible either. Default to the kinetic-text-card language (see below) for every idea — a labelled panel says "n8n" better than an icon trying and failing to look like the n8n mark.
+
+1. Set up the project and transcribe.
+
+```powershell
+node "<skill-dir>\scripts\init-project.mjs" --project "<project>" --slug "<slug>"
+node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>"
+node "<skill-dir>\scripts\transcribe-media.mjs" --input "raws\<video>.mp4" --out-audio "assets\voice\<slug>.wav" --out-transcript "assets\voice\<slug>.transcript.json" --language <es-or-en-or-whatever-was-detected>
+```
+
+Detect the spoken language before transcribing rather than assuming `es` — run a quick language-detect pass (`faster_whisper` with `language=None`) on the extracted audio first if it isn't obviously known, since the default second-pass language argument changes transcription quality.
+
+2. **Transcript Approval Gate (blocking).** Same rule as every other branch: show the full transcript, flag low-confidence/suspicious words, wait for explicit approval before designing anything.
+
+3. Read the frames — don't guess overlay placement. Extract 2-3 real frames from the moments you intend to cover and look at where the face, hands, and background clutter actually sit before picking a zone. A close talking-head shot usually leaves a clean band low-left and a clean top band above the hair; a wide shot is different every time.
+
+4. Analyze content structure and design the overlay set. Read the transcript as a sequence of beats (hook, problem, credibility, promise, steps, CTA — whatever this video actually has) and design one overlay per beat that *quotes or tightly paraphrases* what is said at that timestamp. Default building blocks:
+   - **textcard** — a lower-third-style panel with 1-2 lines of kinetic word-by-word reveal (stagger + slide + ease-out-back), an accent-colour bar that draws in, and a box pop-in. This is the proven, well-received default — reach for it first.
+   - **steplist** — a row of chip panels that tick in one at a time (checkmark path-draw) against a shared timeline; use it for genuinely sequential/numbered content (steps, a short numbered list), never for content that a textcard already says just as well.
+   - **punch** — a single big centered line for a closing beat or a one-word emphasis moment.
+
+   Do not run two items in the same screen zone at overlapping times — a textcard and a steplist both anchored bottom-center at the same timestamp will visually collide. `composite-overlays.mjs` checks this and refuses to render on a collision; treat that check as a design bug to fix, not an obstacle to work around.
+
+### Creative Proposal Gate (blocking, requires the user)
+
+Before capturing any frames, present the full beat breakdown: each overlay's id, type, exact on-screen text, timestamp window, and accent colour/zone. This is the direct analogue of the script-to-video Creative Proposal Gate — get it approved before spending a render cycle, because a rejected overlay design after capture costs the full capture-and-composite cycle to fix, not just an edit.
+
+5. Write `manifests/overlays.json` once the beat breakdown is approved:
+
+```json
+{
+  "width": 1920, "height": 1080,
+  "items": [
+    { "id": "problem1", "type": "textcard", "start": 8.7, "end": 15.9,
+      "position": "bottom-left", "accent": "#ff8a6a",
+      "lines": [["El", "problema:"], ["parches", "o", "conexiones", "inestables."]],
+      "accentWords": ["inestables."] },
+    { "id": "roadmap", "type": "steplist", "start": 33.7, "duration": 8.8,
+      "position": "bottom-center", "accent": "#30D5FF",
+      "steps": [{ "label": "Configurar Meta", "tickAt": 0.0 },
+                { "label": "Token permanente", "tickAt": 3.3 },
+                { "label": "Conexión estable", "tickAt": 5.3 }] },
+    { "id": "punch", "type": "punch", "start": 42.8, "end": 46.16,
+      "accent": "#30D5FF", "html": "Vamos <span class=\"accent\">con ello.</span>" }
+  ]
+}
+```
+
+`position` for `textcard`/`steplist` is one of `bottom-left`, `bottom-center`, `top-left`, `top-center`, `center`. `textcard` and `punch` need `start`+`end`; `steplist` needs `start`+`duration` (its own exit adds ~0.3s after that).
+
+6. Capture the animation frames, then composite in one encode pass:
+
+```powershell
+node "<skill-dir>\scripts\capture-overlay-frames.mjs" --project "<project>"
+node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input "raws\<video>.mp4" --output "renders\final\<slug>-overlays.mp4"
+```
+
+`capture-overlay-frames.mjs` renders each item's animation (word-stagger entrance, hold, exit; or continuous tick-in frames for a steplist) as transparent PNGs under `renders\overlay-frames\<item-id>\` and writes `renders\overlay-frames\capture-manifest.json`. `composite-overlays.mjs` reads that manifest plus `overlays.json`, builds the ffmpeg `filter_complex` for every item in a single pass (each item concatenated from its own enter/hold/exit or continuous/exit pieces, time-shifted to its `start`, then overlaid in sequence), and encodes once. Re-running `composite-overlays.mjs` alone (without re-capturing) is enough after a pure timing/color JSON edit; re-run `capture-overlay-frames.mjs` whenever the text content itself changes.
+
+7. Verify like every other branch: check final resolution/duration/streams, extract frames at each overlay's entrance and mid-hold, and confirm text matches the approved transcript exactly (no accidental respelling, no leaked internal labels).
+
 ## Caption Contract
 
 - Captions must follow actual spoken audio, not the earlier script.
@@ -635,6 +703,8 @@ node "<skill-dir>\scripts\transcribe-media.mjs" --input "<project>\raws\source.m
 node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\assets\voice\source.transcript.json" --output "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --size 104 --accent "#30D5FF"
 node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --output "<project>\manifests\audits\caption-width.json"
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.mp4" --ass "<project>\renders\source.ass" --output "<project>\renders\final\source-subs.mp4" --fonts-dir "<project>\assets\fonts"
+node "<skill-dir>\scripts\capture-overlay-frames.mjs" --project "<project>"
+node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input "<project>\raws\source.mp4" --output "<project>\renders\final\source-overlays.mp4"
 ```
 
 - `init-project.mjs`: create the canonical one-folder project layout and starter manifests without overwriting existing files.
@@ -658,6 +728,8 @@ node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.m
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.
 - `burn-in-captions.mjs`: burn an `.ass` file into a video in a single encode pass, copying the original audio.
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
+- `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
+- `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
 
 If an existing project still has older local tools such as `render-local.cjs`, `snapshot-qa.cjs`, or `check-overflow.cjs`, those may be used for that project, but migrate repeated behavior back into the bundled scripts.
 
