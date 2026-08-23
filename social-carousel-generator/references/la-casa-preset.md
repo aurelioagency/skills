@@ -91,6 +91,23 @@ Archivo Black, Roboto Mono, and Inter are on Google Fonts; Georgia ships with Wi
 - Footer on content slides: **Inter** bold `aurelioagency.com` left · page-counter pill center (Inter bold, fill `#252422`, fully rounded `border-radius: 999px`) · `← Desliza` right, in the same Inter bold, size and colour as the brand line.
 - Cream contrast cards (`#EDE8DE`, dark text, sage border) for outcomes/results, often paired against dark panel cards (`#191716`) for the "before"/technical side.
 
+### Icons (Lucide/Tabler)
+
+Fetched live per slide, per `references/html-rendering.md` in the skill — never saved to the
+asset bank. This entry fixes the one thing that varies between the two sets and would drift
+carousel to carousel if left to judgment each time.
+
+- **`stroke-width: 1.5`** on every icon, overriding whatever the source set ships (Lucide and
+  Tabler default to `2`). `1.5` matches the weight already used everywhere else in the brand's
+  chrome — panel borders (`1.5px`) and the contour field (`1.6px`) — so an icon reads as part of
+  the same system instead of a heavier, cartoonish element dropped on top. Never mix weights
+  within one carousel.
+- `stroke="currentColor"`, `fill="none"`, colour driven by the wrapping element's `color` —
+  always one of the four canonical accents, never a hardcoded hex.
+- Size: `40-56px` square depending on how much weight the slide needs it to carry, same floor
+  logic as everything else on the canvas — small enough not to compete with the headline, never
+  so small it reads as a stray mark.
+
 ### Never on a slide
 
 This list is closed on purpose. If an element is not in the components above, it does not go on the canvas — including when an older published carousel shows it.
