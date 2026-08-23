@@ -75,6 +75,21 @@ The bottle stays fixed on the table for the entire clip and never moves.
 them. Use the exact name from [`eyecannndy-catalog.md`](eyecannndy-catalog.md) instead of describing
 the movement from scratch, then add the timing around it.
 
+**But check what the name actually means before pasting it, and never paste a tag.** The Eyecandy
+vocabulary is built almost entirely around *what the camera does*, not what the subject does. Two
+traps that follow from that:
+
+- A technique whose reference clip *looks* right can still name the wrong thing. `lazy susan` is not
+  "something rotates" — it is a camera at the centre of a table panning to each person. Put it in a
+  prompt for "a man swivels in his chair while the camera stays locked" and you have just ordered
+  the camera to rotate, against your own CAMERA block.
+- **Tags are not techniques.** `spin`, `phone`, `portal` are how the curators labelled the clip's
+  content; they are search keys for `find-reference.mjs`, not vocabulary the model knows. Only the
+  names in the catalogue tables go into a prompt.
+
+When no technique names what the subject is doing — and often none does — describe the action
+plainly and keep whichever real technique names still apply (`motion blur`, `slow motion`).
+
 ### 9. Nothing is reproducible
 
 There is no seed. Same prompt, different video, every time. Two consequences:
