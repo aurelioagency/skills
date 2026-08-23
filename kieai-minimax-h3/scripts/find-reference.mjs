@@ -18,7 +18,10 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const INDEX = path.join(HERE, '..', 'references', 'eyecannndy-clips.tsv');
-const ASSET = 'https://asset.eyecannndy.com/media/CACHE/images/clip/';
+// The full-size asset, not the grid thumbnail. The site lazy-loads: `src` points at a
+// downscaled copy under /media/CACHE/images/clip/, and the real file is in `data-src`
+// under /media/clip/. Storing the `src` gives everyone a postage stamp.
+const ASSET = 'https://asset.eyecannndy.com/media/clip/';
 const TECHNIQUE = 'https://eyecannndy.com/technique/';
 
 function parseArgs(argv) {

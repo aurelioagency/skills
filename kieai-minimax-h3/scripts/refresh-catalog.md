@@ -19,7 +19,7 @@ Discovered by reading the site's htmx attributes, not documented anywhere.
 
 | What | Call | Notes |
 |---|---|---|
-| Clips of a technique | `GET /technique/<slug>` | Each `img[hx-get]` is one clip; the `hx-get` URL carries the clip id, the `src`/`data-src` is the GIF |
+| Clips of a technique | `GET /technique/<slug>` | Each `img[hx-get]` is one clip; the `hx-get` URL carries the clip id, and **`data-src`** is the real asset |
 | One clip's record | `GET /clip_info_g/<id>/?type=clip&board=&entry=&p_type=&p_id=&t_id=&q=` | Returns an HTML fragment: title, year, description, techniques, credits, original source, tags |
 | Search | `GET /search/?q=<term>` | Same grid shape as a technique page, capped at 100 results |
 
@@ -28,8 +28,13 @@ Two traps, both cost time when they were hit:
 - **The full parameter string matters.** `/clip_info_g/<id>/?type=technique` alone returns the whole
   page (65 KB of navigation) instead of the 7 KB fragment. An `HX-Request: true` header does not fix
   it. Use the query string exactly as above.
-- **There is no per-clip page.** `/clip/<id>/` and every variant 404s. The clip's GIF URL is the
+- **There is no per-clip page.** `/clip/<id>/` and every variant 404s. The clip's asset URL is the
   only permalink a clip has — so that is what the index stores and what gets shown to users.
+- **Take `data-src`, never `src`.** The grid lazy-loads: `src` is a downscaled copy under
+  `/media/CACHE/images/clip/…` and `data-src` is the real file under `/media/clip/…`, usually
+  `.webp`. The difference is not cosmetic — measured on the same clip, the thumbnail is 100×56 and
+  the real asset is 600×338. The first build of this index took `src` and shipped 6,399 postage
+  stamps.
 
 ## The procedure
 
