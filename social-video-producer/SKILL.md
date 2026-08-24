@@ -664,6 +664,42 @@ captions\<prefix>.captions.srt
 
 - If captions fail after an avatar video completes, keep the video and report the caption failure plus expected caption paths.
 
+## Post Description (Social Caption)
+
+Every finished video ships with a ready-to-publish post description in `<slug>-caption.txt` next to the final MP4 in `renders\final\`, plus pasted in the chat. Plain text, UTF-8, no markdown, no headings, nothing but the caption itself, ready to select-all and paste.
+
+**Caption template (Instagram / TikTok), La Casa de Aurelio:**
+
+```text
+Bienvenidos a la Casa de Aurelio!
+
+<2-4 lineas que resumen el gancho o insight principal del video, tono directo, sin relleno>
+
+De la teoría a la práctica: Aurelio Agency →
+https://www.aurelioagency.com/es
+
+Únete a la comunidad:
+https://www.skool.com/la-casa-de-aurelio-2061
+
+<4 hashtags dinamicos segun el tema> #LaCasaDeAurelio
+```
+
+Rules:
+
+- The greeting, the services paragraph links, and both URLs are **fixed**. Never reword, translate, shorten, or adapt them.
+- The only written block is the 2-4 line paragraph: it restates the video's strongest idea, hook, or figure — not a recap of every line spoken. No filler, no generic AI phrasing, no inflated claims. Natural rhythm for the language actually spoken in the video.
+- **Deduce the variant from what the video's outro actually says — never ask when the material already answers it.** If the outro asks the viewer to comment a word to receive something by DM (a skill, a template, a resource), insert a `Comentá <PALABRA> y te la mando por DM.` line right after the written paragraph, and make sure that exact word also appears written out in the paragraph itself. Otherwise, skip that line entirely — do not invent a comment CTA the video never asked for. Only ask the user if the outro itself leaves the intent ambiguous.
+- **Exactly 5 hashtags, always.** One fixed: `#LaCasaDeAurelio`, always last, as signature. The other four are dynamic, picked by the video's actual topic:
+  - Agentes / automatización de tareas → `#AIAgents #Agentic #Automatizacion #AIWorkflows`
+  - n8n / workflows → `#n8n #NoCode #WorkflowAutomation #Automatizacion`
+  - OpenAI / modelos puntuales → `#OpenAI #Codex #GPT #IA`
+  - Claude / Anthropic → `#Claude #Anthropic #IA #AIWorkflows`
+  - Productividad / negocio → `#Productividad #FutureOfWork #PYMES #IA`
+  - Desarrollo / código → `#DevTools #SoftwareEngineering #IA`
+  - Ninguna categoría encaja → construí los cuatro con palabras literales del video (nombres de herramientas, conceptos técnicos, el tema puntual tratado).
+- A hashtag off-topic subtracts more than it adds: don't reach for `#Claude`, `#IA`, `#Automatizacion` or `#AIWorkflows` as filler defaults when the video isn't actually about that — pick what the video is actually about.
+- Blank lines between blocks exactly as shown in the template.
+
 ## Repair Rules
 
 - Bad TTS pronunciation or wrong wording: fix `ttsText`, regenerate only that audio segment, transcribe it, update timing/captions, then re-render only the affected segment and final assemblies.
