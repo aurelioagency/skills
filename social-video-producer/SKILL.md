@@ -34,6 +34,8 @@ Hard branch rule: a script path is not a final audio file. For script-driven wor
 
 Keep each script/video job in one global project folder under the active user's documents folder, `<Documents>\videos\` (derive it from the current environment), unless the user gives another path. Never default to an absolute path from another user or machine.
 
+**The project slug must be descriptive of the video's actual topic, in kebab-case** — the same rule `social-carousel-generator` uses for its `<tema-en-kebab-case>` delivery folder. Never name the project after the source filename, a date, or any other non-descriptive label (`0824`, `video1`, `final2`, `clip`). Derive the slug from what the video is actually about — the hook, the product, or the main topic — once enough of the script or transcript is known to name it (for script-driven projects, right after parsing the script; for burn-in-captions or contextual-overlays projects, right after the Transcript Approval Gate, since the slug is not knowable before the transcript is read). If a project must be created before the topic is known, use a short placeholder and rename the folder plus every file inside it that carries the slug as soon as the topic is confirmed — never ship a delivery folder or final filename still named after a placeholder.
+
 ```text
 videos\<script-slug>\
   source\
