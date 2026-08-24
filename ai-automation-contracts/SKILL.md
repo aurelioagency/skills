@@ -1,5 +1,5 @@
 ---
-name: contratos-automatizaciones-ia
+name: ai-automation-contracts
 description: Genera contratos en derecho argentino para vender proyectos de automatización con IA — implementación llave en mano, mantenimiento con abono mensual y órdenes de trabajo puntuales — a partir de los datos del proyecto, y los entrega en Word listos para firmar. Usar SIEMPRE que el usuario mencione contrato, contrato de servicios, contrato de implementación, contrato de mantenimiento, orden de trabajo, anexo técnico, cláusulas, alcance contractual, propiedad intelectual de un desarrollo, garantía de un sistema entregado, o cuando cierre un proyecto con un cliente y necesite formalizarlo. Usar también cuando pregunte qué datos necesita pedirle al cliente antes de firmar, cuando quiera revisar o modificar una cláusula, o cuando describa un proyecto vendido y haya que documentarlo — aunque no diga la palabra "contrato".
 ---
 
