@@ -25,7 +25,7 @@ function usage() {
       [--video-width 1080] [--video-height 1920]
       [--margin-lr 120] [--margin-bottom 500]
       [--reveal chunk|word] [--max-words 2] [--gap-cut 0.35] [--hold 0.45]
-      [--accent-mode keyword|active]          which words get the accent colour (default keyword)
+      [--accent-mode keyword|active]          which words get the accent colour (default active)
       [--accent-terms "Fable,Haiku,Sonnet"]   accent-mode=keyword: which words get the accent colour
       [--corrections <corrections.json>]      [{ "at": 4.72, "from": "puedes", "to": "podés" }]
       [--python python]
@@ -34,11 +34,11 @@ reveal=chunk  the whole chunk enters at once, always centred, never reflows (def
 reveal=word   words appear one at a time; the chunk reserves its full width, so a
               lone first word renders off-centre. See Caption Reveal in the guidelines.
 
-accent-mode=keyword  only the words listed in --accent-terms ever turn accent colour (default)
-accent-mode=active   the whole chunk is visible at once (reveal=chunk) and the accent colour
-                      moves word to word in sync with the audio, then returns to primary —
+accent-mode=active   (default) the whole chunk is visible at once (reveal=chunk) and the accent
+                      colour moves word to word in sync with the audio, then returns to primary —
                       a karaoke-style highlight. Ignores --accent-terms. With reveal=word this
-                      is a no-op: word mode already colours the currently-spoken word.`);
+                      is a no-op: word mode already colours the currently-spoken word.
+accent-mode=keyword  only the words listed in --accent-terms ever turn accent colour.`);
 }
 
 function parseArgs(argv) {
@@ -163,7 +163,7 @@ function main() {
 
   if (reveal !== 'chunk' && reveal !== 'word') throw new Error(`--reveal must be chunk or word`);
 
-  const accentMode = args.accentMode || 'keyword';
+  const accentMode = args.accentMode || 'active';
   if (accentMode !== 'keyword' && accentMode !== 'active') throw new Error(`--accent-mode must be keyword or active`);
 
   const accentTerms = args.accentTerms
