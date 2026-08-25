@@ -1,0 +1,177 @@
+<meta charset="utf-8">
+<title>Carrusel — 04-plano-en-negativo</title>
+<link rel="stylesheet" href="styles.css">
+<script src="slide-data.js"></script>
+
+<div id="root"></div>
+
+<script>
+// 04-plano-en-negativo. Se renderiza de a una slide con ?slide=N; sin parametro
+// muestra todas apiladas.
+//
+// Las piezas de abajo son las que el template ya sabe dibujar. Cual va en cada slide lo
+// decide el material, y se propone en el gate de aprobacion de copy. Las reglas del
+// estilo y el listado completo de piezas estan en estilo.md.
+
+const VIDEO = new URLSearchParams(location.search).has('video');
+
+// Encabezado: numeracion + seccion a la izquierda, estado a la derecha.
+// El estado es la firma del template: un punto de color y una palabra.
+function tab(s, i, total) {
+  const n = String(i + 1).padStart(2, '0');
+  const t = String(total).padStart(2, '0');
+  const st = s.state
+    ? `<span class="state ${s.state.tone || ''}">● ${s.state.t}</span>`
+    : `<span>${s.tabRight || ''}</span>`;
+  return `<div class="tab"><span>${n}/${t} · ${s.tab}</span>${st}</div>`;
+}
+
+// Pie: fuente a la izquierda, firma a la derecha. La firma sale de slide-data.js:
+// no la escribas en duro aca, o el primer carrusel de otra marca sale con el pie
+// de esta. En el cierre la firma va grande.
+// ?video=1 no cambia este pie: no hay prompt de swipe en este template.
+function foot(s, big) {
+  return `
+  <div class="foot${big ? ' big' : ''}">
+    <span>${s.source}</span>
+    <span class="sign">${window.CAROUSEL.footerBrand}</span>
+  </div>`;
+}
+
+// GRAMATICA DE LA MARCA: titular + filete + bajada. El filete va SIEMPRE, es lo
+// que separa el titular del cuerpo en todo el template. Sin titular,
+// render-and-audit.mjs marca red issue (excepcion documentada: 'slide-grammar').
+function head(s, tight) {
+  return `
+    <div class="head${tight ? ' tight' : ''}">
+      <h2${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h2>
+      <div class="hr"></div>
+      ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
+    </div>`;
+}
+
+// Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
+// elige ni se ofrece en variantes: transparente va directo sobre el campo, opaco va
+// enmarcado. Un opaco a sangre NO es una opcion: rompe el margen del disenio.
+const userImg = s => !s.img ? '' : (s.imgTransparent
+  ? `<div class="ext-plain"><img src="${s.img}" alt=""></div>`
+  : `<div class="ext-card"><img src="${s.img}" alt=""></div>`);
+
+// ---------- Componentes ----------
+
+// Dos cifras enfrentadas con una flecha. El valor va escrito, no dibujado: la
+// magnitud la lee el lector del numero, no del tamanio.
+const duo = s => `
+  <div class="duo">
+    <div class="col">
+      <span class="lbl">${s.a.lbl}</span>
+      <span class="fig ${s.a.tone || ''}">${s.a.v}</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <span class="lbl">${s.b.lbl}</span>
+      <span class="fig ${s.b.tone || ''}">${s.b.v}</span>
+    </div>
+  </div>`;
+
+const chips = items => `
+  <div class="chips">
+    ${items.map(c => `<span class="chip ${c.tone || ''}">${c.t}</span>`).join('')}
+  </div>`;
+
+// Fichas apiladas con filete de acento a la izquierda. Tres es el numero que
+// entra sin apretar; cuatro ya obliga a bajar el cuerpo, que no es la salida.
+const stack = items => `
+  <div class="stack">
+    ${items.map(c => `
+      <div class="card ${c.tone || ''}">
+        <div class="lbl">${c.lbl}</div>
+        <div class="t">${c.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Barras verticales con linea de base compartida. `h` es el porcentaje del alto y
+// sale del dato medido. `pad` deja aire a la derecha para que dos barras no se
+// lean como un grafico de dos categorias sobre todo el ancho.
+const vbars = s => `
+  <div class="vbars diagram">
+    ${s.vbars.map(b => `
+      <div class="col ${b.on ? 'on' : ''}">
+        <span class="val">${b.val}</span>
+        <div class="bar" style="height:${b.h}%"></div>
+      </div>`).join('')}
+    ${s.vbarsPad === false ? '' : '<div class="pad"></div>'}
+  </div>`;
+
+const checks = items => `
+  <div class="checks">
+    ${items.map(t => `<div class="ck"><span class="mk">▪</span><span class="t">${t}</span></div>`).join('')}
+  </div>`;
+
+// ---------- Render ----------
+
+function render(s, i, total) {
+  let inner = '';
+
+  // Portada: titular de 112px, filete, bajada, y las dos cifras con sus chips.
+  // Es la unica slide con h1.
+  if (s.type === 'cover') {
+    inner = `
+      <div class="head">
+        <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
+        <div class="hr"></div>
+        <div class="lede">${s.lede}</div>
+      </div>
+      <div class="mid">
+        ${duo(s)}
+        ${chips(s.chips)}
+      </div>`;
+  }
+
+  if (s.type === 'stack') inner = `${head(s, true)}${stack(s.stack)}${userImg(s)}`;
+
+  if (s.type === 'bars') {
+    inner = `
+      ${head(s, true)}
+      <div class="mid start">
+        ${vbars(s)}
+        ${s.after ? `<div class="lede">${s.after}</div>` : ''}
+        ${s.punch ? `<div class="punch ${s.punchTone || ''}">${s.punch}</div>` : ''}
+      </div>`;
+  }
+
+  // ...un bloque mas por cada layout que pida el carrusel. Patron:
+  // head(s) + un componente. Un grafico propio va dentro de un contenedor `chart` o
+  // `diagram`: eso habilita el piso de 24px para su capa de referencia.
+
+  if (s.type === 'cta') {
+    inner = `
+      <div class="body">
+        <h2 style="font-size:${s.hsize || 100}px">${s.headline}</h2>
+        <div class="hr"></div>
+        <div class="lede">${s.lede}</div>
+        ${checks(s.checks)}
+      </div>`;
+  }
+
+  const isCTA = s.type === 'cta';
+  return `<div class="slide s-${s.type}">
+    <div class="grid"></div>
+    ${tab(s, i, total)}
+    ${inner}
+    ${foot(s, isCTA)}
+  </div>`;
+}
+
+const params = new URLSearchParams(location.search);
+const data = window.CAROUSEL;
+const total = data.slides.length;          // incluye la CTA
+const idx = params.has('slide') ? parseInt(params.get('slide'), 10) - 1 : null;
+
+if (idx === null) {
+  document.getElementById('root').innerHTML =
+    data.slides.map((s, i) => render(s, i, total)).join('<div style="height:40px"></div>');
+} else {
+  document.getElementById('root').innerHTML = render(data.slides[idx], idx, total);
+}
+</script>

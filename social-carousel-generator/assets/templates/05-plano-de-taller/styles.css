@@ -1,0 +1,277 @@
+/* 05-plano-de-taller — sistema visual del carrusel.
+   Plano tecnico real: el lenguaje visual del dibujo de ingenieria aplicado tal cual,
+   sin metaforas. Es el mas denso de la familia y el que mas autoridad transmite.
+
+   QUE LO DIFERENCIA DE LOS OTROS:
+     - Papel #EDEAE3 con reticula de 60px al 6%.
+     - Titulares en Barlow Condensed 600 EN MAYUSCULAS. Cuerpo en Barlow. Rotulos y
+       cifras en JetBrains Mono. La condensada es la firma del template.
+     - Relleno SOLO por trama diagonal, nunca color plano. Ver figures.js.
+     - Dos grosores de linea y nada mas, en proporcion 2:1 — gruesa 6px, fina 3px.
+       Un tercer grosor es lo que hace que un plano se vea amateur.
+     - Linea de eje (trazo y punto) como separador entre bloques.
+     - Cartucho al pie: dato / fuente / autor en columnas. Obliga a citar.
+
+   SI LA MARCA NO ES LA CASA, hay que tocar: los @font-face y sus archivos, el
+   bloque :root, `footerBrand` en slide-data.js, y el texto del CTA (.s-cta).
+
+   PISO TIPOGRAFICO: la capa de referencia va por debajo de los 40px de SKILL.md
+   (rotulos mono 22-30px). Excepcion documentada 'typography-floor'.
+   SAFE AREA: el margen del disenio es 80px parejo (5,5% vertical), no el 10%.
+   Excepcion documentada 'safe-area'. Las dos estan en slide-data.js. */
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('assets/fonts/Barlow-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Barlow';
+  src: url('assets/fonts/Barlow-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Barlow';
+  src: url('assets/fonts/Barlow-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  src: url('assets/fonts/BarlowCondensed-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: block;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: block;
+}
+
+:root {
+  --paper: #edeae3;
+  --edge: #c5c1b6;
+  --ink: #14171a;
+  --body: #2e3236;
+  --muted: #6b6f73;
+
+  /* Dos acentos, con significado fijo. La trama azul es "lo bueno / lo nuevo" y la
+     naranja "el problema". Nunca al reves y nunca por gusto estetico. */
+  --azul: #2c6e8f;
+  --naranja: #e2762b;
+
+  /* Dos grosores, proporcion 2:1. No hay un tercero. */
+  --gruesa: 6px;
+  --fina: 3px;
+
+  --pad: 80px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { background: #e8e6e1; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1440px;
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  overflow: hidden;
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Barlow', sans-serif;
+  color: var(--ink);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--ink) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ink) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.slide > *:not(.grid) { position: relative; }
+
+/* ---------- Encabezado y cartucho ---------- */
+
+.tab {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+/* Cartucho ISO 7200: quien dibujo, que, de donde. Obliga a citar la fuente, y eso
+   solo ya separa del resto. Cada celda es rotulo chico arriba, valor abajo. */
+.cartucho {
+  display: flex;
+  border-top: var(--gruesa) solid var(--ink);
+  padding-top: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+}
+.cartucho .cell { display: flex; flex-direction: column; gap: 4px; }
+.cartucho .cell .k { color: var(--muted); font-size: 22px; }
+.cartucho .cell.end { align-items: flex-end; }
+
+/* ---------- Tipografia ---------- */
+
+h1, h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height: 0.94;
+  color: var(--ink);
+}
+h1 { font-size: 112px; line-height: 0.92; }
+h2 { font-size: 104px; }
+
+.lede {
+  font-size: 46px;
+  line-height: 1.4;
+  color: var(--body);
+  max-width: 860px;
+  text-wrap: pretty;
+}
+.lede .soft { color: var(--muted); }
+
+/* Regla de cota: rombo - linea - [rotulo] - linea - rombo, en azul. El rotulo del
+   medio es opcional y lleva la magnitud (FACTOR 25:1). */
+.rule { display: flex; align-items: center; gap: 14px; }
+.rule i {
+  width: 14px; height: 14px; flex: none;
+  border-left: var(--fina) solid var(--azul);
+  border-bottom: var(--fina) solid var(--azul);
+  transform: rotate(45deg);
+}
+.rule i.r {
+  border-left: none; border-bottom: none;
+  border-right: var(--fina) solid var(--azul);
+  border-top: var(--fina) solid var(--azul);
+}
+.rule span { flex: 1; height: var(--fina); background: var(--azul); }
+.rule .k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px; color: var(--azul); font-weight: 600; flex: none;
+}
+
+.head { margin-top: 56px; display: flex; flex-direction: column; gap: 26px; }
+.head.tight { margin-top: 48px; gap: 20px; }
+
+/* Linea de eje (trazo y punto, ISO tipo G): el separador entre bloques.
+   Es la que ya usa el sistema; no la reemplaces por un filete liso. */
+.eje {
+  height: var(--fina);
+  background: repeating-linear-gradient(90deg,
+    var(--ink) 0 34px, transparent 34px 48px, var(--ink) 48px 55px, transparent 55px 69px);
+}
+
+/* ---------- Componente: corte y seccion ---------- */
+
+/* Dos piezas a los costados de una linea de eje. Las alturas salen del dato: una
+   caja mas alta afirma una magnitud (references/data-encoding.md). */
+.corte { flex: 1; display: flex; align-items: center; justify-content: center; }
+.corte .frame { position: relative; width: 100%; height: 400px; }
+.corte .axis {
+  position: absolute; left: 0; right: 0; top: 50%;
+  transform: translateY(-50%); height: var(--fina);
+  background: repeating-linear-gradient(90deg,
+    var(--ink) 0 34px, transparent 34px 48px, var(--ink) 48px 55px, transparent 55px 69px);
+}
+.corte .pza {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 400px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 52px; font-weight: 700;
+}
+.corte .pza.l { left: 0; }
+.corte .pza.r { right: 0; }
+.corte .cap {
+  position: absolute; width: 400px; text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; color: var(--muted);
+}
+.corte .cap.l { left: 0; }
+.corte .cap.r { right: 0; }
+
+/* ---------- Componente: nodos con figura ---------- */
+
+.nodos { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+.nodos .nodo { display: flex; align-items: center; gap: 22px; }
+.nodos .nodo .t { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.nodos .nodo .k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; font-weight: 700; color: var(--azul);
+}
+.nodos .nodo .name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 56px; line-height: 1; text-transform: uppercase;
+}
+.nodos .nodo .desc { font-size: 40px; line-height: 1.3; color: var(--body); }
+
+/* ---------- Componente: barras rayadas ---------- */
+
+.bars { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 32px; }
+.bars .row { display: flex; flex-direction: column; gap: 12px; }
+.bars .top { display: flex; justify-content: space-between; align-items: baseline; }
+.bars .lbl { font-family: 'JetBrains Mono', monospace; font-size: 28px; color: var(--muted); }
+.bars .val { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; }
+.bars .val.azul { color: var(--azul); }
+.bars .val.naranja { color: var(--naranja); }
+.bars .bar { height: 58px; border: var(--fina) solid var(--ink); }
+
+/* Factor: la cifra dominante del template. Barlow Condensed enorme al lado de su
+   explicacion. Una por slide. */
+.factor { display: flex; align-items: flex-end; gap: 28px; }
+.factor .n {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 158px; line-height: 0.84;
+}
+.factor .t { font-size: 42px; line-height: 1.3; color: var(--body); padding-bottom: 14px; }
+
+/* Sellos: pildoras con borde grueso. El primero lleva el azul. */
+.sellos { display: flex; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 600; }
+.sellos .s { border: var(--fina) solid var(--ink); color: var(--ink); padding: 8px 16px; }
+.sellos .s.azul { border-color: var(--azul); color: var(--azul); }
+.sellos .s.naranja { border-color: var(--naranja); color: var(--naranja); }
+
+/* ---------- Componente: checklist ---------- */
+
+.checks {
+  display: flex; flex-direction: column; gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px; font-weight: 600; color: var(--ink);
+}
+.checks .ck { display: flex; gap: 16px; align-items: center; }
+.checks .mk { color: var(--azul); }
+
+/* Imagen que pasa el usuario. Transparente va directo; opaca va enmarcada con la
+   linea gruesa del sistema. Ver SKILL.md > Images the user supplies. */
+.ext-plain { margin-top: auto; }
+.ext-plain img { display: block; width: 100%; height: auto; }
+.ext-card {
+  margin-top: auto;
+  padding: 18px;
+  background: var(--paper);
+  border: var(--fina) solid var(--ink);
+}
+.ext-card img { display: block; width: 100%; height: auto; }
+
+/* ---------- Layout: cierre ---------- */
+
+.s-cta .body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
+.s-cta h2 { font-size: 116px; line-height: 0.92; }
+
+.spacer { flex: 1 1 auto; }

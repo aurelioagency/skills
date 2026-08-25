@@ -38,6 +38,7 @@ assets/brands/<brand-slug>/
 
 ## Defaults
 
+- Template: `<NN-nombre, e.g. 01-editorial-oscuro>` — which folder under `assets/templates/` this brand builds on. See *Template Resolution* in `SKILL.md`. Reuse an existing one if its layout genuinely fits; only ask for a new numbered template when the brand needs a different visual system, not just different colours on an existing one.
 - Brand name: `<as the user writes it>`
 - Carousel length: `<habitual range, e.g. 7-10 exported images — or delete this line to let the
   content decide each time. The skill's ceiling of 10 applies either way.>`

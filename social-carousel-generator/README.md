@@ -19,11 +19,12 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 | [SKILL.md](SKILL.md) | The skill itself: workflow, gates, visual rules, QA |
 | [references/la-casa-preset.md](references/la-casa-preset.md) | La Casa de Aurelio brand preset: voice, palette, measured background field, cover formula, footer spec, fixed CTA |
 | [references/brand-preset-template.md](references/brand-preset-template.md) | Fill-in template for **your own brand**: palette, fonts, cover formula, footer, CTA, caption, density budget, asset bank |
+| [references/content-archetypes.md](references/content-archetypes.md) | Árbol de decisión de arquetipo narrativo: 8 arquetipos evaluados en orden, con la Slide Grammar como default |
 | [references/asset-bank.md](references/asset-bank.md) | The asset bank contract: a folder (local or git) of brand imagery the agent places **by looking at it** |
 | [references/html-rendering.md](references/html-rendering.md) | Static HTML screenshot workflow, contact-sheet QA, typography-floor QA, implementation traps |
 | [scripts/](scripts) | Bundled Node helpers (render + programmatic QA, stage measuring, block diff, contact sheet) |
-| [assets/template/](assets/template/) | Package scaffolding: `index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` to regenerate a CTA |
-| [assets/fonts/](assets/fonts/) | Archivo Black, Roboto Mono, Inter — bundled so renders are identical on any machine |
+| [assets/templates/](assets/templates/) | Seis templates visuales numerados, uno por diseño: `01-editorial-oscuro`, `02-editorial-oscuro-v2`, `03-cuaderno-de-taller`, `04-plano-en-negativo`, `05-plano-de-taller`, `06-handmade`. Cada uno con `index.html`, `styles.css`, `slide-data.js` y su `estilo.md` (las reglas que dan consistencia + las piezas ya construidas); el 05 suma `figures.js`/`figures.md` y el 06 `icons.js`/`icons.md` |
+| [assets/fonts/](assets/fonts/) | Todas las familias de los seis templates, empaquetadas para que el render sea idéntico en cualquier máquina |
 | [assets/](assets/) | The four fixed CTA frames for La Casa: normal and comment variant, one pair per size |
 
 ## Key features

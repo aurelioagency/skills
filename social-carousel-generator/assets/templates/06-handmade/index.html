@@ -1,0 +1,152 @@
+<meta charset="utf-8">
+<title>Carrusel — 06-handmade</title>
+<link rel="stylesheet" href="styles.css">
+<script src="icons.js"></script>
+<script src="slide-data.js"></script>
+
+<div id="root"></div>
+
+<script>
+// 06-handmade. Se renderiza de a una slide con ?slide=N; sin parametro muestra todas
+// apiladas.
+//
+// LA GRILLA ES SIEMPRE LA MISMA, en este orden, y es lo que hace que el carrusel se
+// vea profesional — no la variedad:
+//   1. titulo arriba, centrado
+//   2. subrayado verde debajo del titulo
+//   3. bajada opcional, 2 lineas maximo
+//   4. contenido (lista, cajas o ilustracion)
+//   5. firma abajo a la derecha
+//
+// LA REGLA REAL DEL FORMATO: una idea por placa. Si necesitas dos, son dos placas.
+// El aire vacio no es un problema a resolver.
+
+const VIDEO = new URLSearchParams(location.search).has('video');
+const ico = (i) => i ? window.ICONS.icon(i.name, i.px || 104, i.pastel, '#fcefe3') : '';
+
+// Titulo + subrayado. El ancho del subrayado va entre 55% y 70% del titulo.
+function titulo(s, tag = 'h2') {
+  return `
+    <${tag}${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.titulo}</${tag}>
+    <div class="sub-titulo" style="width:${s.subWidth || 62}%"></div>`;
+}
+
+// Firma: SIEMPRE en la misma esquina, en todas las placas. Sale de slide-data.js.
+// ?video=1 no la cambia: no hay prompt de swipe en este template.
+const firma = (grande) =>
+  `<div class="firma${grande ? ' grande' : ''}">${window.CAROUSEL.footerBrand}</div>`;
+
+// Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
+// elige ni se ofrece en variantes: transparente va directo sobre el papel, opaco va
+// en caja irregular. Un opaco a sangre NO es una opcion: rompe el margen de la receta.
+const userImg = s => !s.img ? '' : (s.imgTransparent
+  ? `<div class="ext-plain"><img src="${s.img}" alt=""></div>`
+  : `<div class="ext-card"><img src="${s.img}" alt=""></div>`);
+
+// ---------- Componentes ----------
+
+// Lista etiquetada: icono + termino resaltado + definicion. Un pastel por concepto,
+// y ese pastel vuelve cada vez que el concepto vuelve a aparecer en el carrusel.
+const lista = items => `
+  <div class="lista">
+    ${items.map(f => `
+      <div class="fila">
+        ${ico(f.ico)}
+        <div class="t"><span class="chip ${f.pastel || ''}">${f.k}</span><span>${f.t}</span></div>
+      </div>`).join('')}
+  </div>`;
+
+// Antes -> despues: dos cajas irregulares y una flecha.
+const antes = s => `
+  <div class="antes">
+    <div class="lado a">
+      <div class="k">${s.a.k}</div>
+      <div class="t">${s.a.t}</div>
+    </div>
+    <div class="flecha">→</div>
+    <div class="lado b">
+      <div class="k">${s.b.k}</div>
+      <div class="t">${s.b.t}</div>
+    </div>
+  </div>`;
+
+// Semaforo: estado + valor + consecuencia. El color del estado no es decorativo.
+const semaforo = items => `
+  <div class="semaforo">
+    ${items.map(f => `
+      <div class="fila">
+        <div class="luz ${f.pastel || ''}"></div>
+        <div class="estado ${f.pastel || ''}">${f.k}</div>
+        <div class="t">${f.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Escena de portada: iconos del set, de 120 a 260px sobre el lienzo de 1080.
+const escena = items => `
+  <div class="escena">${items.map(i => ico(i)).join('')}</div>`;
+
+// ---------- Render ----------
+
+function render(s, i, total) {
+  let inner = '';
+
+  // PORTADA: la pregunta que el otro no se atreve a hacer + promesa + escena.
+  if (s.type === 'cover') {
+    inner = `
+      ${titulo(s, 'h1')}
+      ${s.bajada ? `<div class="bajada">${s.bajada}</div>` : ''}
+      <div class="zona">${s.escena ? escena(s.escena) : userImg(s)}</div>`;
+  }
+
+  if (s.type === 'lista') {
+    inner = `
+      ${titulo(s)}
+      ${s.bajada ? `<div class="bajada">${s.bajada}</div>` : ''}
+      <div class="zona">${lista(s.lista)}</div>`;
+  }
+
+  if (s.type === 'antes') {
+    inner = `
+      ${titulo(s)}
+      ${s.bajada ? `<div class="bajada">${s.bajada}</div>` : ''}
+      <div class="zona">${antes(s)}</div>`;
+  }
+
+  if (s.type === 'semaforo') {
+    inner = `
+      ${titulo(s)}
+      ${s.bajada ? `<div class="bajada">${s.bajada}</div>` : ''}
+      <div class="zona">${semaforo(s.semaforo)}</div>`;
+  }
+
+  // ...un bloque mas por cada layout que pida el carrusel. La receta declara cinco y
+  // dice que con esas cinco se arma todo: la repeticion es lo que lo hace ver
+  // profesional, no la variedad. Antes de agregar una sexta, mira si alguna sirve.
+
+  // CIERRE: pedido de guardado + firma grande.
+  if (s.type === 'cta') {
+    inner = `
+      ${titulo(s)}
+      <div class="bajada">${s.bajada}</div>
+      <div class="zona" style="gap:34px;align-items:center">
+        <div class="mancha" style="width:150px;height:136px;margin:0 auto"></div>
+        <div class="bajada">${s.cierre}</div>
+      </div>`;
+  }
+
+  const isCTA = s.type === 'cta';
+  return `<div class="slide s-${s.type}">${inner}${firma(isCTA)}</div>`;
+}
+
+const params = new URLSearchParams(location.search);
+const data = window.CAROUSEL;
+const total = data.slides.length;          // incluye la CTA
+const idx = params.has('slide') ? parseInt(params.get('slide'), 10) - 1 : null;
+
+if (idx === null) {
+  document.getElementById('root').innerHTML =
+    data.slides.map((s, i) => render(s, i, total)).join('<div style="height:40px"></div>');
+} else {
+  document.getElementById('root').innerHTML = render(data.slides[idx], idx, total);
+}
+</script>

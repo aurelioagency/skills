@@ -4,9 +4,9 @@ Use this workflow when creating the editable carousel package.
 
 ## Starting the package
 
-Do not improvise the skeleton. Copy `assets/template/` into the package (`index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` if the CTA has to be regenerated) and the font files into `<package>/assets/fonts/`, then add the per-slide layouts. The template already carries the footer with its optical corrections, the safe-area constants, and the `layoutExceptions` field — rebuilding those from scratch is how they get re-broken.
+Do not improvise the skeleton. The active preset names its template (see *Template Resolution* in `SKILL.md`) — copy `assets/templates/<NN-nombre>/` into the package (`index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` if the CTA has to be regenerated) and the font files into `<package>/assets/fonts/`, then add the per-slide layouts. Today the only template is `assets/templates/01-editorial-oscuro/`. The template already carries the footer with its optical corrections, the safe-area constants, and the `layoutExceptions` field — rebuilding those from scratch is how they get re-broken.
 
-**If the brand is not La Casa**, the template's header lists the six things that must change before the first render: the `@font-face` block plus the brand's actual font files, the `:root` palette, `footerBrand` / `footerSwipe` in `slide-data.js`, the cover's two families and two colours, the CTA asset, and the density bands (or the `density-budget` exception). Take all six from that brand's `preset.md` — never from this file and never from La Casa's values.
+**If the brand is not La Casa but still uses `01-editorial-oscuro`**, that template's header lists the six things that must change before the first render: the `@font-face` block plus the brand's actual font files, the `:root` palette, `footerBrand` / `footerSwipe` in `slide-data.js`, the cover's two families and two colours, the CTA asset, and the density bands (or the `density-budget` exception). Take all six from that brand's `preset.md` — never from this file and never from La Casa's values. A brand that needs a different layout altogether, not just different colours on this one, gets its own numbered template instead.
 
 ## Files
 

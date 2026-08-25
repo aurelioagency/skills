@@ -8,6 +8,15 @@ Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aure
 
 ## Defaults
 
+- Templates: La Casa tiene **seis**, y se elige uno por carrusel. Ninguno es "el viejo": son seis sistemas visuales vigentes. **Preguntá cuál va** si el pedido no lo dice — es lo único del preset que no se deduce del material.
+  - `01-editorial-oscuro` — el campo negro con grilla de puntos, curvas de contorno y los dos glows radiales, más el sistema tipográfico Archivo Black / Roboto Mono / Inter / Georgia itálica descripto abajo. **Es el default**: todo lo que dice este preset de paleta, tipografía, footer y CTA está escrito para este template.
+  - `02-editorial-oscuro-v2` — segunda versión del mismo campo, plana y con barra de progreso.
+  - `03-cuaderno-de-taller` — papel claro, titulares manuscritos, tono didáctico.
+  - `04-plano-en-negativo` — campo oscuro con retícula turquesa, tono de autoridad.
+  - `05-plano-de-taller` — plano técnico real, con biblioteca de figuras y simbología ISO.
+  - `06-handmade` — cuaderno a mano, dos manuscritas y cinco pasteles, con set de iconos.
+
+  **Del 02 al 06, cada uno lleva su propia paleta, tipografía, footer y CTA**, y esos valores viven en el `styles.css` de su carpeta, no acá. Lo que este preset define para ellos es la marca: la firma del pie (`aurelioagency.com`), la voz, el público, la plantilla de caption y el banco de assets. Los 03, 04 y 05 son tres variantes de una estética de ingeniería mecánica — **eso es el estilo visual, no una línea de negocio: nunca va escrito como texto en una placa.**
 - Tamaño y densidad de texto **no se definen acá**: son reglas de la skill, iguales para toda marca. Están en `SKILL.md`, sección *Format, length and density* — un solo tamaño `1080x1440` y de 120 a 220 caracteres por slide de contenido. La Casa no las pisa.
 - **Largo habitual de La Casa: 7 a 10 imágenes exportadas** (6 a 9 slides de contenido más el CTA). Esto es formato de marca, no una regla de la skill: el techo de 10 lo pone `SKILL.md` y no se toca, pero el piso de 6 es de acá, porque los temas que publica La Casa —papers, procesos, comparativas— casi siempre necesitan separar afirmación de evidencia. Si un carrusel puntual no da para tanto, sale más corto: nunca se rellena para llegar al piso.
 - Language: Spanish by default.
@@ -136,14 +145,14 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
   - Setup line: Archivo Black in `#F6F2E9`, ALL CAPS, the largest type on the canvas.
   - Twist line: **Georgia italic** in the cover's dominant accent (ochre, dusty pink, or sage — the published set uses all three), in sentence case. Italic caps lose the contrast against the headline, which is the whole point of the second line.
   - One accent per cover. The kicker takes that same accent.
-- The cover also carries **one simple, direct graphic** — never text alone. The default pattern is a fan-out: a cream node with the system's name, a stem, a distribution bracket and a row of pills for the destinations (`.fanout` in `assets/template/styles.css`). Any equally simple graphic works; a crowded illustration does not.
+- The cover also carries **one simple, direct graphic** — never text alone. The default pattern is a fan-out: a cream node with the system's name, a stem, a distribution bracket and a row of pills for the destinations (`.fanout` in `assets/templates/01-editorial-oscuro/styles.css`). Any equally simple graphic works; a crowded illustration does not.
 - Content clearance: keep all readable content at least `5%` from the left and right edges and `10%` from the top and bottom edges. En `1080x1440`, el único tamaño: `x=54..1026`, `y=144..1296`.
 - No on-screen source line. Traceability lives in `carousel-brief.md`, not on the slides.
 - Composition scale: expand content inside the safe area with larger type and reflowed visual elements. Do not accept a small composition surrounded by avoidable empty space.
 - Accents: only the canonical accent values from the brand system above — never eyeballed approximations.
 - Visual style: crisp editorial infographic with centered information.
 - Safe zone: keep meaningful text away from the top and bottom app overlay bands. Do not peg headlines, body copy, labels, logo, CTA copy, or footer text to the canvas edge.
-- Footer on content slides. These values come from measuring rendered pixels, not from estimating — copy `assets/template/styles.css`, which has them baked in, and re-run the audit after any change:
+- Footer on content slides. These values come from measuring rendered pixels, not from estimating — copy `assets/templates/01-editorial-oscuro/styles.css`, which has them baked in, and re-run the audit after any change:
   - Bottom-left: `aurelioagency.com` in Inter bold `40px` (not serif italic).
   - Center: page counter pill, Inter bold **`26px`** — it is numeric chrome, not reading text, so the `40px` floor does not apply and a counter at `40px` is oversized. Fill `#252422`, `border-radius: 999px`, padding `9px 20px`.
   - The counter is centered on the **canvas** (`left: 50%`, absolute), not distributed with `space-between`. Those are different positions whenever the brand line and the swipe line have different widths, and the canvas center is the correct one.
@@ -175,7 +184,7 @@ Preguntar la variante en cada carrusel es ruido: la respuesta ya está en el mat
 - Los cuatro assets llevan el mismo campo que los slides de contenido: grilla de puntos, los dos glows y las curvas. Ninguno es plano.
 - Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
 - If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here.
-- **Sources.** `assets/template/cta-ig.html` and `cta-ig-aurelio.html` produce the two `1080x1440` assets; render them with `assets/template/make-cta.mjs`. The two `1080x1920` assets have **no HTML source**: that artwork predates this repo and its colour strokes are hand-drawn, slightly rotated (bounding boxes 23/18/17/11px tall against the flat 9px bars of the Instagram asset). They cannot be re-rendered without inventing them, so they are maintained by compositing — new field underneath, original artwork on top through a luminance mask. If the TikTok CTA ever needs a copy change, expect to redraw by hand whatever the old text was painted over: under the glyphs there is no artwork left to recover (the comment variant's pink underline had to be redrawn from its measured geometry, 630x9px centered at 576.5/823.5, rotated -1.18°).
+- **Sources.** `assets/templates/01-editorial-oscuro/cta-ig.html` and `cta-ig-aurelio.html` produce the two `1080x1440` assets; render them with `assets/templates/01-editorial-oscuro/make-cta.mjs`. The two `1080x1920` assets have **no HTML source**: that artwork predates this repo and its colour strokes are hand-drawn, slightly rotated (bounding boxes 23/18/17/11px tall against the flat 9px bars of the Instagram asset). They cannot be re-rendered without inventing them, so they are maintained by compositing — new field underneath, original artwork on top through a luminance mask. If the TikTok CTA ever needs a copy change, expect to redraw by hand whatever the old text was painted over: under the glyphs there is no artwork left to recover (the comment variant's pink underline had to be redrawn from its measured geometry, 630x9px centered at 576.5/823.5, rotated -1.18°).
 - **Regenerating an existing CTA asset:** the current asset at that size is the reference, not the other platform's artwork. Keep its block layout (positions and widths) and change only what was asked. Verify with `scripts/compare-blocks.mjs` against the previous file before replacing it, and keep the counter band free of artwork — the asset cannot be reflowed once the counter is composed on top. A pure background change must report `+0% +0px` on **every** block; a copy change may only move the text blocks.
 
 Nunca ofrecer diseñar un CTA nuevo mientras este preset esté activo — solo si el usuario pide explícitamente reemplazarlo.

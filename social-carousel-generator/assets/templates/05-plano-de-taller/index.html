@@ -1,0 +1,186 @@
+<meta charset="utf-8">
+<title>Carrusel — 05-plano-de-taller</title>
+<link rel="stylesheet" href="styles.css">
+<script src="figures.js"></script>
+<script src="slide-data.js"></script>
+
+<div id="root"></div>
+
+<script>
+// 05-plano-de-taller. Se renderiza de a una slide con ?slide=N; sin parametro
+// muestra todas apiladas.
+//
+// Las piezas de abajo son las que el template ya sabe dibujar. Cual va en cada slide lo
+// decide el material, y se propone en el gate de aprobacion de copy. Las reglas del
+// estilo y el listado completo de piezas estan en estilo.md; las figuras, en figures.md.
+
+const VIDEO = new URLSearchParams(location.search).has('video');
+
+// Las seis tramas del sistema. Van una sola vez por documento, en un SVG de 0x0.
+// El relleno DICE QUE ES: normal=base, invertida=la otra pieza, densa=mas carga,
+// cruzada=bloqueado, azul=lo bueno, naranja=el problema.
+const DEFS = `
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <pattern id="hb" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#14171a" stroke-width="2"/></pattern>
+  <pattern id="hr" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#14171a" stroke-width="2"/></pattern>
+  <pattern id="hd" patternUnits="userSpaceOnUse" width="5"  height="5"  patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5"  stroke="#14171a" stroke-width="1.6"/></pattern>
+  <pattern id="hx" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#14171a" stroke-width="1.6"/><line x1="0" y1="0" x2="10" y2="0" stroke="#14171a" stroke-width="1.6"/></pattern>
+  <pattern id="hz" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#2c6e8f" stroke-width="2"/></pattern>
+  <pattern id="hn" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#e2762b" stroke-width="2"/></pattern>
+</defs></svg>`;
+
+// Trama como fondo CSS, para cajas y barras (las figuras usan el <pattern> SVG).
+const TRAMA_CSS = {
+  normal:  'repeating-linear-gradient(45deg,#14171a 0 2px,transparent 2px 13px)',
+  invert:  'repeating-linear-gradient(-45deg,#14171a 0 2px,transparent 2px 13px)',
+  densa:   'repeating-linear-gradient(45deg,#14171a 0 2px,transparent 2px 7px)',
+  azul:    'repeating-linear-gradient(45deg,#2c6e8f 0 2px,transparent 2px 13px)',
+  naranja: 'repeating-linear-gradient(45deg,#e2762b 0 2px,transparent 2px 13px)'
+};
+const trama = n => TRAMA_CSS[n] || TRAMA_CSS.normal;
+const fig = (f) => f ? window.FIGURES.figure(f.id, f.px || 120, f.trama, '#edeae3') : '';
+
+function tab(s, i, total) {
+  const n = String(i + 1).padStart(2, '0');
+  const t = String(total).padStart(2, '0');
+  return `<div class="tab"><span>${n} / ${t}</span><span>${s.tab}</span></div>`;
+}
+
+// Cartucho ISO 7200. Las celdas salen de slide-data.js; la ultima es la firma y
+// sale de `footerBrand`, no escrita en duro aca.
+// ?video=1 no cambia el cartucho: no hay prompt de swipe en este template.
+function cartucho(s) {
+  const cells = (s.cartucho || []).map(c =>
+    `<div class="cell" style="flex:${c.flex || 1}"><span class="k">${c.k}</span><span>${c.v}</span></div>`).join('');
+  return `<div class="cartucho">
+    ${cells}
+    <div class="cell end" style="flex:1"><span class="k">POR</span><span>${window.CAROUSEL.footerBrand}</span></div>
+  </div>`;
+}
+
+// GRAMATICA DE LA MARCA: titular condensado en mayusculas + regla de cota + bajada.
+// Sin titular, render-and-audit.mjs marca red issue (excepcion: 'slide-grammar').
+function head(s, tight) {
+  return `
+    <div class="head${tight ? ' tight' : ''}">
+      <h2${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h2>
+      ${rule(s)}
+      ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
+    </div>`;
+}
+
+// La regla lleva un rotulo central opcional con la magnitud (FACTOR 25:1).
+function rule(s) {
+  const k = s.ruleLabel ? `<span class="k">${s.ruleLabel}</span><span></span>` : '';
+  return `<div class="rule" style="width:${s.ruleWidth || 70}%"><i></i><span></span>${k}<i class="r"></i></div>`;
+}
+
+// Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
+// elige ni se ofrece en variantes: transparente va directo sobre el papel, opaco va
+// enmarcado. Un opaco a sangre NO es una opcion: rompe el margen del disenio.
+const userImg = s => !s.img ? '' : (s.imgTransparent
+  ? `<div class="ext-plain"><img src="${s.img}" alt=""></div>`
+  : `<div class="ext-card"><img src="${s.img}" alt=""></div>`);
+
+// ---------- Componentes ----------
+
+// Corte y seccion: dos piezas sobre una linea de eje. `h` sale del dato.
+const corte = s => `
+  <div class="corte diagram">
+    <div class="frame">
+      <div class="axis"></div>
+      <div class="pza l" style="height:${s.a.h}px;border:var(--fina) solid ${s.a.tone === 'naranja' ? 'var(--naranja)' : 'var(--azul)'};background:${trama(s.a.tone)}">${s.a.v}</div>
+      <div class="cap l" style="top:calc(50% + ${s.a.h / 2 + 22}px)">${s.a.cap}</div>
+      <div class="pza r" style="height:${s.b.h}px;border:var(--fina) solid ${s.b.tone === 'naranja' ? 'var(--naranja)' : 'var(--azul)'};background:${trama(s.b.tone)}">${s.b.v}</div>
+      <div class="cap r" style="top:calc(50% + ${s.b.h / 2 + 22}px)">${s.b.cap}</div>
+    </div>
+  </div>`;
+
+// Nodos con figura de la biblioteca, separados por linea de eje.
+const nodos = items => `
+  <div class="nodos">
+    ${items.map((n, k) => `
+      ${k ? '<div class="eje"></div>' : ''}
+      <div class="nodo">
+        ${fig(n.fig)}
+        <div class="t">
+          <div class="k">${n.k}</div>
+          <div class="name">${n.name}</div>
+          <div class="desc">${n.desc}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+
+// Barras rayadas. `w` es el ancho en porcentaje y sale del dato medido.
+const bars = s => `
+  <div class="bars">
+    ${s.bars.map(b => `
+      <div class="row">
+        <div class="top"><span class="lbl">${b.lbl}</span><span class="val ${b.tone || ''}">${b.val}</span></div>
+        <div class="bar" style="width:${b.w}%;background:${trama(b.tone)}"></div>
+      </div>`).join('')}
+    ${s.factor ? `
+      <div class="eje" style="margin:4px 0"></div>
+      <div class="factor"><div class="n">${s.factor.n}</div><div class="t">${s.factor.t}</div></div>` : ''}
+    ${s.sellos ? `<div class="sellos">${s.sellos.map(x => `<span class="s ${x.tone || ''}">${x.t}</span>`).join('')}</div>` : ''}
+  </div>`;
+
+const checks = items => `
+  <div class="checks">
+    ${items.map(t => `<div class="ck"><span class="mk">▪</span><span>${t}</span></div>`).join('')}
+  </div>`;
+
+// ---------- Render ----------
+
+function render(s, i, total) {
+  let inner = '';
+
+  // Portada: titular condensado de 112px, regla con la magnitud, bajada, y el corte
+  // ocupando el resto. Es la unica slide con h1.
+  if (s.type === 'cover') {
+    inner = `
+      <div class="head">
+        <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
+        ${rule(s)}
+        <div class="lede">${s.lede}</div>
+      </div>
+      ${corte(s)}`;
+  }
+
+  if (s.type === 'nodos') inner = `${head(s, true)}${nodos(s.nodos)}${userImg(s)}`;
+  if (s.type === 'bars')  inner = `${head(s, true)}${bars(s)}`;
+
+  // ...un bloque mas por cada layout que pida el carrusel. Patron:
+  // head(s) + un componente. Un grafico propio va dentro de un contenedor `chart` o
+  // `diagram`: eso habilita el piso de 24px para su capa de referencia.
+
+  if (s.type === 'cta') {
+    inner = `
+      <div class="body">
+        <h2 style="font-size:${s.hsize || 116}px">${s.headline}</h2>
+        ${rule(s)}
+        <div class="lede">${s.lede}</div>
+        ${checks(s.checks)}
+      </div>`;
+  }
+
+  return `<div class="slide s-${s.type}">
+    <div class="grid"></div>
+    ${tab(s, i, total)}
+    ${inner}
+    ${cartucho(s)}
+  </div>`;
+}
+
+const params = new URLSearchParams(location.search);
+const data = window.CAROUSEL;
+const total = data.slides.length;          // incluye la CTA
+const idx = params.has('slide') ? parseInt(params.get('slide'), 10) - 1 : null;
+const root = document.getElementById('root');
+
+if (idx === null) {
+  root.innerHTML = DEFS + data.slides.map((s, i) => render(s, i, total)).join('<div style="height:40px"></div>');
+} else {
+  root.innerHTML = DEFS + render(data.slides[idx], idx, total);
+}
+</script>

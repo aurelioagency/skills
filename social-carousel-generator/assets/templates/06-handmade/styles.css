@@ -1,0 +1,272 @@
+/* 06-handmade — sistema visual del carrusel.
+   Cuaderno a mano: papel crema, dos manuscritas, cinco pasteles y cuatro marcas
+   hechas con cajas y bordes. Ninguna ilustracion dibujada hace falta.
+
+   Este template NO se transcribio de un carrusel: se construyo desde la receta de
+   siete decisiones del archivo de origen. Los valores de abajo son los que esa
+   receta declara, no estimaciones.
+
+   QUE LO DIFERENCIA DE LOS OTROS:
+     - Papel crema #FCEFE3 en TODAS las placas, sin degradados y sin excepcion.
+     - Dos manuscritas, nunca tres: Gochi Hand para titulos, Patrick Hand para
+       cuerpo. El cuerpo lleva tracking abierto (+0.02em) y mucho aire entre lineas,
+       para que se lea como escrito con marcador fino y no como fuente.
+     - Titulo SIEMPRE arriba y centrado, con subrayado verde debajo.
+     - Los pasteles NUNCA son fondo: solo resaltador, relleno de caja o subrayado.
+       Un pastel por concepto, y ese pastel vuelve cada vez que el concepto vuelve.
+     - Ningun radio de borde es simetrico. Es el detalle que hace la magia: escribir
+       `border-radius: 22px 20px 24px 18px` en vez de `20px` y el ojo lo lee como
+       trazo humano.
+
+   SI LA MARCA NO ES LA CASA, hay que tocar: los @font-face y sus archivos, el
+   bloque :root, `footerBrand` en slide-data.js, y el texto del CTA (.s-cta).
+
+   PISO TIPOGRAFICO: la receta declara su propio piso —nada por debajo de 38px— que
+   es mas bajo que los 40px de SKILL.md, y los rotulos mono quedan aun mas abajo.
+   Excepcion documentada 'typography-floor'.
+   SAFE AREA: el margen de la receta es 88px a los lados y 96px arriba y abajo
+   (6,7% vertical), no el 10%. Excepcion documentada 'safe-area'. */
+
+@font-face {
+  font-family: 'Gochi Hand';
+  src: url('assets/fonts/GochiHand.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Patrick Hand';
+  src: url('assets/fonts/PatrickHand.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Patrick Hand SC';
+  src: url('assets/fonts/PatrickHandSC.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: block;
+}
+
+:root {
+  --papel: #fcefe3;
+  --tinta: #1b1a18;
+  --texto: #2a2825;
+  --firma: #6e6e6e;
+  --linea: #a8c3b4;         /* el verde del subrayado de titulo */
+
+  /* Los cinco pasteles. Un pastel = un concepto, en TODO el carrusel.
+     Si "Tabla" es verde en la placa 2, sigue siendo verde en la 7. */
+  --verde: #c9dcc4;
+  --celeste: #c3d8ea;
+  --lila: #d5cce8;
+  --coral: #f5b5ab;
+  --amarillo: #fae0a6;
+
+  /* Margen de seguridad de la receta. NO se reduce. */
+  --pad-x: 88px;
+  --pad-y: 96px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { background: #f3e7dc; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1440px;
+  background: var(--papel);
+  overflow: hidden;
+  padding: var(--pad-y) var(--pad-x);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  font-family: 'Patrick Hand', cursive;
+  color: var(--tinta);
+}
+
+/* ---------- Tipografia (escala declarada por la receta) ---------- */
+
+/* Titulo: 96-120px, line-height 1.02, 2 lineas maximo, centrado, siempre arriba. */
+h1, h2 {
+  font-family: 'Gochi Hand', cursive;
+  font-weight: 400;
+  font-size: 108px;
+  line-height: 1.02;
+  text-align: center;
+  color: var(--tinta);
+}
+
+/* Subrayado de titulo: 9-12px de alto, verde linea, 55-70% del ancho del titulo. */
+.sub-titulo {
+  height: 12px;
+  background: var(--linea);
+  border-radius: 99px;
+}
+
+/* Bajada: 44-54px, line-height 1.5, tracking 0.02em, maximo 6 palabras por linea. */
+.bajada {
+  font-size: 52px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--texto);
+  max-width: 800px;
+  text-wrap: pretty;
+}
+
+.cuerpo {
+  font-size: 44px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--texto);
+}
+
+.etiqueta {
+  font-size: 46px;
+  letter-spacing: 0.02em;
+}
+
+/* Firma: 40px, gris, abajo a la derecha, SIEMPRE en la misma esquina. */
+.firma {
+  margin-top: auto;
+  align-self: flex-end;
+  font-size: 40px;
+  color: var(--firma);
+}
+.firma.grande {
+  font-family: 'Gochi Hand', cursive;
+  font-size: 76px;
+  align-self: center;
+}
+
+/* ---------- Las cuatro marcas a mano ---------- */
+
+/* 1 · RESALTADOR. Solo para terminos tecnicos, nunca para enfasis generico. */
+.hl {
+  padding: 2px 10px;
+  border-radius: 6px;
+  background: var(--verde);
+}
+.hl.celeste  { background: var(--celeste); }
+.hl.lila     { background: var(--lila); }
+.hl.coral    { background: var(--coral); }
+.hl.amarillo { background: var(--amarillo); }
+
+/* 2 · SUBRAYADO DE FRASE. Una vez por placa, con el pastel del concepto. */
+.uline { box-shadow: inset 0 -6px 0 var(--coral); }
+.uline.verde    { box-shadow: inset 0 -6px 0 var(--verde); }
+.uline.celeste  { box-shadow: inset 0 -6px 0 var(--celeste); }
+.uline.lila     { box-shadow: inset 0 -6px 0 var(--lila); }
+.uline.amarillo { box-shadow: inset 0 -6px 0 var(--amarillo); }
+
+/* 3 · CAJA IRREGULAR. Los cuatro radios distintos son lo que la hace leer a mano.
+   Nunca pongas un radio unico: ahi se pierde todo el caracter del formato. */
+.caja {
+  border: 3px solid var(--tinta);
+  border-radius: 22px 20px 24px 18px;
+  background: var(--celeste);
+  padding: 12px 22px;
+}
+.caja.verde    { background: var(--verde); }
+.caja.lila     { background: var(--lila); }
+.caja.coral    { background: var(--coral); }
+.caja.amarillo { background: var(--amarillo); }
+.caja.vacia    { background: transparent; }
+
+/* 4 · MANCHA. La forma organica del cierre: un radio en porcentajes desparejos.
+   No es un doodle dibujado, es una caja con el borde deformado. */
+.mancha {
+  border: 3px solid var(--tinta);
+  border-radius: 52% 48% 46% 54% / 44% 46% 56% 54%;
+  background: var(--coral);
+}
+
+/* ---------- Zonas fijas de la grilla ---------- */
+
+.zona { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; }
+
+/* ---------- Componente: lista etiquetada ---------- */
+
+.lista { display: flex; flex-direction: column; gap: 28px; width: 100%; }
+.lista .fila { display: flex; gap: 26px; align-items: center; }
+.lista .fila .t { font-size: 44px; letter-spacing: 0.02em; display: flex; gap: 14px; align-items: center; }
+
+/* Chip de la lista: caja chica irregular con el pastel del concepto. */
+.chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 38px;
+  padding: 2px 14px;
+  border-radius: 9px 7px 10px 8px;
+  background: var(--celeste);
+}
+.chip.verde    { background: var(--verde); }
+.chip.lila     { background: var(--lila); }
+.chip.coral    { background: var(--coral); }
+.chip.amarillo { background: var(--amarillo); }
+
+/* ---------- Componente: antes -> despues ---------- */
+
+.antes { display: flex; align-items: center; gap: 24px; width: 100%; }
+.antes .lado {
+  flex: 1;
+  border: 3px solid var(--tinta);
+  padding: 34px 30px;
+  display: flex; flex-direction: column; gap: 14px; align-items: center;
+  text-align: center;
+}
+.antes .lado.a { border-radius: 26px 22px 28px 20px; background: var(--coral); }
+.antes .lado.b { border-radius: 21px 27px 19px 25px; background: var(--verde); }
+.antes .lado .k { font-family: 'JetBrains Mono', monospace; font-size: 38px; }
+.antes .lado .t { font-size: 44px; line-height: 1.4; letter-spacing: 0.02em; }
+.antes .flecha { font-size: 56px; flex: none; }
+
+/* ---------- Componente: semaforo ---------- */
+
+.semaforo { display: flex; flex-direction: column; gap: 26px; width: 100%; }
+.semaforo .fila { display: flex; gap: 22px; align-items: center; }
+.semaforo .luz {
+  width: 62px; height: 62px; flex: none;
+  border: 3px solid var(--tinta);
+  border-radius: 50%;
+  background: var(--verde);
+}
+.semaforo .luz.amarillo { background: var(--amarillo); }
+.semaforo .luz.coral    { background: var(--coral); }
+.semaforo .estado {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 38px;
+  border: 3px solid var(--tinta);
+  border-radius: 11px 9px 12px 8px;
+  padding: 6px 16px;
+  flex: none;
+  background: var(--verde);
+}
+.semaforo .estado.amarillo { background: var(--amarillo); }
+.semaforo .estado.coral    { background: var(--coral); }
+.semaforo .t { flex: 1; font-size: 44px; letter-spacing: 0.02em; color: var(--texto); }
+
+/* Zona de ilustracion de la portada. Los iconos van de 120 a 260px sobre el lienzo
+   de 1080, segun la receta. */
+.escena { display: flex; align-items: center; justify-content: center; gap: 40px; }
+
+/* Imagen que pasa el usuario. Transparente va directo; opaca va en caja irregular,
+   que es el unico contenedor del sistema. Ver SKILL.md > Images the user supplies. */
+.ext-plain { width: 100%; }
+.ext-plain img { display: block; width: 100%; height: auto; }
+.ext-card {
+  width: 100%;
+  border: 3px solid var(--tinta);
+  border-radius: 22px 20px 24px 18px;
+  background: var(--papel);
+  padding: 18px;
+}
+.ext-card img { display: block; width: 100%; height: auto; border-radius: 8px; }
+
+.spacer { flex: 1 1 auto; }

@@ -20,7 +20,12 @@
 // Excepciones documentadas: si `window.CAROUSEL.layoutExceptions` incluye el id de un
 // chequeo, ese chequeo baja a nota informativa. Ids validos:
 //   cover-hook-centered | vertical-balance | counter-centered | optical-padding
-//   | density-budget | slide-grammar
+//   | density-budget | slide-grammar | typography-floor | safe-area
+//
+// typography-floor y safe-area son las mas caras de conceder: bajan a nota TODOS los
+// avisos de su tipo, incluido el error real que se cuele entre ellos. Van solo cuando
+// el template las tiene como decision de disenio (02-editorial-oscuro-v2 usa ambas) y
+// nunca para acallar un slide suelto que no entra.
 // Toda excepcion tiene que estar decidida por el usuario y registrada en manifest.json
 // bajo `layout_exceptions`, con el motivo.
 import fs from 'node:fs';
@@ -173,9 +178,17 @@ for (let i = 1; i <= count; i++) {
       if (!el.textContent || !el.textContent.trim()) return false;
       return parseFloat(getComputedStyle(el).fontSize) >= 90 * scale;
     });
+    //     El nombre de la clase varia por template, pero el elemento es el mismo:
+    //     el rotulo corto que encabeza el slide. 01-editorial-oscuro lo llama
+    //     `.kicker`, 02-editorial-oscuro-v2 `.eyebrow`, 03-cuaderno-de-taller y
+    //     05-plano-de-taller `.tab` (la pestania de ficha). Cuentan todos.
     const grammar = {
-      kicker: !!document.querySelector('.kicker'),
-      h1: !!document.querySelector('h1') || bigType
+      kicker: !!document.querySelector('.kicker, .eyebrow, .tab'),
+      // Cuenta cualquier etiqueta de titular, no solo h1: 04-plano-en-negativo usa
+      // h2 a 88px y quedaba 2px por debajo del umbral de cifra dominante, con lo
+      // que un slide con titular se reportaba como si no lo tuviera. Lo que el
+      // chequeo busca es que el slide tenga un titular, y un h2 lo es.
+      h1: !!document.querySelector('h1, h2') || bigType
     };
 
     // 7) hook de portada centrado
@@ -337,13 +350,32 @@ for (let i = 1; i <= count; i++) {
     ctx.drawImage(img, 0, 0);
     const W2 = c.width, H2 = c.height;
     const d = ctx.getImageData(0, 0, W2, H2).data;
+
+    // "Tinta" es lo que CONTRASTA con el campo, no lo que es claro. Medido como
+    // brillo > 110 fijo, un template de fondo claro da 95% de cobertura y un solo
+    // renglon: el campo entero cuenta como tinta y el analisis se vuelve basura.
+    // Se mide el brillo modal (el campo domina el lienzo) y se cuenta lo que se
+    // aparta de el mas que el umbral. Sobre campo oscuro (brillo ~5) eso da
+    // exactamente el ">110" original, asi que las bandas medidas sobre el set de
+    // La Casa siguen valiendo sin recalibrar.
+    const INK_DELTA = 105;
+    const hist = new Uint32Array(256);
+    for (let y = 0; y < H2; y += 2) {
+      for (let x = 0; x < W2; x += 2) {
+        const i = (y * W2 + x) * 4;
+        hist[Math.round((d[i] + d[i + 1] + d[i + 2]) / 3)]++;
+      }
+    }
+    let field = 0;
+    for (let v = 1; v < 256; v++) if (hist[v] > hist[field]) field = v;
+
     const rows = [];
     let total = 0;
     for (let y = 0; y < H2; y += 2) {
       let n = 0;
       for (let x = 0; x < W2; x += 2) {
         const i = (y * W2 + x) * 4;
-        if ((d[i] + d[i + 1] + d[i + 2]) / 3 > 110) n++;
+        if (Math.abs((d[i] + d[i + 1] + d[i + 2]) / 3 - field) > INK_DELTA) n++;
       }
       total += n;
       if (n > 2) rows.push(y);
@@ -449,8 +481,8 @@ for (const r of report) {
   const at = (list, m) => list.push(`slide ${r.slide}: ${m}`);
 
   for (const f of r.fontsMissing) at(red, `la fuente "${f}" no cargo (fallback silencioso a fuente de sistema)`);
-  for (const s of r.small) at(red, `"${s.txt}" a ${s.size}px, piso ${s.floor}px`);
-  for (const o of r.outside) at(red, `"${o.txt}" fuera del safe area [${o.box}]`);
+  for (const s of r.small) at(excepted('typography-floor') ? notes : red, `"${s.txt}" a ${s.size}px, piso ${s.floor}px`);
+  for (const o of r.outside) at(excepted('safe-area') ? notes : red, `"${o.txt}" fuera del safe area [${o.box}]`);
   for (const o of r.orphans) at(red, `posible huerfana: "${o.txt}" — ultima linea ${o.lastLine}px vs ${o.widest}px`);
   for (const b of r.brokenImages) at(red, `asset no cargado: ${b}`);
   if (r.overflow.h > H + 1 || r.overflow.w > W + 1) at(red, `overflow ${r.overflow.w}x${r.overflow.h} (canvas ${W}x${H})`);

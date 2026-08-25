@@ -1,0 +1,169 @@
+<meta charset="utf-8">
+<title>Carrusel — 03-cuaderno-de-taller</title>
+<link rel="stylesheet" href="styles.css">
+<script src="slide-data.js"></script>
+
+<div id="root"></div>
+
+<script>
+// 03-cuaderno-de-taller. Se renderiza de a una slide con ?slide=N; sin parametro
+// muestra todas apiladas.
+//
+// Las piezas de abajo son las que el template ya sabe dibujar. Cual va en cada slide lo
+// decide el material, y se propone en el gate de aprobacion de copy. Las reglas del
+// estilo y el listado completo de piezas estan en estilo.md.
+
+const VIDEO = new URLSearchParams(location.search).has('video');
+
+// Encabezado de ficha: numeracion a la izquierda, etiqueta del contenido a la derecha.
+function tab(s, i, total) {
+  const n = String(i + 1).padStart(2, '0');
+  const t = String(total).padStart(2, '0');
+  return `<div class="tab"><span>FICHA ${n}/${t}</span><span>${s.tab}</span></div>`;
+}
+
+// Pie: fuente a la izquierda, firma manuscrita a la derecha. La firma sale de
+// slide-data.js: no la escribas en duro aca, o el primer carrusel de otra marca sale
+// con el pie de esta.
+// ?video=1 no cambia este pie: no hay prompt de swipe en este template.
+function foot(s, big) {
+  return `
+  <div class="foot${big ? ' big' : ''}">
+    <span>${s.source}</span>
+    <span class="sign">${window.CAROUSEL.footerBrand}</span>
+  </div>`;
+}
+
+// GRAMATICA DE LA MARCA: titular manuscrito + regla de cota + bajada.
+// La regla de cota acompania el largo del titular, no el ancho de la slide: se pasa
+// `ruleWidth` como porcentaje. Sin titular, render-and-audit.mjs marca red issue
+// (excepcion documentada: 'slide-grammar').
+function head(s) {
+  return `
+    <div class="head">
+      <h2${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h2>
+      <div class="rule" style="width:${s.ruleWidth || 70}%"><i></i><span></span><i class="r"></i></div>
+      ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
+    </div>`;
+}
+
+const PASTEL = { rosa: 'var(--rosa)', celeste: 'var(--celeste)', amarillo: 'var(--amarillo)', gris: 'var(--gris)' };
+const pastel = n => PASTEL[n] || 'var(--gris)';
+
+// Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
+// elige ni se ofrece en variantes: transparente va directo sobre el papel, opaco va
+// enmarcado. Un opaco a sangre NO es una opcion: rompe el margen del disenio.
+const userImg = s => !s.img ? '' : (s.imgTransparent
+  ? `<div class="ext-plain"><img src="${s.img}" alt=""></div>`
+  : `<div class="ext-card"><img src="${s.img}" alt=""></div>`);
+
+// ---------- Componentes ----------
+
+// Comparacion de dos cajas. `h` es la altura en px y es PROPORCIONAL AL DATO:
+// si la fuente no publica la magnitud, este componente no va.
+const compare = s => `
+  <div class="compare">
+    <div class="col">
+      <div class="box" style="height:${s.a.h}px;background:${pastel(s.a.tone)}">${s.a.v}</div>
+      <div class="cap">${s.a.cap}</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <div class="box" style="height:${s.b.h}px;background:${pastel(s.b.tone)}">${s.b.v}</div>
+      <div class="cap">${s.b.cap}</div>
+    </div>
+  </div>`;
+
+// Despiece: piezas con etiqueta P-01, nombre manuscrito y descripcion.
+const parts = s => `
+  <div class="parts">
+    ${s.parts.map(p => `
+      <div class="part">
+        <span class="tag" style="background:${pastel(p.tone)}">${p.tag}</span>
+        <div class="t">
+          <div class="name">${p.name}</div>
+          <div class="desc">${p.desc}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+
+// Barras de ensayo. `w` es el ancho en porcentaje y sale del dato medido.
+const bars = s => `
+  <div class="bars">
+    ${s.bars.map(b => `
+      <div class="row">
+        <div class="top"><span class="lbl">${b.lbl}</span><span class="val">${b.val}</span></div>
+        <div class="bar" style="width:${b.w}%;background:${pastel(b.tone)}"></div>
+      </div>`).join('')}
+    ${s.after ? `<div class="lede">${s.after}</div>` : ''}
+    ${s.note ? `<div class="note">${s.note}</div>` : ''}
+  </div>`;
+
+// Pasos numerados del cierre.
+const steps = items => `
+  <div class="steps">
+    ${items.map((t, k) => `
+      <div class="step">
+        <span class="n">${String(k + 1).padStart(2, '0')}</span>
+        <span class="t">${t}</span>
+      </div>`).join('')}
+  </div>`;
+
+// ---------- Render ----------
+
+function render(s, i, total) {
+  let inner = '';
+
+  // Portada: titular manuscrito grande, regla de cota, bajada, y la comparacion
+  // ocupando el resto. Es la unica slide con h1.
+  if (s.type === 'cover') {
+    inner = `
+      <div class="head">
+        <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
+        <div class="rule" style="width:${s.ruleWidth || 76}%"><i></i><span></span><i class="r"></i></div>
+        <div class="lede">${s.lede}</div>
+      </div>
+      ${compare(s)}`;
+  }
+
+  if (s.type === 'compare') inner = `${head(s)}${compare(s)}`;
+  if (s.type === 'parts')   inner = `${head(s)}${parts(s)}${userImg(s)}`;
+  if (s.type === 'bars')    inner = `${head(s)}${bars(s)}`;
+
+  // ...un bloque mas por cada layout que pida el carrusel. Patron:
+  // head(s) + un componente. Un grafico propio va dentro de un contenedor `chart` o
+  // `diagram`: eso habilita el piso de 24px para su capa de referencia.
+
+  // Cierre: sin encabezado de ficha numerado a la izquierda? No — lo lleva igual,
+  // para que la serie se lea completa. Lo que cambia es la firma, que va grande.
+  if (s.type === 'cta') {
+    inner = `
+      <div class="body">
+        <h2 style="font-size:${s.hsize || 100}px">${s.headline}</h2>
+        <div class="rule" style="width:${s.ruleWidth || 70}%"><i></i><span></span><i class="r"></i></div>
+        <div class="lede">${s.lede}</div>
+        ${steps(s.steps)}
+      </div>`;
+  }
+
+  const isCTA = s.type === 'cta';
+  return `<div class="slide s-${s.type}">
+    <div class="grid"></div>
+    ${tab(s, i, total)}
+    ${inner}
+    ${foot(s, isCTA)}
+  </div>`;
+}
+
+const params = new URLSearchParams(location.search);
+const data = window.CAROUSEL;
+const total = data.slides.length;          // incluye la CTA
+const idx = params.has('slide') ? parseInt(params.get('slide'), 10) - 1 : null;
+
+if (idx === null) {
+  document.getElementById('root').innerHTML =
+    data.slides.map((s, i) => render(s, i, total)).join('<div style="height:40px"></div>');
+} else {
+  document.getElementById('root').innerHTML = render(data.slides[idx], idx, total);
+}
+</script>

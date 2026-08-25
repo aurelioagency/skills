@@ -1,0 +1,281 @@
+<meta charset="utf-8">
+<title>Carrusel — 02-editorial-oscuro-v2</title>
+<link rel="stylesheet" href="styles.css">
+<script src="slide-data.js"></script>
+
+<div id="root"></div>
+
+<script>
+// 02-editorial-oscuro-v2. Se renderiza de a una slide con ?slide=N; sin parametro
+// muestra todas apiladas.
+//
+// Este template trae layouts armados (abajo, en render()). Cual va en cada slide lo
+// decide el agente segun el material, en el gate de aprobacion de copy — igual que en
+// 01-editorial-oscuro. No hay una regla de composicion fija en este archivo.
+
+const VIDEO = new URLSearchParams(location.search).has('video');
+
+// Barra de progreso: un segmento por imagen exportada. En la slide N los primeros N
+// van encendidos, en el acento de esa slide.
+function progress(i, total, accent) {
+  let out = '';
+  for (let k = 0; k < total; k++) {
+    out += `<i class="${k <= i ? `on ${accent}` : ''}"></i>`;
+  }
+  return `<div class="progress">${out}</div>`;
+}
+
+// ?video=1 omite el prompt de swipe: en un Short no hay nada que deslizar, y la
+// linea queda como un residuo del carrusel. build-short.mjs renderiza con este flag.
+// La marca y el swipe salen de slide-data.js: no los escribas en duro aca, o el
+// primer carrusel de otra marca sale con el footer de esta.
+function footer(i, total) {
+  const d = window.CAROUSEL;
+  return `
+  <div class="footer">
+    <div class="brand">${d.footerBrand}</div>
+    <div class="counter">${String(i + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</div>
+    ${VIDEO ? '' : `<div class="swipe">${d.footerSwipe || '← Desliza'}</div>`}
+  </div>`;
+}
+
+// GRAMATICA DE LA MARCA, no un helper opcional:
+//   eyebrow -> titular -> bajada en serif
+// Todo slide de contenido pasa por aca. Sin titular, render-and-audit.mjs lo marca
+// como red issue (excepcion documentada: 'slide-grammar').
+function head(s) {
+  return `
+    <div class="head">
+      <div class="eyebrow ${s.accent}">${s.eyebrow}</div>
+      <h2${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h2>
+      ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
+    </div>`;
+}
+
+const close = s => s.close ? `<div style="padding:0 var(--pad-x);margin-top:56px"><p class="close">${s.close}</p></div>` : '';
+const dlabel = (t, cls) => t ? `<div class="dlabel ${cls || ''}">${t}</div>` : '';
+
+// Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
+// elige ni se ofrece en variantes: transparente va directo sobre el campo, opaco va
+// enmarcado. Un opaco a sangre NO es una opcion: rompe el margen lateral y el ancho
+// extra no compra legibilidad.
+const userImg = s => !s.img ? '' : (s.imgTransparent
+  ? `<div class="ext-plain"><img src="${s.img}" alt=""></div>`
+  : `<div class="ext-card"><img src="${s.img}" alt=""></div>`);
+
+const slot = src => src ? `<img src="${src}" alt="">` : '';
+
+// ---------- Componentes ----------
+
+// Tira de nueve celdas cuya opacidad dibuja la forma del dato. `weights` son nueve
+// valores de 0 a 1; el acento sale del acento de la slide.
+const strip = s => `
+  <div class="strip diagram">
+    ${dlabel(s.stripLabel)}
+    <div class="cells">
+      ${s.weights.map(w => `<i style="background:${accentRGBA(s.accent, w)}"></i>`).join('')}
+    </div>
+    <div class="axis"><span>${s.axis[0]}</span><span class="mid">${s.axis[1]}</span><span>${s.axis[2]}</span></div>
+  </div>`;
+
+const HEX = { coral: [224,113,74], verde: [127,187,160], dorado: [227,192,92] };
+function accentRGBA(name, a) {
+  const [r, g, b] = HEX[name] || HEX.dorado;
+  return a >= 1 ? `rgb(${r},${g},${b})` : `rgba(${r},${g},${b},${a})`;
+}
+
+// Filas con etiqueta mono + descripcion. Imagen opcional al costado.
+const rows = s => `
+  <div class="rows">
+    <div class="col">
+      ${s.rows.map(r => `
+        <div class="row ${s.accent}">
+          <div class="lbl">${r.lbl}</div>
+          <div class="t">${r.t}</div>
+        </div>`).join('')}
+    </div>
+    ${s.aside ? `<div class="slot">${slot(s.aside)}</div>` : ''}
+  </div>`;
+
+// Grafico de linea con area. `path` es la curva; el viewBox es 904x380.
+// Va dentro de .chart: eso es lo que habilita el piso de 24px para sus rotulos.
+const chart = s => `
+  <div class="chart">
+    ${dlabel(s.chartLabel)}
+    <svg viewBox="0 0 904 380" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="fill-${s.id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${accentRGBA(s.accent, 1)}" stop-opacity="0.30"></stop>
+          <stop offset="100%" stop-color="${accentRGBA(s.accent, 1)}" stop-opacity="0"></stop>
+        </linearGradient>
+      </defs>
+      <line x1="0" y1="379" x2="904" y2="379" stroke="#232327" stroke-width="2"></line>
+      <line x1="0" y1="190" x2="904" y2="190" stroke="#1a1a1e" stroke-width="2"></line>
+      <path d="${s.path} L880,379 L24,379 Z" fill="url(#fill-${s.id})"></path>
+      <path d="${s.path}" fill="none" stroke="${accentRGBA(s.accent, 1)}" stroke-width="7" stroke-linecap="round"></path>
+      ${(s.dots || []).map(d => `<circle cx="${d.x}" cy="${d.y}" r="${d.r || 14}" fill="${accentRGBA(d.accent || s.accent, 1)}"></circle>`).join('')}
+    </svg>
+    <div class="axis"><span>${s.axis[0]}</span><span class="mid">${s.axis[1]}</span><span>${s.axis[2]}</span></div>
+  </div>`;
+
+// Numero gigante + eyebrow + titular. Para un punto de una serie (01, 02, 03…).
+const bignum = s => `
+  <div class="bignum">
+    <div class="n ${s.accent === 'dorado' ? 'dorado' : ''}">${s.num}</div>
+    <div>
+      <div class="eyebrow ${s.accent}">${s.eyebrow}</div>
+      <h2>${s.headline}</h2>
+    </div>
+  </div>
+  ${s.lede ? `<p class="lede" style="margin:44px var(--pad-x) 0">${s.lede}</p>` : ''}`;
+
+// Fila de chips: uno activo, uno tachado, el resto neutros.
+const chips = items => `
+  <div class="chips">
+    ${items.map(c => `<div class="chip ${c.state || ''}">${c.t}</div>`).join('')}
+  </div>`;
+
+// Lista numerada, 3 a 5 items.
+const list = s => `
+  <div class="list">
+    ${s.items.map((t, k) => `
+      <div class="li ${s.accent}">
+        <span class="n">${String(k + 1).padStart(2, '0')}</span>
+        <span class="t">${t}</span>
+      </div>`).join('')}
+  </div>`;
+
+// Tarjetas en fila. `tone: 'coral'` marca la que es el caso malo.
+const cards = items => `
+  <div class="cards">
+    ${items.map(c => `
+      <div class="card ${c.tone || ''}">
+        <div class="lbl">${c.lbl}</div>
+        <div class="t">${c.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Documentos con renglones: muestra donde cae el dato dentro del texto.
+// `hit` es el indice del renglon marcado; `miss: true` lo pinta como fallo.
+const docs = items => `
+  <div class="docs diagram">
+    ${items.map(d => `
+      <div class="doc ${d.miss ? 'miss' : ''}">
+        <div class="sheet">
+          ${Array.from({ length: 9 }, (_, k) =>
+            `<i class="${k === d.hit ? (d.miss ? 'lost' : 'hit') : ''}"></i>`).join('')}
+        </div>
+        <div class="cap">${d.cap}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Barras por capa: cada capa llega menos lejos que la anterior.
+// `reach` es de 0 a 1: hasta donde conserva intensidad el degradado.
+const layers = s => `
+  <div class="layers diagram">
+    ${dlabel(s.layersLabel)}
+    ${s.layers.map(l => `
+      <div class="lrow">
+        <div class="lbl">${l.lbl}</div>
+        <div class="bar" style="background:linear-gradient(90deg,${accentRGBA(s.accent, 1)} 0%,${accentRGBA(s.accent, l.tail)} ${Math.round(l.reach * 100)}%)"></div>
+      </div>`).join('')}
+    <div class="axis">
+      <div class="pad"></div>
+      <div class="ends"><span>${s.axis[0]}</span><span>${s.axis[1]}</span></div>
+    </div>
+  </div>`;
+
+// Remate grande con imagen al costado. `hl` es la parte resaltada del remate.
+const punch = s => `
+  <div class="punch">
+    <div class="t">${s.punch}</div>
+    ${s.aside ? `<div class="slot">${slot(s.aside)}</div>` : ''}
+  </div>`;
+
+// ---------- Render ----------
+
+function render(s, i, total) {
+  const accent = s.accent || 'dorado';
+  const glow = `<div class="glow ${s.glow || 'tl'} ${accent}"></div>`;
+  let inner = '';
+
+  // Portada: titular partido en dos mitades (la primera en --ghost, la segunda en
+  // --ink), giro en serif italica (otra fuente y otro color), y un grafico simple
+  // debajo. Una portada de solo texto se lee como placa de titulo, no como gancho.
+  if (s.type === 'cover') {
+    inner = `
+      <div class="head">
+        <div class="eyebrow ${accent}">${s.eyebrow}</div>
+        <h1 class="ghost">${s.headTop}</h1>
+        <h1>${s.headBottom}</h1>
+        <div class="twist">${s.twist}</div>
+      </div>
+      ${strip(s)}`;
+  }
+
+  if (s.type === 'rows')   inner = `${head(s)}${rows(s)}${userImg(s)}`;
+  if (s.type === 'chart')  inner = `${head(s)}${chart(s)}${close(s)}`;
+  if (s.type === 'docs')   inner = `${head(s)}${docs(s.docs)}${close(s)}`;
+  if (s.type === 'list')   inner = `${head(s)}${list(s)}${close(s)}`;
+  if (s.type === 'layers') inner = `${bignum(s)}${layers(s)}${close(s)}`;
+
+  // Numero gigante + chips, con un diagrama opcional arriba de los chips.
+  if (s.type === 'steps') {
+    inner = `
+      ${bignum(s)}
+      <div style="padding:0 var(--pad-x);margin-top:auto">
+        ${dlabel(s.chipsLabel, 'coral')}
+        ${s.diagram || ''}
+        ${chips(s.chips)}
+      </div>
+      ${close(s)}`;
+  }
+
+  // Tarjetas arriba + remate con imagen abajo.
+  if (s.type === 'cards') {
+    inner = `
+      <div class="head">
+        <div class="eyebrow ${accent}">${s.eyebrow}</div>
+        <h2>${s.headline}</h2>
+      </div>
+      <div style="margin-top:64px">${cards(s.cards)}</div>
+      ${punch(s)}`;
+  }
+
+  // ...un bloque mas por cada layout que pida el carrusel. Patron:
+  // head(s) + un componente + close(s). Un grafico propio va dentro de un
+  // contenedor `chart` o `diagram`: eso habilita el piso de 24px para su capa de
+  // referencia (rotulos, marcas de escala, leyendas).
+
+  // Cierre: slide HTML de este mismo template, no un PNG fijo. El texto sale de
+  // slide-data.js para que una variante ("Comenta X y te lo mando por DM") sea un
+  // cambio de datos y no un asset nuevo.
+  if (s.type === 'cta') {
+    inner = `
+      <div class="box">
+        <div class="sig">${s.signature}</div>
+        <h2>${s.headline}</h2>
+        <div class="sub">${s.sub}</div>
+        <div class="rule"></div>
+        <div class="site">${window.CAROUSEL.footerBrand}</div>
+        ${s.community ? `<div class="community">${s.community}</div>` : ''}
+      </div>
+      <div class="counter">${String(total).padStart(2, '0')} / ${String(total).padStart(2, '0')}</div>`;
+  }
+
+  const chrome = s.type === 'cta' ? '' : footer(i, total);
+  return `<div class="slide s-${s.type}">${glow}${progress(i, total, accent)}${inner}${chrome}</div>`;
+}
+
+const params = new URLSearchParams(location.search);
+const data = window.CAROUSEL;
+const total = data.slides.length;          // incluye la CTA
+const idx = params.has('slide') ? parseInt(params.get('slide'), 10) - 1 : null;
+
+if (idx === null) {
+  document.getElementById('root').innerHTML =
+    data.slides.map((s, i) => render(s, i, total)).join('<div style="height:40px"></div>');
+} else {
+  document.getElementById('root').innerHTML = render(data.slides[idx], idx, total);
+}
+</script>

@@ -15,8 +15,8 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
    Completion criterion: the active preset, language, footer behavior, and CTA behavior are explicit, and the preset carries no unfilled placeholder in any section this carousel will use.
 2. Understand the source, then extract it into shareable angles.
    Completion criterion: source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content, and the `Lectura` — the source re-told in ordinary language (see *Understanding the topic before writing it*) — is written before any hook or slide copy.
-3. Recommend the carousel split, present two hook options per carousel, and ask for confirmation.
-   Completion criterion: the user has confirmed, reduced, or changed the number of carousels, and picked or edited a hook for each one, before any slide is drafted.
+3. Elegir el arquetipo narrativo, recomendar el split, presentar dos ganchos por carrusel, y pedir confirmacion.
+   Completion criterion: el arbol de `references/content-archetypes.md` se corrio sobre la `Lectura`, y el usuario confirmo, redujo o cambio el arquetipo, la cantidad de carruseles y el gancho de cada uno, antes de que se escriba un solo slide.
 4. Draft the slides and get the copy approved.
    Completion criterion: each carousel has as many content slides as its material supports and no more than 9, each slide has one job, each slide has its component declared (see *Copy Approval Gate*), each slide uses the density budget below rather than hugging its floor, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
@@ -90,6 +90,42 @@ Two things a new brand must decide explicitly, because inheriting La Casa's answ
 
 - **The density budget.** The bands in `scripts/render-and-audit.mjs` were measured on La Casa's published set. Another brand either measures its own and updates the table, or lists `density-budget` under `layoutExceptions` with the reason in `manifest.json`. Judging a brand by another brand's density produces red issues that mean nothing.
 - **The cover formula.** Which family and colour carry the headline, which different family and colour carry the twist line, and what graphic the cover uses.
+
+## Template Resolution
+
+A **template** is a visual layout system — the HTML/CSS skeleton, its field treatment, and its component set. A **preset** is a brand's decisions on top of one (palette, fonts, footer, CTA, caption). Several presets can point at the same template; a brand that needs a genuinely different layout, not just different colours, gets a new template instead of bending an existing one.
+
+Templates live in `assets/templates/`, one folder per design, numbered and named:
+
+```text
+assets/templates/01-editorial-oscuro/
+  index.html
+  styles.css
+  slide-data.js
+  cta-<variant>.html   # CTA source(s) built on this template's field, if any
+  make-cta.mjs
+```
+
+Templates today:
+
+| # | Template | Sistema visual |
+|---|---|---|
+| 01 | `01-editorial-oscuro` | Campo negro con grilla de puntos, curvas de contorno y dos glows. Archivo Black / Roboto Mono / Inter / Georgia itálica. Portada centrada. CTA como PNG fijo, dos variantes. |
+| 02 | `02-editorial-oscuro-v2` | Segunda versión del mismo campo, plana: sin grilla ni curvas, un glow que rota de esquina, barra de progreso arriba. Archivo / Source Serif 4 / JetBrains Mono. Portada alineada a la izquierda con el titular partido en dos mitades. CTA como slide HTML. |
+| 03 | `03-cuaderno-de-taller` | Papel `#F2EFE7` con retícula de 60px. Titulares manuscritos (Architects Daughter), cuerpo Space Grotesk, rótulos JetBrains Mono. Regla de cota rombo-línea-rombo. Cuatro pasteles con borde de tinta. Tono didáctico. |
+| 04 | `04-plano-en-negativo` | Campo `#101418` con retícula turquesa. Una sola familia (Space Grotesk) haciendo toda la jerarquía por peso y tamaño. Estado con punto de color en el encabezado. Tono de autoridad y prueba. |
+| 05 | `05-plano-de-taller` | Papel `#EDEAE3`, Barlow Condensed en mayúsculas, relleno sólo por trama diagonal, dos grosores de línea en proporción 2:1, línea de eje como separador y cartucho ISO al pie. Trae **biblioteca de figuras** (`figures.js` / `figures.md`): 24 formas × 6 tramas, los 8 tipos de línea ISO 128-20 y simbología normalizada. |
+| 06 | `06-handmade` | Papel crema `#FCEFE3`, dos manuscritas (Gochi Hand / Patrick Hand), cinco pasteles y cuatro marcas hechas con cajas de radio irregular. Cinco plantillas fijas y nada más. Trae **set de iconos** (`icons.js` / `icons.md`). |
+
+Los seis son de La Casa de Aurelio y comparten la marca; lo que cambia es el sistema visual entero. Los 03, 04 y 05 son tres variantes de una misma estética de ingeniería, pero cada uno es un template independiente: no comparten paleta, tipografía ni componentes. Un diseño nuevo (`07-<nombre>`, …) entra como carpeta numerada nueva, nunca como variante pegada encima de los archivos de otro template.
+
+**Un template puede traer su propia librería de ilustración**, en la misma carpeta: `figures.js` + `figures.md` en el 05, `icons.js` + `icons.md` en el 06. Es distinto del asset bank de la marca (`references/asset-bank.md`), que son PNG terminados y reutilizables: estas se dibujan en SVG al renderizar y pertenecen a un solo template, porque están hechas con las reglas de trazo de ese sistema visual.
+
+**Every preset names which template it uses**, in its `Defaults` section (`Template: 01-editorial-oscuro`). Resolve the template from the preset, the same way the preset itself gets resolved — never ask which template unless the preset is silent about it or names more than one, and never assume a new brand wants the default just because it is the one most carousels used.
+
+**Un template puede traer excepciones de layout de fábrica**, ya listadas en su `slide-data.js`. Son decisiones de diseño del template, no atajos: `02-editorial-oscuro-v2` trae `typography-floor`, `safe-area` y `cover-hook-centered`. No se sacan y no se agregan otras sin que el usuario lo decida. Al copiarlas al paquete, van también a `manifest.json` con su motivo, como cualquier excepción.
+
+Starting a package copies the named template's folder, not a hardcoded path — see *Starting the package* in `references/html-rendering.md`.
 
 ## Source Intake
 
@@ -195,7 +231,17 @@ I recommend [N] carousel(s):
 Confirm, reduce, or change the split?
 ```
 
-Include the two hook options per carousel (see Hooks) in the same confirmation message, so split and hooks get approved together.
+Include the two hook options per carousel (see Hooks) **and el arquetipo narrativo** in the same confirmation message, so archetype, split and hooks get approved together.
+
+El arquetipo sale de correr el arbol de decision de `references/content-archetypes.md` sobre la `Lectura`. Su salida son tres lineas, y van antes del split:
+
+```text
+Arquetipo: [nombre]
+Por que: [que condicion del arbol se cumplio]
+Estructura: [la secuencia de ese arquetipo aplicada a este tema]
+```
+
+**El arquetipo puede fijar la cantidad de slides.** Tutorial es un paso por slide y listicle un item por slide: ahi la cuenta la da el material, no una eleccion. Si un proceso tiene 12 pasos son dos carruseles, porque el techo de 10 imagenes no se mueve.
 
 **State the slide count you are proposing for each carousel, and why that number** — it is part of what the user is confirming here, and it is far cheaper to change now than after the copy is drafted. Size and the text budget per slide are fixed by the skill; the count is not. See Format, length and density below.
 
@@ -240,9 +286,39 @@ This budget is what governs while writing. The pixel bands in `scripts/render-an
 
 **A character count is not a composition.** The budget measures how much someone reads; it says nothing about how much of the canvas is occupied. The same count is a full slide when it is carried by a chart, a set of cards or a list, and a near-empty one when it is four lines of prose. Treating the two as the same measure is what produces a carousel that passes the count and renders hollow.
 
+## Estilo visual y secuencia de contenido
+
+Dos cosas distintas que conviene no mezclar:
+
+| | Qué es | Dónde vive |
+|---|---|---|
+| **El estilo visual** | Paleta, tipografía, marcas y las reglas que hacen que todo lo que salga de ahí se vea de la misma familia | `assets/templates/<NN-nombre>/estilo.md` |
+| **La secuencia de contenido** | Qué dice cada slide y en qué orden | `references/content-archetypes.md` (árbol de decisión) y *Slide Grammar*, acá abajo |
+
+**Un template es un estilo, no un molde para rellenar.** No trae un juego de placas
+prearmadas donde sólo se cambian las palabras: trae las reglas que dan consistencia
+—qué familias tipográficas, con qué roles; qué significa cada acento; qué grosor de
+línea; qué margen— y un conjunto de piezas ya construidas que sirven de punto de
+partida. Cada carrusel compone sus propias placas dentro de ese estilo, y si le falta
+una pieza se agrega al template.
+
+`estilo.md` tiene esas dos partes, en ese orden: primero las reglas, que son lo que
+manda; después las piezas construidas, con los campos que lee cada una.
+
+**Lo que NO hay que hacer con las piezas construidas.** No son un catálogo de arquetipos
+y no llevan una doctrina de "cuándo conviene cada una". La mayoría son, literalmente,
+las placas del carrusel con el que se armó el template — un carrusel es evidencia de un
+carrusel. Escribirles un "cuándo usar / cuándo no" que la fuente nunca declaró es
+inventar reglas de marca, y ya pasó una vez (2026-08-25) y hubo que deshacerlo. Si
+alguna vez hace falta ese nivel, sale de mirar el set publicado, no de deducirlo.
+
+Qué pieza va en cada slide lo decide el material, y se propone en el gate de aprobación
+de copy como cualquier otra decisión de composición. Se registra en `carousel-brief.md`
+y en `manifest.json` (el `type` de cada slide).
+
 ## Slide Grammar
 
-Use this default grammar unless the source demands a different structure:
+Es la secuencia por defecto, y vale para todo template y toda marca. Es tambien el paso 9 del arbol de `references/content-archetypes.md`: lo que se usa cuando ninguna condicion se cumple con claridad. Use this default grammar unless the source demands a different structure:
 
 1. Hook or claim.
 2. Context or problem.
@@ -306,7 +382,7 @@ Recommendation: [which and why, one line]
 
 Before building any HTML, show the user the complete copy of every slide as plain text — kicker, headline, body, labels, and any verdict line — numbered by slide. Wait for approval, edits, or replacements.
 
-**Every slide's component is declared here too, and this is the one that gets skipped.** For each slide, say what occupies it besides the text: a chart, a set of cards, a list, a table, a diagram, a mascot row — or nothing, deliberately. A slide whose component is never decided does not end up without one; it ends up with whatever the layout falls back to when nothing was chosen, and a carousel where that happens on most slides renders as a run of near-identical, half-empty frames. The symptom is unmistakable in the contact sheet and invisible in the copy, which is why it has to be settled here, in text, before anything is built.
+**Every slide's component is declared here too, and this is the one that gets skipped.** For each slide, say what occupies it besides the text: a chart, a set of cards, a list, a table, a diagram, a mascot row — or nothing, deliberately. **Las piezas ya construidas del template activo están en `assets/templates/<NN-nombre>/estilo.md`**, con los campos que lee cada una; son el punto de partida, y si el slide necesita otra cosa se arma dentro de las reglas del estilo. A slide whose component is never decided does not end up without one; it ends up with whatever the layout falls back to when nothing was chosen, and a carousel where that happens on most slides renders as a run of near-identical, half-empty frames. The symptom is unmistakable in the contact sheet and invisible in the copy, which is why it has to be settled here, in text, before anything is built.
 
 Deciding the component is also what makes the density budget reachable: prose spends the character budget without filling the canvas, while the same facts inside a component fill it and read faster. If a slide has nothing to put in a component, that is worth knowing at this gate — it usually means the slide is carrying less than it should.
 
@@ -445,7 +521,7 @@ broken margin.
 Beyond that, the ordinary rules hold: inside the safe area, never under or over text, and it
 counts toward the slide's density like any other block.
 
-**The component already exists**: `userImg(s)` in `assets/template/index.html`, with `.ext-plain` and `.ext-card` in the template stylesheet. Set `img` on the slide, plus `imgTransparent: true` when the file has no background, and it picks the right treatment. Do not rebuild it per carousel.
+**The component already exists**: `userImg(s)` in `assets/templates/01-editorial-oscuro/index.html`, with `.ext-plain` and `.ext-card` in that template's stylesheet. Set `img` on the slide, plus `imgTransparent: true` when the file has no background, and it picks the right treatment. Do not rebuild it per carousel.
 
 #### The one thing still worth saying
 
@@ -532,7 +608,9 @@ An exception is valid when all three are true:
 2. Its id is listed in `slide-data.js` under `layoutExceptions`, with a comment naming the decision and its date.
 3. `manifest.json` carries the same id under `layout_exceptions`, with the reason.
 
-Valid ids: `cover-hook-centered`, `vertical-balance`, `counter-centered`, `optical-padding`, `density-budget`, `slide-grammar`. A listed exception drops that check from red issue to informational note, so the rest of the QA keeps blocking normally.
+Valid ids: `cover-hook-centered`, `vertical-balance`, `counter-centered`, `optical-padding`, `density-budget`, `slide-grammar`, `typography-floor`, `safe-area`. A listed exception drops that check from red issue to informational note, so the rest of the QA keeps blocking normally.
+
+`typography-floor` and `safe-area` are the two most expensive to grant, because they drop **every** warning of their kind to a note — including the genuine mistake that slips in among them. They exist for a template whose design deliberately sits below the floor or outside the clearance (`02-editorial-oscuro-v2` uses both, plus `cover-hook-centered`), and they come from the template, already listed in its `slide-data.js`. Never add either to make one stubborn slide pass, and when a template carries them, read the report's notes instead of trusting a clean exit code.
 
 `density-budget` is the one a new brand is most likely to need: the density bands are La Casa's, measured on its published set. A brand with a different visual weight either measures its own bands or takes this exception — see the brand preset template.
 

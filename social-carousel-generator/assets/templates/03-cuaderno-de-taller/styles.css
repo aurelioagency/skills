@@ -1,0 +1,244 @@
+/* 03-cuaderno-de-taller — sistema visual del carrusel.
+   Registro didactico: papel claro, reticula tenue, titulares manuscritos. El tono
+   "baja la guardia" — explica sin postura de autoridad.
+
+   QUE LO DIFERENCIA DE LOS OTROS:
+     - Papel #F2EFE7 con reticula de 60px al 7%. Fondo claro, no oscuro.
+     - Titulares en Architects Daughter (manuscrita), cuerpo en Space Grotesk,
+       rotulos en JetBrains Mono. Tres familias con roles fijos.
+     - Regla de cota: rombo - linea - rombo, debajo del titular. Es el separador
+       de la marca y aparece en toda slide de contenido.
+     - Cuatro pasteles planos, siempre con borde de 3px de tinta. Nunca sin borde.
+     - Pie de dos columnas: fuente a la izquierda, firma manuscrita a la derecha.
+
+   SI LA MARCA NO ES LA CASA, hay que tocar: los @font-face y sus archivos, el
+   bloque :root, `footerBrand` en slide-data.js, y el texto del CTA (.s-cta).
+
+   PISO TIPOGRAFICO: este template usa su capa de referencia por debajo de los 40px
+   de SKILL.md (rotulos mono 26-28px). Excepcion documentada 'typography-floor'.
+   SAFE AREA: el padding del disenio es 80px (5,5% vertical), menos que el 10% de
+   SKILL.md. Excepcion documentada 'safe-area'. Las dos estan en slide-data.js. */
+
+@font-face {
+  font-family: 'Architects Daughter';
+  src: url('assets/fonts/ArchitectsDaughter.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('assets/fonts/SpaceGrotesk.ttf') format('truetype');
+  font-weight: 300 700;
+  font-display: block;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: block;
+}
+
+:root {
+  --paper: #f2efe7;
+  --edge: #c5c1b6;          /* borde del lienzo */
+  --ink: #16181a;
+  --body: #3a3e42;          /* cuerpo de texto */
+  --muted: #6b6f73;         /* rotulos mono y pie */
+
+  /* Cuatro pasteles planos. Van SIEMPRE con borde de 3px de tinta: sin borde
+     pierden el caracter de recorte pegado en un cuaderno. */
+  --rosa: #d9a79c;          /* el caso caro / el antes */
+  --celeste: #b9cfe0;       /* el caso bueno / el despues */
+  --amarillo: #f0c874;      /* el subrayado, la nota al margen */
+  --gris: #c9cec7;          /* lo neutro / la linea base */
+
+  --pad: 80px;              /* margen del disenio. NO se reduce. */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { background: #e8e6e1; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1440px;
+  background: var(--paper);
+  border: 1px solid var(--edge);
+  overflow: hidden;
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--ink);
+}
+
+/* Reticula de cuaderno. Al 7% se lee como papel cuadriculado; mas fuerte compite
+   con el texto y mas debil desaparece en pantalla. */
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--ink) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ink) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+/* Todo lo que va sobre la reticula necesita position:relative o queda debajo. */
+.slide > *:not(.grid) { position: relative; }
+
+/* ---------- Encabezado y pie ---------- */
+
+.tab {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 3px solid var(--ink);
+  padding-top: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px;
+  color: var(--muted);
+}
+.foot .sign {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 30px;
+  color: var(--ink);
+}
+.foot.big .sign { font-size: 52px; }
+
+/* ---------- Tipografia ---------- */
+
+h1, h2 {
+  font-family: 'Architects Daughter', cursive;
+  font-weight: 400;
+  line-height: 1.04;
+  color: var(--ink);
+}
+h1 { font-size: 104px; }
+h2 { font-size: 92px; }
+
+.lede {
+  font-size: 46px;
+  line-height: 1.42;
+  color: var(--body);
+  max-width: 840px;
+  text-wrap: pretty;
+}
+
+/* Regla de cota: rombo - linea - rombo. El separador de la marca.
+   El ancho se pasa por style inline y acompania al largo del titular. */
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.rule i {
+  width: 13px; height: 13px; flex: none;
+  border-left: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  transform: rotate(45deg);
+}
+.rule i.r {
+  border-left: none; border-bottom: none;
+  border-right: 3px solid var(--ink);
+  border-top: 3px solid var(--ink);
+}
+.rule span { flex: 1; height: 3px; background: var(--ink); }
+
+.head { margin-top: 60px; display: flex; flex-direction: column; gap: 26px; }
+
+/* ---------- Componente: comparacion de dos cajas ---------- */
+
+/* Las alturas son proporcionales al dato y se pasan inline. Nunca se eligen a
+   ojo: una caja mas alta afirma una magnitud, y si la fuente no la publica, no
+   va (references/data-encoding.md). */
+.compare {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+}
+.compare .col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.compare .box {
+  width: 100%;
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 56px; font-weight: 700;
+}
+.compare .cap {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; color: var(--muted); text-align: center;
+}
+.compare .arrow { font-family: 'JetBrains Mono', monospace; font-size: 56px; }
+
+/* ---------- Componente: despiece (piezas numeradas) ---------- */
+
+.parts { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 34px; }
+.parts .part { display: flex; gap: 24px; align-items: flex-start; }
+.parts .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px; font-weight: 700;
+  border: 3px solid var(--ink);
+  padding: 6px 14px; flex: none;
+}
+.parts .t { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.parts .t .name { font-family: 'Architects Daughter', cursive; font-size: 56px; line-height: 1.05; }
+.parts .t .desc { font-size: 42px; line-height: 1.35; color: var(--body); }
+
+/* ---------- Componente: barras de ensayo ---------- */
+
+.bars { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 40px; }
+.bars .row { display: flex; flex-direction: column; gap: 14px; }
+.bars .top { display: flex; justify-content: space-between; align-items: baseline; }
+.bars .lbl { font-family: 'JetBrains Mono', monospace; font-size: 28px; color: var(--muted); }
+.bars .val { font-family: 'JetBrains Mono', monospace; font-size: 34px; font-weight: 700; }
+.bars .bar { height: 66px; border: 3px solid var(--ink); }
+
+/* Nota al margen: manuscrita con barra amarilla. Una por slide como maximo. */
+.note {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 44px; line-height: 1.25;
+  border-left: 8px solid var(--amarillo);
+  padding-left: 22px;
+}
+
+/* ---------- Componente: pasos numerados ---------- */
+
+.steps { display: flex; flex-direction: column; gap: 16px; margin-top: 12px; }
+.steps .step { display: flex; gap: 18px; align-items: center; }
+.steps .n { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; }
+.steps .t { font-size: 42px; color: var(--body); }
+
+/* Imagen que pasa el usuario. Transparente va directo; opaca va enmarcada con el
+   mismo borde de 3px del resto del sistema. Ver SKILL.md > Images the user supplies. */
+.ext-plain { margin-top: auto; }
+.ext-plain img { display: block; width: 100%; height: auto; }
+.ext-card {
+  margin-top: auto;
+  padding: 18px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+}
+.ext-card img { display: block; width: 100%; height: auto; }
+
+/* ---------- Layout: cierre ---------- */
+
+.s-cta .body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 34px; }
+.s-cta h2 { font-size: 100px; }
+
+.spacer { flex: 1 1 auto; }

@@ -1,0 +1,419 @@
+/* 02-editorial-oscuro-v2 — sistema visual del carrusel.
+   Segunda version del campo editorial oscuro de La Casa de Aurelio. Copiala al
+   paquete y agregale los layouts por slide.
+
+   QUE LA DIFERENCIA DE 01-editorial-oscuro:
+     - Campo plano #08080A: sin grilla de puntos y sin curvas de contorno. El unico
+       relieve es un glow radial por slide, que rota de esquina.
+     - Barra de progreso de segmentos arriba de cada slide, en el acento de esa slide.
+     - Tipografia: Archivo 900 (titulares) / Source Serif 4 (bajadas y giro) /
+       JetBrains Mono (eyebrows, numeros, rotulos). No hay Archivo Black ni Inter.
+     - Tres acentos con funcion asignada, no cuatro familias intercambiables.
+     - El CTA es una slide HTML de este mismo template, no un PNG fijo.
+
+   SI LA MARCA NO ES LA CASA, hay que tocar estas cinco cosas. Ninguna es opcional:
+     1. Los @font-face de aca abajo + copiar los archivos de fuente de la marca a
+        assets/fonts/ del paquete. Una fuente que no carga es red issue.
+     2. El bloque :root entero: neutros y los tres acentos.
+     3. El footer: `footerBrand` en slide-data.js y el texto de swipe.
+     4. La portada: familia y color del titular y del giro (.s-cover h1 y .twist).
+        Tienen que ser dos familias y dos colores distintos.
+     5. El texto del CTA (.s-cta) y las bandas de densidad de render-and-audit.mjs,
+        o la excepcion 'density-budget'.
+
+   PISO TIPOGRAFICO: este template usa deliberadamente tamanios por debajo de los
+   40px de SKILL.md en su capa de referencia (eyebrow 26px, footer 30px, rotulos de
+   eje 22px, chips 38px). Es decision de disenio, registrada como excepcion
+   documentada 'typography-floor-02' en slide-data.js y en manifest.json. El cuerpo
+   de texto y los titulares SI estan por encima del piso. */
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('assets/fonts/Archivo.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('assets/fonts/SourceSerif4.ttf') format('truetype');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url('assets/fonts/SourceSerif4-Italic.ttf') format('truetype');
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: block;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: block;
+}
+
+:root {
+  --field: #08080a;
+  --ink: #f5f1e6;
+  --ink-2: #ede8dc;          /* texto de items y chips */
+  --muted: #b9b4aa;          /* bajadas en serif */
+  --dim: #8a857a;            /* rotulos de eje */
+  --dimmer: #6e6a62;         /* labels de diagrama, contador */
+  --ghost: #3a3730;          /* primera mitad del titular de portada */
+  --panel: #111114;
+  --rule: #1e1e22;           /* separadores de lista y bordes de panel */
+  --rule-soft: #1c1c1f;      /* borde superior del footer */
+  --track: #26262a;          /* segmento apagado de la barra de progreso */
+  --slab: #2a2a2f;           /* renglon apagado del diagrama de documento */
+
+  /* Tres acentos, cada uno con su funcion:
+       coral   -> problema, causa, lo que falla
+       verde   -> dato, evidencia, solucion
+       dorado  -> apertura, cierre, slide neutra */
+  --coral: #e0714a;
+  --coral-deep: #2e1d16;     /* numero gigante sobre campo */
+  --coral-edge: #4a2a1e;     /* borde de chip */
+  --verde: #7fbba0;
+  --dorado: #e3c05c;
+  --dorado-deep: #332b14;
+  --dorado-soft: #c9ae68;    /* giro en serif italica */
+
+  --pad-x: 88px;             /* margen lateral del disenio. NO se reduce. */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { background: #141416; }
+
+.slide {
+  position: relative;
+  width: 1080px;
+  height: 1440px;
+  background: var(--field);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: Archivo, 'Helvetica Neue', sans-serif;
+}
+
+/* Glow: el unico relieve del campo. Rota de esquina slide a slide para que la
+   secuencia no se lea repetida. La clase de posicion la pone index.html. */
+.glow { position: absolute; pointer-events: none; }
+.glow.tl { top: -320px; left: -180px; width: 900px; height: 900px; }
+.glow.tr { top: -320px; right: -200px; width: 820px; height: 820px; }
+.glow.bl { bottom: -260px; left: -160px; width: 900px; height: 800px; }
+.glow.br { bottom: -280px; right: -180px; width: 860px; height: 820px; }
+.glow.tc { top: -300px; left: 50%; width: 900px; height: 800px; transform: translateX(-50%); }
+.glow.mid {
+  top: 50%; left: 50%; width: 1000px; height: 1000px;
+  transform: translate(-50%, -50%);
+}
+.glow.coral  { background: radial-gradient(circle, rgba(224,113,74,0.13), transparent 62%); }
+.glow.verde  { background: radial-gradient(circle, rgba(127,187,160,0.12), transparent 62%); }
+.glow.dorado { background: radial-gradient(circle, rgba(227,192,92,0.13), transparent 62%); }
+.glow.mid.dorado { background: radial-gradient(circle, rgba(227,192,92,0.10), transparent 62%); }
+
+/* Barra de progreso: tantos segmentos como imagenes tenga el carrusel. En la slide
+   N los primeros N van en el acento; el resto en --track. */
+.progress {
+  display: flex; gap: 6px;
+  padding: 0 var(--pad-x);
+  margin-top: 56px;
+}
+.progress i { height: 3px; flex: 1; background: var(--track); }
+.progress i.on.coral  { background: var(--coral); }
+.progress i.on.verde  { background: var(--verde); }
+.progress i.on.dorado { background: var(--dorado); }
+
+/* ---------- Tipografia ---------- */
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px;
+  letter-spacing: 0.32em;
+  font-weight: 500;
+}
+.eyebrow.coral  { color: var(--coral); }
+.eyebrow.verde  { color: var(--verde); }
+.eyebrow.dorado { color: var(--dorado); }
+
+h1, h2 {
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+h1 { font-size: 132px; line-height: 0.9; letter-spacing: -0.045em; }
+h2 { font-size: 104px; }
+
+/* Bajada: serif, no la sans de los titulares. */
+.lede {
+  font-family: 'Source Serif 4', serif;
+  font-size: 46px;
+  line-height: 1.34;
+  color: var(--muted);
+  max-width: 860px;
+  text-wrap: pretty;
+}
+
+/* Cierre: una linea, sans pesada, blanca. Traduce lo que muestra el componente. */
+.close {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.head { padding: 0 var(--pad-x); margin-top: 88px; }
+.head h2 { margin-top: 32px; }
+.head .lede { margin-top: 40px; }
+
+/* ---------- Footer ---------- */
+
+.footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  justify-items: center;
+  padding: 48px var(--pad-x) 64px;
+  border-top: 1px solid var(--rule-soft);
+}
+.footer .brand {
+  font-size: 30px; font-weight: 800; color: var(--ink);
+  letter-spacing: -0.01em; justify-self: start;
+}
+.footer .counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; color: var(--dimmer);
+}
+.footer .swipe {
+  font-size: 30px; font-weight: 800; color: var(--ink); justify-self: end;
+}
+
+/* ---------- Layout: portada ---------- */
+
+.s-cover .head { margin-top: 96px; }
+.s-cover h1.ghost { color: var(--ghost); margin-top: 36px; }
+.s-cover .twist {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 52px;
+  line-height: 1.2;
+  color: var(--dorado-soft);
+  max-width: 800px;
+  margin-top: 48px;
+  text-wrap: pretty;
+}
+.s-cover .footer { margin-top: 72px; padding-top: 56px; }
+
+/* Tira de celdas: el grafico por defecto de la portada. Nueve celdas cuya opacidad
+   dibuja la forma del dato (una U, una rampa, lo que el tema pida). */
+.strip { margin-top: auto; padding: 0 var(--pad-x); }
+.strip .cells { display: flex; gap: 10px; height: 132px; }
+.strip .cells i { flex: 1; border-radius: 8px; background: var(--dorado); }
+.strip .axis {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; letter-spacing: 0.18em; color: var(--dim);
+  margin-top: 20px;
+}
+.strip .axis .mid { color: #5a564e; }
+
+/* Rotulo que encabeza un componente. Capa de referencia: 22px por disenio. */
+.dlabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; letter-spacing: 0.2em; color: var(--dimmer);
+  margin-bottom: 22px;
+}
+.dlabel.coral { color: var(--coral); }
+
+/* ---------- Componente: filas con etiqueta ---------- */
+
+.rows { display: flex; gap: 44px; align-items: center; padding: 0 var(--pad-x); margin-top: auto; }
+.rows .col { display: flex; flex-direction: column; gap: 20px; flex: 1; }
+.rows .row { border-left: 4px solid var(--coral); padding: 6px 0 6px 28px; }
+.rows .row.verde  { border-left-color: var(--verde); }
+.rows .row.dorado { border-left-color: var(--dorado); }
+.rows .row .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; letter-spacing: 0.2em; font-weight: 700; color: var(--coral);
+}
+.rows .row.verde  .lbl { color: var(--verde); }
+.rows .row.dorado .lbl { color: var(--dorado); }
+.rows .row .t { font-size: 40px; color: var(--ink-2); margin-top: 8px; }
+.rows .slot { position: relative; width: 320px; height: 380px; flex: none; }
+.rows .slot img { width: 100%; height: 100%; object-fit: contain; }
+
+/* ---------- Componente: grafico de linea ---------- */
+
+.chart { padding: 0 var(--pad-x); margin-top: auto; }
+.chart svg { width: 100%; height: 250px; display: block; }
+.chart .axis {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; letter-spacing: 0.18em; color: var(--dim);
+  margin-top: 18px;
+}
+.chart .axis .mid { color: var(--coral); }
+
+/* ---------- Componente: numero gigante ---------- */
+
+.bignum { padding: 0 var(--pad-x); margin-top: 88px; display: flex; gap: 36px; align-items: flex-start; }
+.bignum .n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 120px; line-height: 0.8; font-weight: 700;
+  color: var(--coral-deep); flex: none;
+}
+.bignum .n.dorado { color: var(--dorado-deep); }
+.bignum h2 { margin-top: 26px; font-size: 100px; }
+
+/* ---------- Componente: chips ---------- */
+
+.chips { display: flex; gap: 14px; }
+.chips .chip {
+  flex: 1; text-align: center; padding: 22px 0;
+  border: 2px solid var(--coral-edge); border-radius: 12px;
+  font-size: 38px; color: var(--ink-2);
+}
+.chips .chip.active {
+  background: var(--ink); border-color: var(--ink);
+  font-weight: 600; color: #0a0a0c;
+}
+.chips .chip.off {
+  border-color: var(--rule); color: #2e2e33; text-decoration: line-through;
+}
+
+/* ---------- Componente: lista numerada ---------- */
+
+.list { display: flex; flex-direction: column; padding: 0 var(--pad-x); margin-top: auto; }
+.list .li {
+  display: flex; gap: 32px; align-items: baseline;
+  padding: 24px 0; border-top: 1px solid var(--rule);
+}
+.list .li:last-child { border-bottom: 1px solid var(--rule); }
+.list .li .n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px; font-weight: 700; color: var(--verde); flex: none;
+}
+.list .li.coral  .n { color: var(--coral); }
+.list .li.dorado .n { color: var(--dorado); }
+.list .li .t { font-size: 44px; color: var(--ink-2); line-height: 1.15; }
+
+/* ---------- Componente: tarjetas en fila ---------- */
+
+.cards { padding: 0 var(--pad-x); display: flex; gap: 20px; }
+.cards .card {
+  flex: 1; padding: 32px 28px; border-radius: 14px;
+  background: rgba(127,187,160,0.08); border: 1px solid rgba(127,187,160,0.28);
+}
+.cards .card.coral {
+  background: rgba(224,113,74,0.07); border-color: rgba(224,113,74,0.28);
+}
+.cards .card .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; letter-spacing: 0.18em; color: var(--verde);
+}
+.cards .card.coral .lbl { color: var(--coral); }
+.cards .card .t { font-size: 38px; color: var(--ink-2); margin-top: 14px; line-height: 1.2; }
+.cards .card.coral .t { color: var(--dim); }
+
+/* ---------- Componente: documento con renglones ---------- */
+
+.docs { display: flex; gap: 28px; padding: 0 var(--pad-x); margin-top: auto; }
+.docs .doc { flex: 1; }
+.docs .doc .sheet {
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 26px; background: var(--panel);
+  border: 1px solid var(--rule); border-radius: 14px;
+}
+.docs .doc.miss .sheet { border-color: #2a1a14; }
+.docs .doc .sheet i { height: 11px; border-radius: 6px; background: var(--slab); }
+.docs .doc .sheet i.hit  { background: var(--verde); }
+.docs .doc .sheet i.lost { background: var(--coral); }
+.docs .doc .cap {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; letter-spacing: 0.14em; color: var(--verde);
+  margin-top: 22px; text-align: center;
+}
+.docs .doc.miss .cap { color: var(--coral); }
+
+/* ---------- Componente: barras por capa ---------- */
+
+.layers { padding: 0 var(--pad-x); margin-top: auto; }
+.layers .lrow { display: flex; align-items: center; gap: 28px; margin-bottom: 16px; }
+.layers .lrow:last-of-type { margin-bottom: 0; }
+.layers .lrow .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; color: var(--dim); width: 130px; flex: none;
+}
+/* La mascara corta la barra en 9 celdas: el degradado de cada capa muestra hasta
+   donde llega la atencion. El gradiente lo pone index.html por capa. */
+.layers .lrow .bar {
+  flex: 1; height: 56px; border-radius: 6px;
+  -webkit-mask-image: repeating-linear-gradient(90deg,#000 0 calc(11.111% - 9px),transparent calc(11.111% - 9px) 11.111%);
+  mask-image: repeating-linear-gradient(90deg,#000 0 calc(11.111% - 9px),transparent calc(11.111% - 9px) 11.111%);
+}
+.layers .axis { display: flex; margin-top: 22px; }
+.layers .axis .pad { width: 158px; flex: none; }
+.layers .axis .ends {
+  flex: 1; display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; letter-spacing: 0.16em; color: var(--dim);
+}
+
+/* ---------- Componente: remate con imagen al lado ---------- */
+
+.punch { display: flex; align-items: flex-end; gap: 32px; padding: 0 var(--pad-x); margin-top: auto; }
+.punch .t {
+  flex: 1; font-size: 64px; line-height: 1.05; font-weight: 900;
+  letter-spacing: -0.03em; color: var(--ink);
+}
+.punch .t .hl { color: var(--coral); }
+.punch .slot { position: relative; width: 300px; height: 400px; flex: none; }
+.punch .slot img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Imagen que pasa el usuario. Transparente va directo sobre el campo; opaca va
+   enmarcada. Ver SKILL.md > Images the user supplies. */
+.ext-plain { padding: 0 var(--pad-x); margin-top: auto; }
+.ext-plain img { display: block; width: 100%; height: auto; }
+.ext-card {
+  margin: auto var(--pad-x) 0;
+  padding: 20px; background: var(--panel);
+  border: 1px solid var(--rule); border-radius: 14px;
+}
+.ext-card img { display: block; width: 100%; height: auto; border-radius: 6px; }
+
+/* ---------- Layout: cierre / CTA ---------- */
+
+.s-cta { align-items: center; justify-content: center; }
+.s-cta .progress { position: absolute; top: 56px; left: 0; right: 0; }
+.s-cta .box { text-align: center; padding: 0 var(--pad-x); position: relative; }
+.s-cta .sig {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; letter-spacing: 0.3em; color: var(--dimmer);
+}
+.s-cta h2 {
+  margin-top: 40px; font-size: 110px; line-height: 0.94;
+  letter-spacing: -0.045em; text-transform: none;
+}
+.s-cta .sub {
+  font-family: 'Source Serif 4', serif; font-style: italic;
+  font-size: 50px; color: var(--dorado-soft); margin-top: 28px;
+}
+.s-cta .rule { width: 180px; height: 4px; background: var(--dorado); margin: 64px auto 0; }
+.s-cta .site { margin-top: 88px; font-size: 34px; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; }
+.s-cta .community {
+  margin-top: 14px; font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; color: var(--dimmer);
+}
+.s-cta .counter {
+  position: absolute; bottom: 64px; left: 0; right: 0; text-align: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #4a4842;
+}
+
+/* Reparte el aire sobrante en vez de un margin-top fijo: el margen fijo pasa el
+   chequeo de balance vertical y aun asi deja un agujero en el medio de la slide. */
+.spacer { flex: 1 1 auto; }
