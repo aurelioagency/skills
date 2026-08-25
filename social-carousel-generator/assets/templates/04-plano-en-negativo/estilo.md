@@ -42,3 +42,23 @@ En `vbars`, `h` es el porcentaje del alto y `on` marca la barra que lleva el ace
 hueco a la derecha las devuelve a lo que son —dos puntos de una comparación— en vez de
 un gráfico de dos categorías sobre todo el ancho. En `chips`, el primero lleva el acento
 y los demás quedan apagados: dos encendidos no dicen nada.
+
+## Iconos de Lucide/Tabler
+
+**Grosor de linea: 2.5px reales sobre el lienzo.** Los filetes son de 2px y las barras de acento de 5px. Campo oscuro otra vez, asi que el icono queda apenas por encima del filete: a 2px se va liviano y a 3px empieza a pesar mas que la barra.
+
+`stroke-width` NO esta en pixeles: esta en las unidades del viewBox del icono, que en
+Lucide y en Tabler es de 24. Un icono a 56px se escala x2,33, asi que el valor a poner
+depende del tamanio al que vaya:
+
+```
+stroke-width = 2.5 x 24 / tamanio_en_px
+```
+
+Tamanio del icono: 40-56px, segun cuanto peso tenga que cargar el slide. Chico como para
+no competir con el titular, nunca tan chico que se lea como una marca perdida.
+
+`stroke="currentColor"` y el color manejado desde el CSS del elemento que lo envuelve,
+siempre con un acento de la paleta de este estilo, nunca un hex escrito a mano.
+
+Nunca mezcles dos grosores de icono dentro de un mismo carrusel.

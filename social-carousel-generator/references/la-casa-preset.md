@@ -100,22 +100,38 @@ Archivo Black, Roboto Mono, and Inter are on Google Fonts; Georgia ships with Wi
 - Footer on content slides: **Inter** bold `aurelioagency.com` left · page-counter pill center (Inter bold, fill `#252422`, fully rounded `border-radius: 999px`) · `← Desliza` right, in the same Inter bold, size and colour as the brand line.
 - Cream contrast cards (`#EDE8DE`, dark text, sage border) for outcomes/results, often paired against dark panel cards (`#191716`) for the "before"/technical side.
 
-### Icons (Lucide/Tabler)
+### Iconos (Lucide/Tabler)
 
-Fetched live per slide, per `references/html-rendering.md` in the skill — never saved to the
-asset bank. This entry fixes the one thing that varies between the two sets and would drift
-carousel to carousel if left to judgment each time.
+Se traen por slide y se pegan inline, nunca se guardan en el asset bank — el contrato esta en
+`references/html-rendering.md`.
 
-- **`stroke-width: 1.5`** on every icon, overriding whatever the source set ships (Lucide and
-  Tabler default to `2`). `1.5` matches the weight already used everywhere else in the brand's
-  chrome — panel borders (`1.5px`) and the contour field (`1.6px`) — so an icon reads as part of
-  the same system instead of a heavier, cartoonish element dropped on top. Never mix weights
-  within one carousel.
-- `stroke="currentColor"`, `fill="none"`, colour driven by the wrapping element's `color` —
-  always one of the four canonical accents, never a hardcoded hex.
-- Size: `40-56px` square depending on how much weight the slide needs it to carry, same floor
-  logic as everything else on the canvas — small enough not to compete with the headline, never
-  so small it reads as a stray mark.
+**El grosor lo define el estilo, no la marca, y vive en el `estilo.md` de cada template.** La
+Casa tiene seis estilos con pesos de linea distintos, asi que un solo numero para todos no
+puede funcionar: el mismo icono que pertenece sobre el papel del `03` se ve flaco sobre el
+campo negro del `01`.
+
+| Estilo | Grosor real del icono |
+|---|---|
+| `01-editorial-oscuro` | 2px |
+| `02-editorial-oscuro-v2` | 2px |
+| `03-cuaderno-de-taller` | 3px |
+| `04-plano-en-negativo` | 2,5px |
+| `05-plano-de-taller` | no lleva — usa su biblioteca de figuras |
+| `06-handmade` | no lleva — usa su set de iconos |
+
+Dos cosas que valen para todos:
+
+- **El grosor se declara en pixeles reales sobre el lienzo, no como `stroke-width`.** Ese
+  atributo esta en las unidades del viewBox del icono (24 en Lucide y en Tabler), asi que el
+  mismo valor da lineas distintas segun el tamanio: el `1.5` que este preset fijaba hasta el
+  2026-08-25 salia 2,5px reales con el icono a 40px y 3,5px con el icono a 56px, y el preset
+  permitia los dos tamanios. No era un grosor, era un numero que cambiaba solo.
+- **En campo oscuro el icono va un escalon por encima del filete al que acompania.** Una linea
+  clara sobre fondo negro adelgaza opticamente. El `03` es el unico que iguala su chrome
+  exacto, porque es el unico de papel.
+
+Color: `stroke="currentColor"`, `fill="none"`, manejado desde el CSS del elemento que envuelve
+al icono y siempre con un acento de la paleta del estilo activo, nunca un hex escrito a mano.
 
 ### Never on a slide
 

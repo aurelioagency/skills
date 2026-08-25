@@ -43,3 +43,23 @@ Las dos cajas muestran que una es mucho más chica que la otra; la magnitud exac
 el lector del número escrito adentro, a 56px. Por eso funciona con un factor de 25:1,
 que dibujado a escala sería ilegible. Lo único que no podés hacer es invertir la
 relación: si el valor es menor, la caja va más chica.
+
+## Iconos de Lucide/Tabler
+
+**Grosor de linea: 3px reales sobre el lienzo.** Es el unico estilo de papel, y el unico donde el icono IGUALA su chrome exacto: los bordes de tinta de los pasteles, las etiquetas y la regla de cota son todos de 3px. A 2px el icono queda flaco al lado de la etiqueta que tiene enfrente.
+
+`stroke-width` NO esta en pixeles: esta en las unidades del viewBox del icono, que en
+Lucide y en Tabler es de 24. Un icono a 56px se escala x2,33, asi que el valor a poner
+depende del tamanio al que vaya:
+
+```
+stroke-width = 3 x 24 / tamanio_en_px
+```
+
+Tamanio del icono: 40-56px, segun cuanto peso tenga que cargar el slide. Chico como para
+no competir con el titular, nunca tan chico que se lea como una marca perdida.
+
+`stroke="currentColor"` y el color manejado desde el CSS del elemento que lo envuelve,
+siempre con un acento de la paleta de este estilo, nunca un hex escrito a mano.
+
+Nunca mezcles dos grosores de icono dentro de un mismo carrusel.

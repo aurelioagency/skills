@@ -41,3 +41,23 @@ Cada ítem de `list` entra en una línea a 44px, ~40 caracteres. Si no entra, se
 ítem: nunca se baja el cuerpo.
 
 En `cards`, si va sin `aside` el remate queda solo contra un campo vacío a su derecha.
+
+## Iconos de Lucide/Tabler
+
+**Grosor de linea: 2px reales sobre el lienzo.** Los filetes de este estilo son de 1px y las barras de acento de 4px. Como el campo es oscuro, el icono no iguala el filete sino que se apoya entre los dos. A 3px ya compite con la barra.
+
+`stroke-width` NO esta en pixeles: esta en las unidades del viewBox del icono, que en
+Lucide y en Tabler es de 24. Un icono a 56px se escala x2,33, asi que el valor a poner
+depende del tamanio al que vaya:
+
+```
+stroke-width = 2 x 24 / tamanio_en_px
+```
+
+Tamanio del icono: 40-56px, segun cuanto peso tenga que cargar el slide. Chico como para
+no competir con el titular, nunca tan chico que se lea como una marca perdida.
+
+`stroke="currentColor"` y el color manejado desde el CSS del elemento que lo envuelve,
+siempre con un acento de la paleta de este estilo, nunca un hex escrito a mano.
+
+Nunca mezcles dos grosores de icono dentro de un mismo carrusel.

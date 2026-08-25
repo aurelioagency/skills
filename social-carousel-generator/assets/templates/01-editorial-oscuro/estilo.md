@@ -47,3 +47,23 @@ de la gramática de arriba.
 | `bars` | Tres barras de acento, anchos decrecientes. |
 | `mascot` | El personaje de la marca. **Nunca solo en su fila**: siempre con un componente al lado, a la misma altura. |
 | `userImg` | Imagen que pasó el usuario. Transparente va directo; opaca va enmarcada. |
+
+## Iconos de Lucide/Tabler
+
+**Grosor de linea: 2px reales sobre el lienzo.** El chrome de este estilo son bordes de panel de 1.5px y curvas de 1.6px, pero el campo es oscuro: una linea clara sobre negro se lee mas fina de lo que es, asi que el icono queda un escalon por encima del filete al que acompania. A 1.5px reales se afina y desaparece.
+
+`stroke-width` NO esta en pixeles: esta en las unidades del viewBox del icono, que en
+Lucide y en Tabler es de 24. Un icono a 56px se escala x2,33, asi que el valor a poner
+depende del tamanio al que vaya:
+
+```
+stroke-width = 2 x 24 / tamanio_en_px
+```
+
+Tamanio del icono: 40-56px, segun cuanto peso tenga que cargar el slide. Chico como para
+no competir con el titular, nunca tan chico que se lea como una marca perdida.
+
+`stroke="currentColor"` y el color manejado desde el CSS del elemento que lo envuelve,
+siempre con un acento de la paleta de este estilo, nunca un hex escrito a mano.
+
+Nunca mezcles dos grosores de icono dentro de un mismo carrusel.
