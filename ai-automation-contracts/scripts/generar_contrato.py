@@ -11,17 +11,24 @@ Cualquier placeholder sin valor se reemplaza por [ ... ] resaltado para completa
 """
 
 import json
+import os
 import re
 import sys
 
 from docx import Document
 from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_TAB_ALIGNMENT
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 from docx.shared import Pt, Cm, RGBColor
 
 
 PLACEHOLDER = re.compile(r"\{\{([A-Z0-9_]+)\}\}")
 BOLD = re.compile(r"\*\*(.+?)\*\*")
+
+LOGO_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "logo.png")
+MARCA_NOMBRE = "AURELIO AGENCY"
+MARCA_WEB = "aurelioagency.com"
 
 
 def render_template(text, datos):
@@ -41,8 +48,8 @@ def render_template(text, datos):
 
 def setup_styles(doc):
     normal = doc.styles["Normal"]
-    normal.font.name = "Calibri"
-    normal.font.size = Pt(10.5)
+    normal.font.name = "Arial"
+    normal.font.size = Pt(12)
     normal.paragraph_format.space_after = Pt(6)
     normal.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 
@@ -52,7 +59,7 @@ def setup_styles(doc):
         ("Heading 3", 11, RGBColor(0, 0, 0)),
     ):
         st = doc.styles[name]
-        st.font.name = "Calibri"
+        st.font.name = "Arial"
         st.font.size = Pt(size)
         st.font.bold = True
         st.font.color.rgb = color
@@ -65,6 +72,65 @@ def setup_styles(doc):
     section.bottom_margin = Cm(2.5)
     section.left_margin = Cm(2.5)
     section.right_margin = Cm(2.5)
+
+
+def add_page_number(paragraph):
+    """Inserta el campo de número de página de Word en el párrafo dado."""
+    run = paragraph.add_run()
+    fld_begin = OxmlElement("w:fldChar")
+    fld_begin.set(qn("w:fldCharType"), "begin")
+    instr = OxmlElement("w:instrText")
+    instr.set(qn("xml:space"), "preserve")
+    instr.text = "PAGE"
+    fld_end = OxmlElement("w:fldChar")
+    fld_end.set(qn("w:fldCharType"), "end")
+    run._r.append(fld_begin)
+    run._r.append(instr)
+    run._r.append(fld_end)
+
+
+def setup_header_footer(doc):
+    """Encabezado con logo + nombre de marca y pie con sitio web + n° de página."""
+    section = doc.sections[0]
+    right_edge = section.page_width - section.left_margin - section.right_margin
+
+    header_par = section.header.paragraphs[0]
+    header_par.paragraph_format.tab_stops.add_tab_stop(right_edge, WD_TAB_ALIGNMENT.RIGHT)
+    if os.path.exists(LOGO_PATH):
+        header_par.add_run().add_picture(LOGO_PATH, height=Cm(0.45))
+    marca_run = header_par.add_run(f"\t{MARCA_NOMBRE}")
+    marca_run.bold = True
+    marca_run.font.size = Pt(8)
+    marca_run.font.color.rgb = RGBColor(0x40, 0x40, 0x40)
+
+    footer_par = section.footer.paragraphs[0]
+    footer_par.paragraph_format.tab_stops.add_tab_stop(right_edge, WD_TAB_ALIGNMENT.RIGHT)
+    web_run = footer_par.add_run(MARCA_WEB)
+    web_run.font.size = Pt(8)
+    web_run.font.color.rgb = RGBColor(0x80, 0x80, 0x80)
+    footer_par.add_run("\t")
+    add_page_number(footer_par)
+
+
+def add_portada(doc):
+    """Bloque de portada con logo y marca antes del título del documento."""
+    if os.path.exists(LOGO_PATH):
+        p_logo = doc.add_paragraph()
+        p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_logo.add_run().add_picture(LOGO_PATH, height=Cm(1.8))
+
+    p_marca = doc.add_paragraph()
+    p_marca.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_marca = p_marca.add_run(MARCA_NOMBRE)
+    r_marca.bold = True
+    r_marca.font.size = Pt(12)
+
+    p_web = doc.add_paragraph()
+    p_web.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_web = p_web.add_run(MARCA_WEB)
+    r_web.font.size = Pt(8.5)
+    r_web.font.color.rgb = RGBColor(0x80, 0x80, 0x80)
+    p_web.paragraph_format.space_after = Pt(20)
 
 
 def add_runs(par, text):
@@ -105,6 +171,8 @@ def parse_table(lines, i):
 def build_docx(md, salida):
     doc = Document()
     setup_styles(doc)
+    setup_header_footer(doc)
+    add_portada(doc)
 
     lines = md.split("\n")
     i = 0
