@@ -406,11 +406,73 @@ The copy shown here has already passed the filter in *Grounding Technical Terms*
 - Every slide must stand alone. When a slide compresses a quote or a long passage, read the result cold: if it no longer states a complete, understandable idea, rewrite it. Compression that loses the logical connector is a defect, not a style choice.
 - Numbers, percentages, dates, and limits are transcribed exactly. If a figure needs rounding for the layout, say so on the slide.
 - **Never turn a descriptor into a name.** The source's *"the ultra capability setting in ChatGPT"* is not a product called "modo ultra". Translating a description into a proper noun invents a product.
-- **A third-party name earns its place only if the slide can say who it is without spending a line.** A company the audience cannot place — sitting in the kicker or the verdict, the most visible line — costs attention and returns nothing. Keep the fact, drop the name, and record it in `carousel-brief.md` with its quote. Apply it to every such name in the carousel or to none: one named startup among three anonymous ones reads as an oversight.
+- **A third-party name earns its place only if the slide can say who it is without spending a line.** "The audience" is **this brand's** audience, the one written in its preset — never a general public. Measuring against a general public strips names the actual reader places instantly, and those names buy credibility for free: on 2026-08-25 `OpenClaw` and `Mythos` were cut from a La Casa carousel on exactly that mistake, and its reader ranked the omission alongside not mentioning `OpenAI`. A company that reader cannot place — sitting in the kicker or the verdict, the most visible line — costs attention and returns nothing. Keep the fact, drop the name, and record it in `carousel-brief.md` with its quote. Apply it to every such name in the carousel or to none: one named startup among three anonymous ones reads as an oversight.
 - **A description the reader cannot resolve is worse than a proper noun.** "El modelo grande" names nothing; `GPT-5.5` does. When a model, tool or product needs its size or role understood, attach it to the name in the same sentence, or in the graphic's label.
 - **Every fact on a slide comes from the same passage.** An example borrowed from another section, dropped onto a slide about a specific company, reads as that company's example. That is misattribution even when both facts are true.
 - **Name the action the source describes.** *"After enabling retained reasoning"* is enabling, not implementing: a checklist item that says "guardá lo que el modelo pensó" invents manual work that does not exist.
 - **Body copy is sentences, not notes.** Two fragments without a subject ("Encontrar datos difíciles en la web. La misma prueba, tres meses después.") read as an outline. If a line has no verb and no subject, it is not finished.
+
+## Cómo se escribe una placa
+
+Del otro lado hay una persona leyendo. La placa se le está contando a alguien: si la lee y no
+entiende qué le dijiste, no importa que el dato sea correcto ni que entre en el presupuesto de
+caracteres.
+
+**Un término que no conoce es una palabra que puede ir a buscar. Una oración mal armada no se
+puede ir a buscar.** Esa es la línea que separa lo que se deja como está de lo que hay que
+arreglar:
+
+- `Mythos`, `paper`, `OpenClaw`, `top of funnel` → vocabulario del tema. Se dejan sin explicar
+  (*Grounding Technical Terms*, abajo, cubre los pocos casos en que sí conviene aterrizar uno).
+  El lector que quiera saber, lo busca, y explicárselo arruina la placa para el que ya lo sabe.
+- `hacer ciencia`, `investigar`, `el trabajo de un científico` → no filtran a nadie y no hay
+  nada que ir a buscar. Son etiquetas puestas justo donde la frase tenía que decir qué pasó.
+
+El defecto no se ve como texto difícil. Se ve como una frase hecha toda de palabras comunes que
+igual no dice nada. *"Una IA tuvo seis días para hacer ciencia"* no tiene un solo término
+técnico y no se entiende: te deja esperando la segunda mitad, que nunca llega. Comparala con
+*"los agentes de IA aún no son lo suficientemente creativos como para llevar a cabo una
+investigación abierta"*, que tiene adentro un término discutible y se entiende perfecto, porque
+el resto de la oración está armado.
+
+### Las tres cosas que lo arreglan
+
+No son reglas sobre cómo tiene que quedar el texto. Son sobre cómo se produce.
+
+1. **Empezá por la frase larga y verdadera, y recortá desde ahí.** Nunca al revés. Arrancar
+   corto buscando impacto y después chequear si es cierto tira primero lo que sostenía el
+   sentido — es el orden que produce `cero ideas` cuando la fuente decía que tuvo hipótesis
+   buenas y las descartó con pocos datos. Partiendo de la frase completa no lo podés perder.
+2. **Escribí la línea varias veces y elegí.** No una vez y justificada. Las versiones
+   descartadas son las que muestran qué falta; un párrafo explicando por qué la línea es buena
+   no muestra nada.
+3. **Decila en voz alta.** Es el mismo test que ya se le exige a la `Lectura` (ver
+   *Understanding the topic before writing it*), y hasta ahora se dejaba de aplicar justo donde
+   empieza a importar: de la `Lectura` en adelante las placas se juzgaban por cuánto miden
+   —presupuesto de caracteres, piso tipográfico— y no por si se le pueden decir a alguien.
+
+Cómo se ve la 1. Frase larga y verdadera:
+
+> Le dieron a Claude Opus 4.8 una pregunta de investigación de un paper que todavía no estaba
+> publicado, seis días y 3.000 dólares, y el paper que escribió lo rechazaron los autores del
+> original.
+
+Recortada sin perder nada:
+
+> A Claude Opus 4.8 le dieron seis días para contestar una pregunta que nadie había publicado.
+> El paper que escribió lo rechazaron.
+
+### No lo conviertas en más reglas
+
+Cuando una placa sale mal, el arreglo es **reescribirla**, no producir un diagnóstico nuevo ni
+agregar otra regla acá. Esta sección alcanza: hay un lector, la frase tiene que decirle algo, y
+las tres prácticas de arriba son el trabajo.
+
+Cinco rondas de corrección con cinco explicaciones distintas y ninguna redacción mejor es el
+modo exacto en que esto falla, y ya pasó (2026-08-25, carrusel `ia-que-se-mejora-sola`: cuatro
+ganchos rechazados seguidos, cada uno acompañado de una teoría nueva sobre por qué el anterior
+había fallado). Devolver análisis en vez de una línea mejor es el mismo defecto que las placas
+vagas, un nivel más arriba.
 
 ## Grounding Technical Terms
 
