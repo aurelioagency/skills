@@ -530,7 +530,14 @@ Caption fonts want a heavy weight. At 104px a Regular reads thin over moving vid
 
 **House default:** Inter Black at 104px, white with the key terms in cyan `#30D5FF`, chunk reveal. That is what the scripts produce with no style arguments, and it is the starting point to show at the gate below — offer alternatives from there rather than opening with a blank choice.
 
-5. **Caption Style Gate (blocking).** Render 2-3 style candidates as single frames over real frames of the video and let the user choose from the images. Stills are cheap; a wrong style discovered after the burn is not. Confirm font, size, colours, and reveal mode before generating the full `.ass`.
+**Accent mode is always a question, never a silent default.** There are two distinct ways the accent colour can be used, and they read very differently on screen:
+
+- **`keyword`** (`--accent-mode keyword`, the default) — only hand-picked key terms (`--accent-terms`) ever turn cyan; everything else stays white for the whole video.
+- **`active`** (`--accent-mode active`) — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns cyan as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. Only meaningful with `reveal=chunk`; with `reveal=word` it is a no-op since word reveal already colours the currently-spoken word.
+
+Ask the user which one they want before building the `.ass` — do not assume `keyword` just because it is the flag default. If the answer is "highlight what's actually being said" or similar, that is `active`; if it is "only the important words" or similar, that is `keyword`.
+
+5. **Caption Style Gate (blocking).** Render 2-3 style candidates as single frames over real frames of the video and let the user choose from the images. Stills are cheap; a wrong style discovered after the burn is not. Confirm font, size, colours, accent mode, and reveal mode before generating the full `.ass`.
 
 6. Generate the subtitle file.
 

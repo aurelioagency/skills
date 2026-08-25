@@ -25,13 +25,20 @@ function usage() {
       [--video-width 1080] [--video-height 1920]
       [--margin-lr 120] [--margin-bottom 500]
       [--reveal chunk|word] [--max-words 2] [--gap-cut 0.35] [--hold 0.45]
-      [--accent-terms "Fable,Haiku,Sonnet"]   chunk mode: which words get the accent colour
+      [--accent-mode keyword|active]          which words get the accent colour (default keyword)
+      [--accent-terms "Fable,Haiku,Sonnet"]   accent-mode=keyword: which words get the accent colour
       [--corrections <corrections.json>]      [{ "at": 4.72, "from": "puedes", "to": "podés" }]
       [--python python]
 
 reveal=chunk  the whole chunk enters at once, always centred, never reflows (default)
 reveal=word   words appear one at a time; the chunk reserves its full width, so a
-              lone first word renders off-centre. See Caption Reveal in the guidelines.`);
+              lone first word renders off-centre. See Caption Reveal in the guidelines.
+
+accent-mode=keyword  only the words listed in --accent-terms ever turn accent colour (default)
+accent-mode=active   the whole chunk is visible at once (reveal=chunk) and the accent colour
+                      moves word to word in sync with the audio, then returns to primary —
+                      a karaoke-style highlight. Ignores --accent-terms. With reveal=word this
+                      is a no-op: word mode already colours the currently-spoken word.`);
 }
 
 function parseArgs(argv) {
@@ -156,6 +163,9 @@ function main() {
 
   if (reveal !== 'chunk' && reveal !== 'word') throw new Error(`--reveal must be chunk or word`);
 
+  const accentMode = args.accentMode || 'keyword';
+  if (accentMode !== 'keyword' && accentMode !== 'active') throw new Error(`--accent-mode must be keyword or active`);
+
   const accentTerms = args.accentTerms
     ? new Set(args.accentTerms.split(',').map((term) => term.trim().toLowerCase()).filter(Boolean))
     : null;
@@ -175,6 +185,7 @@ function main() {
   const baseY = videoHeight - marginBottom;
   const move = `\\move(${baseX},${baseY + risePx},${baseX},${baseY},0,${riseMs})`;
   const tags = `{\\an2${move}\\fad(${fadeMs},0)}`;
+  const staticTags = `{\\an2\\pos(${baseX},${baseY})}`;
   const primaryTag = `{\\c${assColour(primary)}}`;
   const accentTag = `{\\c${assColour(accent)}}`;
 
@@ -184,6 +195,21 @@ function main() {
     const next = chunks[index + 1];
     let chunkEnd = chunk[chunk.length - 1].end + hold;
     if (next) chunkEnd = Math.min(chunkEnd, next[0].start);
+
+    if (reveal === 'chunk' && accentMode === 'active') {
+      // Whole chunk stays visible and in place (no reflow); only the colour of the
+      // currently-spoken word changes, one dialogue event per word boundary.
+      chunk.forEach((word, wordIndex) => {
+        const end = wordIndex + 1 < chunk.length ? chunk[wordIndex + 1].start : chunkEnd;
+        if (end <= word.start) return;
+        const text = chunk
+          .map((w, i) => (i === wordIndex ? `${accentTag}${w.word}${primaryTag}` : w.word))
+          .join(separator);
+        const eventTags = wordIndex === 0 ? tags : staticTags;
+        events.push(`Dialogue: 0,${timestamp(word.start)},${timestamp(end)},Cap,,0,0,0,,${eventTags}${text}`);
+      });
+      return;
+    }
 
     if (reveal === 'chunk') {
       const text = chunk
@@ -205,7 +231,8 @@ function main() {
           return w.word;
         })
         .join(separator);
-      events.push(`Dialogue: 0,${timestamp(word.start)},${timestamp(end)},Cap,,0,0,0,,${tags}${text}`);
+      const eventTags = wordIndex === 0 ? tags : staticTags;
+      events.push(`Dialogue: 0,${timestamp(word.start)},${timestamp(end)},Cap,,0,0,0,,${eventTags}${text}`);
     });
   });
 
@@ -237,6 +264,7 @@ Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
     fontFamilyFromTtf: detectedFamily,
     fontNameUsed: fontName,
     reveal,
+    accentMode,
     words: words.length,
     chunks: chunks.length,
     events: events.length,
