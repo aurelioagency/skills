@@ -26,7 +26,7 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 7. Build the vertical Short and get the music approved.
    Completion criterion: `short.mp4` is built from the approved slides, the user has seen the chosen track — already cut to the video's length — and approved it, and the track is recorded in `manifest.json` and appended to the brand's music log. Nothing is published before that yes.
 8. Humanize captions and deliver.
-   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, it has been copied into the brand's Drive folder if the preset names one — and only after the user approved, never on the strength of a clean audit alone, the editable source is in place, and a short validation summary is given.
+   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, it has been copied into the brand's Drive folder if the preset names one — and only after the user approved, never on the strength of a clean audit alone, the editable source is in place, and a short validation summary is given, **y el mensaje termina con el bloque `bash` que abre la carpeta** (ver *El atajo para abrir la carpeta*).
 
 When the user brings an existing carousel to convert to another platform or size, steps 2-4 are replaced by Adaptation Mode below: verbatim transcription and faithful rebuild, never re-angling or rewriting approved content.
 
@@ -926,4 +926,23 @@ What the package keeps so the carousel can be fixed later without rebuilding it:
 
 Nothing else ships. `qa-report.json` and `contact-sheet.png` are deleted after the QA pass; there is no `exports/` and no `post-descriptions.md`.
 
-And in the chat: the caption pasted in full, plus a visual QA note confirming size, readability, centered layout, CTA behavior, and any remaining caveat.
+And in the chat: la caption pegada entera, la nota de QA visual (tamano, legibilidad, composicion centrada, comportamiento del CTA y cualquier salvedad que quede), y **el atajo para abrir la carpeta**.
+
+### El atajo para abrir la carpeta
+
+**Toda entrega termina con un bloque que abre la carpeta de entrega, sin excepcion.** La app le pone boton de Run a los bloques marcados como `bash`, asi que es un clic y se abre el explorador — el usuario no tiene que ir carpeta por carpeta buscandola en el explorador de Windows.
+
+Va con la ruta absoluta real, nunca con un placeholder:
+
+    ```bash
+    explorer.exe "RUTA_ABSOLUTA_DE_LA_CARPETA_DE_ENTREGA"
+    ```
+
+Reglas:
+
+- **La carpeta de entrega primero**, que es la que tiene los PNG, la caption y el video. Es la que el usuario quiere ver.
+- **Un solo comando por bloque.** Si tambien hace falta abrir la carpeta del paquete —para editar el fuente o revisar el brief— va en su propio bloque, abajo, aclarando cual es cual.
+- **Ruta absoluta y entre comillas**, para que aguante los espacios de `Documents` y de cualquier carpeta con nombre compuesto.
+- **Tambien va cuando la entrega todavia no esta terminada.** Si se renderizo aunque sea una tanda para revisar, el bloque va igual: sirve justamente para mirar antes de aprobar.
+- Si el preset nombra una carpeta de Drive y el carrusel ya se copio ahi, va un segundo bloque con esa ruta, aclarando que esa es la copia publicada.
+- En macOS o Linux el comando cambia (`open` / `xdg-open`); lo que no cambia es que el bloque va siempre.
