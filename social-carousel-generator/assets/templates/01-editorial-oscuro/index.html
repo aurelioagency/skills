@@ -55,6 +55,28 @@ function head(s) {
     </div>`;
 }
 
+// ---------- Iconos de Lucide/Tabler ----------
+// El grosor real de la linea de este estilo, en px sobre el lienzo. Esta medido contra
+// su propio chrome; el valor y el por que estan en estilo.md. NO se cambia por slide.
+const ICON_REAL = 2;
+const ICON_PX = 56;              // 40-56 segun cuanto peso cargue el slide
+
+// `stroke-width` NO esta en pixeles: esta en las unidades del viewBox del icono, que en
+// Lucide y en Tabler es 24. El mismo numero da lineas distintas segun el tamanio, por eso
+// se calcula en vez de escribirse a mano.
+//
+// COMO SE USA: entra a lucide.dev o tabler.io/icons, copia el INTERIOR del <svg> (los
+// <path>, sin la etiqueta <svg>) y pegalo en el slide como `ico: { d: '<path .../>' }`.
+// Opcional `px` para cambiar el tamanio. El color sale del CSS de .ico.
+const ico = (spec) => {
+  if (!spec) return '';
+  const px = spec.px || ICON_PX;
+  const sw = +(ICON_REAL * 24 / px).toFixed(2);
+  return `<svg class="ico" viewBox="0 0 24 24" style="width:${px}px;height:${px}px"
+    fill="none" stroke="currentColor" stroke-width="${sw}"
+    stroke-linecap="round" stroke-linejoin="round">${spec.d}</svg>`;
+};
+
 // Componentes del set publicado. Usalos antes de inventar uno nuevo.
 const verdict = s => s.verdict ? `<div class="verdict">${s.verdict}</div>` : '';
 const mascot  = s => s.mascot ? `<div class="mascot-row"><img class="mascot" src="${s.mascot}" alt=""></div>` : '';
@@ -74,8 +96,13 @@ const userImg = s => !s.img ? '' : (s.imgTransparent
 const BARS = `<div class="bars"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>`;
 
 // Checklist: items con marca de color.
+// Los items aceptan string, o { t, ico } si el item lleva icono. El icono reemplaza a
+// la marca de color: no van los dos, o la fila arranca con dos senializadores.
 const checklist = items =>
-  `<div class="checklist">${items.map(t => `<div class="ci"><span class="mk"></span><div class="tx">${t}</div></div>`).join('')}</div>`;
+  `<div class="checklist">${items.map(x => {
+    const it = typeof x === 'string' ? { t: x } : x;
+    return `<div class="ci">${it.ico ? ico({ ...it.ico, px: it.ico.px || 44 }) : '<span class="mk"></span>'}<div class="tx">${it.t}</div></div>`;
+  }).join('')}</div>`;
 
 // Flujo vertical de cajas con flecha hacia abajo. Clases de caja: trigger | agent | human.
 const flow = steps => `

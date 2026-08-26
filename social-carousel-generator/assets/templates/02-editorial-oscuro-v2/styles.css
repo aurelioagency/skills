@@ -417,3 +417,11 @@ h2 { font-size: 104px; }
 /* Reparte el aire sobrante en vez de un margin-top fijo: el margen fijo pasa el
    chequeo de balance vertical y aun asi deja un agujero en el medio de la slide. */
 .spacer { flex: 1 1 auto; }
+
+/* Icono de Lucide/Tabler. El grosor lo calcula ico() en index.html con el valor medido
+   para este estilo; aca va solo la alineacion y el color. El color SIEMPRE sale de un
+   acento de la paleta, nunca de un hex escrito en el slide. */
+.ico { flex: none; color: var(--verde); }
+/* Con icono, la fila lo pone a la izquierda y el texto pasa a .rt. */
+.rows .row { display: flex; align-items: center; gap: 22px; }
+.rows .row .rt { flex: 1; }

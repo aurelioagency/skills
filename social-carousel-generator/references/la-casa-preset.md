@@ -20,7 +20,12 @@ Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aure
 - Tamaño y densidad de texto **no se definen acá**: son reglas de la skill, iguales para toda marca. Están en `SKILL.md`, sección *Format, length and density* — un solo tamaño `1080x1440` y de 120 a 220 caracteres por slide de contenido. La Casa no las pisa.
 - **Largo habitual de La Casa: 7 a 10 imágenes exportadas** (6 a 9 slides de contenido más el CTA). Esto es formato de marca, no una regla de la skill: el techo de 10 lo pone `SKILL.md` y no se toca, pero el piso de 6 es de acá, porque los temas que publica La Casa —papers, procesos, comparativas— casi siempre necesitan separar afirmación de evidencia. Si un carrusel puntual no da para tanto, sale más corto: nunca se rellena para llegar al piso.
 - Language: Spanish by default.
-- Voice: practical, sharp, useful, human. Prefer clear Spanish. Use voseo only when the surrounding La Casa voice calls for it.
+- Voice: practical, sharp, useful, human. Prefer clear Spanish.
+- **Voseo rioplatense, siempre y en todo el paquete.** La marca es argentina: `seguime`, `guardá`,
+  `elegí`, `probá`, `mirá`, `tenés`. Nunca `sígueme`, `guarda`, `elige`, `tienes`. Vale para las
+  placas, el CTA, el caption y cualquier texto que lea una persona. El tuteo neutro suena
+  importado y es el error que más se cuela, porque entra copiado de fuentes en español de España
+  o de plantillas viejas. Decidido por el usuario el 2026-08-25.
 - Audience: builders, operators, founders, AI-system users, Codex users, and people learning agent workflows.
 - Content density: useful, not encyclopedic.
 - Cómo se aplica el presupuesto de caracteres de la skill en esta marca: la portada usa el máximo de 40 caracteres por línea sobre el titular Archivo Black y sobre el remate Georgia itálica por separado, que es lo que muestra el set publicado (titulares de 23 a 45 caracteres). Referencia histórica: los 37 slides publicados hasta el 2026-08-13 promedian 225 caracteres, es decir por encima de la banda actual — los carruseles nuevos salen más repartidos que los viejos.
@@ -180,7 +185,7 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
 
 La Casa tiene el frame de CTA fijo activado, en **dos variantes**. **No se pregunta cuál va: se deduce del carrusel.**
 
-- **Normal** (`Guarda este post`) es el default y cubre la enorme mayoría de los casos: un paper, un artículo, un video, un proceso, una comparativa, cualquier contenido explicativo. Se usa sin preguntar nada.
+- **Normal** (`Guardá este post`) es el default y cubre la enorme mayoría de los casos: un paper, un artículo, un video, un proceso, una comparativa, cualquier contenido explicativo. Se usa sin preguntar nada.
 - **Comentario** (`Comenta AURELIO` y te enviamos la skill por DM) solo corresponde cuando **el carrusel entrega algo por DM** — una skill, un template, un prompt, un recurso descargable — y ese algo es el tema del carrusel, no una mención al pasar. Ahí no se pregunta tampoco: se propone junto con el split, en una línea, y el usuario dice que no si no va.
 
 Preguntar la variante en cada carrusel es ruido: la respuesta ya está en el material. Solo se pregunta si el propio usuario deja la intención ambigua — por ejemplo, si pide un carrusel sobre una skill pero no aclara si la va a regalar.
@@ -195,8 +200,14 @@ Preguntar la variante en cada carrusel es ruido: la respuesta ya está en el mat
 
 - Los dos assets `1080x1920` (`la-casa-cta.png` y `la-casa-cta-aurelio.png`) quedaron **fuera de uso** desde la decisión de tamaño único del 2026-08-13. Siguen versionados en `assets/` por si alguna vez vuelve a hacer falta ese tamaño; no se usan en carruseles nuevos y no se recortan ni estiran para llenar el lugar del asset de `1080x1440`.
 
-- Copy in the normal variant: `Guarda este post` / `y sígueme para más`. In the comment variant: `Comenta AURELIO` / `y te enviamos la skill por DM`. Both sit over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature, in the same layout.
+- Copy in the normal variant: `Guardá este post` / `y seguime para más`. In the comment variant: `Comenta AURELIO` / `y te enviamos la skill por DM`. Both sit over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature, in the same layout.
 - When the comment variant is used, the word to comment must also appear in the caption's written paragraph. If it ever changes, it changes in both places.
+- **Deuda abierta (2026-08-25): los PNG fijos del `01-editorial-oscuro` todavía dicen `y sígueme
+  para más`.** El texto está horneado en `la-casa-cta-ig.png` y en su fuente `cta-ig.html`, así que
+  arreglarlo es regenerar el asset con `make-cta.mjs` y verificarlo con `scripts/compare-blocks.mjs`
+  (un cambio de copy solo puede mover los bloques de texto). Hasta que se haga, cualquier carrusel
+  del template 01 sale con tuteo en el cierre. El `02-editorial-oscuro-v2` no está afectado: su CTA
+  es una placa HTML y ya está en voseo.
 - Los cuatro assets llevan el mismo campo que los slides de contenido: grilla de puntos, los dos glows y las curvas. Ninguno es plano.
 - Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
 - If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here.
@@ -277,7 +288,7 @@ Bienvenidos a la Casa de Aurelio!
 De la teoría a la práctica: Aurelio Agency →
 https://www.aurelioagency.com/es
 
-Únete a la comunidad:
+Unite a la comunidad:
 https://www.skool.com/la-casa-de-aurelio-2061
 
 <4 hashtags dinamicos segun el tema> #LaCasaDeAurelio
@@ -285,6 +296,9 @@ https://www.skool.com/la-casa-de-aurelio-2061
 
 Rules:
 
+- **Los bloques fijos tambien van en voseo.** `Unite a la comunidad` reemplazo a `Únete a la
+  comunidad` el 2026-08-25: que un bloque sea fijo no lo exime de la regla de voz, solo
+  significa que no se adapta al tema del carrusel.
 - The greeting, the services paragraph, and both links are **fixed**. Never reword, translate, shorten, or adapt them to the carousel's topic.
 - The only written paragraph is the second block: it restates the carousel's strongest idea or figure in 2-4 lines. No filler, no recap of every slide.
 - **Exactly 5 hashtags, siempre.** El tope de 5 es de plataforma y está en `SKILL.md`; acá se define cómo se reparten esos 5 en esta marca.

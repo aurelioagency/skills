@@ -245,3 +245,12 @@ h2 { font-size: 88px; line-height: 1; }
 .mid { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 44px; }
 .mid.start { align-items: flex-start; gap: 20px; }
 .spacer { flex: 1 1 auto; }
+
+/* Icono de Lucide/Tabler. El grosor lo calcula ico() en index.html con el valor medido
+   para este estilo; aca va solo la alineacion y el color. El color SIEMPRE sale de un
+   acento de la paleta, nunca de un hex escrito en el slide. */
+.ico { flex: none; color: var(--teal); }
+/* Con icono, la ficha lo pone a la izquierda y el texto pasa a .ct. */
+.stack .card { flex-direction: row; align-items: center; gap: 22px; }
+.stack .card .ct { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.checks .ck { align-items: center; }

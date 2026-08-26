@@ -57,6 +57,28 @@ const userImg = s => !s.img ? '' : (s.imgTransparent
   ? `<div class="ext-plain"><img src="${s.img}" alt=""></div>`
   : `<div class="ext-card"><img src="${s.img}" alt=""></div>`);
 
+// ---------- Iconos de Lucide/Tabler ----------
+// El grosor real de la linea de este estilo, en px sobre el lienzo. Esta medido contra
+// su propio chrome; el valor y el por que estan en estilo.md. NO se cambia por slide.
+const ICON_REAL = 3;
+const ICON_PX = 56;              // 40-56 segun cuanto peso cargue el slide
+
+// `stroke-width` NO esta en pixeles: esta en las unidades del viewBox del icono, que en
+// Lucide y en Tabler es 24. El mismo numero da lineas distintas segun el tamanio, por eso
+// se calcula en vez de escribirse a mano.
+//
+// COMO SE USA: entra a lucide.dev o tabler.io/icons, copia el INTERIOR del <svg> (los
+// <path>, sin la etiqueta <svg>) y pegalo en el slide como `ico: { d: '<path .../>' }`.
+// Opcional `px` para cambiar el tamanio. El color sale del CSS de .ico.
+const ico = (spec) => {
+  if (!spec) return '';
+  const px = spec.px || ICON_PX;
+  const sw = +(ICON_REAL * 24 / px).toFixed(2);
+  return `<svg class="ico" viewBox="0 0 24 24" style="width:${px}px;height:${px}px"
+    fill="none" stroke="currentColor" stroke-width="${sw}"
+    stroke-linecap="round" stroke-linejoin="round">${spec.d}</svg>`;
+};
+
 // ---------- Componentes ----------
 
 // Comparacion de dos cajas. `h` es la altura en px y es PROPORCIONAL AL DATO:
@@ -79,6 +101,7 @@ const parts = s => `
   <div class="parts">
     ${s.parts.map(p => `
       <div class="part">
+        ${p.ico ? ico({ ...p.ico, px: p.ico.px || 52 }) : ''}
         <span class="tag" style="background:${pastel(p.tone)}">${p.tag}</span>
         <div class="t">
           <div class="name">${p.name}</div>

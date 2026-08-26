@@ -51,16 +51,19 @@ window.CAROUSEL = {
     },
 
     // DESPIECE. Piezas con etiqueta P-01, nombre manuscrito y descripcion.
-    // `aside`/`img` opcional si el slide lleva una imagen.
+    // `ico` es opcional: se copia el INTERIOR del <svg> de lucide.dev o tabler.io/icons
+    // (los <path>, sin la etiqueta <svg>). El grosor lo calcula el template solo, con el
+    // valor medido para este estilo; no se escribe stroke-width a mano.
+    // `img` opcional si el slide lleva una imagen.
     {
       type: 'parts',
       tab: 'DESPIECE',
       headline: 'Las 3 piezas<br>que bajan el costo',
       ruleWidth: 64,
       parts: [
-        { tag: 'P-01', tone: 'celeste',  name: 'Guardar el razonamiento',      desc: 'El agente no vuelve a pensar lo que ya pensó entre paso y paso.' },
-        { tag: 'P-02', tone: 'amarillo', name: 'Repartir en paralelo',          desc: 'Varios agentes trabajando a la vez, uno que ordena y sintetiza.' },
-        { tag: 'P-03', tone: 'gris',     name: 'Mover lo repetitivo a código',  desc: 'Filtrar y sumar lo hace un script. El modelo sólo juzga.' }
+        { tag: 'P-01', tone: 'celeste',  ico: { d: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' }, name: 'Guardar el razonamiento',      desc: 'El agente no vuelve a pensar lo que ya pensó entre paso y paso.' },
+        { tag: 'P-02', tone: 'amarillo', ico: { d: '<path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/>' }, name: 'Repartir en paralelo',          desc: 'Varios agentes trabajando a la vez, uno que ordena y sintetiza.' },
+        { tag: 'P-03', tone: 'gris',     ico: { d: '<path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/>' }, name: 'Mover lo repetitivo a código',  desc: 'Filtrar y sumar lo hace un script. El modelo sólo juzga.' }
       ],
       source: 'CONJUNTO: RESPONSES API'
     },

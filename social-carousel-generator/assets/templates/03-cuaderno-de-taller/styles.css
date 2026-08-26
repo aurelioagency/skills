@@ -242,3 +242,10 @@ h2 { font-size: 92px; }
 .s-cta h2 { font-size: 100px; }
 
 .spacer { flex: 1 1 auto; }
+
+/* Icono de Lucide/Tabler. El grosor lo calcula ico() en index.html con el valor medido
+   para este estilo; aca va solo la alineacion y el color. El color SIEMPRE sale de un
+   acento de la paleta, nunca de un hex escrito en el slide. */
+.ico { flex: none; color: var(--ink); }
+/* El icono va antes de la etiqueta P-01, alineado con ella y no con el bloque. */
+.parts .part .ico { margin-top: 4px; }

@@ -483,3 +483,10 @@ h1 {
   padding: 16px;
 }
 .ext-card img { display: block; width: 100%; height: auto; border-radius: 10px; }
+
+/* Icono de Lucide/Tabler. El grosor lo calcula ico() en index.html con el valor medido
+   para este estilo; aca va solo la alineacion y el color. El color SIEMPRE sale de un
+   acento de la paleta, nunca de un hex escrito en el slide. */
+.ico { flex: none; color: var(--terracotta); }
+/* .ci ya es flex; con icono la marca de color no va, solo hay que centrar. */
+.checklist .ci { align-items: center; }

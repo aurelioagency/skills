@@ -62,3 +62,17 @@ no competir con el titular, nunca tan chico que se lea como una marca perdida.
 siempre con un acento de la paleta de este estilo, nunca un hex escrito a mano.
 
 Nunca mezcles dos grosores de icono dentro de un mismo carrusel.
+
+**Qué piezas lo aceptan:** `stack` y `checks` — en `checks` reemplaza a la marca ▪, no van los dos.
+
+Se copia el **interior** del `<svg>` de lucide.dev o tabler.io/icons — los `<path>`, sin
+la etiqueta `<svg>` — y va en el slide como `ico: { d: '<path .../>' }`. Opcional `px`
+para cambiar el tamaño.
+
+**El `stroke-width` no se escribe a mano.** Lo calcula `ico()` en `index.html` con el
+grosor de arriba y el tamaño del ícono. Si lo escribís vos, se rompe la consistencia en
+cuanto un ícono vaya a otro tamaño.
+
+Para que una pieza más acepte ícono hay que tocar los tres archivos: `index.html` (que
+lo dibuje), `styles.css` (cómo se alinea) y este archivo (que quede documentado). Los
+tres, o el dato queda en `slide-data.js` y no aparece nada.
