@@ -19,7 +19,8 @@
 //   5. firma abajo a la derecha
 //
 // LA REGLA REAL DEL FORMATO: una idea por placa. Si necesitas dos, son dos placas.
-// El aire vacio no es un problema a resolver.
+// Este estilo respira mas que los otros, pero el contenido va repartido: aire si,
+// agujeros no. Lo verifica el chequeo de hueco interno de render-and-audit.mjs.
 
 const VIDEO = new URLSearchParams(location.search).has('video');
 const ico = (i) => i ? window.ICONS.icon(i.name, i.px || 104, i.pastel, '#fcefe3') : '';
@@ -95,7 +96,10 @@ function render(s, i, total) {
     inner = `
       ${titulo(s, 'h1')}
       ${s.bajada ? `<div class="bajada">${s.bajada}</div>` : ''}
-      <div class="zona">${s.escena ? escena(s.escena) : userImg(s)}</div>`;
+      <div class="zona">
+        ${s.escena ? escena(s.escena) : userImg(s)}
+        ${s.pieEscena ? `<div class="pie-escena">${s.pieEscena}</div>` : ''}
+      </div>`;
   }
 
   if (s.type === 'lista') {

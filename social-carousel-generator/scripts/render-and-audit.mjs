@@ -20,7 +20,7 @@
 // Excepciones documentadas: si `window.CAROUSEL.layoutExceptions` incluye el id de un
 // chequeo, ese chequeo baja a nota informativa. Ids validos:
 //   cover-hook-centered | vertical-balance | counter-centered | optical-padding
-//   | density-budget | slide-grammar | typography-floor | safe-area
+//   | density-budget | slide-grammar | typography-floor | safe-area | internal-gap
 //
 // typography-floor y safe-area son las mas caras de conceder: bajan a nota TODOS los
 // avisos de su tipo, incluido el error real que se cuele entre ellos. Van solo cuando
@@ -386,10 +386,22 @@ for (let i = 1; i <= count; i++) {
       for (let i = 1; i < rows.length; i++) if (rows[i] - rows[i - 1] > gap) k++;
       return k;
     };
+    // Hueco interno mas grande: la distancia vertical mas larga sin nada de tinta
+    // ENTRE el primer y el ultimo bloque de contenido. El chequeo de balance vertical
+    // solo mira los extremos, asi que un slide con todo pegado arriba y abajo y un
+    // agujero enorme en el medio le pasa con delta cero. Esto lo agarra.
+    let gap = 0, gapAt = 0;
+    for (let i = 1; i < rows.length; i++) {
+      const d = rows[i] - rows[i - 1];
+      if (d > gap) { gap = d; gapAt = rows[i - 1]; }
+    }
+
     return {
       coverage: +(total / ((W2 / 2) * (H2 / 2)) * 100).toFixed(1),
       lines: runs(8),
-      blocks: runs(30)
+      blocks: runs(30),
+      gap: Math.round(gap * (H2 > 1500 ? 1 : 1)),
+      gapAt: Math.round(gapAt)
     };
   }, { b64: shot.toString('base64') });
 
@@ -515,6 +527,32 @@ for (const r of report) {
                   `(${Math.round(delta)}px de diferencia, limite ${Math.round(limit)}px). ` +
                   `Si sacaste un elemento, revisa la constante de layout que existia para el.`;
       at(excepted('vertical-balance') ? notes : red, msg);
+    }
+  }
+
+  // hueco interno: el vacio vertical mas largo ENTRE bloques de contenido.
+  //
+  // El balance vertical de arriba solo compara los extremos — el hueco sobre el primer
+  // elemento contra el hueco bajo el ultimo. Un slide con todo pegado arriba y abajo y
+  // un agujero enorme en el medio le pasa con delta cero, y ese es justo el defecto que
+  // se ve de lejos: "las cosas quedaron re separadas".
+  //
+  // Los cortes salen de inspeccion visual sobre el set de ejemplos (2026-08-26): 252px
+  // se leyo como aire deliberado y 290px como agujero. Aviso en 260, bloqueo en 280.
+  // Escalan con el alto del lienzo.
+  //
+  // EL ARREGLO ES MAS CONTENIDO O MENOS SEPARACION, NUNCA AGRANDAR LO QUE YA ESTA.
+  // Escalar tipografia o graficos para tapar el hueco da un slide mas grande que dice
+  // lo mismo, y saca al carrusel de la marca.
+  if (r.density && r.density.gap != null && !r.isCTA) {
+    const k = H / 1440;
+    const warn = 260 * k, stop = 280 * k;
+    if (r.density.gap > warn) {
+      const msg = `hueco interno de ${r.density.gap}px a la altura y=${r.density.gapAt} ` +
+                  `(limite ${Math.round(stop)}px). Sumale contenido a ese espacio o junta los ` +
+                  `bloques; no agrandes lo que ya esta.`;
+      if (r.density.gap > stop) at(excepted('internal-gap') ? notes : red, msg);
+      else notes.push(`slide ${r.slide}: ${msg}`);
     }
   }
 

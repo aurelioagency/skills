@@ -192,6 +192,26 @@ h1, h2 {
 
 .zona { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; }
 
+/* El contenido se REPARTE en la zona, no se apretuja en el centro. Centrado, un
+   bloque chico en una zona alta deja un agujero arriba y otro abajo; repartido, esos
+   dos agujeros se vuelven varios huecos chicos. Lo verifica el chequeo de hueco
+   interno de render-and-audit.mjs. */
+.zona > .lista,
+.zona > .semaforo { flex: 1; justify-content: space-evenly; }
+.zona > .antes { flex: 1; }
+
+/* Portada: la escena y su pie se reparten la zona en vez de flotar centrados. */
+.s-cover .zona { justify-content: space-evenly; }
+
+/* Pie de escena: nombra lo que muestran los iconos. Es contenido, no decoracion:
+   sin el, la portada deja un agujero entre la bajada y los iconos. */
+.pie-escena {
+  font-size: 44px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--firma);
+}
+
 /* ---------- Componente: lista etiquetada ---------- */
 
 .lista { display: flex; flex-direction: column; gap: 28px; width: 100%; }

@@ -24,9 +24,9 @@ window.CAROUSEL = {
   //   'cover-hook-centered' -> no hace falta: la portada de este template ya esta
   //      centrada. Es el unico de la familia que cumple ese chequeo de fabrica.
   //   'density-budget' -> las bandas estan medidas sobre el set publicado del
-  //      01-editorial-oscuro. Este template deja aire a proposito: la receta dice
-  //      textual que el aire vacio no es un problema a resolver, asi que juzgarlo
-  //      con las bandas de otro template produce avisos que no significan nada.
+  //      01-editorial-oscuro, que tiene otro peso visual. Este template todavia no
+  //      tiene set propio para medir las suyas. NO es permiso para dejar agujeros:
+  //      el hueco interno se chequea igual que en los otros cinco.
   //   'slide-grammar' -> la grilla de la receta no tiene rotulo de encabezado. Sus
   //      cinco zonas fijas son: titulo centrado, subrayado verde, bajada opcional,
   //      contenido y firma. El titular esta y manda la placa; el kicker no existe en
@@ -47,7 +47,10 @@ window.CAROUSEL = {
         { name: 'documento', px: 200, pastel: 'celeste' },
         { name: 'buscar',    px: 200, pastel: 'verde' },
         { name: 'ok',        px: 200, pastel: 'lila' }
-      ]
+      ],
+      // Nombra lo que muestran los iconos. Sin esto la portada deja un agujero
+      // entre la bajada y la escena — lo marca el chequeo de hueco interno.
+      pieEscena: 'Guardar · encontrar · confirmar'
     },
 
     // 02 · LISTA ETIQUETADA — icono + termino resaltado + definicion.
@@ -68,6 +71,7 @@ window.CAROUSEL = {
       type: 'antes',
       titulo: 'Buscar sin orden<br>y buscar con orden',
       subWidth: 66,
+      bajada: 'Es la misma biblioteca. Cambia cuánto tardás en encontrar el libro.',
       a: { k: 'SIN ORDEN', t: 'Revisás todos los libros hasta dar con el que buscabas.' },
       b: { k: 'CON ORDEN',  t: 'Vas directo al estante, y ahí al libro.' }
     },

@@ -21,8 +21,9 @@ estimados.
   `border-radius: 22px 20px 24px 18px` en vez de `20px` y el ojo lo lee como trazo
   humano. Con un radio único se pierde todo el carácter del formato.
 - **Una idea por placa.** Si necesitás dos, son dos placas.
-- **El aire vacío no es un problema a resolver.** Por eso este estilo lleva la excepción
-  `density-budget`.
+- **Aire sí, agujeros no.** Este estilo respira más que los otros cinco y está bien, pero
+  el contenido tiene que quedar repartido: nada de bloques pegados arriba y abajo con un
+  vacío enorme en el medio. Lo mide el chequeo de hueco interno, igual que a todos.
 - **Firma en la misma esquina en todas las placas.**
 - **Margen de 88px a los lados y 96px arriba y abajo.** No se reduce.
 
