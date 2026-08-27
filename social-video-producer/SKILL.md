@@ -32,12 +32,21 @@ Hard branch rule: a script path is not a final audio file. For script-driven wor
 
 ## Project Layout
 
-Keep each script/video job in one global project folder under the active user's documents folder, `<Documents>\videos\` (derive it from the current environment), unless the user gives another path. Never default to an absolute path from another user or machine.
+Keep each script/video job in one project folder under `<Documents>\social-video-producer\` (derive `<Documents>` from the current environment), unless the user gives another path. Never default to an absolute path from another user or machine.
+
+Every video this skill produces lives under that one root, named after the skill, so the user has a single place to find all of them. It sits inside the documents folder for a second reason that matters operationally: **this harness only makes links clickable when the path is inside the working directory.** A deliverable written to `Downloads\` or anywhere else outside it can be described but never opened with a click — the link resolves to "outside the working directory" and fails. Keep everything in-tree.
 
 **The project slug must be descriptive of the video's actual topic, in kebab-case** — the same rule `social-carousel-generator` uses for its `<tema-en-kebab-case>` delivery folder. Never name the project after the source filename, a date, or any other non-descriptive label (`0824`, `video1`, `final2`, `clip`). Derive the slug from what the video is actually about — the hook, the product, or the main topic — once enough of the script or transcript is known to name it (for script-driven projects, right after parsing the script; for burn-in-captions or contextual-overlays projects, right after the Transcript Approval Gate, since the slug is not knowable before the transcript is read). If a project must be created before the topic is known, use a short placeholder and rename the folder plus every file inside it that carries the slug as soon as the topic is confirmed — never ship a delivery folder or final filename still named after a placeholder.
 
+The root holds two things: one delivery folder per video, named after the video, and a single `.work\` folder where every project's working tree lives out of the way.
+
 ```text
-videos\<script-slug>\
+social-video-producer\<script-slug>\           <- DELIVERY: only what the user consumes
+  <slug>-subs.mp4
+  <slug>-caption.txt
+  <slug>-transcript.txt
+
+social-video-producer\.work\<script-slug>\     <- the project; the user never has to open it
   source\
     script.md
     build-composition.mjs
@@ -94,7 +103,7 @@ Do not create a project-local `tools\` folder for normal runs. Reuse this skill'
 
 When the user must supply existing media (opening clips, body audio, outro, script) and has not given explicit paths, never fail or stall on missing placeholders. Collect the assets this way:
 
-1. Ask only where the project should live (default `<Documents>\videos\<video-name>\`). Create the full project structure immediately, plus a `raws\` folder in the project root for the user's original files.
+1. Ask only where the project should live (default `<Documents>\social-video-producer\.work\<slug>\`). Create the full project structure immediately, plus a `raws\` folder in the project root for the user's original files.
 2. Tell the user: "drop this video's files into `<project>\raws\` and tell me when they are ready". Suggest descriptive file names aligned with the segments (`intro`/`opening`, `body`, `outro`, `script`) — helpful but never required.
 3. Accept the two alternatives without friction: files dragged into the chat, or "they are in folder X". In both cases copy the originals into `<project>\raws\` yourself, so every project ends up self-contained: originals in `raws\`, deliverables in `renders\final\`.
 4. Inventory `raws\` with ffprobe: duration, video/audio streams, resolution. Classify candidates (opening1..openingN, body audio, outro, script/notes) by file name first, probed metadata second (short video+audio clips are opening/outro candidates; a long audio-only file is the body).
@@ -155,15 +164,35 @@ node "<skill-dir>\scripts\audit-splice-silence.mjs" --project "<project>" --nois
 
 After obtaining the word-level transcript of each clip (Whisper or any other ASR) and BEFORE rendering any caption or composite:
 
-1. Show the full plain text of every clip in the chat, one clip at a time, readable.
-2. Explicitly flag suspicious words: proper nouns, brand/product names, low-confidence words, and very short tokens that could be split words. ASR engines systematically mis-transcribe proper nouns and brand names.
-3. Wait for the user's correction or approval. Do NOT start any caption or composite render until explicit approval is received.
-4. Apply the corrections to the timestamp JSON with these rules:
+1. Fix the language yourself first, before showing anything. Spelling, accents, verb forms, prefix joining, and register consistency are the agent's job, resolved against a dictionary and against the rest of the transcript — never a question for the user. See **Language Is Never A Question** below.
+2. Show the full plain text of every clip in the chat, one clip at a time, readable, already corrected.
+3. Ask about every word you genuinely doubt *was said*: proper nouns, brand and product names, acronyms, numbers, low-confidence tokens, and anything that does not parse. ASR engines systematically mis-transcribe proper nouns and brand names, and no dictionary can tell you which product the speaker meant — that is exactly what the user is for. What never goes in the list is how a word is spelled or accented.
+4. Wait for the user's correction or approval. Do NOT start any caption or composite render until explicit approval is received.
+5. Apply the corrections to the timestamp JSON with these rules:
    - Word split into 2 tokens: merge into a single token with the start of the first token and the end of the second.
    - Missing word (articles/prepositions before names): insert it by splitting the neighboring token's time range.
    - Never invent timestamps outside the real audio range.
+   - Keep the raw ASR output untouched and write the corrected version alongside it as `<slug>.approved.json`, so the original stays auditable.
 
 Catching a transcript error after the render costs a full re-render cycle; catching it here costs seconds.
+
+#### Ask What Was Said, Never How It Is Written
+
+There is a line through the middle of this gate, and it decides what belongs in the questions:
+
+- **Ask freely about which word was spoken.** That is the point of the gate and the user is the only source for it. Anything the audio leaves genuinely ambiguous — a product name, an acronym, a number, a word Whisper flagged as low-confidence, a phrase that does not parse — goes in the list. Doubt is a good reason to ask.
+- **Never ask how a word is written.** Spelling, accents, prefix joining, and which conjugation family the speaker uses are the agent's job, resolved against a dictionary and against the rest of the transcript. The user is a native speaker of the language they recorded in; asking them to adjudicate their own orthography is not diligence, it is offloading the work onto them, and it reads as insulting.
+
+Two failure modes to avoid specifically:
+
+- **Do not bundle unrelated words into one grammar question.** Five words listed together under a single "is this X or Y?" row is not five careful checks — it is one grammatical question the user never asked to be involved in, wearing a costume. Resolve the pattern once, apply it to all five, report it as done.
+- **Do not name grammatical categories at the user.** Terms like *tuteo*, *voseo*, *aguda*, *llana*, *diacritic* are internal vocabulary. The user does not have to know them and should not have to learn them to approve a transcript. If a reason is needed, ground it in their own audio: "va en voseo porque en el audio decís *tenés* y *Seguime*" — one line, no lesson.
+
+- **Accents/diacritics:** a solved rule, not an opinion. Apply the language's own orthography (Spanish: `haces` is llana ending in -s → no tilde; `hacés` is aguda ending in -s → tilde; `comentá` is aguda ending in a vowel → tilde). If unsure, look the form up — do not put the question to the user.
+- **Prefixes and compounds:** apply the language academy's rule directly (RAE: prefixes join the base word, so `ultraliviano`, not `ultra liviano`).
+- **Register consistency (tuteo vs. voseo, formal vs. informal, regional forms):** decide it from the audio, not from the user. Whisper systematically neutralises Rioplatense voseo to peninsular tuteo, but it rarely neutralises *every* instance. Find the forms that survived — `tenés`, `Seguime`, `podés`, `sos` — and normalise the whole transcript to that register. A transcript that mixes `tenés` with `instalas` is an ASR artefact and a grammatical inconsistency, never a stylistic choice the user made.
+- Do not name the grammatical categories at the user unless they ask. State the correction and the reason in one line ("va en voseo porque en el audio decís *tenés* y *Seguime*") and move on.
+- Report the fixes as a decision already applied, in a table of `what the ASR heard` → `what ships` → `why`. The user's only job is to veto something that looks wrong.
 
 3. Generate or reuse HeyGen avatar segments.
 
@@ -413,6 +442,17 @@ renders\segments\outro.mp4
 - If a new pipeline step would require an additional encode, the correct answer is to integrate it into an existing pass, never to add another encode.
 - In production, invoke segment renders with `render-segment.cjs ... --crf 10 --frame-format png` so the intermediate encode meets this budget from lossless PNG frame capture (JPEG capture artifacts degrade kinetic-text sharpness). The script defaults (`--crf 18`, JPEG q92) stay backward compatible.
 
+#### Never Downscale The Source
+
+The source's native resolution is the floor for the deliverable, always. A 2160x3840 recording ships at 2160x3840; a 4K source never becomes a 1080p deliverable.
+
+- **Never propose downscaling, and never ask whether to.** "The platform standard is 1080x1920" is not a reason — the platforms accept and prefer higher resolution, and they re-encode everything anyway, so handing them more pixels produces a better final stream on their side. Asking the question at all signals the quality rule was not read.
+- File size is not a reason either. A 165 MB 4K deliverable is the correct output for a 34-second 4K source. Do not trade pixels for megabytes on your own initiative.
+- The `1080x1920` in this document is the *default composition canvas* for videos this skill generates from scratch, not a ceiling imposed on footage the user shot. When the user supplies the video, its own dimensions are the target.
+- Scale only when the user explicitly asks for a specific smaller size, and only inside an already-budgeted encode pass — never as an extra pass.
+- Consequently, verify the burn against the SOURCE dimensions: `verify-render.mjs --expect-width <source-width> --expect-height <source-height>`, read from ffprobe, not from a hardcoded 1080x1920.
+- Caption geometry is expressed against the 1080-wide house design, so scale every caption dimension by `sourceWidth / 1080` before building the `.ass`: at 2160 wide that means `--size 208 --outline 14 --shadow 10 --margin-lr 240 --margin-bottom 1000`. Passing the 1080 numbers onto a 4K frame renders captions at half their intended size.
+
 5. Assemble final variants.
 
 - Assemble final MP4s from the frozen/rendered segments:
@@ -528,19 +568,27 @@ With no flag this freezes **Inter Black**, the skill default, from the fonts bun
 
 Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video.
 
-**House default:** Inter Black at 104px, chunk reveal, `accent-mode active` — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns cyan `#30D5FF` as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. That is what the scripts produce with no style arguments, and it is the starting point to show at the gate below — offer alternatives from there rather than opening with a blank choice.
+**House default:** Inter Black at 104px, chunk reveal, `accent-mode active` — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns cyan `#30D5FF` as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. That is what the scripts produce with no style arguments, and **it is what ships.** It is a decided house style, not a starting point for a menu.
 
 The alternative is `accent-mode keyword` (`--accent-mode keyword --accent-terms "..."`) — only hand-picked key terms ever turn cyan, everything else stays white for the whole video. Switch to it only if the user asks for that specific look; do not default to it. `accent-mode` is only meaningful with `reveal=chunk`; with `reveal=word` it is a no-op since word reveal already colours the currently-spoken word.
 
-5. **Caption Style Gate (blocking).** Render 2-3 style candidates as single frames over real frames of the video and let the user choose from the images. Stills are cheap; a wrong style discovered after the burn is not. Confirm font, size, colours, accent mode, and reveal mode before generating the full `.ass`.
+5. **Render ONE preview frame of the house default and keep going.** Burn the default `.ass` onto a real frame of this video, show that single image, and proceed straight to the full burn. This is a sanity check on placement over *this* footage — that the captions clear the speaker's face and any on-screen UI — not a style decision.
+
+   **Do not offer 2-3 style candidates.** The skill already made the style decision; re-opening it hands a solved problem back to the user, wastes their attention, and implies the default is arbitrary. Generate alternative styles only when the user asks for a different look, and then render exactly the alternatives they described.
+
+   The one thing that IS worth confirming per video is caption placement when the preview frame shows a conflict the guidelines can't resolve blind — a face in the lower third, a burned-in logo, on-screen UI under the caption band. Ask about that specific frame, not about taste.
 
 6. Generate the subtitle file.
 
 ```powershell
-node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.transcript.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --size 104 --accent "#30D5FF" --corrections "source\corrections.json"
+node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.approved.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --video-width <source-width> --video-height <source-height> --size 104 --accent "#30D5FF"
 ```
 
 `accent-mode` defaults to `active` (karaoke-style, no `--accent-terms` needed). Only add `--accent-mode keyword --accent-terms "<key terms>"` if the user asked for that specific keyword-only look instead.
+
+Pass the SOURCE's real dimensions, and scale every caption dimension by `sourceWidth / 1080` — the geometry defaults are expressed against the 1080-wide house design. On a 2160x3840 source that is `--video-width 2160 --video-height 3840 --size 208 --outline 14 --shadow 10 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their intended size, and it passes the width gate while doing it, because the gate measures against the same wrong width.
+
+Use `--corrections "source\corrections.json"` for plain one-word substitutions. When a fix merges or splits tokens (`ultra` + `liviano` → `ultraliviano`), the corrections format cannot express it: write the corrected `<slug>.approved.json` directly, keep the raw `.transcript.json` untouched, and build from the approved copy.
 
 7. Run the width gate before encoding.
 
@@ -554,10 +602,18 @@ Treat a failure as a hard stop. `check-overflow.cjs` inspects DOM boxes and cann
 
 ```powershell
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "raws\<video>.mp4" --ass "renders\<slug>.ass" --output "renders\final\<slug>-subs.mp4" --fonts-dir "assets\fonts"
-node "<skill-dir>\scripts\verify-render.mjs" --file "renders\final\<slug>-subs.mp4" --expect-width 1080 --expect-height 1920
+node "<skill-dir>\scripts\verify-render.mjs" --file "renders\final\<slug>-subs.mp4" --expect-width <source-width> --expect-height <source-height>
 ```
 
 Then extract frames from the FINAL file at several timestamps — at minimum one talking-head frame, one graphic/screen-recording frame, and one wrapped two-line caption — and look at them.
+
+9. Write the post description, then package the delivery. See **Post Description** and **Delivery Package**:
+
+```powershell
+node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>" --extra "renders\<slug>.ass"
+```
+
+Give the user the folder link from `folderUrl` before anything else.
 
 ### libass Behaviour That Costs A Render Cycle
 
@@ -566,6 +622,8 @@ Then extract frames from the FINAL file at several timestamps — at minimum one
 - **ASS colour is `&HBBGGRR&`,** the reverse of CSS hex. Reversing it turns the accent into its complement, which is easy to miss on a warm frame.
 - **Escape the Windows drive letter inside a filter argument** (`C\:/path/file.ass`), or ffmpeg reads the colon as the next filter option.
 - Always pass `--fonts-dir`, so the burn uses the frozen project font rather than whatever the machine happens to have installed.
+- **`-ss` before `-i` renders the wrong subtitle.** Input seeking rebases output timestamps to zero, so the `ass` filter draws whatever event lives at t=0 — usually nothing, which looks exactly like a silently broken filter. For any preview or QA frame, put `-ss` AFTER `-i`: `ffmpeg -i in.mp4 -ss 12.7 -frames:v 1 -vf "ass=...,scale=540:-1" out.png`. Slower, correct.
+- A frame extracted exactly on an event's start time can come back blank: `\fad(70,0)` means alpha is still zero at that instant. Sample a few tenths inside the event, not at its boundary, before concluding a caption is missing.
 
 ## Contextual Overlays Branch
 
@@ -745,8 +803,10 @@ node "<skill-dir>\scripts\transcribe-media.mjs" --input "<project>\raws\source.m
 node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\assets\voice\source.transcript.json" --output "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --size 104 --accent "#30D5FF"
 node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --output "<project>\manifests\audits\caption-width.json"
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.mp4" --ass "<project>\renders\source.ass" --output "<project>\renders\final\source-subs.mp4" --fonts-dir "<project>\assets\fonts"
+node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 node "<skill-dir>\scripts\capture-overlay-frames.mjs" --project "<project>"
 node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input "<project>\raws\source.mp4" --output "<project>\renders\final\source-overlays.mp4"
+node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 ```
 
 - `init-project.mjs`: create the canonical one-folder project layout and starter manifests without overwriting existing files.
@@ -772,6 +832,7 @@ node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input 
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
+- `deliver-package.mjs`: copy the final video(s), the post description and a readable plain-text transcript into one descriptively named folder in the user's Downloads, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
 
 If an existing project still has older local tools such as `render-local.cjs`, `snapshot-qa.cjs`, or `check-overflow.cjs`, those may be used for that project, but migrate repeated behavior back into the bundled scripts.
 
@@ -785,10 +846,44 @@ Before reporting completion:
 - Run overflow/layout checks on affected timestamps. For burned-in captions this means `audit-caption-width.mjs`, which must pass before the encode; `check-overflow.cjs` cannot see them.
 - After rendering or assembly, verify each final MP4 has:
   - expected duration;
-  - `1080x1920` unless the user requested another format;
+  - the SOURCE's dimensions for user-supplied footage (never downscaled — see **Never Downscale The Source**), or `1080x1920` for compositions this skill generates from scratch, unless the user requested another format;
   - H.264 or expected video stream;
   - AAC or expected audio stream;
   - clear output path.
 - Extract or inspect at least one rendered frame near any repaired region and near each splice boundary.
 - Run ffmpeg silencedetect over each final MP4: no splice pause may exceed ~0.9s of silence. Splice pauses must stay comparable to the natural pauses between spoken phrases.
-- Report exact final paths, segment paths when relevant, manifests, HeyGen ids/page URLs, and any remaining risk.
+
+## Delivery Package (mandatory final step, every branch)
+
+A file buried in `renders\final\` next to manifests, audits and snapshots has not been delivered. Every finished run ends by gathering the deliverables into the video's own folder, `<Documents>\social-video-producer\<slug>\` — the script derives it from the project's location under `.work\`:
+
+```powershell
+node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
+```
+
+- It lives inside the project, which lives inside the working directory — that is what makes the links clickable. The script refuses to run under a placeholder slug (`tmp-0826`, `video1`, `final2`), because the whole point is that the user can tell which video is which from the folder name.
+- Large files are hardlinked rather than copied, so the tidy folder costs no extra disk. Editing a delivered file edits the one in `renders\final\` too — they are the same bytes. Re-run with `--overwrite` after a re-render.
+- The folder contains exactly three kinds of thing:
+  - every final video from `renders\final\`;
+  - the post description `<slug>-caption.txt`;
+  - `<slug>-transcript.txt`, the full transcript as readable wrapped prose.
+- **The word-level transcript JSON does NOT ship.** It is a build input for the caption pipeline, not a deliverable. It stays in the project under `assets\voice\`. The same goes for every other intermediate: manifests, audits, snapshots, segment renders, the extracted WAV. A delivery folder is what the user consumes, not a copy of the workspace.
+- Add something else only when the user would actually use it, via `--extra` (the `.ass` when they may want to re-edit subtitles, the attribution text for licensed music).
+- **Hand over clickable links, and know exactly what is clickable.** Three rules learned the hard way:
+  - A link works only when its href is a path **relative to the working directory and inside it**. A path that escapes the working directory fails with "outside the working directory", so `../Downloads/...` never works from `Documents`.
+  - A `file:///` URL is never clickable here. Do not use one.
+  - **A folder link cannot be opened. Verified twice on this harness:** a path outside the working directory fails with "outside the working directory", and a folder path *inside* it fails with "no se pudo encontrar este archivo" even when the folder demonstrably exists — the viewer resolves files only. Do not offer a folder as a clickable link, and do not promise one. If the user asks for one, say plainly that this interface cannot do it and give them the two things that work.
+- **To give the user a one-click "open the delivery folder", use a shell command block.** The harness puts a Run button on any fenced ` ```bash ` block, so this is the click that actually opens the folder — the thing a markdown link cannot do. Always include it, right at the top of the handoff:
+
+  ````text
+  ```bash
+  explorer.exe "<Documents>\social-video-producer\<slug>"
+  ```
+  ````
+
+  (`open` on macOS, `xdg-open` on Linux.) When the user asks for "a clickable link to the folder", this is the answer — not an apology about what links cannot do. Reach for a Run block whenever the goal is an action rather than viewing a file.
+- Then, underneath: **one link per file**, relative to the working directory — `[<slug>-subs.mp4](social-video-producer/<slug>/<slug>-subs.mp4)` — and the absolute path as plain text to copy-paste. The script also opens the folder once on its own when it finishes.
+- The script also opens the folder in the file manager (`--no-open` to skip), which is the only way a folder actually opens for the user.
+- Still send the final video itself through the normal file-sending path so it previews in the conversation. If it is too large to upload, say so plainly and point at the folder.
+
+- Report exact final paths, segment paths when relevant, manifests, HeyGen ids/page URLs, and any remaining risk — after the delivery folder link.
