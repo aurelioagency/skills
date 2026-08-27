@@ -206,16 +206,45 @@ One distinction worth keeping straight: a result row with `success: false` is a 
 
 This is the step everyone forgets, because by the time you publish, the folder that produced the files was built in another session days ago. Do it here, while you still know both halves.
 
-**A publish is not finished until the folder is renamed.** On this machine the convention is settled: it is part of the publish, not a follow-up question. Do not ask permission, do not offer it as an option, and do not leave it for the next turn. Deliverables live under `G:\Unidades compartidas\Aurelio\` — `Reels\Finales\` and `Carrouseles\`.
+**A publish is not finished until the folder is renamed.** On this machine the convention is settled: it is part of the publish, not a follow-up question. Do not ask permission, do not offer it as an option, and do not leave it for the next turn. Deliverables live under `G:\Unidades compartidas\Aurelio\` — `Reels\` and `Carruseles\`.
 
 **Mark it once the post is created. Do not wait for the per-account results.** The owner of this machine decided that explicitly: `processing` with no results yet still gets marked, because the post was sent and the results routinely confirm later, after the session is over. Waiting means the folder never gets marked at all. Report the pending confirmation in the summary — but rename first, in the same turn.
 
 Steps:
 
 1. Take the publication date from `updated_at`, or `scheduled_at` if it was scheduled.
-2. Rename the folder the published files came from to `YYYY-MM-DD-<folder>_POST`.
-3. If the folder is already marked, leave it alone — a second pass must not produce `2026-08-13-2026-08-11-thing_POST_POST`.
+2. Rename the folder the published files came from to `YYYY-MM-DD_<slug>_post`, following the naming convention below. The folder arrives named after its topic only — no date, no state — so marking *adds* the two outer blocks around the topic; it does not replace it.
+3. If the folder is already marked — it ends in `_post`, or in the legacy `_POST` — leave it alone. A second pass must not produce `2026-08-13_2026-08-11-thing_post_post`.
 4. Say in the summary which folder was marked and with what date.
+
+#### The naming convention: `fecha_tema_estado`
+
+A delivery folder has **two shapes**, and the whole queue depends on telling them apart:
+
+```
+mcp-mercado-libre                       <- pending: tema only, no date, no state
+2026-08-26_mcp-meli-conectar-todo_post  <- published: fecha_tema_estado
+```
+
+**The folder you are about to publish has neither a date nor `_post`.** It is named after its topic and nothing else — that is how it was handed over, and it is correct. Marking is what adds the two outer blocks: normalise the topic into the `tema` slug, prepend the publication date, append `_post`. The topic block survives intact in the middle; you are wrapping it, not rewriting it.
+
+```
+MCP MERCADO LIBRE  ->  2026-08-27_mcp-mercado-libre_post
+```
+
+That is why the queue needs no state file: three blocks means done, one block means pending.
+
+**Never ask the person to name the folder in this format.** They drop a folder with a plain descriptive name — uppercase, spaces, accents, whatever reads well to them — and that is all they owe you. Turning it into a slug is your job, and it happens at marking time, not before. Do not flag the folder name as a problem, do not rename it ahead of publishing, and do not treat an unnormalised name as a sign the delivery is unfinished.
+
+- **`_` separates blocks, `-` separates words inside a block.** Never the other way round.
+- **Everything lowercase**, the state suffix included: `_post`, never `_POST`.
+- **Date first, ISO 8601 `YYYY-MM-DD`.** It is the only order in which alphabetical sorting and chronological sorting are the same thing.
+- **No spaces, no accents, no parentheses, no doubled separators.** `Skill Edición (2)` becomes `skill-edicion-2`.
+- **The state block is the publication marker.** A folder with no `_post` is unpublished, and that absence is what lets the folder listing double as the queue.
+
+To normalise a name that does not follow this: lowercase it, turn spaces into `-`, collapse repeated `-`, strip leading and trailing `-`, then join the three blocks with `_`.
+
+**Legacy names** use `YYYY-MM-DD-<slug>_POST` — hyphen after the date, uppercase suffix. Treat those as already marked and do not re-mark them; rename them to the current form only if you are touching that folder for another reason anyway.
 
 `references/marking.md` has the templates, the idempotence rule and the cases where marking must *not* happen. Ask about the convention only when working for someone who has not set one.
 
