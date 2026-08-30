@@ -748,8 +748,12 @@ user as a question — bring them the result and let them veto it.
   captions speaking one colour is what makes the profile grid recognisable.
 - Three lines: a small setup line, the big line that carries the cover, a small payoff line.
   Only the big line is mandatory.
-- Dark semi-transparent outline and drop shadow, always on, even when the background looks
-  easy. It is what survives a backlit or pale-walled shot.
+- **Fully opaque black outline**, plus a semi-transparent drop shadow, always on, even when
+  the background looks easy. It is what survives a backlit or pale-walled shot. The two
+  alphas are different decisions on purpose: a semi-transparent outline lets the background
+  bleed through the ring around every glyph, and the colour then reads washed out and
+  "half transparent" even though the fill itself is solid. The shadow stays soft because it
+  is meant to be a drop, not a second outline.
 
 Why cyan and not the lime yellow that the Spanish IG-tips niche defaults to: yellow sits next
 to skin and warm-wood interiors on the colour wheel and leans on the shadow to separate, and

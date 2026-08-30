@@ -309,6 +309,13 @@ function buildMode(args) {
   events.push(`{\\an5\\pos(${centerX},${yBig})\\fs${bigSize}${args.accentBig ? `\\c${bigColor}&` : ''}}${args.big}`);
   if (args.bottom) events.push(`{\\an5\\pos(${centerX},${yBottom})\\fs${smallSize}}${args.bottom}`);
 
+  // Two alpha decisions in the style line, and they are not the same decision:
+  // the OUTLINE is fully opaque black (&H00......) so the fill keeps a hard edge — a
+  // semi-transparent outline lets the background bleed through the ring around every
+  // glyph and the colour reads washed out even though the fill itself is solid. The
+  // SHADOW stays semi-transparent (&H80......) because it is meant to be a soft drop,
+  // not a second outline.
+  //
   // `YCbCr Matrix: None` is load-bearing for PNG output. See the header comment.
   const ass = `[Script Info]
 ScriptType: v4.00+
@@ -320,7 +327,7 @@ YCbCr Matrix: None
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cover,${fontFamily},${smallSize},${primary},${primary},&HB0000000,&HA0000000,0,0,0,0,100,100,0,0,1,${(BASE.outline * scale).toFixed(1)},${(BASE.shadow * scale).toFixed(1)},5,${Math.round(BASE.marginLr * scale)},${Math.round(BASE.marginLr * scale)},60,1
+Style: Cover,${fontFamily},${smallSize},${primary},${primary},&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,${(BASE.outline * scale).toFixed(1)},${(BASE.shadow * scale).toFixed(1)},5,${Math.round(BASE.marginLr * scale)},${Math.round(BASE.marginLr * scale)},60,1
 
 [Events]
 Format: Layer, Start, End, Style, MarginL, MarginR, MarginV, Effect, Text
