@@ -231,7 +231,11 @@ I recommend [N] carousel(s):
 Confirm, reduce, or change the split?
 ```
 
-Include the two hook options per carousel (see Hooks) **and el arquetipo narrativo** in the same confirmation message, so archetype, split and hooks get approved together.
+Include the two hook options per carousel (see Hooks), **el arquetipo narrativo** and **el template** in the same confirmation message, so archetype, split, hooks and template get approved together.
+
+**El template se pregunta acá, y no se asume.** Es lo único del preset que no se deduce del material (ver *Template Resolution*): una marca con varios templates vigentes no tiene un "default seguro", y arrancar a componer con el equivocado tira el trabajo entero, porque cada template tiene sus propias piezas y su propia paleta. Si el pedido ya nombra uno, se usa ese y no se pregunta. Si no, va la lista de los que tiene la marca, con una línea de qué es cada uno.
+
+Anunciar el template como supuesto —"sigo con el 01 salvo que digas otro"— **no cuenta como preguntarlo**: deja la decisión hecha y le pasa al usuario el costo de deshacerla. Pasó el 2026-08-29 y terminó en un carrusel rehecho entero en otro template.
 
 El arquetipo sale de correr el arbol de decision de `references/content-archetypes.md` sobre la `Lectura`. Su salida son tres lineas, y van antes del split:
 
@@ -348,6 +352,15 @@ Every hook is two parts:
 1. Setup line: a strong, specific claim — the main headline.
 2. Twist line: the tension, break, or consequence. It must contrast with the headline in **both font and colour** — the active preset defines how (La Casa: serif italic in the carousel's dominant accent, sentence case). Never hardcode a colour.
 
+**Dos patrones, no uno.**
+
+- **Afirmación + remate** (el default). El setup afirma algo, el remate lo rompe. Se usa cuando el lector ya tiene una creencia, una práctica o una expectativa sobre el tema.
+- **Nombre + qué es.** El setup es el nombre propio de la cosa; el remate dice en una línea qué hace. Se usa cuando el tema es algo nuevo con nombre propio que el lector no vio nunca: un lanzamiento, un estándar, una herramienta recién publicada. Ahí el nombre *es* la novedad, y forzar una contradicción produce un gancho que suena a campaña y no dice qué se anunció.
+
+  La condición es una sola: **el remate dice qué hace, no lo adjetiva.** "El estándar para que un agente opere hardware" sirve; "El futuro de los laboratorios" no.
+
+El contraste de fuente y color entre las dos líneas no cambia en ninguno de los dos patrones, y la portada sigue llevando su gráfico.
+
 Both lines are centered, and both must be short enough to hold the typography floor without shrinking. If a line only works small, rewrite it shorter.
 
 The cover also carries one simple graphic. A cover that is only type reads as a title card, not as a hook — see the preset for the default pattern.
@@ -370,6 +383,12 @@ Recommendation: [which and why, one line]
 ### Quality criteria
 
 - **A hook that catches and is not understood has failed.** Stopping the scroll is half the job; the other half is that the reader knows what was just claimed. Cut both lines out of the `Lectura` (see *Understanding the topic before writing it*). A hook assembled straight from the source — its figures, its findings, its vocabulary — comes out accurate and meaning nothing.
+- **La portada nombra el tema.** El que lee sólo la primera placa tiene que poder decir de qué es el carrusel.
+
+  Ejemplo real: una portada que dice que un modelo alineó un láser hace pensar que el carrusel es sobre láseres. Era sobre MHS, y MHS no aparecía por ningún lado. El lector no siente que le falta información: entiende mal y sigue.
+
+  El kicker alcanza para nombrarlo.
+- **No lo fuerces.** El default es la frase simple: qué es, qué pasó, qué cambia. Un gancho ingenioso es la excepción, y sólo entra si sale solo. Si estás buscando la vuelta para que algo entre, ya se rompió: lo que sale es una línea que suena bien y no se entiende. Vale igual para el resto de las placas.
 - **The hook cannot depend on anything the reader does not already have.** Whatever it needs in order to be read the way it was meant, either the hook says it or the kicker does. A hook leaning on context the reader is missing does not read as incomplete — it reads as a different claim, and nothing signals that it was misread.
 - Specific beats generic. A concrete number creates authority ("80.508 personas", "25,6%"). But a figure the reader cannot attach a unit to is not specific, it is noise.
 - The two lines must create tension between them: contrast, contradiction, or a negated expectation ("La respuesta no fue...", "El estudio no dice X. Dice algo más útil...").
@@ -647,6 +666,20 @@ Hard QA rules:
 - Treat any user-facing word below the typography floor as a red issue that blocks delivery.
 - Always center the primary hook block on the first content slide. Its bounding box must be horizontally centered in the canvas and its text must use centered alignment. A left-aligned or edge-anchored cover hook is a red issue **unless the user decides otherwise** — see Documented Layout Exceptions below.
 - Balance the vertical composition. The gap above the first content pixel and the gap below the last must be within `4%` of the canvas height of each other. This is the check that catches dead space nobody meant to leave: when you remove an element, revisit every layout constant that existed to accommodate it. A stage offset that once cleared a badge keeps pushing content down long after the badge is gone. Fixed CTA assets are exempt.
+- **Dos piezas que cumplen el mismo rol llevan el mismo cuerpo.** Si una placa cierra con
+  un remate y otra con una línea de cierre, las dos son *la línea de cierre de una placa*:
+  mismo tamaño, mismo peso, mismo interletrado. Vale igual para rótulos, bajadas y
+  etiquetas de tarjeta entre piezas distintas.
+
+  **`render-and-audit.mjs` no lo ve.** Chequea el piso tipográfico, no el sistema: dos
+  piezas a 44px y 52px pasan las dos. Se mira en el contact sheet, recorriendo la misma
+  fila lógica en las nueve placas — y se mira siempre, porque el síntoma es que el
+  carrusel "se lee desprolijo" sin que ninguna placa esté mal por separado. Pasó el
+  2026-08-29: el remate de `cards` a 52px contra el cierre de `list` a 44px sobrevivió
+  nueve renders limpios.
+
+  El arreglo va **en el template**, no en el paquete: si dos piezas del template están
+  desalineadas, todo carrusel que use ese template las hereda.
 - **Reparti el espacio sobrante; no lo amontones en un lugar.** El chequeo de balance vertical de arriba solo compara los extremos — el hueco sobre el primer elemento contra el hueco bajo el ultimo — asi que un slide con todo pegado arriba y abajo y un agujero en el medio le pasa con diferencia cero. El chequeo de **hueco interno** mide el vacio vertical mas largo ENTRE bloques de contenido: avisa a los `260px` y bloquea a los `280px` sobre un lienzo de 1440 (escala con el alto). Los cortes salen de inspeccion visual sobre el set de ejemplos el 2026-08-26: `252px` se leyo como aire deliberado y `290px` como agujero. Exception id: `internal-gap`.
 
   **El arreglo es mas contenido o menos separacion, nunca agrandar lo que ya esta** — vale la misma regla de *Slide Grammar*: un slide que se ve vacio le falta contenido, no tamanio. En la practica hay dos caminos: sumarle al slide un dato de la fuente que todavia no esta, o repartir el sobrante entre varios huecos en vez de dejarlo en uno. Un layout que empuja su pieza al fondo con `margin-top: auto` concentra todo el sobrante arriba de esa pieza; agregando `margin-bottom: auto` se parte en dos. Ojo con las margenes automaticas adyacentes: **suman**, asi que dos piezas seguidas con `auto` de los dos lados dejan el hueco del medio al doble.
@@ -927,6 +960,26 @@ What the package keeps so the carousel can be fixed later without rebuilding it:
 Nothing else ships. `qa-report.json` and `contact-sheet.png` are deleted after the QA pass; there is no `exports/` and no `post-descriptions.md`.
 
 And in the chat: la caption pegada entera, la nota de QA visual (tamano, legibilidad, composicion centrada, comportamiento del CTA y cualquier salvedad que quede), y **el atajo para abrir la carpeta**.
+
+### Mandale la imagen, no se la cuentes
+
+**Cada vez que se renderiza, el contact sheet va al chat.** No alcanza con mirarlo vos y
+describir lo que ves: la revisión visual la hace el usuario, y sólo la puede hacer sobre
+la imagen. Contarle que "quedó bien" es pedirle que confíe en el mismo ojo que compuso la
+placa.
+
+- **Después de cada tanda de render**, el contact sheet, aunque la QA automática haya
+  dado limpia.
+- **Si el pedido es sobre una placa puntual**, esa placa a tamaño completo. Un recorte de
+  contact sheet no sirve para juzgar cuerpos ni separaciones.
+- **Después de cada corrección**, la placa corregida. Una corrección que el usuario no
+  ve no está confirmada.
+- El atajo para abrir la carpeta sigue yendo, pero **no reemplaza mandar la imagen**: es
+  para el archivo final, no para revisar.
+
+El 2026-08-29 se perdió media sesión por esto: se renderizaron nueve placas, se revisaron
+en silencio y se reportaron por escrito. Todas las correcciones que vinieron después
+salieron de recortes que sacó el usuario por su cuenta.
 
 ### El atajo para abrir la carpeta
 

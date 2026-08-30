@@ -52,7 +52,9 @@ function head(s) {
     </div>`;
 }
 
-const close = s => s.close ? `<div style="padding:0 var(--pad-x);margin-top:56px"><p class="close">${s.close}</p></div>` : '';
+// margin-bottom: sin el, el cierre queda apoyado sobre el footer y se lee como si
+// perteneciera a la fila de la marca y no al contenido de la placa.
+const close = s => s.close ? `<div style="padding:0 var(--pad-x);margin-top:56px;margin-bottom:88px"><p class="close">${s.close}</p></div>` : '';
 const dlabel = (t, cls) => t ? `<div class="dlabel ${cls || ''}">${t}</div>` : '';
 
 // Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
@@ -217,6 +219,35 @@ const punch = s => `
     ${s.aside ? `<div class="slot">${slot(s.aside)}</div>` : ''}
   </div>`;
 
+
+// Dos cifras medidas, una al lado de la otra. Para resultados sueltos: `chart` pide una
+// curva y `layers` pide una serie, y un par de numeros no es ninguna de las dos cosas.
+const stats = items => `
+  <div class="stats">
+    ${items.map(c => `
+      <div class="st">
+        <div class="fig">${c.fig}</div>
+        <div class="sub">${c.sub}</div>
+        <div class="lbl">${c.lbl}</div>
+        <div class="t">${c.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Tres elementos con su icono bajo un mismo bus. Es la alternativa a `strip` para una
+// portada cuya fuente NO publica una serie: ver la advertencia de `strip` en estilo.md.
+const devstrip = s => `
+  <div class="devstrip">
+    ${dlabel(s.stripLabel)}
+    <div class="bus"></div>
+    <div class="devs">
+      ${s.devices.map(d => `
+        <div class="dev">
+          ${ico({ d: d.ico, px: 52 })}
+          <div class="lbl">${d.lbl}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+
 // ---------- Render ----------
 
 function render(s, i, total) {
@@ -231,11 +262,15 @@ function render(s, i, total) {
     inner = `
       <div class="head">
         <div class="eyebrow ${accent}">${s.eyebrow}</div>
-        <h1 class="ghost">${s.headTop}</h1>
+        <!-- Titular entero en blanco. La particion gris/blanco se saco el 2026-08-29:
+             con mitades desparejas (una palabra arriba, dos abajo) se lee como un error
+             de render, no como jerarquia. El contraste lo dan el giro en serif y el
+             tamanio, que ya alcanzan. -->
+        <h1>${s.headTop}</h1>
         <h1>${s.headBottom}</h1>
         <div class="twist">${s.twist}</div>
       </div>
-      ${strip(s)}`;
+      ${s.devices ? devstrip(s) : strip(s)}`;
   }
 
   if (s.type === 'rows')   inner = `${head(s)}${rows(s)}${userImg(s)}`;
@@ -246,9 +281,12 @@ function render(s, i, total) {
 
   // Numero gigante + chips, con un diagrama opcional arriba de los chips.
   if (s.type === 'steps') {
+    // Sin `num` va el encabezado normal: un numero gigante que no numera nada no se
+    // entiende, y ademas corre el titular a la derecha y rompe la alineacion del resto
+    // del carrusel. El numero solo va si la placa es un punto de una serie (01, 02...).
     inner = `
-      ${bignum(s)}
-      <div style="padding:0 var(--pad-x);margin-top:auto">
+      ${s.num ? bignum(s) : head(s)}
+      <div style="padding:0 var(--pad-x);margin-top:auto;margin-bottom:auto">
         ${dlabel(s.chipsLabel, 'coral')}
         ${s.diagram || ''}
         ${chips(s.chips)}
@@ -256,12 +294,15 @@ function render(s, i, total) {
       ${close(s)}`;
   }
 
+  if (s.type === 'stats') inner = `${head(s)}<div class="stats-wrap">${stats(s.stats)}</div>`;
+
   // Tarjetas arriba + remate con imagen abajo.
   if (s.type === 'cards') {
     inner = `
       <div class="head">
         <div class="eyebrow ${accent}">${s.eyebrow}</div>
         <h2>${s.headline}</h2>
+        ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
       </div>
       <div class="cards-wrap">${cards(s.cards)}</div>
       ${punch(s)}`;

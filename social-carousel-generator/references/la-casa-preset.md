@@ -202,12 +202,18 @@ Preguntar la variante en cada carrusel es ruido: la respuesta ya está en el mat
 
 - Copy in the normal variant: `Guardá este post` / `y seguime para más`. In the comment variant: `Comenta AURELIO` / `y te enviamos la skill por DM`. Both sit over the `AURELIO` wordmark and the serif italic `La Casa de Aurelio` signature, in the same layout.
 - When the comment variant is used, the word to comment must also appear in the caption's written paragraph. If it ever changes, it changes in both places.
-- **Deuda abierta (2026-08-25): los PNG fijos del `01-editorial-oscuro` todavía dicen `y sígueme
-  para más`.** El texto está horneado en `la-casa-cta-ig.png` y en su fuente `cta-ig.html`, así que
-  arreglarlo es regenerar el asset con `make-cta.mjs` y verificarlo con `scripts/compare-blocks.mjs`
-  (un cambio de copy solo puede mover los bloques de texto). Hasta que se haga, cualquier carrusel
-  del template 01 sale con tuteo en el cierre. El `02-editorial-oscuro-v2` no está afectado: su CTA
-  es una placa HTML y ya está en voseo.
+- **Saldada el 2026-08-29:** el PNG fijo `la-casa-cta-ig.png` ya está en voseo (`Guardá este
+  post` / `y seguime para más`). Se regeneró desde `cta-ig.html` con `make-cta.mjs` y
+  `compare-blocks.mjs` reportó los 8 bloques en `+0% +0px`: sólo cambió el texto, la maqueta
+  quedó igual. Dos cosas que costaron una vuelta y conviene saber antes de regenerarlo:
+  `make-cta.mjs` importa Playwright, así que hay que correrlo **desde la carpeta de la skill**
+  (`node <paquete>/make-cta.mjs ...` con el cwd en la skill), y la página sirve sus rutas desde
+  la raíz del servidor — necesita `assets/fonts/Inter-VF.ttf` **y** `assets/aurelio-wordmark.png`
+  en la carpeta servida, o el wordmark sale como imagen rota y toda la maqueta se corre 11%.
+- **Sigue en tuteo la variante de comentario:** `Comenta AURELIO`, en el asset y en este preset.
+  No se tocó porque la palabra a comentar es parte del mecanismo del CTA y cambiarla afecta
+  también al caption.
+
 - Los cuatro assets llevan el mismo campo que los slides de contenido: grilla de puntos, los dos glows y las curvas. Ninguno es plano.
 - Compose the CTA slide as the fixed asset plus the counter pill drawn on top at render time. This keeps the asset reusable while the number stays correct for any carousel length.
 - If a new size is ever needed, rebuild the CTA once in HTML/CSS at that size, save it as a new fixed asset, and reference it here.
@@ -221,7 +227,7 @@ Nunca ofrecer diseñar un CTA nuevo mientras este preset esté activo — solo s
 Las entregas de La Casa viven acá, en la unidad compartida sincronizada en local:
 
 ```text
-G:\Unidades compartidas\Aurelio\Carrouseles\
+G:\Unidades compartidas\Aurelio\Carruseles\
 ```
 
 **Copiá la carpeta de entrega adentro una vez que el usuario aprobó** — el carrusel y la pista —
@@ -244,7 +250,7 @@ sin API, sin paso manual. Un Sheet nativo no se puede: en el disco es un `.gshee
 que solo apunta al archivo real, que vive en los servidores de Google.
 
 ```text
-G:\Unidades compartidas\Aurelio\Carrouseles\Carruseles La Casa de Aurelio.xlsx
+G:\Unidades compartidas\Aurelio\Carruseles\Carruseles La Casa de Aurelio.xlsx
 ```
 
 Se escribe con `openpyxl` (ya instalado): `load_workbook` → `ws.append(fila)` → `wb.save()`.

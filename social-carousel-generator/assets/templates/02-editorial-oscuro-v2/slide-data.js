@@ -32,7 +32,12 @@ window.CAROUSEL = {
   //      titular (gris/blanco) y el giro en serif, no la simetria.
   // Las tres bajan a nota TODOS los avisos de su tipo, asi que hay que leer las notas del
   // reporte: un error real se cuela ahi adentro sin bloquear la entrega.
-  layoutExceptions: ['typography-floor', 'safe-area', 'cover-hook-centered'],
+  //   'density-budget' -> las bandas de tinta estan medidas sobre el set publicado del
+  //      01-editorial-oscuro, cuyo titular de portada es mas chico. La portada de este
+  //      template lleva Archivo a 100px y, desde que el titular va entero en blanco
+  //      (2026-08-29), una portada de cuatro renglones supera la banda por diseno, no
+  //      por estar sobrecargada.
+  layoutExceptions: ['typography-floor', 'safe-area', 'cover-hook-centered', 'density-budget'],
 
   // Bandas de densidad propias de la marca, copiadas de su preset.md. Lo que declares
   // pisa solo esas claves; el resto sale de las de La Casa. Si la marca todavia no las
@@ -186,6 +191,9 @@ window.CAROUSEL = {
       glow: 'tl',
       eyebrow: 'QUÉ HACER MIENTRAS TANTO',
       headline: 'El orden<br>no es neutro.',
+      // `cards` va con bajada: sin ella la placa queda corta y el sobrante se junta
+      // entre las tarjetas y el remate (328px medidos). Ver estilo.md.
+      lede: 'Lo único que controlás vos es en qué parte del texto va cada cosa.',
       cards: [
         { lbl: 'PRIMERO',    t: 'lo que importa' },
         { lbl: 'EN EL MEDIO', t: 'relleno, nunca el dato', tone: 'coral' },
@@ -203,8 +211,10 @@ window.CAROUSEL = {
       glow: 'mid',
       signature: 'LA CASA DE AURELIO',
       headline: 'Guardá este post',
-      sub: 'y seguime para más.',
-      community: 'skool.com/la-casa-de-aurelio'
+      sub: 'y seguime para más.'
+      // SIN link de comunidad: decidido por el usuario el 2026-08-29. La placa de cierre
+      // lleva firma, titular, subtitulo, filete y el sitio, y nada mas. El link de Skool
+      // vive en el caption, no en la imagen.
     }
   ]
 };

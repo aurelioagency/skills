@@ -179,7 +179,7 @@ h2 { font-size: 104px; }
   align-items: center;
   justify-items: center;
   padding: 48px var(--pad-x) 64px;
-  border-top: 1px solid var(--rule-soft);
+  /* Sin filete sobre el footer: decidido por el usuario el 2026-08-29. */
 }
 .footer .brand {
   font-size: 30px; font-weight: 800; color: var(--ink);
@@ -211,7 +211,9 @@ h2 { font-size: 104px; }
 
 /* Tira de celdas: el grafico por defecto de la portada. Nueve celdas cuya opacidad
    dibuja la forma del dato (una U, una rampa, lo que el tema pida). */
-.strip { margin-top: auto; padding: 0 var(--pad-x); }
+/* Auto de los dos lados: con solo margin-top, un titular corto deja todo el sobrante
+   en un agujero unico entre el giro y la tira (medido: 438px). */
+.strip { margin-top: auto; margin-bottom: auto; padding: 0 var(--pad-x); }
 .strip .cells { display: flex; gap: 10px; height: 132px; }
 .strip .cells i { flex: 1; border-radius: 8px; background: var(--dorado); }
 .strip .axis {
@@ -313,7 +315,10 @@ h2 { font-size: 104px; }
    tarjetas y el remate, y despues del remate. Con un margen fijo arriba de las
    tarjetas, esos 64px salian del reparto y los otros dos huecos se agrandaban hasta
    pasarse del limite de hueco interno. */
-.cards-wrap { margin-top: auto; }
+/* Sin margin-top:auto: las tarjetas son parte del bloque de texto, no una pieza suelta.
+   Con `auto` la holgura se repartia en tres huecos y quedaban flotando lejos de la
+   bajada. Toda la holgura la absorbe el remate, que si va separado. */
+.cards-wrap { margin-top: 0; padding-top: 44px; }
 .cards { padding: 0 var(--pad-x); display: flex; gap: 20px; }
 .cards .card {
   flex: 1; padding: 32px 28px; border-radius: 14px;
@@ -376,10 +381,15 @@ h2 { font-size: 104px; }
 
 /* ---------- Componente: remate con imagen al lado ---------- */
 
-.punch { display: flex; align-items: flex-end; gap: 32px; padding: 0 var(--pad-x); margin-top: auto; margin-bottom: auto; }
+/* align-items: center, no flex-end: con la imagen mas alta que el remate, apoyarlos por
+   la base deja el texto colgando a la altura de los pies del personaje. */
+.punch { display: flex; align-items: center; gap: 32px; padding: 0 var(--pad-x); margin-top: auto; margin-bottom: auto; }
 .punch .t {
-  flex: 1; font-size: 64px; line-height: 1.05; font-weight: 900;
-  letter-spacing: -0.03em; color: var(--ink);
+  /* Mismo cuerpo, peso e interletrado que .close: las dos son la linea de cierre de una
+     placa, y a cuerpos distintos el carrusel se lee sin sistema. Ver la regla de
+     consistencia entre piezas en SKILL.md. */
+  flex: 1; font-size: 44px; line-height: 1.16; font-weight: 800;
+  letter-spacing: -0.02em; color: var(--ink);
 }
 .punch .t .hl { color: var(--coral); }
 .punch .slot { position: relative; width: 300px; height: 400px; flex: none; }
@@ -435,3 +445,81 @@ h2 { font-size: 104px; }
 /* Con icono, la fila lo pone a la izquierda y el texto pasa a .rt. */
 .rows .row { display: flex; align-items: center; gap: 22px; }
 .rows .row .rt { flex: 1; }
+
+
+/* ---------- Componente: dos cifras medidas ----------
+   Para resultados sueltos que no forman ni una curva ni una serie. */
+.stats-wrap { padding: 0 var(--pad-x); margin-top: auto; margin-bottom: auto; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.stats .st {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: 30px 26px 32px;
+}
+.stats .fig {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 104px;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--verde);
+}
+.stats .sub {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 1;
+  color: var(--dim);
+  margin-top: 12px;
+}
+.stats .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-top: 30px;
+}
+.stats .t {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-top: 14px;
+  text-wrap: balance;
+}
+
+/* ---------- Componente: elementos bajo un bus ----------
+   Grafico de portada para cuando la fuente NO publica una serie. `strip` dibuja la
+   forma de un dato; si no hay dato que dibujar, va este. */
+.devstrip { margin-top: auto; margin-bottom: auto; padding: 0 var(--pad-x); }
+.devstrip .bus {
+  height: 3px;
+  background: var(--dorado);
+  opacity: 0.5;
+  margin-bottom: 34px;
+}
+.devstrip .devs { display: flex; gap: 18px; }
+.devstrip .dev {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  padding: 30px 26px 32px;
+}
+.devstrip .dev .ico { color: var(--dorado); }
+.devstrip .dev .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.2;
+}
