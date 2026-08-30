@@ -977,9 +977,20 @@ placa.
 - El atajo para abrir la carpeta sigue yendo, pero **no reemplaza mandar la imagen**: es
   para el archivo final, no para revisar.
 
-El 2026-08-29 se perdió media sesión por esto: se renderizaron nueve placas, se revisaron
-en silencio y se reportaron por escrito. Todas las correcciones que vinieron después
-salieron de recortes que sacó el usuario por su cuenta.
+El 2026-08-29 se renderizaron nueve placas, se revisaron en silencio y se reportaron por
+escrito. Que el usuario mande recortes para marcar algo puntual está perfecto y es lo más
+preciso que hay: la regla no existe para evitar eso. Existe porque quien compuso la placa
+no puede ser el único que la mira.
+
+### Una referencia ambigua se pregunta, no se elige
+
+`el 02` puede ser la placa 2 o el template `02-...`, y en una conversación que viene
+hablando de las dos cosas no hay forma de saberlo por contexto. Ahí se pregunta en una
+línea. Elegir la interpretación más probable y seguir cuesta una tanda entera de trabajo
+cuando sale mal — el 2026-08-29 se mandó la placa 2 a alguien que estaba pidiendo el
+template 02, y hubo que rehacer el carrusel completo.
+
+Vale para cualquier referencia corta: un número suelto, "el anterior", "ese", "el otro".
 
 ### El atajo para abrir la carpeta
 
