@@ -607,7 +607,9 @@ node "<skill-dir>\scripts\verify-render.mjs" --file "renders\final\<slug>-subs.m
 
 Then extract frames from the FINAL file at several timestamps — at minimum one talking-head frame, one graphic/screen-recording frame, and one wrapped two-line caption — and look at them.
 
-9. Write the post description, then package the delivery. See **Post Description** and **Delivery Package**:
+9. Build the cover. See **Cover (Portada)** — it ships with every subtitled video, unasked.
+
+10. Write the post description, then package the delivery. See **Post Description** and **Delivery Package**:
 
 ```powershell
 node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>" --extra "renders\<slug>.ass"
@@ -728,6 +730,84 @@ captions\<prefix>.captions.srt
 
 - If captions fail after an avatar video completes, keep the video and report the caption failure plus expected caption paths.
 
+## Cover (Portada)
+
+Every finished video ships with a cover: one frame of the video with a three-line headline
+burned onto it, as a PNG at the source's native resolution, named `<slug>-portada.png` and
+delivered next to the MP4. **This is not an optional extra and it is not something to ask
+about.** A request for subtitles is a request for a publishable post, and the cover is what
+decides whether anyone opens it. Produce it in the same run.
+
+The agent chooses the frame and writes the headline. Do not hand either decision back to the
+user as a question — bring them the result and let them veto it.
+
+### House Style (decided; not a menu)
+
+- Frozen project caption font, Inter Black by default — the same file the captions use.
+- **All three lines in cyan `#30D5FF`**, the same cyan as the caption accent. Cover and
+  captions speaking one colour is what makes the profile grid recognisable.
+- Three lines: a small setup line, the big line that carries the cover, a small payoff line.
+  Only the big line is mandatory.
+- Dark semi-transparent outline and drop shadow, always on, even when the background looks
+  easy. It is what survives a backlit or pale-walled shot.
+
+Why cyan and not the lime yellow that the Spanish IG-tips niche defaults to: yellow sits next
+to skin and warm-wood interiors on the colour wheel and leans on the shadow to separate, and
+half that niche already uses it. Cyan is complementary to those backgrounds and is already
+this account's caption colour. `--accent-big` renders white lines with only the big one in
+cyan — reach for it when the footage is unusually busy and the full-colour block stops
+reading, not as a matter of taste.
+
+### Choosing The Frame
+
+Scan the video and *look*, do not guess a timestamp:
+
+```powershell
+node "<skill-dir>\scripts\build-cover.mjs" --scan --input "raws\<video>.mp4" --output "snapshots\cover-scan.png"
+```
+
+The sheet is head-and-shoulders crops at 5 fps, so the mouth is legible. Cell `(row, column)`
+is `t = (row * columns + column) / fps`. Pick a frame with:
+
+- **mouth closed or a slight smile** — a mid-word open mouth reads as a bad screenshot;
+- eyes to camera;
+- a clean band under the face for the text, clear of hands and props.
+
+### Writing The Headline
+
+Restate the video's strongest idea in the cadence the format wants: small line, big keyword,
+small line. Concrete beats clever — a number, a name, a promise. Match the video's own words
+and register (voseo if that is how it was spoken). Not a summary of the video, and never a
+line the video does not actually deliver on.
+
+### Building It
+
+```powershell
+node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\<video>.mp4" --frame 19.0 `
+  --top "esta skill te da" --big "10 ganchos" --bottom "para tu próximo video"
+```
+
+Geometry is expressed in 1080-wide design space and scaled by `sourceWidth / 1080`, so a 4K
+source gets 4K-sized text with no arguments. The script gates the width against the real font
+metrics, verifies the rendered fill colour, and reports whether the block survives the profile
+grid's centred square crop.
+
+Then **look at both outputs** — the full cover and the grid-crop preview it writes next to it.
+The text landing across the speaker's hands or a prop is the failure the script cannot see;
+nudge the block with `--y-offset` (positive is down, in source pixels) and rebuild.
+
+### Two Failures Worth Knowing About
+
+- **`YCbCr Matrix` in the ASS header is target-dependent.** `TV.709` is correct burning into
+  an MP4 and wrong rendering to a PNG: libass converts the fill for limited-range video and it
+  lands dimmer and greyer than asked for. `#30D5FF` arrived as `#39C7EB`, which reads to the
+  eye as *"the letters look half transparent"* — the fill is fully opaque, just wrong. PNG
+  output declares `None`. `build-cover.mjs` samples the rendered strip and fails if the fill
+  does not match, so this cannot ship again.
+- **The profile grid crops the cover to a centred square.** Text sitting low in a 9:16 frame is
+  outside that crop and nobody reads it. The script reports `insideGridCrop`; treat `false` as
+  a blocker, not a warning.
+
 ## Post Description (Social Caption)
 
 Every finished video ships with a ready-to-publish post description in `<slug>-caption.txt` next to the final MP4 in `renders\final\`, plus pasted in the chat. Plain text, UTF-8, no markdown, no headings, nothing but the caption itself, ready to select-all and paste.
@@ -742,7 +822,7 @@ Bienvenidos a la Casa de Aurelio!
 De la teoría a la práctica: Aurelio Agency →
 https://www.aurelioagency.com/es
 
-Únete a la comunidad:
+Unite a la comunidad:
 https://www.skool.com/la-casa-de-aurelio-2061
 
 <4 hashtags dinamicos segun el tema> #LaCasaDeAurelio
@@ -803,6 +883,8 @@ node "<skill-dir>\scripts\transcribe-media.mjs" --input "<project>\raws\source.m
 node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\assets\voice\source.transcript.json" --output "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --size 104 --accent "#30D5FF"
 node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --output "<project>\manifests\audits\caption-width.json"
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.mp4" --ass "<project>\renders\source.ass" --output "<project>\renders\final\source-subs.mp4" --fonts-dir "<project>\assets\fonts"
+node "<skill-dir>\scripts\build-cover.mjs" --scan --input "<project>\raws\source.mp4" --output "<project>\snapshots\cover-scan.png"
+node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\source.mp4" --frame 19.0 --top "esta skill te da" --big "10 ganchos" --bottom "para tu próximo video"
 node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 node "<skill-dir>\scripts\capture-overlay-frames.mjs" --project "<project>"
 node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input "<project>\raws\source.mp4" --output "<project>\renders\final\source-overlays.mp4"
@@ -829,10 +911,11 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.
 - `burn-in-captions.mjs`: burn an `.ass` file into a video in a single encode pass, copying the original audio.
+- `build-cover.mjs`: `--scan` writes a head-and-shoulders contact sheet for choosing the cover frame by looking at it; the build mode extracts that frame at native resolution and composes the house headline onto it, gating text width against the real font metrics, verifying the rendered fill colour against the requested hex, and reporting whether the block survives the profile grid's centred square crop.
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
-- `deliver-package.mjs`: copy the final video(s), the post description and a readable plain-text transcript into one descriptively named folder in the user's Downloads, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
+- `deliver-package.mjs`: copy the final video(s), the cover PNG, the post description and a readable plain-text transcript into one descriptively named folder in the user's Downloads, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
 
 If an existing project still has older local tools such as `render-local.cjs`, `snapshot-qa.cjs`, or `check-overflow.cjs`, those may be used for that project, but migrate repeated behavior back into the bundled scripts.
 
@@ -863,8 +946,9 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 
 - It lives inside the project, which lives inside the working directory — that is what makes the links clickable. The script refuses to run under a placeholder slug (`tmp-0826`, `video1`, `final2`), because the whole point is that the user can tell which video is which from the folder name.
 - Large files are hardlinked rather than copied, so the tidy folder costs no extra disk. Editing a delivered file edits the one in `renders\final\` too — they are the same bytes. Re-run with `--overwrite` after a re-render.
-- The folder contains exactly three kinds of thing:
+- The folder contains exactly four kinds of thing:
   - every final video from `renders\final\`;
+  - the cover `<slug>-portada.png`;
   - the post description `<slug>-caption.txt`;
   - `<slug>-transcript.txt`, the full transcript as readable wrapped prose.
 - **The word-level transcript JSON does NOT ship.** It is a build input for the caption pipeline, not a deliverable. It stays in the project under `assets\voice\`. The same goes for every other intermediate: manifests, audits, snapshots, segment renders, the extracted WAV. A delivery folder is what the user consumes, not a copy of the workspace.

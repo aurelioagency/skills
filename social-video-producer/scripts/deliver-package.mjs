@@ -17,6 +17,7 @@ function usage() {
   console.error(`Usage:
   node deliver-package.mjs --project <project-root> [--slug <slug>]
       [--video <path>]...        final MP4s; defaults to everything in renders/final
+      [--cover <path>]           cover PNG; auto-detected as *-portada.png
       [--caption <path>]         post description txt; auto-detected as *-caption.txt
       [--transcript <path>]      word-level JSON; auto-detected (.approved.json wins)
       [--extra <path>]...        anything else worth handing over
@@ -35,6 +36,7 @@ function parseArgs(argv) {
     if (item === '--project') args.project = argv[++i];
     else if (item === '--slug') args.slug = argv[++i];
     else if (item === '--video') args.video.push(argv[++i]);
+    else if (item === '--cover') args.cover = argv[++i];
     else if (item === '--caption') args.caption = argv[++i];
     else if (item === '--transcript') args.transcript = argv[++i];
     else if (item === '--extra') args.extra.push(argv[++i]);
@@ -54,6 +56,15 @@ function listFinalVideos(projectDir) {
   return fs.readdirSync(dir)
     .filter((name) => /\.(mp4|mov|webm)$/i.test(name))
     .map((name) => path.join(dir, name));
+}
+
+// The cover ships with the video: it is the first thing the audience sees and the user
+// has to upload it by hand at publish time. Leaving it in renders/ means it gets forgotten.
+function findCover(projectDir) {
+  const dir = path.join(projectDir, 'renders', 'final');
+  if (!fs.existsSync(dir)) return null;
+  const hit = fs.readdirSync(dir).find((name) => /-portada\.(png|jpg|jpeg)$/i.test(name));
+  return hit ? path.join(dir, hit) : null;
 }
 
 function findCaption(projectDir) {
@@ -169,8 +180,11 @@ function main() {
   const transcriptPath = args.transcript ? path.resolve(projectDir, args.transcript) : findTranscript(projectDir);
   if (!transcriptPath) throw new Error('No transcript found under assets/voice/.');
 
+  const coverPath = args.cover ? path.resolve(projectDir, args.cover) : findCover(projectDir);
+
   const delivered = [];
   for (const video of videos) delivered.push(placeInto(video, dest));
+  if (coverPath) delivered.push(placeInto(coverPath, dest));
   delivered.push(placeInto(captionPath, dest));
 
   // The word-level JSON is a build input for the caption pipeline, not something the
