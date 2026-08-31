@@ -32,15 +32,29 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BASE = {
   smallSize: 66,
   bigSize: 160,
-  yTop: 1215,
-  yBig: 1330,
-  yBottom: 1442,
   outline: 2.5,
   shadow: 6,
   // A cover line may run wider than a caption line: it is read once, big, not followed
   // word by word. 70 in 1080-space still leaves a real gate against a runaway headline.
   marginLr: 70,
+  // Baseline-to-baseline step, as a fraction of the larger of the two adjacent line
+  // sizes. 0.72 is the ratio the original fixed three-line geometry used (115/160).
+  // That ratio is calibrated for a big line next to a small one; two lines at the SAME
+  // size come out nearly touching, so the step also has a floor relative to the smaller
+  // of the pair.
+  lineStep: 0.72,
+  lineStepMin: 0.95,
 };
+
+// Where the block's vertical centre sits, as a fraction of the frame height.
+// `bottom` reproduces the original fixed geometry (centre at 1330 of 1920).
+//
+// The headline is ONE block. Splitting it into a band above the speaker and another
+// below was built and then removed: in a talking-head shot the head sits high, so the
+// top band lands on hair and forehead and leaves a dead gap through the middle of the
+// frame. It only works over footage with real empty space above the head, and nothing
+// here can verify that, so the failure mode is not worth the feature.
+const ANCHORS = { top: 0.17, center: 0.5, bottom: 0.693 };
 
 // Same cyan as the caption accent. The cover and the captions inside the video speak one
 // language on purpose: that repetition is what makes the grid recognisable.
@@ -53,15 +67,24 @@ function usage() {
 
   Then build the cover:
     node build-cover.mjs --project <project-root> --input <source.mp4> --frame <seconds> \\
-      --top "esta skill te da" --big "10 ganchos" --bottom "para tu proximo video" \\
+      --line "vivo *solo*" --line "desde hace *tres anios*" \\
+      [--anchor bottom|center|top]  where the block sits; default bottom
+      [--small-size 66] [--big-size 160]   in 1080-wide design space, scaled to the source
+      [--fit]                       grow both sizes until the widest line fills the width
       [--output <cover.png>]        defaults to renders/final/<slug>-portada.png
       [--font-file <font.ttf>]      defaults to the project's frozen caption font
-      [--color "#30D5FF"]           house cyan; all three lines
-      [--accent-big]                white lines with the big one in --color instead
+      [--color "#30D5FF"]           house cyan
+      [--accent-big]                white text with only the *emphasised* words in --color
       [--y-offset <px>]             nudge the whole block; + is down, in SOURCE pixels
       [--python python] [--ffmpeg <path>]
 
---top and --bottom are optional; --big is the line that carries the cover.`);
+--line is repeatable and takes as many lines as the headline needs — one, two, four.
+Words wrapped in *asterisks* render at the big size; everything else is small. The
+emphasis is per WORD, not per line, so the big word can sit anywhere in the block.
+Write a literal asterisk as \\*.
+
+Legacy form, still accepted: --top / --big / --bottom builds the fixed three-line
+block with the whole middle line emphasised.`);
 }
 
 function parseArgs(argv) {
@@ -74,6 +97,11 @@ function parseArgs(argv) {
     else if (item === '--top') args.top = argv[++i];
     else if (item === '--big') args.big = argv[++i];
     else if (item === '--bottom') args.bottom = argv[++i];
+    else if (item === '--line') (args.lines ||= []).push(argv[++i]);
+    else if (item === '--anchor') args.anchor = argv[++i];
+    else if (item === '--small-size') args.smallSize = Number(argv[++i]);
+    else if (item === '--big-size') args.bigSize = Number(argv[++i]);
+    else if (item === '--fit') args.fit = true;
     else if (item === '--output') args.output = argv[++i];
     else if (item === '--font-file') args.fontFile = argv[++i];
     else if (item === '--color' || item === '--colour') args.color = argv[++i];
@@ -169,6 +197,49 @@ function measureLines(python, fontFile, size, lines) {
   return JSON.parse(proc.stdout);
 }
 
+// "vivo *solo* desde hace" -> [{text:'vivo ',big:false},{text:'solo',big:true},...]
+// The emphasis is per word, so a headline can carry its big word on any line and at any
+// position in that line — which is what the reference covers actually do, and what the
+// old fixed small/BIG/small template could not express. \* is a literal asterisk.
+function parseEmphasis(line) {
+  const runs = [];
+  let buffer = '';
+  let big = false;
+  for (let i = 0; i < line.length; i += 1) {
+    const ch = line[i];
+    if (ch === '\\' && line[i + 1] === '*') { buffer += '*'; i += 1; continue; }
+    if (ch === '*') {
+      if (buffer) runs.push({ text: buffer, big });
+      buffer = '';
+      big = !big;
+      continue;
+    }
+    buffer += ch;
+  }
+  if (buffer) runs.push({ text: buffer, big });
+  if (big) throw new Error(`Unclosed * in cover line: ${line}`);
+  return runs.filter((run) => run.text.length);
+}
+
+// Width of a line whose runs are set at two different sizes. Measured run by run and
+// summed: Pillow can only measure one size at a time, and the sum is what libass lays
+// out, give or take the kerning pair at each run boundary.
+function measureMixedLines(python, fontFile, smallSize, bigSize, lines) {
+  const smallRuns = [];
+  const bigRuns = [];
+  for (const runs of lines) {
+    for (const run of runs) (run.big ? bigRuns : smallRuns).push(run.text);
+  }
+  const smallWidths = measureLines(python, fontFile, smallSize, smallRuns);
+  const bigWidths = measureLines(python, fontFile, bigSize, bigRuns);
+  let smallAt = 0;
+  let bigAt = 0;
+  return lines.map((runs) => runs.reduce(
+    (total, run) => total + (run.big ? bigWidths[bigAt++] : smallWidths[smallAt++]),
+    0,
+  ));
+}
+
 function findProjectFont(projectDir) {
   const dir = path.join(projectDir, 'assets', 'fonts');
   if (!fs.existsSync(dir)) return null;
@@ -253,7 +324,8 @@ function scanMode(args) {
 }
 
 function buildMode(args) {
-  if (!args.project || !args.input || !Number.isFinite(args.frame) || !args.big) {
+  const hasLines = Array.isArray(args.lines) && args.lines.length;
+  if (!args.project || !args.input || !Number.isFinite(args.frame) || (!hasLines && !args.big)) {
     usage();
     process.exit(2);
   }
@@ -277,37 +349,84 @@ function buildMode(args) {
   const scale = width / 1080;
   const yOffset = args.yOffset ?? 0;
 
-  const smallSize = Math.round(BASE.smallSize * scale);
-  const bigSize = Math.round(BASE.bigSize * scale);
+  let smallSize = Math.round((args.smallSize || BASE.smallSize) * scale);
+  let bigSize = Math.round((args.bigSize || BASE.bigSize) * scale);
   const usableWidth = width - Math.round(BASE.marginLr * scale) * 2;
 
   const color = args.color || HOUSE_COLOR;
   const primary = assColor(args.accentBig ? '#FFFFFF' : color);
   const bigColor = assColor(color);
 
+  // The legacy three-line form is just the general form with the whole middle line
+  // emphasised, so it goes through exactly the same layout and gates.
+  const rawLines = hasLines
+    ? args.lines
+    : [args.top, `*${args.big}*`, args.bottom].filter(Boolean);
+  const lines = rawLines.map(parseEmphasis);
+  if (!lines.length) throw new Error('The cover needs at least one --line.');
+
   // Width gate, same reasoning as audit-caption-width.mjs: \pos disables margin-based
   // wrapping, so an over-long line runs straight off the frame instead of wrapping.
-  const smallLines = [args.top, args.bottom].filter(Boolean);
-  const smallWidths = measureLines(python, fontFile, smallSize, smallLines);
-  const bigWidths = measureLines(python, fontFile, bigSize, [args.big]);
-  const overflow = [];
-  smallLines.forEach((line, i) => {
-    if (smallWidths[i] > usableWidth) overflow.push({ line, widthPx: Math.round(smallWidths[i]), usableWidth });
-  });
-  if (bigWidths[0] > usableWidth) overflow.push({ line: args.big, widthPx: Math.round(bigWidths[0]), usableWidth });
-  if (overflow.length) {
-    throw new Error(`Cover text is wider than the frame:\n${JSON.stringify(overflow, null, 2)}\nShorten the line or lower the size.`);
+  let lineWidths = measureMixedLines(python, fontFile, smallSize, bigSize, lines);
+
+  // --fit: a headline that stops well short of the usable width is a headline set too
+  // small — the cover is read at thumbnail size and every unused pixel of width is
+  // legibility left on the table. Scale both sizes by the factor that makes the widest
+  // line just reach the margin, then re-measure at the real sizes rather than trusting
+  // the linear projection.
+  let fitFactor = 1;
+  if (args.fit) {
+    fitFactor = usableWidth / Math.max(...lineWidths);
+    smallSize = Math.floor(smallSize * fitFactor);
+    bigSize = Math.floor(bigSize * fitFactor);
+    lineWidths = measureMixedLines(python, fontFile, smallSize, bigSize, lines);
+    while (Math.max(...lineWidths) > usableWidth && smallSize > 1) {
+      smallSize -= 1;
+      bigSize = Math.max(1, Math.round(bigSize - bigSize / smallSize));
+      lineWidths = measureMixedLines(python, fontFile, smallSize, bigSize, lines);
+    }
   }
 
-  const yTop = Math.round(BASE.yTop * scale) + yOffset;
-  const yBig = Math.round(BASE.yBig * scale) + yOffset;
-  const yBottom = Math.round(BASE.yBottom * scale) + yOffset;
+  const overflow = [];
+  lineWidths.forEach((lineWidth, i) => {
+    if (lineWidth > usableWidth) {
+      overflow.push({ line: rawLines[i], widthPx: Math.round(lineWidth), usableWidth });
+    }
+  });
+  if (overflow.length) {
+    throw new Error(`Cover text is wider than the frame:\n${JSON.stringify(overflow, null, 2)}\nShorten the line or move a word to another --line.`);
+  }
+
+  // Each line is as tall as its largest run; the step between two lines is driven by the
+  // larger of the pair, so a small line under a big one does not float away from it.
+  const lineSizes = lines.map((runs) => (runs.some((run) => run.big) ? bigSize : smallSize));
+
+  const anchorKey = args.anchor || 'bottom';
+  if (!(anchorKey in ANCHORS)) {
+    throw new Error(`Unknown --anchor "${anchorKey}". Use one of: ${Object.keys(ANCHORS).join(', ')}.`);
+  }
+
+  const step = (a, b) => Math.round(Math.max(BASE.lineStep * Math.max(a, b), BASE.lineStepMin * Math.min(a, b)));
+  const steps = lineSizes.slice(0, -1).map((size, i) => step(size, lineSizes[i + 1]));
+  const blockHeight = steps.reduce((a, b) => a + b, 0)
+    + (lineSizes[0] + lineSizes[lineSizes.length - 1]) * 0.45;
+  const blockCenter = Math.round(height * ANCHORS[anchorKey]) + yOffset;
+  const ys = [];
+  let cursor = blockCenter - blockHeight / 2 + lineSizes[0] * 0.45;
+  lineSizes.forEach((size, i) => {
+    ys.push(Math.round(cursor));
+    if (i < steps.length) cursor += steps[i];
+  });
   const centerX = Math.round(width / 2);
 
-  const events = [];
-  if (args.top) events.push(`{\\an5\\pos(${centerX},${yTop})\\fs${smallSize}}${args.top}`);
-  events.push(`{\\an5\\pos(${centerX},${yBig})\\fs${bigSize}${args.accentBig ? `\\c${bigColor}&` : ''}}${args.big}`);
-  if (args.bottom) events.push(`{\\an5\\pos(${centerX},${yBottom})\\fs${smallSize}}${args.bottom}`);
+  const events = lines.map((runs, i) => {
+    const body = runs.map((run) => {
+      const size = run.big ? bigSize : smallSize;
+      const colorTag = args.accentBig ? `\\c${run.big ? bigColor : primary}&` : '';
+      return `{\\fs${size}${colorTag}}${run.text}`;
+    }).join('');
+    return `{\\an5\\pos(${centerX},${ys[i]})}${body}`;
+  });
 
   // Two alpha decisions in the style line, and they are not the same decision:
   // the OUTLINE is fully opaque black (&H00......) so the fill keeps a hard edge — a
@@ -351,8 +470,16 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
   ]);
 
   // Colour gate: the fill that landed on disk has to be the fill that was asked for.
+  // Sample the line carrying the most emphasised text — the big glyphs are thousands of
+  // pixels on that row, so the fill's share of the strip is unmistakable even when
+  // --accent-big leaves the small runs white.
+  const emphasisWidths = lines.map((runs, i) => (runs.some((run) => run.big) ? lineWidths[i] : 0));
+  const sampleIndex = emphasisWidths.some(Boolean)
+    ? emphasisWidths.indexOf(Math.max(...emphasisWidths))
+    : lineWidths.indexOf(Math.max(...lineWidths));
+  const sampleWidth = lineWidths[sampleIndex];
   const expectedHex = `#${String(color).replace('#', '').toUpperCase()}`;
-  const strip = stripHistogram(ffmpeg, output, centerX - bigWidths[0] / 2, yBig, bigWidths[0]);
+  const strip = stripHistogram(ffmpeg, output, centerX - sampleWidth / 2, ys[sampleIndex], sampleWidth);
   const fillShare = strip.share(expectedHex);
   if (fillShare < 0.05) {
     throw new Error(
@@ -370,8 +497,8 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
   // \an5 centres each line on its own box, so the visible extent above and below the
   // anchor is roughly 0.45em — cap height one way, descender the other. Using the full
   // font size as the half-extent would flag a block that is demonstrably inside the crop.
-  const blockTop = (args.top ? yTop : yBig) - (args.top ? smallSize : bigSize) * 0.45;
-  const blockBottom = (args.bottom ? yBottom : yBig) + (args.bottom ? smallSize : bigSize) * 0.45;
+  const blockTop = ys[0] - lineSizes[0] * 0.45;
+  const blockBottom = ys[ys.length - 1] + lineSizes[lineSizes.length - 1] * 0.45;
   const insideGridCrop = blockTop >= squareTop && blockBottom <= squareBottom;
 
   const gridPreview = path.join(coverDir, `${slug}-portada-gridcrop.png`);
@@ -396,11 +523,21 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
       accentBig: Boolean(args.accentBig),
       smallSize,
       bigSize,
-      yTop, yBig, yBottom,
+      fit: Boolean(args.fit),
+      fitFactor: Number(fitFactor.toFixed(3)),
+      anchor: anchorKey,
+      lines: lines.map((runs, i) => ({
+        text: rawLines[i],
+        y: ys[i],
+        size: lineSizes[i],
+        widthPx: Math.round(lineWidths[i]),
+      })),
+      blockTop: Math.round(blockTop),
+      blockBottom: Math.round(blockBottom),
       yOffset,
     },
     verified: { fill: expectedHex, shareOfBigLineStrip: Number(fillShare.toFixed(3)), colours: strip.top },
-    widestLinePx: Math.round(Math.max(bigWidths[0], ...(smallWidths.length ? smallWidths : [0]))),
+    widestLinePx: Math.round(Math.max(...lineWidths)),
     usableWidthPx: usableWidth,
     insideGridCrop,
     next: insideGridCrop

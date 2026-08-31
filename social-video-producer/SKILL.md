@@ -744,10 +744,20 @@ user as a question — bring them the result and let them veto it.
 ### House Style (decided; not a menu)
 
 - Frozen project caption font, Inter Black by default — the same file the captions use.
-- **All three lines in cyan `#30D5FF`**, the same cyan as the caption accent. Cover and
+- **All the text in cyan `#30D5FF`**, the same cyan as the caption accent. Cover and
   captions speaking one colour is what makes the profile grid recognisable.
-- Three lines: a small setup line, the big line that carries the cover, a small payoff line.
-  Only the big line is mandatory.
+- **Three lines, one block, anchored bottom.** Small setup line, big line, small payoff
+  line, sitting over the torso. That is the shape of both approved covers and the shape
+  to start from — see **The Shape, From The Two Approved Covers** below.
+- **The emphasis is per WORD.** Wrap what carries the cover in `*asterisks*` and it is
+  set at the big size. Normally that is the whole middle line; a second word further down
+  can take it too (`--line "y esta *skill* lo arregla"`). The rest of the line stays small
+  around it.
+- **`--anchor top|center|bottom` exists, but `bottom` is the answer for a talking head.**
+  Text placed above the speaker lands on hair and forehead and leaves a dead gap through
+  the middle of the frame. Move it only over footage with real empty space up there, and
+  only after looking at the frame — `insideGridCrop` checks the thumbnail edges, never
+  what is behind the text.
 - **Fully opaque black outline**, plus a semi-transparent drop shadow, always on, even when
   the background looks easy. It is what survives a backlit or pale-walled shot. The two
   alphas are different decisions on purpose: a semi-transparent outline lets the background
@@ -779,17 +789,72 @@ is `t = (row * columns + column) / fps`. Pick a frame with:
 
 ### Writing The Headline
 
-Restate the video's strongest idea in the cadence the format wants: small line, big keyword,
-small line. Concrete beats clever — a number, a name, a promise. Match the video's own words
-and register (voseo if that is how it was spoken). Not a summary of the video, and never a
-line the video does not actually deliver on.
+Restate the video's strongest idea, then decide which WORDS carry it and set those big.
+Concrete beats clever. Match the video's own words and register (voseo if that is how it
+was spoken). Not a summary of the video, and never a line the video does not deliver on.
+
+Break the lines around the emphasis, not around the grammar: the big word wants to end up
+alone or nearly alone on its line so it reads at a glance.
+
+#### The Shape, From The Two Approved Covers
+
+These two shipped and were approved. Copy their shape; do not reinvent it per video.
+
+```text
+esta skill te da            Claude ignoró
+  10 GANCHOS                LA HERRAMIENTA
+para tu próximo video       y esta SKILL lo arregla
+```
+
+- **Three lines. One block. Anchored bottom, over the torso.** Not two blocks, not a band
+  above the head — see the note on ANCHORS in build-cover.mjs for why that was removed.
+- **The middle line is the big one**, and it is the whole line. A second word may go big
+  further down (`skill` above), but the middle line is what carries the cover.
+- **Six to eight words**, small line → BIG line → small line.
+- **Read the big words alone and it still has to mean something**: "10 ganchos",
+  "la herramienta · skill".
+- **No punctuation.** No commas, no full stops — the line breaks do that work, and a comma
+  set in display type reads as a stray dot hanging off a centred line. It is also
+  all-or-nothing: a comma in the middle commits you to a full stop at the end. Question
+  marks are the exception; they carry meaning, not just rhythm.
+- **House cyan, always**, the same as the captions inside the video. That is what makes the
+  grid recognisable.
+
+The exact invocation behind the right-hand cover, worth copying verbatim as a starting
+point (the sizes and `--fit` are what make it fill the frame):
+
+```powershell
+--line "Claude ignoró" --line "*la herramienta*" --line "y esta *skill* lo arregla" `
+  --anchor bottom --small-size 82 --big-size 150 --fit
+```
+
 
 ### Building It
 
 ```powershell
 node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\<video>.mp4" --frame 19.0 `
-  --top "esta skill te da" --big "10 ganchos" --bottom "para tu próximo video"
+  --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --fit
 ```
+
+**Always pass `--fit`.** The cover is judged at thumbnail size, so a headline that stops
+short of the margin is a headline set too small — `--fit` grows both sizes until the widest
+line just reaches it. Width left unused is legibility thrown away.
+
+The `66 / 160` house sizes are a *starting ratio*, not a floor, and their 1:2.4 contrast is
+harder than the format usually runs (~1:1.9). When the small lines look weak next to the
+big word, raise them with `--small-size` and give the big word back some room with
+`--big-size` — `--small-size 82 --big-size 150 --fit` is a good second try. The small text
+carries most of the sentence; it has to be readable on its own.
+
+Budget the width before writing the headline: at the house sizes a big word runs about
+`0.163 x frameWidth` per character and a small one about `0.067 x frameWidth`, against a
+usable width of `frameWidth - 140/1080 x frameWidth`. In practice that is ~10 big
+characters or ~25 small ones on a line, and `--fit` then scales the whole block up from
+there. The script measures the real font metrics and refuses to render an over-wide line,
+but knowing the budget saves a round trip.
+
+Bigger text means a taller block, so re-check `insideGridCrop` after `--fit` and nudge with
+`--y-offset` — growing the type is what pushes a block out of the profile grid's square.
 
 Geometry is expressed in 1080-wide design space and scaled by `sourceWidth / 1080`, so a 4K
 source gets 4K-sized text with no arguments. The script gates the width against the real font
@@ -808,9 +873,10 @@ nudge the block with `--y-offset` (positive is down, in source pixels) and rebui
   eye as *"the letters look half transparent"* — the fill is fully opaque, just wrong. PNG
   output declares `None`. `build-cover.mjs` samples the rendered strip and fails if the fill
   does not match, so this cannot ship again.
-- **The profile grid crops the cover to a centred square.** Text sitting low in a 9:16 frame is
-  outside that crop and nobody reads it. The script reports `insideGridCrop`; treat `false` as
-  a blocker, not a warning.
+- **The profile grid crops the cover to a centred square.** Text sitting low in a 9:16
+  frame is outside that crop and nobody reads it. The script reports `insideGridCrop`;
+  treat `false` as a blocker, not a warning. (The Reels tab shows a taller thumbnail than
+  the square, so the square is the conservative gate — a cover that clears it clears both.)
 
 ## Post Description (Social Caption)
 
@@ -888,7 +954,7 @@ node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\as
 node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --output "<project>\manifests\audits\caption-width.json"
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.mp4" --ass "<project>\renders\source.ass" --output "<project>\renders\final\source-subs.mp4" --fonts-dir "<project>\assets\fonts"
 node "<skill-dir>\scripts\build-cover.mjs" --scan --input "<project>\raws\source.mp4" --output "<project>\snapshots\cover-scan.png"
-node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\source.mp4" --frame 19.0 --top "esta skill te da" --big "10 ganchos" --bottom "para tu próximo video"
+node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\source.mp4" --frame 19.0 --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --fit
 node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 node "<skill-dir>\scripts\capture-overlay-frames.mjs" --project "<project>"
 node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input "<project>\raws\source.mp4" --output "<project>\renders\final\source-overlays.mp4"
@@ -915,7 +981,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.
 - `burn-in-captions.mjs`: burn an `.ass` file into a video in a single encode pass, copying the original audio.
-- `build-cover.mjs`: `--scan` writes a head-and-shoulders contact sheet for choosing the cover frame by looking at it; the build mode extracts that frame at native resolution and composes the house headline onto it, gating text width against the real font metrics, verifying the rendered fill colour against the requested hex, and reporting whether the block survives the profile grid's centred square crop.
+- `build-cover.mjs`: `--scan` writes a head-and-shoulders contact sheet for choosing the cover frame by looking at it; the build mode extracts that frame at native resolution and composes the house headline onto it. Takes the headline as repeated `--line`s, sets the words wrapped in `*asterisks*` at the big size so the emphasis lands per word rather than per line, places the single block with `--anchor top|center|bottom`, and with `--fit` grows the type until the widest line fills the usable width (`--small-size`/`--big-size` set the starting ratio). Gates text width against the real font metrics, verifies the rendered fill colour against the requested hex, and reports whether the block survives the profile grid's centred square crop. The legacy `--top/--big/--bottom` form still builds the fixed three-line block.
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
