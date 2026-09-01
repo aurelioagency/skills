@@ -145,16 +145,8 @@ const chart = s => `
     <div class="axis"><span>${s.axis[0]}</span><span class="mid">${s.axis[1]}</span><span>${s.axis[2]}</span></div>
   </div>`;
 
-// Numero gigante + eyebrow + titular. Para un punto de una serie (01, 02, 03…).
-const bignum = s => `
-  <div class="bignum">
-    <div class="n ${s.accent === 'dorado' ? 'dorado' : ''}">${s.num}</div>
-    <div>
-      <div class="eyebrow ${s.accent}">${s.eyebrow}</div>
-      <h2>${s.headline}</h2>
-    </div>
-  </div>
-  ${s.lede ? `<p class="lede" style="margin:44px var(--pad-x) 0">${s.lede}</p>` : ''}`;
+// El numero gigante se elimino el 2026-08-31 por pedido del usuario: corria el
+// titular a un costado y no numeraba nada. El campo `num` ya no existe.
 
 // Fila de chips: uno activo, uno tachado, el resto neutros.
 const chips = items => `
@@ -277,7 +269,7 @@ function render(s, i, total) {
   if (s.type === 'chart')  inner = `${head(s)}${chart(s)}${close(s)}`;
   if (s.type === 'docs')   inner = `${head(s)}${docs(s.docs)}${close(s)}`;
   if (s.type === 'list')   inner = `${head(s)}${list(s)}${close(s)}`;
-  if (s.type === 'layers') inner = `${bignum(s)}${layers(s)}${close(s)}`;
+  if (s.type === 'layers') inner = `${head(s)}${layers(s)}${close(s)}`;
 
   // Numero gigante + chips, con un diagrama opcional arriba de los chips.
   if (s.type === 'steps') {
@@ -285,7 +277,7 @@ function render(s, i, total) {
     // entiende, y ademas corre el titular a la derecha y rompe la alineacion del resto
     // del carrusel. El numero solo va si la placa es un punto de una serie (01, 02...).
     inner = `
-      ${s.num ? bignum(s) : head(s)}
+      ${head(s)}
       <div style="padding:0 var(--pad-x);margin-top:auto;margin-bottom:auto">
         ${dlabel(s.chipsLabel, 'coral')}
         ${s.diagram || ''}

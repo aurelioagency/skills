@@ -48,8 +48,9 @@ window.CAROUSEL = {
   // },
 
   slides: [
-    // PORTADA. El titular va partido en dos mitades: headTop en gris (--ghost) y
-    // headBottom en blanco. El giro, en serif italica y caja de oracion.
+    // PORTADA. El titular va ENTERO EN BLANCO, en dos renglones (headTop y
+    // headBottom). La particion gris/blanco se saco el 2026-08-29. El giro, en
+    // serif italica y caja de oracion.
     // `weights` son las nueve celdas de la tira, de 0 a 1: dibujan la forma del dato.
     {
       type: 'cover',
@@ -120,13 +121,12 @@ window.CAROUSEL = {
       close: 'Mejor al inicio. Peor en el medio.<br>Repunta al final.'
     },
 
-    // NUMERO GIGANTE + CHIPS. `diagram` acepta un SVG suelto arriba de los chips.
+    // CHIPS. `diagram` acepta un SVG suelto arriba de los chips.
     // Estados de chip: '' (neutro) | 'active' | 'off'.
     {
       type: 'steps',
       accent: 'coral',
       glow: 'tl',
-      num: '01',
       eyebrow: 'LA CAUSA',
       headline: 'La máscara<br>causal.',
       lede: 'Cada palabra solo puede mirar a las anteriores: lo que viene después le queda tapado. Eso lo inclina al inicio aunque los datos no lo pidan.',
@@ -151,7 +151,6 @@ window.CAROUSEL = {
       type: 'layers',
       accent: 'dorado',
       glow: 'tr',
-      num: '02',
       eyebrow: 'LA CAUSA',
       headline: 'Más capas,<br>más sesgo.',
       lede: 'El modelo relee el texto capa por capa, y cada pasada hereda lo que la anterior ya priorizó.',

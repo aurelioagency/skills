@@ -31,6 +31,11 @@ visual, no un sistema distinto de composición.
   peso 800. Estuvieron a 52 y 44 hasta el 2026-08-29 y el audit no lo ve — se chequea a
   ojo en el contact sheet.
 - **El footer no lleva filete superior** (2026-08-29).
+- **El cierre lleva `margin-bottom: 88px`** (2026-08-31): sin eso se apoya contra el
+  footer y la placa se pasa del area segura por abajo.
+- **No hay número gigante.** Se eliminó el 2026-08-31 por pedido del usuario: corría el
+  titular a un costado y no numeraba nada. El campo `num` no existe más, ni en `steps` ni
+  en `layers`. No se vuelve a agregar.
 - **`cards` va con bajada.** Sin ella la placa queda corta y el sobrante se junta entre
   las tarjetas y el remate. Si no hay qué poner en la bajada, a la placa le falta
   contenido — no se arregla separando bloques.
@@ -51,8 +56,8 @@ dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bl
 | `rows` | eyebrow · titular · bajada · filas con etiqueta mono y descripción, barra de acento a la izquierda | `rows` = `[{ lbl, t }]`, `aside` opcional |
 | `docs` | tres hojas con nueve renglones, un renglón marcado en cada una y un pie que dice si acertó | `docs` = `[{ hit, cap, miss }]`, `close` |
 | `chart` | eyebrow con fuente · titular · bajada · gráfico de línea con área y puntos · rótulos de eje · cierre | `id`, `chartLabel`, `path` (viewBox 904x380), `dots`, `axis`, `close` |
-| `steps` | número gigante **opcional** · eyebrow · titular · bajada · diagrama opcional · chips (uno activo, uno tachado) · cierre | `num` (sólo si la placa es un punto de una serie), `chipsLabel`, `diagram`, `chips` = `[{ t, state }]`, `close` |
-| `layers` | número gigante · titular · cuatro barras que llegan cada vez menos lejos · rótulos de extremos · cierre | `num`, `layersLabel`, `layers` = `[{ lbl, reach, tail }]`, `axis`, `close` |
+| `steps` | eyebrow · titular · bajada · diagrama opcional · chips (uno activo, uno tachado) · cierre | `chipsLabel`, `diagram`, `chips` = `[{ t, state }]`, `close` |
+| `layers` | eyebrow · titular · cuatro barras que llegan cada vez menos lejos · rótulos de extremos · cierre | `layersLabel`, `layers` = `[{ lbl, reach, tail }]`, `axis`, `close` |
 | `list` | eyebrow · titular · bajada · ítems numerados separados por filete · cierre | `items`, `close` |
 | `cards` | eyebrow · titular · bajada opcional · tres tarjetas en fila · remate con parte resaltada | `cards` = `[{ lbl, t, tone }]`, `lede` opcional, `punch`, `aside` opcional |
 | `stats` | eyebrow · titular · bajada · dos cifras grandes con su unidad, rótulo y detalle | `stats` = `[{ fig, sub, lbl, t }]` |

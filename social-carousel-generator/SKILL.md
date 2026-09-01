@@ -21,8 +21,8 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
    Completion criterion: **cada titular está trazado a su frase de la `Lectura` en la tabla de `carousel-brief.md`, tiene verbo conjugado, y los titulares leídos solos y seguidos cuentan el carrusel** (ver *Cómo se escribe una placa*); each carousel has as many content slides as its material supports and no more than 9, each slide has one job, each slide has its component declared (see *Copy Approval Gate*), each slide uses the density budget below rather than hugging its floor, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
    Completion criterion: the delivery folder (`<tema-en-kebab-case>`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
-6. Run visual QA from contact sheets.
-   Completion criterion: every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
+6. Run visual QA. **Abrí cada PNG a tamaño real, uno por uno.**
+   Completion criterion: **cada placa se abrió a `1080x1440` y se miró** (ver *Mirar las placas, no el reporte*); every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
 7. Build the vertical Short and get the music approved.
    Completion criterion: `short.mp4` is built from the approved slides, the user has seen the chosen track — already cut to the video's length — and approved it, and the track is recorded in `manifest.json` and appended to the brand's music log. Nothing is published before that yes.
 8. Humanize captions and deliver.
@@ -1060,6 +1060,93 @@ What the package keeps so the carousel can be fixed later without rebuilding it:
 Nothing else ships. `qa-report.json` and `contact-sheet.png` are deleted after the QA pass; there is no `exports/` and no `post-descriptions.md`.
 
 And in the chat: la caption pegada entera, la nota de QA visual (tamano, legibilidad, composicion centrada, comportamiento del CTA y cualquier salvedad que quede), y **el atajo para abrir la carpeta**.
+
+### Mirar las placas, no el reporte
+
+**Antes de decir una sola palabra sobre cómo quedó un carrusel, hay que abrir cada PNG a
+tamaño real y mirarlo.** Uno por uno, los nueve. No el contact sheet: los archivos.
+
+No es una recomendación. Es el paso que evita el peor error posible, que es afirmarle al
+usuario que una placa está bien sin haberla visto.
+
+**El contact sheet no sirve para esto.** A esa escala una palabra cortada se ve como una
+palabra. El 2026-08-31 se entregó una portada donde `ALUCINACIONES` salía como
+`ALUCINACIONI` —la palabra se iba del lienzo— y en el mismo mensaje se le escribió al
+usuario "sin texto cortado". El contact sheet estaba a la vista y no se notaba. El
+contact sheet es para el ritmo de la serie; la placa a tamaño real es para todo lo demás.
+
+**`QA automática OK` no quiere decir que esté bien.** Dice que ningún chequeo programático
+saltó, y los chequeos no leen. En ese mismo carrusel el reporte salió limpio con:
+
+- una palabra del titular cortada por el borde,
+- un número gigante `01` arriba de un kicker que decía `SEGUNDA CAUSA`,
+- titulares de cinco renglones ocupando un tercio de la placa,
+- un kicker (`LO QUE LE FALTA`) repitiendo la primera palabra de su propio titular
+  (`Le falta decir «no sé»`).
+
+Ninguna de las cuatro la puede ver un script.
+
+**Ojo particular con `typography-floor` y `safe-area`.** El template `02` las trae como
+excepción de fábrica, y bajan a nota **todos** los avisos de su tipo — incluido
+`"ALUCINACIONES" fuera del safe area`, que es exactamente como se reporta una palabra que
+se fue del lienzo. Con esas excepciones activas, **el texto cortado no bloquea nada**. Hay
+que leer las notas una por una y mirar la placa.
+
+### No persigas el número del audit
+
+Cuando un chequeo marca un hueco o un desbalance, **el arreglo sale de mirar la placa, no
+de mover una constante hasta que el número baje.**
+
+El 2026-08-31, para tapar un aviso de hueco interno en la portada, se bajó el titular de
+`88px` a `268px` del borde. El aviso desapareció y el carrusel quedó peor: la portada era
+la única placa cuyo titular no arrancaba a la misma altura que las demás, y la serie perdió
+la línea superior. Lo vio el usuario, no el audit.
+
+Dos reglas que salen de ahí:
+
+- **Lo que alinea la serie no se toca para cerrar un hueco.** El titular arranca donde
+  arranca en todas las placas.
+- **Si el único modo de pasar el chequeo es empeorar la composición, el chequeo tiene
+  razón sobre el síntoma y vos sobre el arreglo: a esa placa le falta contenido.** Ponele
+  contenido real o preguntale al usuario. No la estires. Inflar una tarjeta hasta que
+  quede hueca por dentro es la misma trampa un nivel más abajo.
+
+### El titular tiene que entrar en dos renglones
+
+La regla de *Cómo se escribe una placa* pide que el titular sea una oración con verbo
+conjugado. Falta la otra mitad: **tiene que entrar en dos renglones del template activo.**
+
+Sin ese límite salen oraciones de 45 caracteres que en el `02` se componen a 104px en
+mayúsculas y ocupan **cinco renglones y un tercio de la placa**. Pasó el 2026-08-31 con
+`ENSEÑARLE LO QUE NO SABÍA LE ENSEÑA A INVENTAR`.
+
+Contá los caracteres contra el template:
+
+| Template | Titular de contenido | Caracteres que entran en 2 renglones |
+|---|---|---|
+| `02-editorial-oscuro-v2` | Archivo 104px, mayúsculas | **~22** |
+
+Las del set del propio template: `La máscara causal.` (18) · `Más capas, más sesgo.` (21)
+· `El orden no es neutro.` (22). Ese es el largo, no 45.
+
+**Un `<br>` no achica nada.** Si la línea no entra a lo ancho, envuelve igual y el `<br>`
+sólo agrega un renglón más. La cuenta es de caracteres, no de dónde ponés el corte.
+
+Cuando la oración completa no entra, **el titular se acorta y la bajada completa la idea**
+— para eso está. Lo que no se hace es bajarle el cuerpo al titular.
+
+### Un campo opcional no es una invitación
+
+**Si el usuario pidió sacar un elemento, se saca del template — no se deja opcional.** Un
+campo que sigue existiendo se vuelve a llenar, y el que lo llena es el agente.
+
+Pasó con el número gigante del `02`: el usuario pidió sacarlo el 2026-08-30, se lo dejó
+opcional (`s.num ? bignum(s) : head(s)`), y al día siguiente el primer carrusel nuevo salió
+con `01` y `02` puestos por el agente, uno de ellos arriba de un kicker que decía
+`SEGUNDA CAUSA`. Se eliminó de verdad el 2026-08-31.
+
+Y en general: **un campo opcional del template no se llena sin que el usuario lo pida.** Va
+al gate de aprobación de copy como cualquier otra decisión de composición.
 
 ### Mandale la imagen, no se la cuentes
 

@@ -61,7 +61,6 @@
   --muted: #b9b4aa;          /* bajadas en serif */
   --dim: #8a857a;            /* rotulos de eje */
   --dimmer: #6e6a62;         /* labels de diagrama, contador */
-  --ghost: #3a3730;          /* primera mitad del titular de portada */
   --panel: #111114;
   --rule: #1e1e22;           /* separadores de lista y bordes de panel */
   --rule-soft: #1c1c1f;      /* borde superior del footer */
@@ -165,6 +164,9 @@ h2 { font-size: 104px; }
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--ink);
+  /* Sin este margen el cierre no se apoya en nada y se mete contra el footer:
+     las placas se pasaban del area segura por abajo. 2026-08-31. */
+  margin-bottom: 88px;
 }
 
 .head { padding: 0 var(--pad-x); margin-top: 88px; }
@@ -196,7 +198,6 @@ h2 { font-size: 104px; }
 /* ---------- Layout: portada ---------- */
 
 .s-cover .head { margin-top: 96px; }
-.s-cover h1.ghost { color: var(--ghost); margin-top: 36px; }
 .s-cover .twist {
   font-family: 'Source Serif 4', serif;
   font-style: italic;
@@ -268,14 +269,6 @@ h2 { font-size: 104px; }
 
 /* ---------- Componente: numero gigante ---------- */
 
-.bignum { padding: 0 var(--pad-x); margin-top: 88px; display: flex; gap: 36px; align-items: flex-start; }
-.bignum .n {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 120px; line-height: 0.8; font-weight: 700;
-  color: var(--coral-deep); flex: none;
-}
-.bignum .n.dorado { color: var(--dorado-deep); }
-.bignum h2 { margin-top: 26px; font-size: 100px; }
 
 /* ---------- Componente: chips ---------- */
 
