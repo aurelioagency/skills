@@ -275,3 +275,27 @@ h2 { font-size: 104px; }
 .s-cta h2 { font-size: 116px; line-height: 0.92; }
 
 .spacer { flex: 1 1 auto; }
+
+/* Ficha de respuesta sin fuente (portada). Pieza agregada el 2026-08-31: la portada
+   usaba el corte de dos piezas del ejemplo, que aca no comparaba ninguna magnitud. */
+.ficha { padding: 0 var(--pad-x); margin-top: auto; margin-bottom: auto; }
+.ficha-card { border: var(--fina) solid var(--ink); padding: 40px 44px 36px; background: rgba(255,255,255,0.45); }
+.ficha-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; font-weight: 700; letter-spacing: 0.14em;
+  color: var(--azul); margin-bottom: 30px;
+}
+.ficha-line { height: 14px; background: repeating-linear-gradient(45deg, rgba(26,26,26,0.30) 0 2px, transparent 2px 9px); border: 2px solid rgba(20,23,26,0.45); margin-bottom: 18px; }
+.ficha-sep { height: 0; border-top: 2px dashed var(--muted); margin: 32px 0 28px; }
+.ficha-src { display: flex; align-items: center; gap: 20px; }
+.ficha-src .k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; font-weight: 700; letter-spacing: 0.14em; color: var(--muted);
+}
+.ficha-src .blank { flex: 1; height: 0; border-top: var(--fina) solid var(--ink); }
+.ficha-src .q { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 64px; line-height: 0.8; color: var(--naranja); }
+.ficha-foot {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 600; text-transform: uppercase;
+  font-size: 44px; letter-spacing: 0.02em; color: var(--ink);
+  margin-top: 34px; text-align: center;
+}

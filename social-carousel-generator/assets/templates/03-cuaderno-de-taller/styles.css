@@ -249,3 +249,36 @@ h2 { font-size: 92px; }
 .ico { flex: none; color: var(--ink); }
 /* El icono va antes de la etiqueta P-01, alineado con ella y no con el bloque. */
 .parts .part .ico { margin-top: 4px; }
+
+/* Ficha de respuesta sin fuente (portada). Pieza agregada el 2026-08-31: la portada
+   usaba la comparacion de dos cajas del ejemplo y no comparaba nada. */
+.ficha { padding: 0 var(--pad-x); margin-top: auto; margin-bottom: auto; }
+.ficha-card {
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  background: #FBFAF6;
+  padding: 40px 44px 36px;
+  box-shadow: 8px 8px 0 rgba(26,26,26,0.10);
+}
+.ficha-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--soft); margin-bottom: 30px;
+}
+.ficha-line { height: 14px; border-radius: 7px; background: #D9D5CB; margin-bottom: 18px; }
+.ficha-sep { height: 2px; background: var(--ink); opacity: 0.25; margin: 32px 0 28px; }
+.ficha-src { display: flex; align-items: center; gap: 20px; }
+.ficha-src .k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; font-weight: 700; letter-spacing: 0.12em; color: var(--soft);
+}
+.ficha-src .blank { flex: 1; height: 3px; background: var(--ink); opacity: 0.55; }
+.ficha-src .q {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 64px; line-height: 0.8; color: var(--ink);
+}
+.ficha-foot {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 42px; line-height: 1.25; color: var(--ink);
+  margin-top: 34px; text-align: center;
+}

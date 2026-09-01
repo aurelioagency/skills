@@ -38,6 +38,7 @@ dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bl
 | `cover` | encabezado · titular condensado 112px · regla de cota con la magnitud · bajada · corte y sección · cartucho | `tab`, `headline`, `ruleWidth`, `ruleLabel`, `lede`, `a`/`b`, `cartucho` |
 | `nodos` | cabeza estándar + nodos con figura, rótulo mono azul, nombre condensado y descripción, separados por línea de eje | `nodos` = `[{ fig:{ id, px, trama }, k, name, desc }]`, `img` opcional |
 | `bars` | cabeza estándar + barras rayadas, línea de eje, cifra dominante y sellos | `bars` = `[{ lbl, val, w, tone }]`, `factor` = `{ n, t }`, `sellos`, `cartucho` |
+| `ficha` | ficha de respuesta en lenguaje de plano: renglones con trama, linea de corte punteada y el campo `FUENTE` en blanco. Alternativa a `corte` en la portada cuando no hay dos magnitudes que comparar | `ficha` = `{ lbl, lines, foot }` |
 | `cta` | titular condensado 116px · regla · bajada · checklist · cartucho | `headline`, `ruleWidth`, `lede`, `checks`, `cartucho` |
 
 `tone`: `azul` · `naranja` · `normal` · `invert` · `densa`. Los `id` de figura y las

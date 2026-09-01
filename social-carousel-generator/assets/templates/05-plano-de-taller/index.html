@@ -85,6 +85,25 @@ const userImg = s => !s.img ? '' : (s.imgTransparent
 // ---------- Componentes ----------
 
 // Corte y seccion: dos piezas sobre una linea de eje. `h` sale del dato.
+// Ficha de respuesta con el campo FUENTE en blanco, en lenguaje de plano: cuadro de
+// pieza con trama, renglones de texto y un campo de cartucho sin llenar. Dibuja "una
+// respuesta que no se apoya en nada", que es la definicion del articulo.
+// Campos: `ficha` = { lbl, lines, foot }.
+const ficha = s => `
+  <div class="ficha">
+    <div class="ficha-card">
+      <div class="ficha-lbl">${s.ficha.lbl}</div>
+      ${s.ficha.lines.map(w => `<div class="ficha-line" style="width:${w}%"></div>`).join('')}
+      <div class="ficha-sep"></div>
+      <div class="ficha-src">
+        <span class="k">FUENTE</span>
+        <span class="blank"></span>
+        <span class="q">?</span>
+      </div>
+    </div>
+    <div class="ficha-foot">${s.ficha.foot}</div>
+  </div>`;
+
 const corte = s => `
   <div class="corte diagram">
     <div class="frame">
@@ -144,7 +163,7 @@ function render(s, i, total) {
         ${rule(s)}
         <div class="lede">${s.lede}</div>
       </div>
-      ${corte(s)}`;
+      ${s.ficha ? ficha(s) : corte(s)}`;
   }
 
   if (s.type === 'nodos') inner = `${head(s, true)}${nodos(s.nodos)}${userImg(s)}`;

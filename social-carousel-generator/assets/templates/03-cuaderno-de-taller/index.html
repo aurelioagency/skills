@@ -83,6 +83,23 @@ const ico = (spec) => {
 
 // Comparacion de dos cajas. `h` es la altura en px y es PROPORCIONAL AL DATO:
 // si la fuente no publica la magnitud, este componente no va.
+// Ficha de respuesta con el campo FUENTE en blanco. Dibuja "una respuesta que no se
+// apoya en nada", que es la definicion del articulo. Campos: `ficha` = { lbl, lines, foot }.
+const ficha = s => `
+  <div class="ficha">
+    <div class="ficha-card">
+      <div class="ficha-lbl">${s.ficha.lbl}</div>
+      ${s.ficha.lines.map(w => `<div class="ficha-line" style="width:${w}%"></div>`).join('')}
+      <div class="ficha-sep"></div>
+      <div class="ficha-src">
+        <span class="k">FUENTE</span>
+        <span class="blank"></span>
+        <span class="q">?</span>
+      </div>
+    </div>
+    <div class="ficha-foot">${s.ficha.foot}</div>
+  </div>`;
+
 const compare = s => `
   <div class="compare">
     <div class="col">
@@ -146,7 +163,7 @@ function render(s, i, total) {
         <div class="rule" style="width:${s.ruleWidth || 76}%"><i></i><span></span><i class="r"></i></div>
         <div class="lede">${s.lede}</div>
       </div>
-      ${compare(s)}`;
+      ${s.ficha ? ficha(s) : compare(s)}`;
   }
 
   if (s.type === 'compare') inner = `${head(s)}${compare(s)}`;

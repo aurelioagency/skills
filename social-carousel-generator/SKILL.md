@@ -345,6 +345,31 @@ una pieza se agrega al template.
 `estilo.md` tiene esas dos partes, en ese orden: primero las reglas, que son lo que
 manda; después las piezas construidas, con los campos que lee cada una.
 
+### El test de la pieza forzada
+
+**Si tuviste que inventar el contenido de un campo para que la pieza no quede vacía, la
+pieza no va en esa placa.**
+
+Es el test que agarra el defecto en el momento en que se comete, y es mecánico: mirá lo que
+estás por escribir en cada campo y preguntate si sale del material o si lo estás fabricando
+para llenar el hueco.
+
+Ejemplo real del 2026-08-31. Las portadas del `03` y del `05` traen dos cajas comparando dos
+magnitudes — en el carrusel de origen, dos precios. El carrusel nuevo no comparaba ninguna
+magnitud, así que las cajas se llenaron con **SÍ** y **NO**. Dos cuadrados gigantes con una
+palabra adentro que no comparan nada y no aportan nada. El campo pedía una cifra, no había
+cifra, y se le metió una palabra: ahí estaba la señal.
+
+**La pieza no queda prohibida.** Las dos cajas son correctas cuando hay dos magnitudes que
+comparar; ese mismo día se sacaron del carrusel de alucinaciones y siguen siendo la portada
+del carrusel de costos. Lo que se juzga es si *esta* placa las pide, no si existen.
+
+Y cuando la placa necesita algo que el estilo todavía no dibuja, **se agrega la pieza al
+template** — la entrada en `estilo.md`, el bloque en `render()`, sus clases en `styles.css`
+— con las reglas de trazo, tipografía y color de ese estilo. Eso es componer dentro del
+sistema visual. Rellenar los campos de la pieza que vino en el ejemplo no lo es, y produce
+carruseles que salen todos iguales con las palabras cambiadas.
+
 **Lo que NO hay que hacer con las piezas construidas.** No son un catálogo de arquetipos
 y no llevan una doctrina de "cuándo conviene cada una". La mayoría son, literalmente,
 las placas del carrusel con el que se armó el template — un carrusel es evidencia de un

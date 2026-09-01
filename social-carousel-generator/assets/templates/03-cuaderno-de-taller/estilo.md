@@ -34,6 +34,7 @@ dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bl
 | `compare` | cabeza estándar + dos cajas pasteles con flecha, valor adentro y epígrafe debajo | `a`/`b` = `{ v, h, tone, cap }` |
 | `parts` | cabeza estándar + piezas con etiqueta `P-01`, nombre manuscrito y descripción | `parts` = `[{ tag, tone, name, desc }]`, `img` opcional |
 | `bars` | cabeza estándar + barras horizontales con rótulo y valor, párrafo y nota manuscrita | `bars` = `[{ lbl, val, w, tone }]`, `after`, `note` |
+| `ficha` | ficha de respuesta con renglones de texto y el campo `FUENTE` en blanco, con un pie manuscrito. Alternativa a `compare` en la portada cuando no hay dos magnitudes que comparar | `ficha` = `{ lbl, lines, foot }` |
 | `cta` | titular · regla · bajada · pasos numerados · firma grande | `headline`, `lede`, `steps`, `source` |
 
 `tone`: `rosa` · `celeste` · `amarillo` · `gris`.
