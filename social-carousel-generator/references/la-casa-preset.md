@@ -161,8 +161,8 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
 - Background: black editorial field per the canonical palette above.
 - Typography: per the typography roles above — large off-white sans headlines, mono labels, serif italic support.
 - Typography floor at `1080px` width: `40px` for every readable word, including card text, source lines, caveats, methodological notes, footer brand text, and swipe text. Never shrink copy below the floor to make it fit. Two exceptions, both from `SKILL.md`: the numeric page counter and decorative single-character marks at `24px`, and the reference layer inside a chart or diagram (axis titles, scale marks, position labels, legends) at `24px`, in a container marked `chart` or `diagram`.
-- First content slide: center the primary hook block horizontally and center-align the title text. A left-aligned cover headline is only allowed as a Documented Layout Exception (see SKILL.md) — decided by the user and recorded in both `slide-data.js` and `manifest.json`.
-- Cover hook follows the two-part structure defined in SKILL.md (Hooks), and the cover is built on a fixed contrast — **two fonts and two colours, both centered**:
+- First content slide: center the primary hook block horizontally and center-align the title text. A left-aligned cover headline is only allowed as a Documented Layout Exception (see *Documented Layout Exceptions* in `SKILL.md`) — decided by the user and recorded in both `slide-data.js` and `manifest.json`.
+- Cover hook follows the two-part structure defined in `references/redaccion.md` (Hooks), and the cover is built on a fixed contrast — **two fonts and two colours, both centered**:
   - Setup line: Archivo Black in `#F6F2E9`, ALL CAPS, the largest type on the canvas.
   - Twist line: **Georgia italic** in the cover's dominant accent (ochre, dusty pink, or sage — the published set uses all three), in sentence case. Italic caps lose the contrast against the headline, which is the whole point of the second line.
   - One accent per cover. The kicker takes that same accent.
@@ -233,7 +233,7 @@ G:\Unidades compartidas\Aurelio\Carruseles\
 **Copiá la carpeta de entrega adentro una vez que el usuario aprobó** — el carrusel y la pista —
 y no antes: la unidad es compartida, así que lo que entra ahí lo ve todo el equipo. Que la QA dé
 limpia no es aprobación. Nunca se renderiza directo a Drive, y nunca se pisa una carpeta que ya
-exista con ese nombre: preguntá. Los motivos, en *Copying it to Drive* de `SKILL.md`.
+exista con ese nombre: preguntá. Los motivos, en *Copying it to Drive* de `references/entrega.md`.
 
 Ahí conviven las entregas sin publicar, con el nombre del tema pelado, y las ya publicadas, que
 `post-for-me` renombra a `YYYY-MM-DD-<tema>_POST` con la fecha real de publicación. El log de

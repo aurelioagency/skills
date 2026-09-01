@@ -9,26 +9,56 @@ Turn source material into a readable social carousel package for TikTok or Insta
 
 Default to the static HTML screenshot workflow because it gives reliable text, layout, and export control. Use generated images, diagrams, charts, cards, and editorial visual systems as supporting imagery, but render final text in HTML/CSS.
 
+## Los cuatro controles
+
+Todo lo que sigue cuelga de estos cuatro. Cuando una placa sale mal, el defecto es de
+uno de ellos, y el archivo donde vive el arreglo esta en la ultima columna.
+
+| | Que exige | Donde |
+|---|---|---|
+| **Redaccion** | Entender el tema y recontarlo en lenguaje comun antes de disenar. Despues, cada placa expresa una idea completa y entendible por si sola. | `references/redaccion.md` |
+| **Fidelidad** | Todo dato, ejemplo, comparacion o grafico sale de la fuente. Sin numeros no hay barras. Sin material no se rellena. | `references/fidelidad.md` |
+| **Creatividad con limites** | El template es un sistema visual, no un guion. La composicion y el recurso varian segun la idea, sin perder familia visual ni repetir por inercia. | `references/composicion.md` |
+| **Proporcion y consistencia** | Grilla compartida, arranques fijos por rol, espaciado reglado. Y una QA que mira la serie, no solo la placa. | `references/proporcion.md` |
+
+**La regla de precedencia, que es la que se rompe mas seguido:**
+
+> El objetivo decide el contenido. El contenido decide la estructura y la cantidad de
+> placas. La estructura decide que recurso visual pide cada placa. El estilo decide solo
+> como se dibuja ese recurso. **El estilo nunca decide cuantas placas hay, ni que dice
+> una placa, ni que recurso aparece.**
+
+De ahi salen las cuatro consecuencias que hay que tener a mano:
+
+- El template define **unicamente** sistema visual: tipografias, paleta, jerarquias,
+  grilla, margenes, ritmo, ilustracion y tratamiento de datos.
+- La cantidad de placas la deciden el objetivo y el contenido, y la confirma el usuario.
+  Una vez confirmada no se recorta por cuenta propia.
+- Graficos, tablas y recursos visuales son **opcionales** y responden a datos reales del
+  tema. Nunca se copian por estar presentes en una referencia.
+- Cada placa tiene una funcion narrativa propia. No se recorta ni se estira el contenido
+  para imitar la cantidad de placas de un ejemplo.
+
 ## Core Workflow
 
-1. Resolve the preset, language, and CTA mode. Size is fixed and never asked (see Format, length and density).
-   Completion criterion: the active preset, language, footer behavior, and CTA behavior are explicit, and the preset carries no unfilled placeholder in any section this carousel will use.
-2. Understand the source, then extract it into shareable angles.
-   Completion criterion: **todo el material viene de la fuente que pasó el usuario y de ninguna otra** (ver *La fuente que te pasan es la única fuente*); source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content, and the `Lectura` — the source re-told in ordinary language (see *Understanding the topic before writing it*) — is written before any hook or slide copy.
-3. Elegir el arquetipo narrativo, recomendar el split, presentar dos ganchos por carrusel, y pedir confirmacion.
-   Completion criterion: el arbol de `references/content-archetypes.md` se corrio sobre la `Lectura`, y el usuario confirmo, redujo o cambio el arquetipo, la cantidad de carruseles y el gancho de cada uno, antes de que se escriba un solo slide.
-4. Draft the slides and get the copy approved.
-   Completion criterion: **cada titular está trazado a su frase de la `Lectura` en la tabla de `carousel-brief.md`, tiene verbo conjugado, y los titulares leídos solos y seguidos cuentan el carrusel** (ver *Cómo se escribe una placa*); each carousel has as many content slides as its material supports and no more than 9, each slide has one job, each slide has its component declared (see *Copy Approval Gate*), each slide uses the density budget below rather than hugging its floor, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
-5. Build the editable HTML package and render PNGs.
-   Completion criterion: the delivery folder (`<tema-en-kebab-case>`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
-6. Run visual QA. **Abrí cada PNG a tamaño real, uno por uno.**
-   Completion criterion: **cada placa se abrió a `1080x1440` y se miró** (ver *Mirar las placas, no el reporte*); every red issue is fixed in source and re-rendered, including clipped text, typography-floor violations, overlap, unsafe top/bottom placement, broken flow spacing, and stale CTA assets.
-7. Build the vertical Short and get the music approved.
-   Completion criterion: `short.mp4` is built from the approved slides, the user has seen the chosen track — already cut to the video's length — and approved it, and the track is recorded in `manifest.json` and appended to the brand's music log. Nothing is published before that yes.
-8. Humanize captions and deliver.
-   Completion criterion: the delivery folder holds the ordered PNGs, `caption.txt` **and `short.mp4`** and nothing else, it has been copied into the brand's Drive folder if the preset names one — and only after the user approved, never on the strength of a clean audit alone, the editable source is in place, and a short validation summary is given, **y el mensaje termina con el bloque `bash` que abre la carpeta** (ver *El atajo para abrir la carpeta*).
+1. **Preset, idioma y CTA.** El tamano no se pregunta nunca (ver *Format, length and density*).
+   Listo cuando: el preset activo, el idioma, el footer y el CTA estan explicitos, y el preset no tiene ningun placeholder sin llenar en las secciones que este carrusel usa.
+2. **Entender la fuente y escribir la `Lectura`.**
+   Listo cuando: todo el material sale de la fuente que paso el usuario y de ninguna otra (`references/fidelidad.md`), y la `Lectura` — la fuente recontada en lenguaje comun, en prosa — esta escrita **antes** de cualquier gancho o copy (`references/redaccion.md`).
+3. **Arquetipo, split, ganchos y template — todo junto, y se confirma.**
+   Listo cuando: se corrio el arbol de `references/content-archetypes.md` sobre la `Lectura`, y el usuario confirmo, redujo o cambio el arquetipo, la cantidad de carruseles, **la cantidad de placas**, el gancho y el template, antes de que se escriba un solo slide.
+4. **Escribir la copy y elegir el recurso de cada placa. Gate de aprobacion.**
+   Listo cuando: cada titular esta trazado a su frase de la `Lectura` en `srcFrase`, tiene verbo conjugado y entra en dos renglones; cada cifra tiene su `srcDato`; cada placa declara su recurso, corrido desde el contenido con `references/composicion.md`; cada placa declara su asset y las alternativas viables del banco; y el usuario aprobo todo eso **como texto plano**, antes de que exista un solo HTML.
+5. **Armar el paquete y renderizar.**
+   Listo cuando: la carpeta de entrega (`<tema-en-kebab-case>`) tiene los PNG ordenados a `1080x1440`, con el CTA solo si el preset lo pide.
+6. **QA. Los dos scripts, y despues las placas.**
+   Listo cuando: `render-and-audit.mjs` y `audit-serie.mjs` corrieron y sus red issues estan arreglados **en el fuente**; y cada PNG se abrio a tamano real y se miro, uno por uno (`references/entrega.md`). El contact sheet va al chat en cada tanda.
+7. **Short vertical y musica aprobada.**
+   Listo cuando: `short.mp4` sale de las placas aprobadas, el usuario vio el track ya cortado al largo del video y lo aprobo, y quedo registrado en `manifest.json` y en el log de musica de la marca.
+8. **Caption y entrega.**
+   Listo cuando: la carpeta tiene los PNG, `caption.txt` y `short.mp4` y nada mas; se copio al Drive de la marca si el preset lo nombra y **solo despues del si del usuario**; el fuente editable quedo en su lugar; y el mensaje termina con el bloque `bash` que abre la carpeta.
 
-When the user brings an existing carousel to convert to another platform or size, steps 2-4 are replaced by Adaptation Mode below: verbatim transcription and faithful rebuild, never re-angling or rewriting approved content.
+Cuando el usuario trae un carrusel ya publicado para llevarlo a otro tamano, los pasos 2 a 4 los reemplaza *Adaptation Mode*: transcripcion textual y reconstruccion fiel, nunca re-angular ni reescribir contenido ya aprobado.
 
 ## Preset Resolution
 
@@ -150,110 +180,14 @@ Starting a package copies the named template's folder, not a hardcoded path — 
 
 ## Source Intake
 
-### La fuente que te pasan es la única fuente
+La fuente que te pasan es la unica fuente: el carrusel sale de ahi y de ningun otro lado.
+No se busca en internet, no se traen papers, no se agregan estudios, cifras ni ejemplos
+que el agente encontro por su cuenta. Si el material no da para una placa, esa placa no
+existe.
 
-**El carrusel sale de ahí y de ningún otro lado.** No se busca en internet, no se traen papers,
-no se agregan estudios, cifras ni ejemplos que el agente encontró por su cuenta. Si el material
-no da para una placa, esa placa no existe. Si falta algo, se dice y decide el usuario — nunca se
-mete primero y se avisa después.
-
-**Investigar para contestarle al usuario no es investigar para el carrusel.** Es el mismo
-error, y es el que pasó el 2026-08-31: el usuario preguntó si un artículo de 2024 seguía
-vigente, se buscaron papers posteriores para contestarle esa pregunta, y después esos papers
-entraron al carrusel como si fueran parte de la fuente. Dos placas de nueve no tenían nada que
-ver con lo que el usuario había pasado. Los datos eran correctos y verificados; eso no los hace
-parte de la fuente.
-
-Cuando la investigación previa y el carrusel conviven en una misma conversación, **la
-investigación queda en el chat**. Para pasar al carrusel tiene que haber un pedido explícito
-del usuario, y en `carousel-brief.md` va anotada como fuente externa con esa autorización.
-
-Si el usuario pide *"el carrusel de este artículo, con lo que hoy sigue siendo cierto"*, eso es
-un **filtro sobre el artículo**: se sacan las partes que envejecieron, no se agregan las que
-faltan.
-
-### Qué se acepta
-
-Accept PDFs, URLs, pasted text, screenshots, image references, and YouTube video links.
-
-Screenshots of third-party social posts or carousels are valid sources of information: use their topic and facts, but always write new original copy. Never reuse their exact wording. Verbatim reuse is reserved for the user's own carousels in Adaptation Mode.
-
-**Si la captura cita un estudio, se le pregunta al usuario si quiere que lo busque.** No se sale
-a buscarlo solo. Hasta el 2026-08-31 esta línea decía lo contrario (*"prefer chasing the
-original sources when cited"*) y era la única instrucción del archivo sobre ir a buscar afuera
-— apuntando justo al error de arriba.
-
-For URLs:
-
-1. Try browser capture or extraction first.
-2. If extraction fails or the URL is blocked, ask for pasted text, screenshots, PDF export, or browser-captured images.
-3. Never invent missing source content.
-
-For YouTube video links:
-
-1. Open the video page in the browser and extract the transcript (open the description, expand "Show transcript" / "Mostrar transcripción", and read it), plus title and description.
-2. Treat the transcript as the source text. Capture key claims, numbers, and examples with enough context to quote them accurately.
-3. If the video has no transcript and no captions, ask the user for an alternative: key screenshots with on-screen text, their own notes, or a summary. Never reconstruct video content from memory or general knowledge of the topic or channel.
-
-**An image the user passes in — pasted into the chat or given as a path — is a slide asset, not just reference material.** Take it at face value: save it into the package's `assets/` and put it on a slide. A chart, a screenshot, a diagram, a photo, a logo, whatever it is. If it arrived in the chat and is not on disk, look for it (the downloads folder is the usual place) or ask for the path — never substitute something else for it. How it gets framed is in *Images the user supplies* under Visual Rules.
-
-For source material, extract one to three shareable angles. Do not summarize the whole document unless the user asks. The carousel should feel useful, not like a dictionary entry.
-
-## Understanding the topic before writing it
-
-A carousel is one person explaining something to someone who was not there. That only
-works if the explaining happened first — in full sentences, out of the source's own words,
-before a single line was cut to fit a slide.
-
-So before drafting anything, hook included, re-tell the source in `carousel-brief.md` under
-`Lectura`: what it says and what it changes, in ordinary language, addressed to someone who
-has not read it and does not work in the field. No character budget, no headline voice, no
-slide constraints. Prose.
-
-This is a comprehension step, not a writing step. What it produces is not copy — it is the
-proof that the topic was understood well enough to be told at all. Every line downstream is
-cut out of it.
-
-### When the reading is finished
-
-- **Si la fuente ya lo explica bien, se dice igual que la fuente.** No hay ningún premio por
-  decirlo distinto. Un artículo bueno ya hizo el trabajo de bajarlo a tierra: repetirlo con
-  otras palabras sólo lo empeora. Lo único que no se puede es repetir una frase que no
-  entendés — si no la podés explicar sin la frase, todavía no está entendida.
-
-  Esta línea decía lo contrario hasta el 2026-08-31 ("no te apoyes en el vocabulario de la
-  fuente"). Empujaba a inventar una manera nueva de decir algo que ya estaba bien dicho, y eso
-  es exactamente el defecto que produce placas rebuscadas. Se dio vuelta por decisión del
-  usuario.
-- **Someone outside the subject follows it end to end.** Not a lighter version with the
-  point removed: the same point, in words that do not require the field.
-- **It says what changes, not what the source contains.** A re-telling that ends where the
-  source ends is a summary, and a summary leaves the reader with nothing.
-- **It survives being said out loud.** If it cannot be spoken to a person without
-  stumbling, it is not ready to be cut into a hook.
-
-### What it is not
-
-**It has no fixed shape, and nothing here prescribes one.** The reading of a study, of a
-product launch, of an argument, of a process and of a personal account look nothing alike.
-A source with no figures in it has a reading like any other. Whatever shape it takes comes
-from the source, never from how the last one went — the only constant is the demand:
-understood first, then told.
-
-Nor is it a simplification pass. La parte difícil del tema se queda adentro: lo que se busca
-es decirla con palabras comunes, no sacarla. Y **si la fuente ya la dijo con palabras comunes,
-se copia esa manera de decirla** — no se busca otra.
-
-### The test
-
-**If the clearest sentence about this carousel ends up in conversation instead of on a
-slide, that is the defect** — not a lucky turn of phrase. It means the topic got understood
-after the drafting instead of before it. When you catch it, stop, write the reading, and
-cut the copy again from it.
-
-Run the same test at delivery: read the finished carousel and the conversation side by
-side. Anything said in the conversation that is clearer than what is on the slides belongs
-on a slide.
+Que se acepta, como se trata cada formato, que hacer con una captura que cita un estudio,
+y los dos campos de trazabilidad (`srcFrase` y `srcDato`) estan en
+**`references/fidelidad.md`**. Se lee antes del paso 2.
 
 ## Adaptation Mode (re-platform)
 
@@ -292,7 +226,7 @@ Include the two hook options per carousel (see Hooks), **el arquetipo narrativo*
 
 **El template se pregunta acá, y no se asume.** Es lo único del preset que no se deduce del material (ver *Template Resolution*): una marca con varios templates vigentes no tiene un "default seguro", y arrancar a componer con el equivocado tira el trabajo entero, porque cada template tiene sus propias piezas y su propia paleta. Si el pedido ya nombra uno, se usa ese y no se pregunta. Si no, va la lista de los que tiene la marca, con una línea de qué es cada uno.
 
-Anunciar el template como supuesto —"sigo con el 01 salvo que digas otro"— **no cuenta como preguntarlo**: deja la decisión hecha y le pasa al usuario el costo de deshacerla. Pasó el 2026-08-29 y terminó en un carrusel rehecho entero en otro template.
+Anunciar el template como supuesto —"sigo con el 01 salvo que digas otro"— **no cuenta como preguntarlo**: deja la decisión hecha y le pasa al usuario el costo de deshacerla, y arrancar con el template equivocado termina en un carrusel rehecho entero.
 
 El arquetipo sale de correr el arbol de decision de `references/content-archetypes.md` sobre la `Lectura`. Su salida son tres lineas, y van antes del split:
 
@@ -312,7 +246,7 @@ These three are skill-wide quality rules, not brand taste. They apply to every c
 
 ### One size
 
-Every carousel is **`1080x1440` (3:4)**. There is no platform question, no TikTok variant and no `1080x1920` carousel: the same export is published to Instagram and to TikTok, which displays it fine. The delivery folder carries no size or platform suffix at all — see *The delivery folder* below.
+Every carousel is **`1080x1440` (3:4)**. There is no platform question, no TikTok variant and no `1080x1920` carousel: the same export is published to Instagram and to TikTok, which displays it fine. The delivery folder carries no size or platform suffix at all — see *La carpeta de entrega* en `references/entrega.md`.
 
 The only `1080x1920` left in the pipeline is `short.mp4`, the vertical video, which centers the slides on the taller canvas. That is not a carousel.
 
@@ -349,83 +283,65 @@ This budget is what governs while writing. The pixel bands in `scripts/render-an
 
 ## Estilo visual y secuencia de contenido
 
-Dos cosas distintas que conviene no mezclar:
+Dos cosas distintas que conviene no mezclar, porque mezclarlas es el defecto que produce
+carruseles copiados:
 
-| | Qué es | Dónde vive |
+| | Que es | Donde vive |
 |---|---|---|
-| **El estilo visual** | Paleta, tipografía, marcas y las reglas que hacen que todo lo que salga de ahí se vea de la misma familia | `assets/templates/<NN-nombre>/estilo.md` |
-| **La secuencia de contenido** | Qué dice cada slide y en qué orden | `references/content-archetypes.md` (árbol de decisión) y *Slide Grammar*, acá abajo |
+| **El estilo visual** | Paleta, tipografia, grilla, marcas y las reglas que hacen que todo lo que salga de ahi se vea de la misma familia | `assets/templates/<NN>/tokens.css`, `grid.css` y `estilo.md` |
+| **El recurso de cada placa** | Que muestra esa placa: comparacion, esquema, dato destacado, secuencia, cita, checklist, metafora | `references/composicion.md` |
+| **La secuencia de contenido** | Que dice cada placa y en que orden | `references/content-archetypes.md` y *Slide Grammar*, aca abajo |
 
 **Un template es un estilo, no un molde para rellenar.** No trae un juego de placas
-prearmadas donde sólo se cambian las palabras: trae las reglas que dan consistencia
-—qué familias tipográficas, con qué roles; qué significa cada acento; qué grosor de
-línea; qué margen— y un conjunto de piezas ya construidas que sirven de punto de
-partida. Cada carrusel compone sus propias placas dentro de ese estilo, y si le falta
-una pieza se agrega al template.
+prearmadas donde solo se cambian las palabras: trae las reglas que dan consistencia
+—que familias tipograficas, con que roles; que significa cada acento; que grosor de
+linea; que margen; donde arranca cada rol— y un conjunto de piezas ya construidas.
+Cada carrusel compone sus propias placas dentro de ese estilo, y si le falta una pieza
+se agrega al template.
 
-`estilo.md` tiene esas dos partes, en ese orden: primero las reglas, que son lo que
-manda; después las piezas construidas, con los campos que lee cada una.
+### El carrusel de ejemplo esta afuera, y no dice cuantas placas entran
 
-### El carrusel de ejemplo no dice cuántas placas entran
+El carrusel con el que se armo cada estilo vive en `ejemplos/<NN-nombre>/`, **fuera de la
+ruta de copia**. El paquete arranca con `slides: []`: no hay nada que rellenar.
 
-**El `slide-data.js` que trae un template es un carrusel, no la capacidad del template.**
-Que su ejemplo tenga cuatro placas no significa que el estilo soporte cuatro: una pieza se
-repite tantas veces como haga falta, igual que el `02` usa `rows` dos veces y `steps` dos
-veces.
-
-**Y una pieza que pide datos que la fuente no tiene no cuesta una placa: se dibuja otra
-cosa.** Si la placa de barras necesita cifras medidas y el artículo no publica ninguna, no
-se dibujan barras — la placa sigue existiendo con el contenido que sí hay, en el componente
-que corresponda.
-
-Pasó el 2026-08-31: se armaron los tres estilos de ingeniería con **tres** placas en vez de
-las nueve aprobadas, razonando que "el template soporta cuatro y una necesita cifras". Las
-dos mitades del razonamiento eran falsas y el resultado fue entregar un tercio del carrusel.
+Que ese ejemplo tenga cuatro placas no significa que el estilo soporte cuatro. Una pieza
+se repite tantas veces como haga falta. Y **una pieza que pide datos que la fuente no
+tiene no cuesta una placa: se dibuja otra cosa.** Si la placa de barras necesita cifras
+medidas y el articulo no publica ninguna, no se dibujan barras — la placa sigue
+existiendo con el contenido que si hay, en el recurso que corresponda.
 
 ### El alcance aprobado no se reduce por tu cuenta
 
-La cantidad de placas se confirma con el usuario en *Series Decision*, junto al arquetipo y
-al gancho. **Después de eso no se recorta**, ni por una limitación del template, ni por
+La cantidad de placas se confirma con el usuario en *Series Decision*, junto al arquetipo
+y al gancho. **Despues de eso no se recorta**, ni por una limitacion del template, ni por
 falta de material, ni por nada.
 
 Si aparece un motivo real para acortar, se dice y decide el usuario. Entregar menos de lo
-aprobado y explicar el motivo al final **no es avisar**: es hacerlo y después contarlo.
+aprobado y explicar el motivo al final no es avisar: es hacerlo y despues contarlo.
 
 ### El test de la pieza forzada
 
-**Si tuviste que inventar el contenido de un campo para que la pieza no quede vacía, la
+**Si tuviste que inventar el contenido de un campo para que la pieza no quede vacia, la
 pieza no va en esa placa.**
 
-Es el test que agarra el defecto en el momento en que se comete, y es mecánico: mirá lo que
-estás por escribir en cada campo y preguntate si sale del material o si lo estás fabricando
-para llenar el hueco.
+Es mecanico: mira lo que estas por escribir en cada campo y preguntate si sale del
+material o si lo estas fabricando para llenar el hueco. El caso testigo son dos cajas
+hechas para comparar dos magnitudes, llenadas con **SI** y **NO** en un carrusel que no
+comparaba ninguna: dos cuadrados gigantes con una palabra adentro que no comparan nada.
+El campo pedia una cifra, no habia cifra, y se le metio una palabra.
 
-Ejemplo real del 2026-08-31. Las portadas del `03` y del `05` traen dos cajas comparando dos
-magnitudes — en el carrusel de origen, dos precios. El carrusel nuevo no comparaba ninguna
-magnitud, así que las cajas se llenaron con **SÍ** y **NO**. Dos cuadrados gigantes con una
-palabra adentro que no comparan nada y no aportan nada. El campo pedía una cifra, no había
-cifra, y se le metió una palabra: ahí estaba la señal.
+**La pieza no queda prohibida.** Esas dos cajas son correctas cuando hay dos magnitudes
+que comparar. Lo que se juzga es si *esta* placa las pide, no si existen.
 
-**La pieza no queda prohibida.** Las dos cajas son correctas cuando hay dos magnitudes que
-comparar; ese mismo día se sacaron del carrusel de alucinaciones y siguen siendo la portada
-del carrusel de costos. Lo que se juzga es si *esta* placa las pide, no si existen.
-
-Y cuando la placa necesita algo que el estilo todavía no dibuja, **se agrega la pieza al
-template** — la entrada en `estilo.md`, el bloque en `render()`, sus clases en `styles.css`
-— con las reglas de trazo, tipografía y color de ese estilo. Eso es componer dentro del
-sistema visual. Rellenar los campos de la pieza que vino en el ejemplo no lo es, y produce
+Y cuando la placa necesita algo que el estilo todavia no dibuja, **se agrega la pieza al
+template** — la entrada en `ejemplos/<NN>/piezas.md`, el bloque en `render()`, sus clases
+en `styles.css` usando solo `tokens.css` y `grid.css`. Eso es componer dentro del sistema
+visual. Rellenar los campos de la pieza que vino en el ejemplo no lo es, y produce
 carruseles que salen todos iguales con las palabras cambiadas.
 
-**Lo que NO hay que hacer con las piezas construidas.** No son un catálogo de arquetipos
-y no llevan una doctrina de "cuándo conviene cada una". La mayoría son, literalmente,
-las placas del carrusel con el que se armó el template — un carrusel es evidencia de un
-carrusel. Escribirles un "cuándo usar / cuándo no" que la fuente nunca declaró es
-inventar reglas de marca, y ya pasó una vez (2026-08-25) y hubo que deshacerlo. Si
-alguna vez hace falta ese nivel, sale de mirar el set publicado, no de deducirlo.
-
-Qué pieza va en cada slide lo decide el material, y se propone en el gate de aprobación
-de copy como cualquier otra decisión de composición. Se registra en `carousel-brief.md`
-y en `manifest.json` (el `type` de cada slide).
+Que recurso va en cada placa lo decide el material, corriendo el arbol de
+`references/composicion.md`, y se propone en el gate de aprobacion de copy como cualquier
+otra decision. Se registra en `carousel-brief.md` y en `manifest.json`.
 
 ## Slide Grammar
 
@@ -450,61 +366,14 @@ There is deliberately **no minimum fill metric**. `measure-stage.mjs` reports sl
 
 ## Hooks
 
-The hook is the first slide's only job: stop the scroll. Write and approve hooks before drafting any other slide.
+El gancho es lo unico que hace la primera placa: frenar el scroll. Se escribe y se aprueba
+antes que cualquier otra placa, y va en el mismo mensaje que el split.
 
-### Structure
+El patron por default es **el tema + que es**: el setup nombra el tema tal cual, el remate
+dice en una linea que es. Hay que tener un motivo concreto para no usarlo.
 
-Every hook is two parts:
-
-1. Setup line: a strong, specific claim — the main headline.
-2. Twist line: the tension, break, or consequence. It must contrast with the headline in **both font and colour** — the active preset defines how (La Casa: serif italic in the carousel's dominant accent, sentence case). Never hardcode a colour.
-
-**Dos patrones. El primero es el default y hay que tener un motivo para no usarlo.**
-
-- **El tema + qué es** (el default). El setup es el nombre del tema, tal cual; el remate dice en una línea qué es. `ALUCINACIONES EXTRÍNSECAS EN LLM` / *No contradice tu texto. Contradice al mundo.* Sale sin esfuerzo, nombra el tema —que es lo que la portada tiene que hacer— y no se puede malinterpretar.
-
-  La condición es una sola: **el remate dice qué es o qué hace, no lo adjetiva.** "El estándar para que un agente opere hardware" sirve; "El futuro de los laboratorios" no.
-
-- **Afirmación + remate.** El setup afirma algo, el remate lo rompe. Sólo cuando el lector ya tiene una creencia instalada sobre el tema y romperla es el contenido del carrusel. **Si tenés que buscarle la vuelta para que funcione, no es el caso: volvé al primero.**
-
-Poner el tema como título no es la salida fácil ni la opción sin trabajo. Es lo que hay que hacer salvo que haya un motivo concreto para otra cosa. Decidido por el usuario el 2026-08-31, después de cuatro ganchos rebuscados seguidos sobre un tema que se resolvía escribiendo su nombre.
-
-El contraste de fuente y color entre las dos líneas no cambia en ninguno de los dos patrones, y la portada sigue llevando su gráfico.
-
-Both lines are centered, and both must be short enough to hold the typography floor without shrinking. If a line only works small, rewrite it shorter.
-
-The cover also carries one simple graphic. A cover that is only type reads as a title card, not as a hook — see the preset for the default pattern.
-
-### Approval gate
-
-Draft up to two hook options (A and B) per carousel. Present them together with the split confirmation, each with a one-line rationale, and recommend one. Never draft the remaining slides or render anything before the user picks, edits, or replaces a hook.
-
-**Si el patrón por default —el tema + qué es— resuelve el gancho, va uno solo y se dice por qué.** Fabricar una segunda opción para llenar el molde produce justo lo que hay que evitar: una línea rebuscada puesta al lado de una que ya estaba bien, que además hace dudar de la buena.
-
-```text
-Carousel 1 - [title]
-Hook A:
-[setup line]
-[twist line]
-Hook B:
-[setup line]
-[twist line]
-Recommendation: [which and why, one line]
-```
-
-### Quality criteria
-
-- **A hook that catches and is not understood has failed.** Stopping the scroll is half the job; the other half is that the reader knows what was just claimed. Cut both lines out of the `Lectura` (see *Understanding the topic before writing it*). A hook assembled straight from the source — its figures, its findings, its vocabulary — comes out accurate and meaning nothing.
-- **La portada nombra el tema.** El que lee sólo la primera placa tiene que poder decir de qué es el carrusel.
-
-  Ejemplo real: una portada que dice que un modelo alineó un láser hace pensar que el carrusel es sobre láseres. Era sobre MHS, y MHS no aparecía por ningún lado. El lector no siente que le falta información: entiende mal y sigue.
-
-  El kicker alcanza para nombrarlo.
-- **No lo fuerces.** El default es la frase simple: qué es, qué pasó, qué cambia. Un gancho ingenioso es la excepción, y sólo entra si sale solo. Si estás buscando la vuelta para que algo entre, ya se rompió: lo que sale es una línea que suena bien y no se entiende. Vale igual para el resto de las placas.
-- **The hook cannot depend on anything the reader does not already have.** Whatever it needs in order to be read the way it was meant, either the hook says it or the kicker does. A hook leaning on context the reader is missing does not read as incomplete — it reads as a different claim, and nothing signals that it was misread.
-- Specific beats generic. A concrete number creates authority ("80.508 personas", "25,6%"). But a figure the reader cannot attach a unit to is not specific, it is noise.
-- No clickbait the slides cannot back with the source. If the hook needs a claim the source does not support, change the hook, never the claim.
-- No hook ships without a verified source behind it. If the source is pending, the carousel waits.
+Los dos patrones, la estructura de las dos lineas, los criterios de calidad y el formato
+del gate estan en **`references/redaccion.md`**.
 
 ## Copy Approval Gate
 
@@ -519,17 +388,40 @@ Primero los titulares solos. Si estos no cuentan el carrusel, no hace falta leer
 ...
 ```
 
-No es un resumen de cortesía: es el chequeo 3 de *Cómo se escribe una placa*, hecho donde el
+No es un resumen de cortesía: es el chequeo 3 de *Los tres chequeos* de `references/redaccion.md`, hecho donde el
 usuario también lo ve. Enterrados adentro de nueve bloques completos, los titulares flojos no
-se notan — el 2026-08-31 se aprobaron nueve placas donde seis titulares no decían nada, y el
-problema apareció recién cuando se los leyó de corrido. Cuesta diez segundos y es el único
+se notan: nueve placas donde seis titulares no dicen nada se aprueban sin que nadie lo vea,
+y el problema aparece recién cuando se los lee de corrido. Cuesta diez segundos y es el único
 momento en que el defecto se ve entero.
 
-Después de esa lista, y en el mismo mensaje, la copy completa de cada placa como texto plano
-— kicker, titular, bajada, rótulos y remate — numerada por slide. Wait for approval, edits, or
-replacements.
+Después de esa lista, y en el mismo mensaje, va cada placa completa como texto plano —
+kicker, titular, bajada, rótulos y remate—, **con su recurso visual y su trazabilidad en la
+misma entrada**. Ese es el formato, y las cuatro líneas son obligatorias:
 
-**Every slide's component is declared here too, and this is the one that gets skipped.** For each slide, say what occupies it besides the text: a chart, a set of cards, a list, a table, a diagram, a mascot row — or nothing, deliberately. **Las piezas ya construidas del template activo están en `assets/templates/<NN-nombre>/estilo.md`**, con los campos que lee cada una; son el punto de partida, y si el slide necesita otra cosa se arma dentro de las reglas del estilo. A slide whose component is never decided does not end up without one; it ends up with whatever the layout falls back to when nothing was chosen, and a carousel where that happens on most slides renders as a run of near-identical, half-empty frames. The symptom is unmistakable in the contact sheet and invisible in the copy, which is why it has to be settled here, in text, before anything is built.
+```text
+Placa 4 — COSTO POR TAREA
+  Titular: Llevamos años premiando al que adivina.
+  Bajada:  <...>
+  srcFrase: "los benchmarks llevan años premiando al modelo que arriesga una respuesta"
+  Recurso: comparación cuantitativa · por qué: la fuente publica los dos números y el punto
+           de la placa es la brecha · srcDato: "43,6% frente a 34,4%" (párrafo 7)
+```
+
+- **`srcFrase` es la frase de la `Lectura` de la que se recortó el titular.** Vacía significa
+  que el titular es invención y se reescribe antes de seguir. No es documentación: es el único
+  chequeo que agarra el cambio de registro sin que nadie tenga que juzgar si la línea está
+  buena.
+- **`srcDato` es la cita textual de la fuente** para cada cifra que se muestra o se dibuja. Sin
+  ella no hay barra, altura, área, proporción ni escala.
+- **El recurso se elige corriendo `references/composicion.md`**, desde el contenido — no
+  eligiendo una pieza del template y buscándole con qué llenar los campos. Los dos campos van a
+  `slide-data.js` con esos nombres, y `audit-serie.mjs` bloquea la entrega si falta `srcFrase`.
+
+**El recurso de cada placa es lo que más se saltea.** Una placa cuyo recurso nunca se decidió no
+termina sin recurso: termina con lo que el layout deje por defecto, y un carrusel donde eso pasa
+en la mayoría de las placas se renderiza como una tira de marcos casi iguales y medio vacíos. El
+síntoma es inconfundible en el contact sheet e invisible en la copy, y por eso se resuelve acá,
+en texto, antes de que se construya nada.
 
 Deciding the component is also what makes the density budget reachable: prose spends the character budget without filling the canvas, while the same facts inside a component fill it and read faster. If a slide has nothing to put in a component, that is worth knowing at this gate — it usually means the slide is carrying less than it should.
 
@@ -545,159 +437,54 @@ List every viable alternative the bank actually has for that slide's job — if 
 
 Rendering before this gate wastes work and hides copy and asset problems inside images, where they are slower to spot and slower to fix.
 
-The copy shown here has already passed the filter in *Grounding Technical Terms* below: every term the argument depends on is readable on its own slide, and nothing is explained that did not need to be.
+The copy shown here has already passed the filter in *Grounding Technical Terms* (`references/redaccion.md`): every term the argument depends on is readable on its own slide, and nothing is explained that did not need to be.
 
-## Copy Accuracy
+## Visual Rules
 
-- Proper nouns are copied verbatim from the source: product names, company names, feature names, people. Never assemble a name by combining a company with a topic (`Anthropic` + `Cowork` is not the product's name; the source says `Claude Cowork`). When a kicker names a product, use the product's real name.
-- Every slide must stand alone. When a slide compresses a quote or a long passage, read the result cold: if it no longer states a complete, understandable idea, rewrite it. Compression that loses the logical connector is a defect, not a style choice.
-- Numbers, percentages, dates, and limits are transcribed exactly. If a figure needs rounding for the layout, say so on the slide.
-- **Never turn a descriptor into a name.** The source's *"the ultra capability setting in ChatGPT"* is not a product called "modo ultra". Translating a description into a proper noun invents a product.
-- **A third-party name earns its place only if the slide can say who it is without spending a line.** "The audience" is **this brand's** audience, the one written in its preset — never a general public. Measuring against a general public strips names the actual reader places instantly, and those names buy credibility for free: on 2026-08-25 `OpenClaw` and `Mythos` were cut from a La Casa carousel on exactly that mistake, and its reader ranked the omission alongside not mentioning `OpenAI`. A company that reader cannot place — sitting in the kicker or the verdict, the most visible line — costs attention and returns nothing. Keep the fact, drop the name, and record it in `carousel-brief.md` with its quote. Apply it to every such name in the carousel or to none: one named startup among three anonymous ones reads as an oversight.
-- **A description the reader cannot resolve is worse than a proper noun.** "El modelo grande" names nothing; `GPT-5.5` does. When a model, tool or product needs its size or role understood, attach it to the name in the same sentence, or in the graphic's label.
-- **Every fact on a slide comes from the same passage.** An example borrowed from another section, dropped onto a slide about a specific company, reads as that company's example. That is misattribution even when both facts are true.
-- **Name the action the source describes.** *"After enabling retained reasoning"* is enabling, not implementing: a checklist item that says "guardá lo que el modelo pensó" invents manual work that does not exist.
-- **Body copy is sentences, not notes.** Two fragments without a subject ("Encontrar datos difíciles en la web. La misma prueba, tres meses después.") read as an outline. If a line has no verb and no subject, it is not finished.
+Que recurso visual va en cada placa: **`references/composicion.md`**.
+Como se compone dentro de la grilla, el piso tipografico, el area segura, el balance y los
+huecos: **`references/proporcion.md`**.
+Como se vuelca un dato en un grafico: **`references/data-encoding.md`**.
+Que imagen puede elegir el agente: **`references/asset-bank.md`**.
 
-## Cómo se escribe una placa
+Las tres que no se delegan, porque son las que mas caro salen:
 
-Del otro lado hay una persona leyendo. La placa se le está contando a alguien: si la lee y no
-entiende qué le dijiste, no importa que el dato sea correcto ni que entre en el presupuesto de
-caracteres.
+- **Una imagen que pasa el usuario se usa. Esa es toda la regla.** No se objeta, no se
+  ofrece reemplazarla, no se redibuja y no se recolorea. Va framed segun la tabla de
+  `proporcion.md` y listo.
+- **Un grafico que publica la fuente se muestra, no se redibuja.**
+- **No inventes convenciones.** Un color que significa "antes", una forma que significa
+  "peor", un nombre para algo que la fuente deja sin nombre: es invencion aunque sea
+  consistente en las nueve placas. Si hace falta una, se dice y decide el usuario.
 
-**Un término que no conoce es una palabra que puede ir a buscar. Una oración mal armada no se
-puede ir a buscar.** Esa es la línea que separa lo que se deja como está de lo que hay que
-arreglar:
+## Documented Layout Exceptions
 
-- `Mythos`, `paper`, `OpenClaw`, `top of funnel` → vocabulario del tema. Se dejan sin explicar
-  (*Grounding Technical Terms*, abajo, cubre los pocos casos en que sí conviene aterrizar uno).
-  El lector que quiera saber, lo busca, y explicárselo arruina la placa para el que ya lo sabe.
-- `hacer ciencia`, `investigar`, `el trabajo de un científico` → no filtran a nadie y no hay
-  nada que ir a buscar. Son etiquetas puestas justo donde la frase tenía que decir qué pasó.
+El layout aprobado de una marca a veces contradice una regla de esta skill. Se permite,
+pero solo como decision explicita y registrada: nunca como deriva silenciosa y nunca para
+callar el audit.
 
-El defecto no se ve como texto difícil. Se ve como una frase hecha toda de palabras comunes que
-igual no dice nada. *"Una IA tuvo seis días para hacer ciencia"* no tiene un solo término
-técnico y no se entiende: te deja esperando la segunda mitad, que nunca llega. Comparala con
-*"los agentes de IA aún no son lo suficientemente creativos como para llevar a cabo una
-investigación abierta"*, que tiene adentro un término discutible y se entiende perfecto, porque
-el resto de la oración está armado.
+Una excepcion es valida cuando se cumplen las tres:
 
-### El titular se recorta de la Lectura. No se escribe de nuevo.
+1. La decidio el usuario, en esta conversacion o en una registrada.
+2. Su id esta en `slide-data.js` bajo `layoutExceptions` (o `seriesExceptions`), con un
+   comentario que nombra la decision.
+3. `manifest.json` lleva el mismo id con el motivo.
 
-Esta es la regla, y las tres de abajo existen sólo para que se cumpla.
+Ids validos, por placa: `cover-hook-centered`, `vertical-balance`, `counter-centered`,
+`optical-padding`, `density-budget`, `slide-grammar`, `typography-floor`, `safe-area`,
+`internal-gap`. De serie: `arranque-por-rol`, `cuerpo-por-rol`, `variedad-de-recurso`,
+`recurso-consecutivo`, `icono-repetido`, `acento-consecutivo`, `fila-despoblada`,
+`repeticion-deliberada`.
 
-La `Lectura` ya dice el tema en frases enteras que se entienden. **Cada titular sale de una de
-esas frases, sacándole palabras.** Nunca es una formulación nueva escrita al llegar al slide.
+`typography-floor` y `safe-area` son las dos mas caras, porque bajan a nota **todos** los
+avisos de su tipo — incluido el error real que se cuele entre ellos. Existen para un
+template cuyo diseno se sienta deliberadamente por debajo del piso o fuera del margen, y
+vienen del template, ya listadas. Nunca se agregan para que una placa terca pase, y cuando
+un template las trae hay que leer las notas del reporte en vez de confiar en el exit code.
 
-El defecto no es escribir mal: es **cambiar de registro**. Al pasar de la prosa al slide aparece
-una voz de titular —frases nominales, telegráficas, que *suenan* a portada— y la oración que ya
-funcionaba se tira. Pasó el 2026-08-31 en seis de ocho placas de un mismo carrusel, con la
-`Lectura` escrita y clara diez minutos antes:
-
-| La Lectura decía | Al slide llegó | Recortado como corresponde |
-|---|---|---|
-| *si le enseñás cosas que no sabía, aprende a inventar* | `Enseñarle algo nuevo.` | **Si le enseñás algo que no sabía, aprende a inventar.** |
-| *los modelos que razonan paso a paso inventan más, no menos* | `Razonar más.` | **Los que razonan inventan más, no menos.** |
-| *el modelo no tiene manera de saber que no sabe* | `No sabe que no sabe.` | **No tiene manera de saber que no sabe.** |
-| *llevamos años premiando al que adivina* | `9 de cada 10 castigan el «no sé».` | **Llevamos años premiando al que adivina.** |
-
-La columna del medio pasa el presupuesto de caracteres, pasa el piso tipográfico y no dice nada.
-
-### Los tres chequeos, antes de mostrar una sola placa
-
-Se hacen sobre el texto escrito, y los tres se ven — no se cumplen declarando que se cumplieron.
-
-1. **Trazá cada titular a su frase.** En `carousel-brief.md` va la tabla `Titular` ·
-   `Frase de la Lectura`, con la frase textual. **Una celda derecha vacía significa que ese
-   titular es invención**, y se reescribe antes de seguir. Es el único chequeo que agarra el
-   cambio de registro sin que nadie tenga que juzgar si la línea está buena.
-2. **Verbo conjugado, o no es un titular.** `Enseñarle algo nuevo.` · `Razonar más.` ·
-   `Tres que funcionan.` · `No todas se chequean igual.` — frases nominales o sin sujeto
-   recuperable. Un titular sin verbo conjugado le pasa el trabajo a la bajada, y la bajada se
-   lee después, si se lee.
-3. **Leé los titulares solos, seguidos, sin las bajadas.** Tienen que contar el carrusel
-   entero **y engancharse uno con otro**: cada titular sigue del anterior, como las oraciones
-   de un párrafo. Si son ocho frases buenas que no van a ningún lado, falta el hilo y la
-   redacción no está terminada — no importa cuán buena sea cada placa por separado. Es la
-   lectura que hace la persona que pasa rápido, y es la que nunca se hacía.
-
-Y sigue valiendo lo de siempre, que es de dónde sale la frase larga: **escribí la línea varias
-veces y elegí**, y **decila en voz alta**. Un párrafo explicando por qué la línea es buena no
-muestra nada; las versiones descartadas sí.
-
-Cómo se ve un recorte bien hecho. Frase larga y verdadera:
-
-> Le dieron a Claude Opus 4.8 una pregunta de investigación de un paper que todavía no estaba
-> publicado, seis días y 3.000 dólares, y el paper que escribió lo rechazaron los autores del
-> original.
-
-Recortada sin perder nada:
-
-> A Claude Opus 4.8 le dieron seis días para contestar una pregunta que nadie había publicado.
-> El paper que escribió lo rechazaron.
-
-Fijate que el recorte sigue siendo dos oraciones con sujeto y verbo. No se convirtió en
-`Seis días para hacer ciencia.`
-
-### No lo conviertas en más reglas
-
-Cuando una placa sale mal, el arreglo es **reescribirla**, no producir un diagnóstico nuevo ni
-agregar otra regla acá. Esta sección alcanza: hay un lector, la frase tiene que decirle algo, y
-las tres prácticas de arriba son el trabajo.
-
-Cinco rondas de corrección con cinco explicaciones distintas y ninguna redacción mejor es el
-modo exacto en que esto falla, y ya pasó (2026-08-25, carrusel `ia-que-se-mejora-sola`: cuatro
-ganchos rechazados seguidos, cada uno acompañado de una teoría nueva sobre por qué el anterior
-había fallado). Devolver análisis en vez de una línea mejor es el mismo defecto que las placas
-vagas, un nivel más arriba.
-
-## Grounding Technical Terms
-
-The goal is that most readers follow the carousel end to end without stopping at a word they do not know. That is not the same as explaining everything: a carousel that defines every term reads like a glossary and loses the argument.
-
-Apply this filter **term by term**, not to the carousel as a whole:
-
-- **The slide's argument holds even if the reader does not know the word → do not explain it.** It is background: the thing being talked about, not the thing being explained. On a carousel about prompting, `modelo`, `LLM` and `prompt` are background. Same for a term that only appears in passing — if `api key` shows up in one line of a carousel about something else, it is not this carousel's job to explain it.
-- **The slide's argument depends on the word → ground it in the same slide, the first time it appears.** `MÁS CAPAS, MÁS SESGO` says nothing to someone who does not know what a `capa` is: there the term is the axis of the slide.
-- **The word is one item in a list of options and the point is "these alternatives exist" → rename it by what it does, or leave it.** `Codificaciones posicionales` became `Atar cada palabra a sus vecinas más cercanas`. Nobody needed the technical name to understand that four levers exist.
-
-### Decilo de la manera más simple, aunque sea una definición
-
-**Si la manera más clara de aterrizar un término es decir qué es, decí qué es.** Sin vueltas.
-`Una capa es cada pasada del modelo sobre el texto` se entiende, y eso es lo único que importa.
-
-Lo que hay que cuidar es el largo, no el formato: una definición larga se come la línea y suena
-a manual. Cuando la misma idea entra en la oración que ya estaba, mejor, porque ahorra lugar:
-
-| Definición | Metida en la oración que ya estaba |
-|---|---|
-| *Una capa es cada pasada del modelo sobre el texto.* | *Relee el texto capa por capa, y cada pasada hereda lo que la anterior priorizó.* |
-| *Le dicen "perdido en el medio".* | *Se pierde justo cuando queda en el medio.* |
-
-Las dos columnas están bien. La derecha es más corta, no más correcta.
-
-**Nunca busques una manera ingeniosa de decirlo para no tener que definirlo.** Ahí es donde
-salen las frases rebuscadas que suenan bien y no se entienden. Entre una definición aburrida y
-un giro elegante, va la definición.
-
-**El término conserva su nombre real** — la máscara causal se sigue llamando máscara causal.
-Lo que cambia es que la frase de al lado la deja clara.
-
-Esta sección decía *"cambiá las palabras, no agregues una definición"* hasta el 2026-08-31.
-Empujaba justo al defecto contrario. Dada vuelta por decisión del usuario.
-
-**A graphic's label is the cheapest place to ground a term**, because it has to name the object anyway. `Todo lo que le pegás, de principio a fin` over the cover's context bar grounds `contexto` without spending a single sentence of body copy.
-
-### When it does not fit
-
-Cutting the concept is the **last** option, not the first. Before dropping anything, try, in this order:
-
-1. Reword it shorter — most of the time the sentence was carrying dead weight anyway.
-2. Move the grounding to the graphic's label, where it costs no body copy.
-3. Split the idea across two slides. There is room: the ceiling is 10 exported images.
-4. Move the detail to the caption, which has no density budget.
-
-Only if none of those work does the concept come out of the carousel, and even then say so to the user instead of dropping it silently — it may be worth its own carousel.
+El detalle de cada chequeo esta en `references/proporcion.md`. **Nunca agregues una
+excepcion por criterio propio para que un render pase.** Si una regla estorba y el usuario
+no se pronuncio, se pregunta.
 
 ## Fixing a Reported Defect
 
@@ -710,182 +497,6 @@ When the user reports a specific problem, fix that problem and nothing else. Thi
 
 After any change to a fixed asset or a shared layout, prove the rest did not move: `scripts/compare-blocks.mjs` against the previous version, and report the table.
 
-## Visual Rules
-
-Use supporting imagery on every carousel:
-
-- **Images the user supplies go on the slide as they are** — see *Images the user supplies* below. It is listed first because it outranks everything else in this section.
-- **Images the agent picks come only from the brand's asset bank** — read `references/asset-bank.md`. The bank is a folder of finished PNGs (local or a git repo) whose **fully descriptive filenames are the selection mechanism**: the agent reads the names, matches them against each slide's job, opens only the shortlisted candidate to confirm, and proposes the pairing at the copy gate. Nothing fits → the slide goes without an asset, and the user is told what would have served. Never pull images from outside the bank or generate them on the fly.
-- Diagrams, cards, charts, flow boards, visual metaphors, and icons built in HTML/CSS when they communicate better than an image — or always, for a brand with no bank.
-- **Static icons may be sourced live from an open icon set** (Lucide, Tabler) instead of drawn in CSS, when a slide's job calls for one — see *Available rendering tools* in `references/html-rendering.md`. This is not the asset bank: nothing gets saved to a brand folder, the icon is fetched and inlined per slide, on the spot.
-- **A real-data line, curve, or scaled chart may use `d3-shape`/`d3-scale`** instead of hand-picked bezier points — see the same section. Reach for it only when there are real numbers to plot; a purely illustrative shape (no data) stays hand-drawn SVG/CSS.
-- Text overlays rendered in HTML/CSS, not baked into images.
-
-### Images the user supplies
-
-**An image the user hands over is used. That is the whole rule.** It arrives pasted into the
-chat or as a path on disk; either way it goes on the slide, framed per the table below. The
-asset-bank restriction in `references/asset-bank.md` governs images the *agent* chooses — it
-has never governed what the user brings, and it does not gate this.
-
-Save it into the package's `assets/` with a descriptive kebab-case filename and reference it
-from `slide-data.js`, the same as any other asset.
-
-**It does not go into the brand's asset bank, and it is not offered to.** The bank holds
-reusable brand imagery — things that will serve some future carousel nobody has thought of
-yet. A chart from one article, a screenshot of one dashboard, a photo of one thing belongs to
-the carousel it arrived for and nowhere else. It lives in that package's `assets/` and that is
-its whole life. Putting one-off material in the bank fills it with files no later carousel can
-use, and every one of them still has to be read past when picking an asset.
-
-**Do not object to it, and do not offer to replace it.**
-
-- **Palette is not a reason.** A supplied image keeps its own colours — vendor blues, stock
-  greys, a screenshot's chrome. It will not match the brand's accents and that is fine. Do
-  not raise it, do not "harmonise" it, do not recolour it.
-- **Neither is branding inside the image.** A published chart carrying its author's logo or
-  wordmark is used with the logo. The preset's ban on logos and watermarks covers chrome the
-  *agent* would add to a slide, not the contents of an image the user chose to include.
-- **Never re-draw a chart the user supplied.** If they hand over the real chart, the real
-  chart is what ships.
-
-#### Framing
-
-| What arrived | How it goes on the slide |
-|---|---|
-| PNG or SVG with a transparent background | Straight onto the field, no container. It has no edge, so there is nothing to frame. |
-| Anything opaque — JPG, PNG with a background, screenshot, photo, a published chart | **Framed**: inside a container, inside the safe area. |
-
-That is the whole decision, and it is already made. **Do not offer variants of it.** Rendering
-the same image three ways and asking which one they like is not thoroughness — it re-opens a
-question that was settled and makes the person choose again. Frame it and show the slide.
-
-The frame is a real container, not just rounded corners: a dark panel with a thin border and a
-little padding, with the image inside it. Opaque artwork usually carries a light ground of its
-own, and without a container that pale rectangle sits on the field looking like it was dropped
-there. The container is what makes it read as a deliberate element.
-
-**Never bleed an opaque image to the canvas edge.** It breaks the side clearance every other
-element respects, and the extra width buys nothing: text baked into an image is unreadable at
-this canvas size either way (see below), so the pixels gained do not buy legibility — only a
-broken margin.
-
-Beyond that, the ordinary rules hold: inside the safe area, never under or over text, and it
-counts toward the slide's density like any other block.
-
-**The component already exists**: `userImg(s)` in `assets/templates/01-editorial-oscuro/index.html`, with `.ext-plain` and `.ext-card` in that template's stylesheet. Set `img` on the slide, plus `imgTransparent: true` when the file has no background, and it picks the right treatment. Do not rebuild it per carousel.
-
-#### The one thing still worth saying
-
-Text baked into an image cannot be measured or resized, so the typography floor cannot reach
-it and `render-and-audit.mjs` cannot see it — it reads the DOM, and an image is pixels.
-
-Say it **once**, as a fact, with the measured size, and move on:
-
-> *The axis labels in that chart land at ~10px on the final PNG; the floor for text the
-> reader must read is 40px. On a 1080px canvas no scaling fixes it — the image would have to
-> render about 4000px wide.*
-
-Then stop. **It is not a red issue, it does not block delivery, and it is not a reason to
-re-draw anything.**
-
-#### The slide's text carries the point; the image shows it
-
-This is what makes the unreadable labels stop mattering, and it is a rule, not a judgement
-call. **Whatever the reader needs — the figure, who wins, what changed — goes in the slide's
-own copy, at full size.** The image then shows the shape of it: which bar is tallest, how far
-apart they are, what the trend does. The reader never has to decode the axis, because the
-answer was already given to them in type they can read.
-
-So a headline like `CODE QUALITY: 43.6% AGAINST 34.4%` over that chart works: the number is
-already delivered, and the chart backs it up at a glance. A headline like `LOOK AT THE
-DIFFERENCE` over the same chart does not, because it sends the reader into the image to find
-out what the difference is — and that is where the 10px labels live.
-
-Applied at the copy gate, this is one question per image: *if the reader could not see this
-picture at all, does the slide still say what it needs to say?* Yes → the image is doing its
-job. No → move the missing piece into the headline or the body. Never into the image.
-
-**Do not invent visual conventions.** The preset is the whole vocabulary: palette, type,
-components, CTA. Anything you introduce that is not in it — a colour that means "before", a
-shape that means "worse", a name for something the source leaves unnamed — is invention,
-even when it is consistent across the carousel and even when it looks right. It reads as
-brand while it lasts, and it does not survive to the next carousel, so the set drifts.
-
-If a carousel needs a convention the preset does not have, say so and ask. If the user
-wants it, it goes into the preset and becomes a rule; otherwise the carousel works with
-what the preset already provides. Never establish one silently — a convention applied
-across four slides looks decided, and nobody will think to question it later.
-
-**A chart the source publishes is shown, not redrawn.** If the source ships the figure as an image and it matters to the carousel, that image is what goes on the slide. Rebuilding it in HTML is for when there is no published chart, or when the user asks for one. Redrawing a chart the user handed over is never right.
-
-**Before drawing a chart or diagram yourself, read `references/data-encoding.md`.** It covers what
-the automated QA cannot check: one metric per chart, one colour per series, labels naming
-what varies rather than what stays constant, no bar height where the source publishes no
-figure, a shared baseline, and the rule that a number belongs to exactly one slide. A
-miscoded chart renders cleanly and passes every check while saying something the source
-does not.
-
-Hard QA rules:
-
-- Export every slide at `1080x1440`.
-- Enforce a typography floor. On any `1080px`-wide export, every user-facing word must have a computed font size of at least `40px`. Body copy, labels, captions, sources, caveats, methodological notes, footer brand text, and swipe text are not exempt. Scale these floors proportionally when the export width is not `1080px`. Two narrow exceptions, and only these:
-  - **Page counters** made entirely of numbers, and purely decorative single-character marks: `24px`.
-  - **Text inside a chart or diagram** — axis titles, scale marks, position labels, legends, reference notes: `24px`. Mark the container with the class `chart` or `diagram`; the audit reads that, nothing else. This exists because a chart label at the same size as a subheading competes with it, collides with the next column, and forces the real damage: **deleting words to dodge the floor**. Shortening published copy to satisfy a size rule is worse than the rule. The exception covers the reference layer of a graphic, never the slide's own copy — headline, body, verdict, checklist, footer and CTA stay at `40px`.
-- **Every content slide carries a kicker and a headline.** That is the brand grammar, and it is checked. The headline may be an actual headline or a dominant figure (a stat at `90px+` plays the same role), but a slide built as `kicker + paragraph` is a red issue: without the headline level the slide reads empty, and the easy fix is to inflate the body, which is not the fix. Exception id: `slide-grammar`.
-- Never shrink text below the typography floor to make content fit. Shorten the copy, split the content across slides, reflow the layout, or remove low-value detail instead. **The kicker is reading text and has no exemption**, and neither does any other element the reader is meant to read: the only exemptions are the two listed above. Do not add a per-slide size override field (`ksize` and friends) to the slide data — a field that exists to make one long label fit becomes the way the floor gets broken everywhere else.
-- Treat any user-facing word below the typography floor as a red issue that blocks delivery.
-- Always center the primary hook block on the first content slide. Its bounding box must be horizontally centered in the canvas and its text must use centered alignment. A left-aligned or edge-anchored cover hook is a red issue **unless the user decides otherwise** — see Documented Layout Exceptions below.
-- Balance the vertical composition. The gap above the first content pixel and the gap below the last must be within `4%` of the canvas height of each other. This is the check that catches dead space nobody meant to leave: when you remove an element, revisit every layout constant that existed to accommodate it. A stage offset that once cleared a badge keeps pushing content down long after the badge is gone. Fixed CTA assets are exempt.
-- **Dos piezas que cumplen el mismo rol llevan el mismo cuerpo.** Si una placa cierra con
-  un remate y otra con una línea de cierre, las dos son *la línea de cierre de una placa*:
-  mismo tamaño, mismo peso, mismo interletrado. Vale igual para rótulos, bajadas y
-  etiquetas de tarjeta entre piezas distintas.
-
-  **`render-and-audit.mjs` no lo ve.** Chequea el piso tipográfico, no el sistema: dos
-  piezas a 44px y 52px pasan las dos. Se mira en el contact sheet, recorriendo la misma
-  fila lógica en las nueve placas — y se mira siempre, porque el síntoma es que el
-  carrusel "se lee desprolijo" sin que ninguna placa esté mal por separado. Pasó el
-  2026-08-29: el remate de `cards` a 52px contra el cierre de `list` a 44px sobrevivió
-  nueve renders limpios.
-
-  El arreglo va **en el template**, no en el paquete: si dos piezas del template están
-  desalineadas, todo carrusel que use ese template las hereda.
-- **Reparti el espacio sobrante; no lo amontones en un lugar.** El chequeo de balance vertical de arriba solo compara los extremos — el hueco sobre el primer elemento contra el hueco bajo el ultimo — asi que un slide con todo pegado arriba y abajo y un agujero en el medio le pasa con diferencia cero. El chequeo de **hueco interno** mide el vacio vertical mas largo ENTRE bloques de contenido: avisa a los `260px` y bloquea a los `280px` sobre un lienzo de 1440 (escala con el alto). Los cortes salen de inspeccion visual sobre el set de ejemplos el 2026-08-26: `252px` se leyo como aire deliberado y `290px` como agujero. Exception id: `internal-gap`.
-
-  **El arreglo es mas contenido o menos separacion, nunca agrandar lo que ya esta** — vale la misma regla de *Slide Grammar*: un slide que se ve vacio le falta contenido, no tamanio. En la practica hay dos caminos: sumarle al slide un dato de la fuente que todavia no esta, o repartir el sobrante entre varios huecos en vez de dejarlo en uno. Un layout que empuja su pieza al fondo con `margin-top: auto` concentra todo el sobrante arriba de esa pieza; agregando `margin-bottom: auto` se parte en dos. Ojo con las margenes automaticas adyacentes: **suman**, asi que dos piezas seguidas con `auto` de los dos lados dejan el hueco del medio al doble.
-
-- Center chrome optically, not just geometrically. Symmetric CSS padding does not produce symmetric-looking boxes: a font's line box reserves dead space above the cap height that does not exist below the baseline, and emoji carry their own side bearing. Verify pills, chips, buttons, and counters by measuring the actual background margin around the ink in the rendered PNG, then compensate with asymmetric padding or a `translateY` on the text. The correction belongs to that element's font size and box height — never copy a working `translateY` onto a different pill. `scripts/render-and-audit.mjs` measures this automatically; in the footer it is a red issue.
-- Size chrome for its role. Page counters, decorative marks, and similar non-reading elements sit at `24-26px` on a `1080px`-wide export. The `40px` floor is a minimum for text the reader is meant to read, not a target for every glyph on the canvas — and a chart's reference layer is not reading text either (see the floor exceptions above).
-- Keep all readable content inside a central safe area with `5%` clearance from the left and right edges and `10%` clearance from the top and bottom edges. At `1080x1440` this means `x=54..1026` and `y=144..1296`. Approved fixed CTA assets are exempt.
-- Expand the composition deliberately within that safe area. Increase type, reflow visual elements, and use the available width and height before accepting large empty regions around small content. An unnecessarily small composition surrounded by avoidable empty space is a red issue.
-- **A small character/mascot asset is never the only thing in its row.** A brand mascot rendered at ~20-30% of canvas height (the size that keeps it from competing with the type) leaves most of that row empty if nothing sits beside it — this has shipped as a real defect more than once. Whenever a slide places a mascot, put a real component in the same row next to it (a verdict/punch box, a stat, a short card) so the row has content across its width, not a character floating alone against a blank field. Stacking a component above or below the mascot does not fix this: the empty space the reader notices is *beside* the character, at the same height, and only something occupying that height fixes it. Check this specifically before calling a render done — it will not show up as a red issue in `render-and-audit.mjs` (ink-coverage and block-count checks are per-slide totals, not per-row), so it has to be caught by eye on the contact sheet.
-- **The cover's graphic has to depict the hook, not the carousel's table of contents.** Its job is to sell the claim in the headline/twist, so it draws that claim (a before/after, a comparison, the mechanism) — never a preview of slide topics or categories that haven't been introduced yet (e.g. don't put the four use-cases from a later slide on a cover about a speed claim: they have nothing to do with the hook and read as a non-sequitur before the reader knows what they mean). If the default fan-out pattern doesn't fit what the hook is actually claiming, use a different simple graphic (a two-card comparison, a before/after) instead of forcing unrelated content into the fan-out's destination slots.
-- Center the main information inside the canvas.
-- Keep every text element fully visible.
-- Keep meaningful text out of app overlay zones by enforcing the `5%` side and `10%` top/bottom safe area. Do not use a weaker overlay clearance for headlines, labels, body text, CTA copy, logos, or footers.
-- Avoid overlapping cards, labels, diagrams, icons, and text.
-- Avoid orphan arrows, accidental wraps, and empty gaps in process diagrams.
-- Keep footer and CTA controls inside safe zones.
-
-## Documented Layout Exceptions
-
-A brand's approved layout sometimes contradicts a rule here. That is allowed, but only as an explicit, recorded decision — never as a silent drift and never to quiet the audit.
-
-An exception is valid when all three are true:
-
-1. The user decided it, in this conversation or a prior recorded one.
-2. Its id is listed in `slide-data.js` under `layoutExceptions`, with a comment naming the decision and its date.
-3. `manifest.json` carries the same id under `layout_exceptions`, with the reason.
-
-Valid ids: `cover-hook-centered`, `vertical-balance`, `counter-centered`, `optical-padding`, `density-budget`, `slide-grammar`, `typography-floor`, `safe-area`. A listed exception drops that check from red issue to informational note, so the rest of the QA keeps blocking normally.
-
-`typography-floor` and `safe-area` are the two most expensive to grant, because they drop **every** warning of their kind to a note — including the genuine mistake that slips in among them. They exist for a template whose design deliberately sits below the floor or outside the clearance (`02-editorial-oscuro-v2` uses both, plus `cover-hook-centered`), and they come from the template, already listed in its `slide-data.js`. Never add either to make one stubborn slide pass, and when a template carries them, read the report's notes instead of trusting a clean exit code.
-
-`density-budget` is the one a new brand is most likely to need: the density bands are La Casa's, measured on its published set. A brand with a different visual weight either measures its own bands or takes this exception — see the brand preset template.
-
-Never add an exception on your own judgment to make a render pass. If a rule is in the way and the user has not ruled on it, ask.
-
 ## Deriving Brand Rules From a Published Set
 
 When extracting or updating a brand preset from already-published carousels:
@@ -895,408 +506,19 @@ When extracting or updating a brand preset from already-published carousels:
 3. State measured values (hex, px, ratios) rather than adjectives, and record how they were measured.
 4. Where identification is uncertain (a font from PNGs only), write the confidence and the runner-up, so a later correction is cheap.
 
-## Rendering
+## Render, QA y entrega
 
-Use a project package with editable source and PNG exports.
+Como se arma el paquete, con que archivos y en que orden: **`references/html-rendering.md`**.
+La carpeta de entrega, el Short vertical, la musica, la caption, la revision visual placa
+por placa y el bloque que abre la carpeta: **`references/entrega.md`**.
 
-Recommended package structure:
+Los dos scripts de QA corren siempre, y ninguno alcanza solo:
 
-```text
-social-carousels/<slug>/
-  index.html
-  styles.css
-  slide-data.js
-  carousel-brief.md
-  manifest.json
-  assets/
-  claude-piloto-automatico/                  # la carpeta de entrega
-```
-
-### The delivery folder
-
-One folder per carousel, named so the user can drag it straight into Drive without renaming anything:
-
-```text
-<tema-en-kebab-case>
-```
-
-**The topic and nothing else** — no date prefix, no platform or size suffix. It is the same string as the package slug, so the delivery folder repeats its parent's name; that is expected, not a mistake.
-
-Both extras were dropped on 2026-08-14 because they cost more than they gave:
-
-- **No date.** The delivery date is already in `manifest.json`, and the one date worth having on the folder is the *publication* date, which `post-for-me` stamps on when it actually publishes (`<folder>` → `YYYY-MM-DD-<folder>_POST`). With a date already in the name that rename produced two of them.
-- **No `-ig`.** There is only one carousel size and it goes to Instagram and TikTok alike, so the suffix labelled nothing and read as a restriction that does not exist.
-
-Inside it, **only three kinds of file**: the ordered PNGs (`01.png`, `02.png`, …), `caption.txt` and `short.mp4`. Nothing else ever goes in there — no report, no contact sheet, no working copy. Render straight into it with `--out <carpeta>`.
-
-### Copying it to Drive
-
-If the preset names a Drive folder, copy the delivery folder into it so the user does not have to
-drag anything.
-
-**Only after the user's approval — never before.** Drive is shared: whatever lands there is
-visible to everyone with access and syncs to their machines, so it is publication-adjacent, not
-a working directory. The copy happens when *all* of these are true:
-
-- the visual QA passes with no red issues;
-- the user has approved the track (the gate in *Music* above);
-- there is no correction pending — no open question, no "cambiá esto" waiting on an answer.
-
-Passing the automated audit is **not** approval. A carousel can be clean at the pixel level and
-still get five copy changes in the next message; that happened on the carousel this rule came
-from. If in doubt about whether the last round closed, ask before copying.
-
-**Copy once, at the end; never render into Drive.** It is tempting to point `--out` straight at
-the synced folder and skip the copy, and it is wrong: a carousel gets re-rendered on every QA
-round and every correction — eight times in one real session — so Drive would sync seventy-odd
-PNGs to end up holding nine, and the user would watch half-finished versions appear and vanish
-in a shared folder. Render locally, deliver locally, copy once when it is approved.
-
-Check first whether a folder of that name is already there and **never overwrite one** — ask
-instead. If the carousel changes after it was copied, re-copy it and say so, rather than leaving
-Drive holding a version the user already asked you to change.
-
-`qa-report.json` and `contact-sheet.png` are working files: produced during the job, read during QA, and **deleted before delivery**. There is no `exports/` (it was a byte-for-byte duplicate) and no `post-descriptions.md` — the caption ships as `caption.txt` inside the delivery folder, and whatever is worth remembering about it goes in `carousel-brief.md`.
-
-Read `references/html-rendering.md` when implementing the static HTML screenshot workflow or visual QA.
-
-## The vertical Short (MP4)
-
-Every carousel also ships a `1080x1920` video built from the same approved slides, so the
-same work covers YouTube Shorts. Build it with `scripts/build-short.mjs` after the visual QA
-passes — never from unapproved slides.
-
-**A clean QA is not sign-off.** Build the video only once the user has said the images are
-finished. Any slide that changes afterwards invalidates the frames, and rebuilding fetches a
-different track, so the approval round starts over. It happened twice in one session.
-
-```bash
-node <skill-dir>/scripts/build-short.mjs --port 8765 --out <carpeta-de-entrega>/short.mp4
-```
-
-- **Frames are re-rendered with `?video=1`**, which drops the swipe prompt. In a Short there
-  is nothing to swipe, and the line reads as leftover carousel chrome. The PNGs the user
-  publishes as a carousel are not touched.
-- **Slide duration is shared out by how much text each slide carries**, mapped onto `3-8s`
-  against that carousel's own lightest and heaviest slide. The CTA gets `3s`. The music is
-  then cut to exactly that total — there is no fixed video length.
-- The slides sit centered on the taller canvas and the bands are filled with the brand's
-  field colour, not black, so the seam does not show.
-
-**The video does not promise legibility.** A slide carrying a methodological note cannot be
-read in 8 seconds. The Short invites the viewer to pause; it does not replace the carousel.
-Say that to the user rather than stretching the video until it is unwatchable — a carousel
-like the OpenAI one needs ~92s to actually be read, and that is not a Short any more.
-
-### Music
-
-`scripts/fetch-music.mjs` picks an instrumental background track from archive.org. No
-account, no API key, no browser.
-
-**The methodology is fixed — do not "improve" it into fetching more:** one page of results
-chosen at random, 20 rows, filter those 20, pick one at random among the survivors. The next
-run lands on a different page, so the pool rotates.
-
-- The query carries **genre terms only**. Never add `background music` on its own: it drags
-  in corporate, epic, Christmas, horror stock and 1950s department-store muzak, all of which
-  pass any decency filter and none of which sets a mood.
-- Title filters drop covers and compilations of other people's songs, type beats, YouTube
-  rips, vocals, stingers, explicit content, and wrong genres.
-- **No language, alphabet or country filters, and do not add any.** Lofi is not any
-  country's national music: if the search returns country-tagged material, the query is
-  wrong, not the language. Measured over 200 candidates with the genre query, rules for
-  Cyrillic/CJK/Thai/Arabic caught exactly zero. What did show up was foreign pop relabelled
-  as lofi, and the "version or compilation of another song" rule catches that in any language.
-- Tracks must run **1 to 5 minutes**. Below that there is nothing to choose from; above it
-  they stop being songs and become hour-long mixes.
-- The track is downloaded whole and its loudness profile measured end to end, then the
-  steadiest window of the video's length is cut, normalised to `-16 LUFS` with fades.
-
-### Cuando el buscador de archive.org se cae
-
-Pasa, y pasa entero: `advancedsearch.php` devuelve **HTTP 200 con
-`{"error":"[BACKEND_ERROR] ..."}`** mientras `/metadata` y las descargas siguen
-funcionando perfectamente. Probar si el dominio responde no sirve para detectarlo.
-
-El carrusel no se queda sin video por eso. La cadena, en orden:
-
-1. **Búsqueda normal.** Lo de arriba.
-2. **`--item <id>`**, que saltea el buscador y toma la pista de un item conocido —
-   misma criba de títulos, mismo rango de duración, misma ventana medida. El
-   identificador sale de `manifest.json > short.music.source` de cualquier carrusel
-   anterior, o de la URL del item. Lo aceptan `fetch-music.mjs` y `build-short.mjs`:
-
-   ```bash
-   node <skill-dir>/scripts/build-short.mjs --port 8765 --item jamendo-464313 --out <carpeta>/short.mp4
-   ```
-3. **Reusar un recorte local** (`<paquete>/assets/music.mp3` de otro carrusel), solo si
-   dura al menos lo que el video nuevo. Es el último recurso porque el recorte ya está
-   normalizado y con fades: no se le puede elegir otra ventana.
-
-**Repetir música entre carruseles no es problema** — decisión de La Casa, 2026-08-16.
-No hace falta buscar una pista nueva a toda costa; una ya aprobada sirve igual.
-
-**Show the chosen track to the user and wait for a yes before publishing.** This gate is not
-optional and cannot be automated away: the filters read titles, so a track can be named well
-and sound wrong, and nothing in the pipeline can listen to it.
-
-### Logging the approved track
-
-Once the user says yes, the track gets recorded in **two** places. Neither is optional, and a
-carousel is not delivered until both are done.
-
-1. **`manifest.json > short.music`**, with `title`, `artist`, `source` (the archive.org page) and
-   `window` (how many seconds from where). This is the copy that survives: a package whose
-   manifest has no music block cannot have its track recovered later. It has already happened —
-   `openai-jornada-reemplazo` is logged as `SIN REGISTRO` forever because of exactly this.
-2. **The brand's music log**, if the preset names one. Its URL and column list live in the
-   preset, because which log a brand keeps is a brand decision.
-
-**A native Google Sheet cannot be written to, a synced `.xlsx` can.** The Drive connector reads
-spreadsheets but only edits file metadata — title and parent folder, never cells. And the local
-Drive mount does not help by itself: a native Sheet lands on disk as a `.gsheet` stub of about
-190 bytes that merely points at the real file on Google's servers, so writing over it destroys
-the shortcut and changes nothing.
-
-What does work, and is what La Casa uses: keep the log as a real `.xlsx` inside the synced Drive
-folder. It is an ordinary file on disk, so the agent opens it, appends the row and saves, and
-Drive syncs it up. Google Sheets opens and edits `.xlsx` the same as a native sheet. Check the
-preset for the brand's log path and column order.
-
-Two things not to do:
-
-- Do **not** rebuild a native sheet with `create_file` to fake a write. A new file is a new ID,
-  which breaks every existing link to the log and throws away its formatting and history.
-- Do **not** write to a synced file the user may have open in the browser without saying so
-  first — Drive resolves that into a conflicted copy. Mention it, or ask.
-
-If a brand insists on a native Sheet, the row is emitted **ready to paste** instead:
-tab-separated, in the log's exact column order, handed over with the sheet link and a plain
-statement that pasting it is the user's step.
-
-### Gotchas that already cost a debugging round
-
-- `ebur128` only emits its per-frame profile with `-loglevel verbose`. Without it there are
-  zero samples and the window picker silently falls back to a fixed offset — which looks like
-  a working measurement until you notice every track lands on the same percentage.
-- ffmpeg writes that profile to **stderr and exits 0**, so `execFileSync` inside a `try/catch`
-  never sees it. Use `spawnSync` and read `.stderr` unconditionally.
-- The profile line reads `t: 1.0  TARGET:-23 LUFS  M:-14.2`. A pattern expecting `t:` directly
-  followed by `M:` never matches.
-- Do **not** compute slide durations as "reading speed, then clamp to a maximum": every
-  content slide overshoots the cap, so they all come out at exactly the maximum and the
-  share-out shares nothing.
-- ffmpeg cannot seek cleanly into an arbitrary point of a long MP3 — it reads forward.
-  Measured on an 8-hour, 1 GB file: jumping to minute 10 took 19s, jumping to hour 7 never
-  finished. The duration ceiling is what keeps the download cheap.
-- archive.org returns a file's `length` sometimes as `MM:SS` and sometimes as seconds.
-
-## Captions
-
-Always generate post descriptions with hashtags.
-
-**Never more than 5 hashtags, on any platform.** This is a platform limit, not brand taste, so it holds for every preset and outranks a caption template that asks for more: if the template's fixed tags plus its dynamic ones add up past 5, the template is wrong and gets fixed before the caption is written — never trimmed silently at the last moment. How the 5 are split between fixed and per-topic tags is a brand decision and lives in the preset.
-
-If the active preset defines a caption template, follow it exactly: fixed blocks (greetings, service lines, links, fixed hashtags) are reproduced verbatim and never adapted to the topic; only the blocks the template marks as written change per carousel. Deliver the caption as one plain-text block, clearly labelled and ready to paste with no further editing.
-
-Check the template is actually filled before writing a single caption. A preset whose caption section still carries `<…>` placeholders, or that has no caption section at all, is not usable: ask the user for the greeting, the fixed lines, the links and the fixed hashtags, write them into the preset, and only then assemble the caption. Shipping a caption invented around a placeholder is worse than asking.
-
-**Ship the caption as a file, not only as chat text.** Write it to `caption.txt` inside the delivery folder — plain text, UTF-8, no markdown, no headings, no code fences, nothing but the caption itself, ready to select-all and paste. It sits next to the PNGs because that is the folder the user opens to publish. Paste it in the chat too.
-
-Use `$humanizer` on each slide passage and each post description before final export. If `$humanizer` is not installed, ask to install it globally with the skill installer when available. If installation is not available, continue only after applying the built-in humanizer pass:
-
-- Remove generic AI phrasing.
-- Remove inflated claims.
-- Cut filler.
-- Keep one meaning once.
-- Use natural rhythm for the selected language.
-- Avoid dictionary-style explanations.
-
-## Deliverable
-
-Return the delivery folder and a short validation summary.
-
-What the user actually publishes — everything else is working material:
-
-- Ordered PNG exports in `<tema-en-kebab-case>/`.
-- `caption.txt` in that same folder — the caption alone, plain text, ready to paste.
-- `short.mp4` in that same folder — the vertical video, same caption, for YouTube Shorts.
-
-What the package keeps so the carousel can be fixed later without rebuilding it:
-
-- Editable HTML/CSS/data source plus `assets/`.
-- `manifest.json` (size, CTA variant, layout exceptions).
-- `carousel-brief.md` — short: source, angles, decisions, caveats. Not a report.
-
-Nothing else ships. `qa-report.json` and `contact-sheet.png` are deleted after the QA pass; there is no `exports/` and no `post-descriptions.md`.
-
-And in the chat: la caption pegada entera, la nota de QA visual (tamano, legibilidad, composicion centrada, comportamiento del CTA y cualquier salvedad que quede), y **el atajo para abrir la carpeta**.
-
-### Mirar las placas, no el reporte
-
-**Antes de decir una sola palabra sobre cómo quedó un carrusel, hay que abrir cada PNG a
-tamaño real y mirarlo.** Uno por uno, los nueve. No el contact sheet: los archivos.
-
-No es una recomendación. Es el paso que evita el peor error posible, que es afirmarle al
-usuario que una placa está bien sin haberla visto.
-
-**El contact sheet no sirve para esto.** A esa escala una palabra cortada se ve como una
-palabra. El 2026-08-31 se entregó una portada donde `ALUCINACIONES` salía como
-`ALUCINACIONI` —la palabra se iba del lienzo— y en el mismo mensaje se le escribió al
-usuario "sin texto cortado". El contact sheet estaba a la vista y no se notaba. El
-contact sheet es para el ritmo de la serie; la placa a tamaño real es para todo lo demás.
-
-**`QA automática OK` no quiere decir que esté bien.** Dice que ningún chequeo programático
-saltó, y los chequeos no leen. En ese mismo carrusel el reporte salió limpio con:
-
-- una palabra del titular cortada por el borde,
-- un número gigante `01` arriba de un kicker que decía `SEGUNDA CAUSA`,
-- titulares de cinco renglones ocupando un tercio de la placa,
-- un kicker (`LO QUE LE FALTA`) repitiendo la primera palabra de su propio titular
-  (`Le falta decir «no sé»`).
-
-Ninguna de las cuatro la puede ver un script.
-
-**Ojo particular con `typography-floor` y `safe-area`.** El template `02` las trae como
-excepción de fábrica, y bajan a nota **todos** los avisos de su tipo — incluido
-`"ALUCINACIONES" fuera del safe area`, que es exactamente como se reporta una palabra que
-se fue del lienzo. Con esas excepciones activas, **el texto cortado no bloquea nada**. Hay
-que leer las notas una por una y mirar la placa.
-
-### Las capas de fondo se miden, no se estiman
-
-Retículas, tramas, curvas, glows: todo lo que vive detrás del contenido **se declara en
-niveles de diferencia sobre el fondo**, medidos, no en una opacidad elegida a ojo.
-
-**El umbral está medido por la marca: a 14 niveles la línea es invisible en un teléfono.**
-Sale del `01-editorial-oscuro`, cuyas curvas estaban a 14 y hubo que subirlas; el valor que
-funcionó es **28**. Ese es el piso para una línea de 1px que tiene que leerse como textura.
-
-Se calcula mezclando el color de la línea con el del fondo según la opacidad, y comparando
-contra el fondo. Una opacidad no dice nada por sí sola: `0.07` sobre papel claro da 15
-niveles y `0.05` sobre campo oscuro da 8.
-
-Pasó el 2026-09-01: los tres estilos de ingeniería salieron con las retículas a 15, 8 y 13
-niveles — las tres en el umbral o debajo. El usuario las vio apagadas antes que cualquier
-chequeo, porque ninguno mide esto.
-
-**Cuando se corrige, el valor medido va al `estilo.md` del template**, con la cuenta, para
-que la próxima vez no vuelva a bajar.
-
-### Dos cosas que solo se ven mirando
-
-Ninguna la agarra un script, y las dos costaron una vuelta el 2026-08-31:
-
-- **Una palabra repetida entre el rótulo y el titular.** El kicker decía `LO QUE LE FALTA` y
-  el titular `Le falta decir «no sé»`. Se lee como un error de armado. Lo mismo vale para el
-  pie: `FUENTE: LILIAN WENG` debajo de una pieza cuyo campo `FUENTE` está en blanco a
-  propósito son dos "fuente" con sentidos distintos en la misma placa.
-- **Un ícono que no significa nada.** Una flecha hacia abajo al lado de *"le enseñaste algo
-  nuevo"* sugiere que algo baja, y no baja nada. El ícono dice lo mismo que la línea que
-  acompaña o no va.
-
-### No persigas el número del audit
-
-Cuando un chequeo marca un hueco o un desbalance, **el arreglo sale de mirar la placa, no
-de mover una constante hasta que el número baje.**
-
-El 2026-08-31, para tapar un aviso de hueco interno en la portada, se bajó el titular de
-`88px` a `268px` del borde. El aviso desapareció y el carrusel quedó peor: la portada era
-la única placa cuyo titular no arrancaba a la misma altura que las demás, y la serie perdió
-la línea superior. Lo vio el usuario, no el audit.
-
-Dos reglas que salen de ahí:
-
-- **Lo que alinea la serie no se toca para cerrar un hueco.** El titular arranca donde
-  arranca en todas las placas.
-- **Si el único modo de pasar el chequeo es empeorar la composición, el chequeo tiene
-  razón sobre el síntoma y vos sobre el arreglo: a esa placa le falta contenido.** Ponele
-  contenido real o preguntale al usuario. No la estires. Inflar una tarjeta hasta que
-  quede hueca por dentro es la misma trampa un nivel más abajo.
-
-### El titular tiene que entrar en dos renglones
-
-La regla de *Cómo se escribe una placa* pide que el titular sea una oración con verbo
-conjugado. Falta la otra mitad: **tiene que entrar en dos renglones del template activo.**
-
-Sin ese límite salen oraciones de 45 caracteres que en el `02` se componen a 104px en
-mayúsculas y ocupan **cinco renglones y un tercio de la placa**. Pasó el 2026-08-31 con
-`ENSEÑARLE LO QUE NO SABÍA LE ENSEÑA A INVENTAR`.
-
-Contá los caracteres contra el template:
-
-| Template | Titular de contenido | Caracteres que entran en 2 renglones |
+| Script | Que ve | Que NO ve |
 |---|---|---|
-| `02-editorial-oscuro-v2` | Archivo 104px, mayúsculas | **~22** |
+| `render-and-audit.mjs` | Cada placa por separado: piso tipografico, area segura, balance, huecos, densidad, centrado optico | Nada que dependa de comparar placas |
+| `audit-serie.mjs` | La serie: cuerpo por rol, arranque por rol, variedad de recurso, iconos repetidos, filas despobladas | El sentido, el ritmo y si la placa dice algo |
 
-Las del set del propio template: `La máscara causal.` (18) · `Más capas, más sesgo.` (21)
-· `El orden no es neutro.` (22). Ese es el largo, no 45.
-
-**Un `<br>` no achica nada.** Si la línea no entra a lo ancho, envuelve igual y el `<br>`
-sólo agrega un renglón más. La cuenta es de caracteres, no de dónde ponés el corte.
-
-Cuando la oración completa no entra, **el titular se acorta y la bajada completa la idea**
-— para eso está. Lo que no se hace es bajarle el cuerpo al titular.
-
-### Un campo opcional no es una invitación
-
-**Si el usuario pidió sacar un elemento, se saca del template — no se deja opcional.** Un
-campo que sigue existiendo se vuelve a llenar, y el que lo llena es el agente.
-
-Pasó con el número gigante del `02`: el usuario pidió sacarlo el 2026-08-30, se lo dejó
-opcional (`s.num ? bignum(s) : head(s)`), y al día siguiente el primer carrusel nuevo salió
-con `01` y `02` puestos por el agente, uno de ellos arriba de un kicker que decía
-`SEGUNDA CAUSA`. Se eliminó de verdad el 2026-08-31.
-
-Y en general: **un campo opcional del template no se llena sin que el usuario lo pida.** Va
-al gate de aprobación de copy como cualquier otra decisión de composición.
-
-### Mandale la imagen, no se la cuentes
-
-**Cada vez que se renderiza, el contact sheet va al chat.** No alcanza con mirarlo vos y
-describir lo que ves: la revisión visual la hace el usuario, y sólo la puede hacer sobre
-la imagen. Contarle que "quedó bien" es pedirle que confíe en el mismo ojo que compuso la
-placa.
-
-- **Después de cada tanda de render**, el contact sheet, aunque la QA automática haya
-  dado limpia.
-- **Si el pedido es sobre una placa puntual**, esa placa a tamaño completo. Un recorte de
-  contact sheet no sirve para juzgar cuerpos ni separaciones.
-- **Después de cada corrección**, la placa corregida. Una corrección que el usuario no
-  ve no está confirmada.
-- El atajo para abrir la carpeta sigue yendo, pero **no reemplaza mandar la imagen**: es
-  para el archivo final, no para revisar.
-
-El 2026-08-29 se renderizaron nueve placas, se revisaron en silencio y se reportaron por
-escrito. Que el usuario mande recortes para marcar algo puntual está perfecto y es lo más
-preciso que hay: la regla no existe para evitar eso. Existe porque quien compuso la placa
-no puede ser el único que la mira.
-
-### Una referencia ambigua se pregunta, no se elige
-
-`el 02` puede ser la placa 2 o el template `02-...`, y en una conversación que viene
-hablando de las dos cosas no hay forma de saberlo por contexto. Ahí se pregunta en una
-línea. Elegir la interpretación más probable y seguir cuesta una tanda entera de trabajo
-cuando sale mal — el 2026-08-29 se mandó la placa 2 a alguien que estaba pidiendo el
-template 02, y hubo que rehacer el carrusel completo.
-
-Vale para cualquier referencia corta: un número suelto, "el anterior", "ese", "el otro".
-
-### El atajo para abrir la carpeta
-
-**Toda entrega termina con un bloque que abre la carpeta de entrega, sin excepcion.** La app le pone boton de Run a los bloques marcados como `bash`, asi que es un clic y se abre el explorador — el usuario no tiene que ir carpeta por carpeta buscandola en el explorador de Windows.
-
-Va con la ruta absoluta real, nunca con un placeholder:
-
-    ```bash
-    explorer.exe "RUTA_ABSOLUTA_DE_LA_CARPETA_DE_ENTREGA"
-    ```
-
-Reglas:
-
-- **La carpeta de entrega primero**, que es la que tiene los PNG, la caption y el video. Es la que el usuario quiere ver.
-- **Un solo comando por bloque.** Si tambien hace falta abrir la carpeta del paquete —para editar el fuente o revisar el brief— va en su propio bloque, abajo, aclarando cual es cual.
-- **Ruta absoluta y entre comillas**, para que aguante los espacios de `Documents` y de cualquier carpeta con nombre compuesto.
-- **Tambien va cuando la entrega todavia no esta terminada.** Si se renderizo aunque sea una tanda para revisar, el bloque va igual: sirve justamente para mirar antes de aprobar.
-- Si el preset nombra una carpeta de Drive y el carrusel ya se copio ahi, va un segundo bloque con esa ruta, aclarando que esa es la copia publicada.
-- En macOS o Linux el comando cambia (`open` / `xdg-open`); lo que no cambia es que el bloque va siempre.
+Lo que ninguno de los dos ve lo ve una persona mirando los PNG a tamano real. **`QA
+automatica OK` no quiere decir que este bien**: quiere decir que ningun chequeo salto, y
+los chequeos no leen.

@@ -41,6 +41,12 @@ window.CAROUSEL = {
   // midieron para este template, no inventes numeros: usa la excepcion 'density-budget'.
   // densityBudget: { ... },
 
+  // Fixture, no carrusel nuevo: las placas de abajo no llevan srcFrase/srcDato
+
+  // porque no salieron de una Lectura. audit-serie.mjs no las juzga por eso.
+
+  seriesExceptions: ['trazabilidad'],
+
   slides: [
     // PORTADA. Titular manuscrito + regla de cota + bajada + la comparacion abajo.
     // `h` de cada caja es su altura en px: ver la nota del componente en estilo.md

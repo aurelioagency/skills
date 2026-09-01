@@ -10,6 +10,12 @@
 // No se copia aca. Rellenar sus campos es lo que produce carruseles todos
 // iguales con las palabras cambiadas.
 //
+//
+// Cada placa de contenido lleva dos campos de fidelidad, y son obligatorios:
+//   srcFrase: 'la frase textual de la Lectura de la que se recorto el titular'
+//   srcDato:  'la cita textual de la fuente, por cada cifra que se muestra o se dibuja'
+// Sin srcFrase el titular es invencion y audit-serie.mjs lo bloquea. Sin srcDato no se
+// dibuja barra, altura, area, proporcion ni escala: ver references/fidelidad.md.
 // `width`/`height` los lee render-and-audit.mjs para fijar el viewport:
 // manteneles el formato.
 window.CAROUSEL = {

@@ -3,7 +3,7 @@
 > **Esto aplica a un gráfico que dibujás vos.** Si la fuente ya publica el gráfico, o si
 > lo pasa el usuario, va esa imagen y nada de acá corre: no se redibuja para que cumpla
 > estas reglas, no se le cambia la paleta y no se le discute el encuadre. Ver *Images the
-> user supplies* en `SKILL.md`.
+> user supplies* en `references/proporcion.md`.
 
 Un gráfico mal codificado no se ve mal: se ve bien y dice otra cosa. Pasa la QA
 automática y el contact sheet. Todo lo de acá salió de gráficos que casi se publican.

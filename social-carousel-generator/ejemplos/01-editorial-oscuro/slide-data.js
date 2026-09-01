@@ -40,6 +40,12 @@ window.CAROUSEL = {
   //   content: { cov: [4.0, 11.5], covHard: [3.0, 13.5], lines: [10, 18], blocks: [6, 11] }
   // },
 
+  // Fixture, no carrusel nuevo: las placas de abajo no llevan srcFrase/srcDato
+
+  // porque no salieron de una Lectura. audit-serie.mjs no las juzga por eso.
+
+  seriesExceptions: ['trazabilidad'],
+
   slides: [
     {
       type: 'cover',

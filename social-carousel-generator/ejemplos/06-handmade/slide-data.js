@@ -41,6 +41,12 @@ window.CAROUSEL = {
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
+  // Fixture, no carrusel nuevo: las placas de abajo no llevan srcFrase/srcDato
+
+  // porque no salieron de una Lectura. audit-serie.mjs no las juzga por eso.
+
+  seriesExceptions: ['trazabilidad'],
+
   slides: [
     // 01 · PORTADA — la pregunta que el otro no se atreve a hacer, mas la escena.
     // Los iconos salen de icons.js: nombre + tamanio + pastel.

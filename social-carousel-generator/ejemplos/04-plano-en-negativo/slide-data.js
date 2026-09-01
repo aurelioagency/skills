@@ -37,6 +37,12 @@ window.CAROUSEL = {
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
+  // Fixture, no carrusel nuevo: las placas de abajo no llevan srcFrase/srcDato
+
+  // porque no salieron de una Lectura. audit-serie.mjs no las juzga por eso.
+
+  seriesExceptions: ['trazabilidad'],
+
   slides: [
     // PORTADA. Titular de 112px + filete + bajada + las dos cifras con sus chips.
     // El primer chip lleva el acento y los demas quedan apagados: el contraste es

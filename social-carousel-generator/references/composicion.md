@@ -24,7 +24,7 @@ una placa cumple mas de una.
 
 1. **¿La fuente publica el grafico y el grafico es el punto de la placa?**
    → Va **esa imagen**, tal cual. No se redibuja, no se recolorea, no se discute el
-   encuadre. Ver *Images the user supplies* en `SKILL.md`.
+   encuadre. Ver *Images the user supplies* en `references/proporcion.md`.
 
 2. **¿Hay dos o mas magnitudes medidas, publicadas, que se comparan entre si?**
    → **Comparacion cuantitativa** (barras, dos cifras grandes, dos cajas).

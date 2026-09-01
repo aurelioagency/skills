@@ -58,7 +58,7 @@ Al aplicar esto, indicar:
 ## Cuándo se corre
 
 Después de escribir la `Lectura` en `carousel-brief.md` (ver *Understanding the topic
-before writing it* en `SKILL.md`) y antes de escribir un solo slide. **Primero se
+before writing it* en `references/redaccion.md`) y antes de escribir un solo slide. **Primero se
 entiende el tema, después se elige el arquetipo** — al revés, el arquetipo decide qué se
 busca en la fuente y aparecen pasos inventados para completarlo.
 

@@ -35,6 +35,12 @@ window.CAROUSEL = {
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
+  // Fixture, no carrusel nuevo: las placas de abajo no llevan srcFrase/srcDato
+
+  // porque no salieron de una Lectura. audit-serie.mjs no las juzga por eso.
+
+  seriesExceptions: ['trazabilidad'],
+
   slides: [
     // PORTADA. Titular condensado + regla con la magnitud + bajada + el corte.
     // `h` de cada pieza es su altura en px y sale del dato: una caja mas alta

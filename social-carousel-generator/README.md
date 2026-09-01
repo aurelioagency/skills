@@ -16,14 +16,20 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 
 | Path | Purpose |
 |---|---|
-| [SKILL.md](SKILL.md) | The skill itself: workflow, gates, visual rules, QA |
+| [SKILL.md](SKILL.md) | The skill itself: los cuatro controles, workflow, gates, resolución de preset y template |
+| [references/redaccion.md](references/redaccion.md) | **Redacción**: la `Lectura`, el recorte del titular, los tres chequeos, ganchos, aterrizaje de términos |
+| [references/fidelidad.md](references/fidelidad.md) | **Fidelidad**: la fuente es la única fuente, `srcFrase` / `srcDato`, exactitud de la copy |
+| [references/composicion.md](references/composicion.md) | **Creatividad con límites**: árbol que elige el recurso visual desde el contenido, reglas de variedad |
+| [references/proporcion.md](references/proporcion.md) | **Proporción y consistencia**: grilla, piso tipográfico, área segura, balance, huecos, excepciones |
+| [references/entrega.md](references/entrega.md) | Render, carpeta de entrega, Short vertical, música, caption y la revisión visual placa por placa |
 | [references/la-casa-preset.md](references/la-casa-preset.md) | La Casa de Aurelio brand preset: voice, palette, measured background field, cover formula, footer spec, fixed CTA |
 | [references/brand-preset-template.md](references/brand-preset-template.md) | Fill-in template for **your own brand**: palette, fonts, cover formula, footer, CTA, caption, density budget, asset bank |
 | [references/content-archetypes.md](references/content-archetypes.md) | Árbol de decisión de arquetipo narrativo: 8 arquetipos evaluados en orden, con la Slide Grammar como default |
 | [references/asset-bank.md](references/asset-bank.md) | The asset bank contract: a folder (local or git) of brand imagery the agent places **by looking at it** |
 | [references/html-rendering.md](references/html-rendering.md) | Static HTML screenshot workflow, contact-sheet QA, typography-floor QA, implementation traps |
-| [scripts/](scripts) | Bundled Node helpers (render + programmatic QA, stage measuring, block diff, contact sheet) |
-| [assets/templates/](assets/templates/) | Seis templates visuales numerados, uno por diseño: `01-editorial-oscuro`, `02-editorial-oscuro-v2`, `03-cuaderno-de-taller`, `04-plano-en-negativo`, `05-plano-de-taller`, `06-handmade`. Cada uno con `index.html`, `styles.css`, `slide-data.js` y su `estilo.md` (las reglas que dan consistencia + las piezas ya construidas); el 05 suma `figures.js`/`figures.md` y el 06 `icons.js`/`icons.md` |
+| [scripts/](scripts) | Bundled Node helpers (render + QA por placa, **QA de serie**, stage measuring, block diff, contact sheet) |
+| [assets/templates/](assets/templates/) | Seis templates visuales numerados, uno por diseño: `01-editorial-oscuro`, `02-editorial-oscuro-v2`, `03-cuaderno-de-taller`, `04-plano-en-negativo`, `05-plano-de-taller`, `06-handmade`. Cada uno con `tokens.css` (familias y paleta), `grid.css` (grilla compartida), `styles.css`, `index.html`, un `slide-data.js` **sin placas** y su `estilo.md`; el 05 suma `figures.js`/`figures.md` y el 06 `icons.js`/`icons.md` |
+| [ejemplos/](ejemplos/) | El carrusel con el que se armó cada estilo, **fuera de la ruta de copia**: para ver el estilo renderizado y como fixture de regresión. No es un molde y no dice cuántas placas entran |
 | [assets/fonts/](assets/fonts/) | Todas las familias de los seis templates, empaquetadas para que el render sea idéntico en cualquier máquina |
 | [assets/](assets/) | The four fixed CTA frames for La Casa: normal and comment variant, one pair per size |
 
@@ -35,6 +41,7 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 - **Source-faithful extraction** — PDFs, URLs, YouTube links (via transcript), pasted text and screenshots. It extracts 1–3 shareable angles; inventing content that is not in the source is prohibited, and proper nouns are copied verbatim.
 - **Hook craft built in** — every hook is a two-part structure (setup headline + twist line) with explicit quality criteria: concrete numbers for authority, tension between the lines, specific over generic, and no claim the source cannot back.
 - **Editable HTML package** — every carousel is a small static site (`index.html` + `styles.css` + `slide-data.js`); the PNGs are browser screenshots of it, so any fix is a source edit plus a re-render, never a PNG patch.
+- **QA de serie** — `scripts/audit-serie.mjs` compara las placas entre sí, que es donde vive el defecto que ningún chequeo por placa ve: dos piezas del mismo rol a cuerpos distintos, un titular que arranca a otra altura que el resto, un recurso que ocupa más del 40% del carrusel, el mismo ícono repetido por inercia, una fila con un solo bloque angosto y el resto vacío al lado. Bloquea la entrega en los dos primeros.
 - **Programmatic QA before your eyes** — `scripts/render-and-audit.mjs` renders each slide and fails the delivery on: a web font that silently fell back, any word under the typography floor, anything outside the safe area, orphan last lines, broken assets, canvas overflow, an off-centre cover hook, vertical imbalance, a counter off the canvas centre, an overlay landing on fixed artwork, optical imbalance inside chrome, and a **density budget** — ink coverage, line count and visual blocks measured on the PNG against the bands of the published set, so a slide that "va cargado" is caught before you are. It writes `qa-report.json` and exits 3 if anything is red.
 - **Typography floor** — on a 1080px-wide export every user-facing word renders at ≥ `40px` computed size (`24px` only for numeric page counters and decorative marks). Copy that does not fit gets shortened or split, never shrunk.
 - **Safe-area QA** — all readable content stays ≥ `5%` from the side edges and ≥ `10%` from top/bottom (app overlay zones); the first-slide hook must be horizontally centered; small compositions floating in empty space are rejected.
@@ -181,7 +188,9 @@ Angle extraction, the split and the hook gate are all skipped. The copy comes fr
 
 social-carousels/<slug>/
   index.html                       # editable slide source
-  styles.css                       # visual system
+  tokens.css                       # familias y paleta (la identidad)
+  grid.css                         # grilla compartida entre placas
+  styles.css                       # cómo se dibuja cada pieza
   slide-data.js                    # slide content data
   carousel-brief.md                # source, angles, decisions
   manifest.json                    # size, slide order, CTA variant

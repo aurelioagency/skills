@@ -14,8 +14,8 @@
 //
 // Excepciones: `window.CAROUSEL.seriesExceptions` en slide-data.js baja un chequeo a
 // nota. Ids validos:
-//   arranque-por-rol | cuerpo-por-rol | variedad-de-recurso | recurso-consecutivo
-//   | icono-repetido | acento-consecutivo | fila-despoblada
+//   trazabilidad | arranque-por-rol | cuerpo-por-rol | variedad-de-recurso
+//   | recurso-consecutivo | icono-repetido | acento-consecutivo | fila-despoblada
 // Como toda excepcion: la decide el usuario y va tambien en manifest.json.
 // `repeticion-deliberada` (06-handmade) implica variedad-de-recurso y
 // recurso-consecutivo.
@@ -119,6 +119,8 @@ for (let i = 1; i <= count; i++) {
 
     return {
       type: sd.type || '(sin type)',
+      srcFrase: typeof sd.srcFrase === 'string' ? sd.srcFrase.trim() : '',
+      srcDato: sd.srcDato,
       isCover: sd.type === 'cover' || !!document.querySelector('.s-cover'),
       isCTA: sd.type === 'cta' || !!document.querySelector('.s-cta, .cta-base'),
       exceptions: d.seriesExceptions || [],
@@ -138,6 +140,19 @@ const contenido = slides.map((s, i) => ({ ...s, n: i + 1 })).filter(s => !s.isCT
 // La portada es otro rol: titular mas grande y arranque propio por diseno. Los
 // chequeos de consistencia corren sobre las placas de contenido, sin ella.
 const cuerpo = contenido.filter(s => !s.isCover);
+
+// 0. Trazabilidad: cada titular tiene la frase de la Lectura de la que se recorto.
+//    Es el unico chequeo que agarra la invencion sin que nadie tenga que juzgar si la
+//    linea esta buena: una celda vacia significa que ese titular se escribio de nuevo
+//    al llegar al slide en vez de recortarse.
+{
+  const sin = contenido.filter(s => !s.srcFrase).map(s => s.n);
+  if (sin.length) {
+    push('trazabilidad', 'red',
+      `las placas ${sin.join(', ')} no declaran \`srcFrase\`: no hay frase de la Lectura detras de ese titular. ` +
+      'Un titular sin frase de origen es una formulacion nueva escrita al llegar al slide, que es el defecto que produce placas que suenan a portada y no dicen nada.');
+  }
+}
 
 // 1. Cuerpo por rol: dos piezas que cumplen el mismo rol llevan el mismo cuerpo.
 for (const rol of Object.keys(ROLES)) {
@@ -239,7 +254,7 @@ console.log(`recursos: ${[...tipos.entries()].map(([t, n]) => `${t}x${n}`).join(
 linea('RED ISSUES (bloquean la entrega):', red);
 linea('AVISOS (leelos, no bloquean):', warn);
 linea('NOTAS (excepcion declarada):', note);
-if (!red.length && !warn.length) console.log('\nSin hallazgos de serie.');
+if (!red.length && !warn.length && !note.length) console.log('\nSin hallazgos de serie.');
 console.log('\nEsto no reemplaza mirar las placas: el ritmo, el sentido y la repeticion');
 console.log('de composicion se ven en el contact sheet, no en un script.');
 process.exit(red.length ? 3 : 0);

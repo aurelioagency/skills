@@ -79,7 +79,7 @@ it never renames silently and never guesses what an opaque name contains.
 - **This does not apply to images the user supplies.** Anything they paste into the chat or
   point at by path goes on the slide as it is, without entering the bank first and without
   being questioned over palette or the branding it carries. See *Images the user supplies*
-  in `SKILL.md`.
+  in `references/proporcion.md`.
 - **One-off material never enters the bank.** A chart from one article, a screenshot of one
   dashboard, a photo of one thing: it belongs to the carousel it arrived for, lives in that
   package's `assets/`, and stays there. The bank is for imagery that will serve carousels
