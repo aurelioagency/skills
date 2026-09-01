@@ -80,7 +80,9 @@ html, body { background: #e8e6e1; }
     linear-gradient(var(--teal) 1px, transparent 1px),
     linear-gradient(90deg, var(--teal) 1px, transparent 1px);
   background-size: 60px 60px;
-  opacity: 0.05;
+  /* 0.05 daba 8 niveles de diferencia sobre el campo, la mitad del umbral medido
+     por la marca (14 = invisible en telefono). 0.16 da 26. 2026-09-01. */
+  opacity: 0.16;
   pointer-events: none;
 }
 

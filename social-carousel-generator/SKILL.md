@@ -345,6 +345,31 @@ una pieza se agrega al template.
 `estilo.md` tiene esas dos partes, en ese orden: primero las reglas, que son lo que
 manda; después las piezas construidas, con los campos que lee cada una.
 
+### El carrusel de ejemplo no dice cuántas placas entran
+
+**El `slide-data.js` que trae un template es un carrusel, no la capacidad del template.**
+Que su ejemplo tenga cuatro placas no significa que el estilo soporte cuatro: una pieza se
+repite tantas veces como haga falta, igual que el `02` usa `rows` dos veces y `steps` dos
+veces.
+
+**Y una pieza que pide datos que la fuente no tiene no cuesta una placa: se dibuja otra
+cosa.** Si la placa de barras necesita cifras medidas y el artículo no publica ninguna, no
+se dibujan barras — la placa sigue existiendo con el contenido que sí hay, en el componente
+que corresponda.
+
+Pasó el 2026-08-31: se armaron los tres estilos de ingeniería con **tres** placas en vez de
+las nueve aprobadas, razonando que "el template soporta cuatro y una necesita cifras". Las
+dos mitades del razonamiento eran falsas y el resultado fue entregar un tercio del carrusel.
+
+### El alcance aprobado no se reduce por tu cuenta
+
+La cantidad de placas se confirma con el usuario en *Series Decision*, junto al arquetipo y
+al gancho. **Después de eso no se recorta**, ni por una limitación del template, ni por
+falta de material, ni por nada.
+
+Si aparece un motivo real para acortar, se dice y decide el usuario. Entregar menos de lo
+aprobado y explicar el motivo al final **no es avisar**: es hacerlo y después contarlo.
+
 ### El test de la pieza forzada
 
 **Si tuviste que inventar el contenido de un campo para que la pieza no quede vacía, la
@@ -1116,6 +1141,38 @@ excepción de fábrica, y bajan a nota **todos** los avisos de su tipo — inclu
 `"ALUCINACIONES" fuera del safe area`, que es exactamente como se reporta una palabra que
 se fue del lienzo. Con esas excepciones activas, **el texto cortado no bloquea nada**. Hay
 que leer las notas una por una y mirar la placa.
+
+### Las capas de fondo se miden, no se estiman
+
+Retículas, tramas, curvas, glows: todo lo que vive detrás del contenido **se declara en
+niveles de diferencia sobre el fondo**, medidos, no en una opacidad elegida a ojo.
+
+**El umbral está medido por la marca: a 14 niveles la línea es invisible en un teléfono.**
+Sale del `01-editorial-oscuro`, cuyas curvas estaban a 14 y hubo que subirlas; el valor que
+funcionó es **28**. Ese es el piso para una línea de 1px que tiene que leerse como textura.
+
+Se calcula mezclando el color de la línea con el del fondo según la opacidad, y comparando
+contra el fondo. Una opacidad no dice nada por sí sola: `0.07` sobre papel claro da 15
+niveles y `0.05` sobre campo oscuro da 8.
+
+Pasó el 2026-09-01: los tres estilos de ingeniería salieron con las retículas a 15, 8 y 13
+niveles — las tres en el umbral o debajo. El usuario las vio apagadas antes que cualquier
+chequeo, porque ninguno mide esto.
+
+**Cuando se corrige, el valor medido va al `estilo.md` del template**, con la cuenta, para
+que la próxima vez no vuelva a bajar.
+
+### Dos cosas que solo se ven mirando
+
+Ninguna la agarra un script, y las dos costaron una vuelta el 2026-08-31:
+
+- **Una palabra repetida entre el rótulo y el titular.** El kicker decía `LO QUE LE FALTA` y
+  el titular `Le falta decir «no sé»`. Se lee como un error de armado. Lo mismo vale para el
+  pie: `FUENTE: LILIAN WENG` debajo de una pieza cuyo campo `FUENTE` está en blanco a
+  propósito son dos "fuente" con sentidos distintos en la misma placa.
+- **Un ícono que no significa nada.** Una flecha hacia abajo al lado de *"le enseñaste algo
+  nuevo"* sugiere que algo baja, y no baja nada. El ícono dice lo mismo que la línea que
+  acompaña o no va.
 
 ### No persigas el número del audit
 

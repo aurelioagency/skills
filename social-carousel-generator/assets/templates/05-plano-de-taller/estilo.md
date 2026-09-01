@@ -26,6 +26,14 @@ formas, sus 6 tramas, los 8 tipos de línea ISO 128-20 y la simbología normaliz
   sigue siendo el hexágono en la 7.
 - **Margen de 80px parejo.** No se reduce.
 
+- **Reticula de 60px a `opacity: 0.13`** = 28 niveles de diferencia sobre el papel
+  `#EDEAE3`. A 0.06 daba 13, por debajo del umbral medido por la marca (14). No bajarla.
+  (2026-09-01)
+
+- **El valor `v` de las piezas de `corte` va corto.** La linea de cota cruza el cuadro a
+  media altura, asi que una etiqueta larga queda tachada por la linea. `SI` / `NO` entra;
+  `NO LA VES` sale tachado. (2026-09-01)
+
 ## Piezas construidas
 
 Lo que el `render()` de `index.html` ya sabe dibujar hoy, con los campos que lee cada

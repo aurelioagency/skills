@@ -21,6 +21,10 @@ Pasteles: `#D9A79C` rosa (el caso caro, el antes) · `#B9CFE0` celeste (el caso 
 después) · `#F0C874` amarillo (el subrayado, la nota al margen) · `#C9CEC7` gris (lo
 neutro, la línea base).
 
+- **Reticula de 60px a `opacity: 0.13`** = 28 niveles de diferencia sobre el papel
+  `#F2EFE7`. A 0.07 daba 15 y no se veia en un telefono; el umbral medido por la marca es
+  14. No bajarla. (2026-09-01)
+
 ## Piezas construidas
 
 Lo que el `render()` de `index.html` ya sabe dibujar hoy, con los campos que lee cada

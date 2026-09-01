@@ -95,7 +95,9 @@ html, body { background: #e8e6e1; }
     linear-gradient(var(--ink) 1px, transparent 1px),
     linear-gradient(90deg, var(--ink) 1px, transparent 1px);
   background-size: 60px 60px;
-  opacity: 0.06;
+  /* 0.06 daba 13 niveles de diferencia sobre el papel, por debajo del umbral medido
+     por la marca (14 = invisible en telefono). 0.13 da 28. 2026-09-01. */
+  opacity: 0.13;
   pointer-events: none;
 }
 

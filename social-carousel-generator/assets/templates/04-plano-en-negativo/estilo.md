@@ -22,6 +22,10 @@ apretada. El tono es autoridad y prueba — afirma y muestra el número.
   veces.
 - **Margen de 80px parejo.** No se reduce.
 
+- **Reticula turquesa de 60px a `opacity: 0.16`** = 26 niveles de diferencia sobre el
+  campo `#101418`. A 0.05 daba 8, la mitad del umbral medido por la marca (14). No
+  bajarla. (2026-09-01)
+
 ## Piezas construidas
 
 Lo que el `render()` de `index.html` ya sabe dibujar hoy, con los campos que lee cada
