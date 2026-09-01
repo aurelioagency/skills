@@ -120,6 +120,30 @@ Checks listed in `slide-data.js` under `layoutExceptions` drop to informational 
 
 Fix the source and re-render. Never patch the PNG. Passing this script is necessary, not sufficient — the contact-sheet pass below still has to run, because meaning, overlap, and rhythm are not machine-checkable.
 
+## QA de serie (corre junto con la de arriba)
+
+`render-and-audit.mjs` juzga cada placa por separado. El defecto mas caro del carrusel es el otro: que las nueve se lean desprolijas sin que ninguna este mal. Eso lo mide `scripts/audit-serie.mjs`, desde la carpeta del paquete y con el server levantado:
+
+```powershell
+node "<skill-dir>/scripts/audit-serie.mjs" --port 8765
+```
+
+Compara las placas entre si y sale con codigo 3 en los dos primeros:
+
+- **`cuerpo-por-rol`** (red) — dos piezas que cumplen el mismo rol compuestas a cuerpos distintos. El remate de una pieza a 52px contra el cierre de otra a 44px sobrevivio nueve renders limpios. El arreglo va en el template, no en el paquete.
+- **`arranque-por-rol`** (red) — el rotulo y el titular arrancan a la misma altura en toda la serie. Una placa que arranca 170px mas abajo rompe la linea superior de la serie, y es lo que pasa cuando se baja un titular para tapar un aviso de hueco.
+- **`variedad-de-recurso`** (aviso) — ningun recurso pasa el 40% de las placas de contenido.
+- **`recurso-consecutivo`** (aviso) — dos placas seguidas con el mismo recurso.
+- **`icono-repetido`** (aviso) — el mismo icono en dos placas. Una forma por concepto, no por placa.
+- **`acento-consecutivo`** (aviso) — tres o mas placas seguidas con el mismo acento.
+- **`fila-despoblada`** (aviso) — una franja ocupada por un solo bloque angosto con el resto del ancho vacio a la misma altura. Es el defecto de la mascota sola en su fila, que los chequeos por placa no ven porque miden totales, no filas.
+
+La portada queda fuera de los chequeos de consistencia: su titular es mas grande y su arranque es propio, por diseno.
+
+**Excepciones**: `window.CAROUSEL.seriesExceptions` en `slide-data.js` baja un chequeo a nota, con las mismas condiciones que `layoutExceptions` — la decide el usuario y va tambien en `manifest.json`. `repeticion-deliberada` (que trae el `06-handmade`) implica `variedad-de-recurso` y `recurso-consecutivo`.
+
+Pasar este script tampoco es suficiente. El ritmo de la serie, el sentido de cada recurso y la repeticion de composicion se ven en el contact sheet.
+
 ## Measure before reflowing
 
 When retargeting to a shorter canvas, run:
