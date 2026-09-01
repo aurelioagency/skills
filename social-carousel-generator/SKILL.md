@@ -14,11 +14,11 @@ Default to the static HTML screenshot workflow because it gives reliable text, l
 1. Resolve the preset, language, and CTA mode. Size is fixed and never asked (see Format, length and density).
    Completion criterion: the active preset, language, footer behavior, and CTA behavior are explicit, and the preset carries no unfilled placeholder in any section this carousel will use.
 2. Understand the source, then extract it into shareable angles.
-   Completion criterion: source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content, and the `Lectura` — the source re-told in ordinary language (see *Understanding the topic before writing it*) — is written before any hook or slide copy.
+   Completion criterion: **todo el material viene de la fuente que pasó el usuario y de ninguna otra** (ver *La fuente que te pasan es la única fuente*); source facts, gaps, and one to three candidate carousel angles are captured in the brief without invented content, and the `Lectura` — the source re-told in ordinary language (see *Understanding the topic before writing it*) — is written before any hook or slide copy.
 3. Elegir el arquetipo narrativo, recomendar el split, presentar dos ganchos por carrusel, y pedir confirmacion.
    Completion criterion: el arbol de `references/content-archetypes.md` se corrio sobre la `Lectura`, y el usuario confirmo, redujo o cambio el arquetipo, la cantidad de carruseles y el gancho de cada uno, antes de que se escriba un solo slide.
 4. Draft the slides and get the copy approved.
-   Completion criterion: each carousel has as many content slides as its material supports and no more than 9, each slide has one job, each slide has its component declared (see *Copy Approval Gate*), each slide uses the density budget below rather than hugging its floor, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
+   Completion criterion: **cada titular está trazado a su frase de la `Lectura` en la tabla de `carousel-brief.md`, tiene verbo conjugado, y los titulares leídos solos y seguidos cuentan el carrusel** (ver *Cómo se escribe una placa*); each carousel has as many content slides as its material supports and no more than 9, each slide has one job, each slide has its component declared (see *Copy Approval Gate*), each slide uses the density budget below rather than hugging its floor, every technical term the argument depends on is grounded on its own slide (see *Grounding Technical Terms*), each slide's proposed asset (or none) is listed from the brand's asset bank **together with the viable alternatives**, and the user has approved the full slide copy plus the asset plan as plain text before any HTML is built.
 5. Build the editable HTML package and render PNGs.
    Completion criterion: the delivery folder (`<tema-en-kebab-case>`) contains ordered `1080x1440` PNGs, with CTA appended only when the active preset says so.
 6. Run visual QA from contact sheets.
@@ -129,9 +129,38 @@ Starting a package copies the named template's folder, not a hardcoded path — 
 
 ## Source Intake
 
+### La fuente que te pasan es la única fuente
+
+**El carrusel sale de ahí y de ningún otro lado.** No se busca en internet, no se traen papers,
+no se agregan estudios, cifras ni ejemplos que el agente encontró por su cuenta. Si el material
+no da para una placa, esa placa no existe. Si falta algo, se dice y decide el usuario — nunca se
+mete primero y se avisa después.
+
+**Investigar para contestarle al usuario no es investigar para el carrusel.** Es el mismo
+error, y es el que pasó el 2026-08-31: el usuario preguntó si un artículo de 2024 seguía
+vigente, se buscaron papers posteriores para contestarle esa pregunta, y después esos papers
+entraron al carrusel como si fueran parte de la fuente. Dos placas de nueve no tenían nada que
+ver con lo que el usuario había pasado. Los datos eran correctos y verificados; eso no los hace
+parte de la fuente.
+
+Cuando la investigación previa y el carrusel conviven en una misma conversación, **la
+investigación queda en el chat**. Para pasar al carrusel tiene que haber un pedido explícito
+del usuario, y en `carousel-brief.md` va anotada como fuente externa con esa autorización.
+
+Si el usuario pide *"el carrusel de este artículo, con lo que hoy sigue siendo cierto"*, eso es
+un **filtro sobre el artículo**: se sacan las partes que envejecieron, no se agregan las que
+faltan.
+
+### Qué se acepta
+
 Accept PDFs, URLs, pasted text, screenshots, image references, and YouTube video links.
 
-Screenshots of third-party social posts or carousels are valid sources of information: use their topic, facts, and any cited studies (prefer chasing the original sources when cited), but always write new original copy. Never reuse their exact wording. Verbatim reuse is reserved for the user's own carousels in Adaptation Mode.
+Screenshots of third-party social posts or carousels are valid sources of information: use their topic and facts, but always write new original copy. Never reuse their exact wording. Verbatim reuse is reserved for the user's own carousels in Adaptation Mode.
+
+**Si la captura cita un estudio, se le pregunta al usuario si quiere que lo busque.** No se sale
+a buscarlo solo. Hasta el 2026-08-31 esta línea decía lo contrario (*"prefer chasing the
+original sources when cited"*) y era la única instrucción del archivo sobre ir a buscar afuera
+— apuntando justo al error de arriba.
 
 For URLs:
 
@@ -166,9 +195,15 @@ cut out of it.
 
 ### When the reading is finished
 
-- **It does not lean on the source's vocabulary.** Re-telling something in the words it
-  arrived in is repeating, not understanding. If a sentence stops working once the source's
-  terms are taken out of it, the topic is not understood yet.
+- **Si la fuente ya lo explica bien, se dice igual que la fuente.** No hay ningún premio por
+  decirlo distinto. Un artículo bueno ya hizo el trabajo de bajarlo a tierra: repetirlo con
+  otras palabras sólo lo empeora. Lo único que no se puede es repetir una frase que no
+  entendés — si no la podés explicar sin la frase, todavía no está entendida.
+
+  Esta línea decía lo contrario hasta el 2026-08-31 ("no te apoyes en el vocabulario de la
+  fuente"). Empujaba a inventar una manera nueva de decir algo que ya estaba bien dicho, y eso
+  es exactamente el defecto que produce placas rebuscadas. Se dio vuelta por decisión del
+  usuario.
 - **Someone outside the subject follows it end to end.** Not a lighter version with the
   point removed: the same point, in words that do not require the field.
 - **It says what changes, not what the source contains.** A re-telling that ends where the
@@ -184,8 +219,9 @@ A source with no figures in it has a reading like any other. Whatever shape it t
 from the source, never from how the last one went — the only constant is the demand:
 understood first, then told.
 
-Nor is it a simplification pass. Simplifying removes; this translates. The difficult part
-of a topic stays in. What changes is that it stops being said in the source's words.
+Nor is it a simplification pass. La parte difícil del tema se queda adentro: lo que se busca
+es decirla con palabras comunes, no sacarla. Y **si la fuente ya la dijo con palabras comunes,
+se copia esa manera de decirla** — no se busca otra.
 
 ### The test
 
@@ -352,12 +388,15 @@ Every hook is two parts:
 1. Setup line: a strong, specific claim — the main headline.
 2. Twist line: the tension, break, or consequence. It must contrast with the headline in **both font and colour** — the active preset defines how (La Casa: serif italic in the carousel's dominant accent, sentence case). Never hardcode a colour.
 
-**Dos patrones, no uno.**
+**Dos patrones. El primero es el default y hay que tener un motivo para no usarlo.**
 
-- **Afirmación + remate** (el default). El setup afirma algo, el remate lo rompe. Se usa cuando el lector ya tiene una creencia, una práctica o una expectativa sobre el tema.
-- **Nombre + qué es.** El setup es el nombre propio de la cosa; el remate dice en una línea qué hace. Se usa cuando el tema es algo nuevo con nombre propio que el lector no vio nunca: un lanzamiento, un estándar, una herramienta recién publicada. Ahí el nombre *es* la novedad, y forzar una contradicción produce un gancho que suena a campaña y no dice qué se anunció.
+- **El tema + qué es** (el default). El setup es el nombre del tema, tal cual; el remate dice en una línea qué es. `ALUCINACIONES EXTRÍNSECAS EN LLM` / *No contradice tu texto. Contradice al mundo.* Sale sin esfuerzo, nombra el tema —que es lo que la portada tiene que hacer— y no se puede malinterpretar.
 
-  La condición es una sola: **el remate dice qué hace, no lo adjetiva.** "El estándar para que un agente opere hardware" sirve; "El futuro de los laboratorios" no.
+  La condición es una sola: **el remate dice qué es o qué hace, no lo adjetiva.** "El estándar para que un agente opere hardware" sirve; "El futuro de los laboratorios" no.
+
+- **Afirmación + remate.** El setup afirma algo, el remate lo rompe. Sólo cuando el lector ya tiene una creencia instalada sobre el tema y romperla es el contenido del carrusel. **Si tenés que buscarle la vuelta para que funcione, no es el caso: volvé al primero.**
+
+Poner el tema como título no es la salida fácil ni la opción sin trabajo. Es lo que hay que hacer salvo que haya un motivo concreto para otra cosa. Decidido por el usuario el 2026-08-31, después de cuatro ganchos rebuscados seguidos sobre un tema que se resolvía escribiendo su nombre.
 
 El contraste de fuente y color entre las dos líneas no cambia en ninguno de los dos patrones, y la portada sigue llevando su gráfico.
 
@@ -367,7 +406,9 @@ The cover also carries one simple graphic. A cover that is only type reads as a 
 
 ### Approval gate
 
-Draft exactly two hook options (A and B) per carousel. Present them together with the split confirmation, each with a one-line rationale, and recommend one. Never draft the remaining slides or render anything before the user picks, edits, or replaces a hook.
+Draft up to two hook options (A and B) per carousel. Present them together with the split confirmation, each with a one-line rationale, and recommend one. Never draft the remaining slides or render anything before the user picks, edits, or replaces a hook.
+
+**Si el patrón por default —el tema + qué es— resuelve el gancho, va uno solo y se dice por qué.** Fabricar una segunda opción para llenar el molde produce justo lo que hay que evitar: una línea rebuscada puesta al lado de una que ya estaba bien, que además hace dudar de la buena.
 
 ```text
 Carousel 1 - [title]
@@ -391,15 +432,31 @@ Recommendation: [which and why, one line]
 - **No lo fuerces.** El default es la frase simple: qué es, qué pasó, qué cambia. Un gancho ingenioso es la excepción, y sólo entra si sale solo. Si estás buscando la vuelta para que algo entre, ya se rompió: lo que sale es una línea que suena bien y no se entiende. Vale igual para el resto de las placas.
 - **The hook cannot depend on anything the reader does not already have.** Whatever it needs in order to be read the way it was meant, either the hook says it or the kicker does. A hook leaning on context the reader is missing does not read as incomplete — it reads as a different claim, and nothing signals that it was misread.
 - Specific beats generic. A concrete number creates authority ("80.508 personas", "25,6%"). But a figure the reader cannot attach a unit to is not specific, it is noise.
-- The two lines must create tension between them: contrast, contradiction, or a negated expectation ("La respuesta no fue...", "El estudio no dice X. Dice algo más útil...").
-- Techniques that work in this brand's published set: number + twist; expectation negation; contrast pairs (casa/trabajo, antes/después, modelo/método); direct challenge to the reader's current practice ("Tu empresa todavía la usa para escribir emails.").
-- Two valid flavors: broad/shareable vs operator/practical. Pick per the carousel's goal and say which in the rationale.
 - No clickbait the slides cannot back with the source. If the hook needs a claim the source does not support, change the hook, never the claim.
 - No hook ships without a verified source behind it. If the source is pending, the carousel waits.
 
 ## Copy Approval Gate
 
-Before building any HTML, show the user the complete copy of every slide as plain text — kicker, headline, body, labels, and any verdict line — numbered by slide. Wait for approval, edits, or replacements.
+**El mensaje arranca con los titulares solos, en orden, y nada más.** Numerados, sin kicker, sin
+bajada, sin piezas, sin assets. Recién después va el detalle placa por placa.
+
+```text
+Primero los titulares solos. Si estos no cuentan el carrusel, no hace falta leer el resto:
+
+1. <titular de portada> — <remate>
+2. <titular>
+...
+```
+
+No es un resumen de cortesía: es el chequeo 3 de *Cómo se escribe una placa*, hecho donde el
+usuario también lo ve. Enterrados adentro de nueve bloques completos, los titulares flojos no
+se notan — el 2026-08-31 se aprobaron nueve placas donde seis titulares no decían nada, y el
+problema apareció recién cuando se los leyó de corrido. Cuesta diez segundos y es el único
+momento en que el defecto se ve entero.
+
+Después de esa lista, y en el mismo mensaje, la copy completa de cada placa como texto plano
+— kicker, titular, bajada, rótulos y remate — numerada por slide. Wait for approval, edits, or
+replacements.
 
 **Every slide's component is declared here too, and this is the one that gets skipped.** For each slide, say what occupies it besides the text: a chart, a set of cards, a list, a table, a diagram, a mascot row — or nothing, deliberately. **Las piezas ya construidas del template activo están en `assets/templates/<NN-nombre>/estilo.md`**, con los campos que lee cada una; son el punto de partida, y si el slide necesita otra cosa se arma dentro de las reglas del estilo. A slide whose component is never decided does not end up without one; it ends up with whatever the layout falls back to when nothing was chosen, and a carousel where that happens on most slides renders as a run of near-identical, half-empty frames. The symptom is unmistakable in the contact sheet and invisible in the copy, which is why it has to be settled here, in text, before anything is built.
 
@@ -454,23 +511,50 @@ técnico y no se entiende: te deja esperando la segunda mitad, que nunca llega. 
 investigación abierta"*, que tiene adentro un término discutible y se entiende perfecto, porque
 el resto de la oración está armado.
 
-### Las tres cosas que lo arreglan
+### El titular se recorta de la Lectura. No se escribe de nuevo.
 
-No son reglas sobre cómo tiene que quedar el texto. Son sobre cómo se produce.
+Esta es la regla, y las tres de abajo existen sólo para que se cumpla.
 
-1. **Empezá por la frase larga y verdadera, y recortá desde ahí.** Nunca al revés. Arrancar
-   corto buscando impacto y después chequear si es cierto tira primero lo que sostenía el
-   sentido — es el orden que produce `cero ideas` cuando la fuente decía que tuvo hipótesis
-   buenas y las descartó con pocos datos. Partiendo de la frase completa no lo podés perder.
-2. **Escribí la línea varias veces y elegí.** No una vez y justificada. Las versiones
-   descartadas son las que muestran qué falta; un párrafo explicando por qué la línea es buena
-   no muestra nada.
-3. **Decila en voz alta.** Es el mismo test que ya se le exige a la `Lectura` (ver
-   *Understanding the topic before writing it*), y hasta ahora se dejaba de aplicar justo donde
-   empieza a importar: de la `Lectura` en adelante las placas se juzgaban por cuánto miden
-   —presupuesto de caracteres, piso tipográfico— y no por si se le pueden decir a alguien.
+La `Lectura` ya dice el tema en frases enteras que se entienden. **Cada titular sale de una de
+esas frases, sacándole palabras.** Nunca es una formulación nueva escrita al llegar al slide.
 
-Cómo se ve la 1. Frase larga y verdadera:
+El defecto no es escribir mal: es **cambiar de registro**. Al pasar de la prosa al slide aparece
+una voz de titular —frases nominales, telegráficas, que *suenan* a portada— y la oración que ya
+funcionaba se tira. Pasó el 2026-08-31 en seis de ocho placas de un mismo carrusel, con la
+`Lectura` escrita y clara diez minutos antes:
+
+| La Lectura decía | Al slide llegó | Recortado como corresponde |
+|---|---|---|
+| *si le enseñás cosas que no sabía, aprende a inventar* | `Enseñarle algo nuevo.` | **Si le enseñás algo que no sabía, aprende a inventar.** |
+| *los modelos que razonan paso a paso inventan más, no menos* | `Razonar más.` | **Los que razonan inventan más, no menos.** |
+| *el modelo no tiene manera de saber que no sabe* | `No sabe que no sabe.` | **No tiene manera de saber que no sabe.** |
+| *llevamos años premiando al que adivina* | `9 de cada 10 castigan el «no sé».` | **Llevamos años premiando al que adivina.** |
+
+La columna del medio pasa el presupuesto de caracteres, pasa el piso tipográfico y no dice nada.
+
+### Los tres chequeos, antes de mostrar una sola placa
+
+Se hacen sobre el texto escrito, y los tres se ven — no se cumplen declarando que se cumplieron.
+
+1. **Trazá cada titular a su frase.** En `carousel-brief.md` va la tabla `Titular` ·
+   `Frase de la Lectura`, con la frase textual. **Una celda derecha vacía significa que ese
+   titular es invención**, y se reescribe antes de seguir. Es el único chequeo que agarra el
+   cambio de registro sin que nadie tenga que juzgar si la línea está buena.
+2. **Verbo conjugado, o no es un titular.** `Enseñarle algo nuevo.` · `Razonar más.` ·
+   `Tres que funcionan.` · `No todas se chequean igual.` — frases nominales o sin sujeto
+   recuperable. Un titular sin verbo conjugado le pasa el trabajo a la bajada, y la bajada se
+   lee después, si se lee.
+3. **Leé los titulares solos, seguidos, sin las bajadas.** Tienen que contar el carrusel
+   entero **y engancharse uno con otro**: cada titular sigue del anterior, como las oraciones
+   de un párrafo. Si son ocho frases buenas que no van a ningún lado, falta el hilo y la
+   redacción no está terminada — no importa cuán buena sea cada placa por separado. Es la
+   lectura que hace la persona que pasa rápido, y es la que nunca se hacía.
+
+Y sigue valiendo lo de siempre, que es de dónde sale la frase larga: **escribí la línea varias
+veces y elegí**, y **decila en voz alta**. Un párrafo explicando por qué la línea es buena no
+muestra nada; las versiones descartadas sí.
+
+Cómo se ve un recorte bien hecho. Frase larga y verdadera:
 
 > Le dieron a Claude Opus 4.8 una pregunta de investigación de un paper que todavía no estaba
 > publicado, seis días y 3.000 dólares, y el paper que escribió lo rechazaron los autores del
@@ -480,6 +564,9 @@ Recortada sin perder nada:
 
 > A Claude Opus 4.8 le dieron seis días para contestar una pregunta que nadie había publicado.
 > El paper que escribió lo rechazaron.
+
+Fijate que el recorte sigue siendo dos oraciones con sujeto y verbo. No se convirtió en
+`Seis días para hacer ciencia.`
 
 ### No lo conviertas en más reglas
 
@@ -503,17 +590,30 @@ Apply this filter **term by term**, not to the carousel as a whole:
 - **The slide's argument depends on the word → ground it in the same slide, the first time it appears.** `MÁS CAPAS, MÁS SESGO` says nothing to someone who does not know what a `capa` is: there the term is the axis of the slide.
 - **The word is one item in a list of options and the point is "these alternatives exist" → rename it by what it does, or leave it.** `Codificaciones posicionales` became `Atar cada palabra a sus vecinas más cercanas`. Nobody needed the technical name to understand that four levers exist.
 
-### Change the words, do not add a definition
+### Decilo de la manera más simple, aunque sea una definición
 
-This is the part that goes wrong first, and it goes wrong while feeling helpful. The reflex is to stick a definition in front of the term — *"Una capa es…"* — and a definition eats the whole line, sounds like a manual, and stops the story. Almost always the same meaning fits **inside the sentence that was already there**, just written differently:
+**Si la manera más clara de aterrizar un término es decir qué es, decí qué es.** Sin vueltas.
+`Una capa es cada pasada del modelo sobre el texto` se entiende, y eso es lo único que importa.
 
-| Definition (the wrong reflex) | Same idea, just written differently |
+Lo que hay que cuidar es el largo, no el formato: una definición larga se come la línea y suena
+a manual. Cuando la misma idea entra en la oración que ya estaba, mejor, porque ahorra lugar:
+
+| Definición | Metida en la oración que ya estaba |
 |---|---|
-| *Una regla del modelo: cada palabra solo puede mirar a las anteriores.* | *Cada palabra solo puede mirar a las anteriores: lo que viene después le queda tapado.* — "tapado" is what makes the headline `LA MÁSCARA CAUSAL` land. |
-| *Una capa es cada pasada del modelo sobre el texto.* | *Relee el texto capa por capa, y cada pasada hereda lo que la anterior priorizó.* — capa ≈ pasada, by context, without a definition. |
-| *Le dicen "perdido en el medio".* | *Se pierde justo cuando queda en el medio.* — translates the English headline `LOST IN THE MIDDLE` without announcing that it is translating it. |
+| *Una capa es cada pasada del modelo sobre el texto.* | *Relee el texto capa por capa, y cada pasada hereda lo que la anterior priorizó.* |
+| *Le dicen "perdido en el medio".* | *Se pierde justo cuando queda en el medio.* |
 
-Evaluate case by case: a short gloss does earn its place sometimes. What is never right is reaching for one by default. **The term keeps its real name** — the máscara causal is still called máscara causal; what changes is that the sentence around it makes it obvious.
+Las dos columnas están bien. La derecha es más corta, no más correcta.
+
+**Nunca busques una manera ingeniosa de decirlo para no tener que definirlo.** Ahí es donde
+salen las frases rebuscadas que suenan bien y no se entienden. Entre una definición aburrida y
+un giro elegante, va la definición.
+
+**El término conserva su nombre real** — la máscara causal se sigue llamando máscara causal.
+Lo que cambia es que la frase de al lado la deja clara.
+
+Esta sección decía *"cambiá las palabras, no agregues una definición"* hasta el 2026-08-31.
+Empujaba justo al defecto contrario. Dada vuelta por decisión del usuario.
 
 **A graphic's label is the cheapest place to ground a term**, because it has to name the object anyway. `Todo lo que le pegás, de principio a fin` over the cover's context bar grounds `contexto` without spending a single sentence of body copy.
 
