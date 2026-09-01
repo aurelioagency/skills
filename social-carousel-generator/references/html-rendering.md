@@ -4,9 +4,26 @@ Use this workflow when creating the editable carousel package.
 
 ## Starting the package
 
-Do not improvise the skeleton. The active preset names its template (see *Template Resolution* in `SKILL.md`) — copy `assets/templates/<NN-nombre>/` into the package (`index.html`, `styles.css`, `slide-data.js`, plus `cta-ig*.html` and `make-cta.mjs` if the CTA has to be regenerated) and the font files into `<package>/assets/fonts/`, then add the per-slide layouts. Today the only template is `assets/templates/01-editorial-oscuro/`. The template already carries the footer with its optical corrections, the safe-area constants, and the `layoutExceptions` field — rebuilding those from scratch is how they get re-broken.
+Do not improvise the skeleton. The active preset names its template (see *Template Resolution* in `SKILL.md`). Copy these files from `assets/templates/<NN-nombre>/` into the package:
 
-**If the brand is not La Casa but still uses `01-editorial-oscuro`**, that template's header lists the six things that must change before the first render: the `@font-face` block plus the brand's actual font files, the `:root` palette, `footerBrand` / `footerSwipe` in `slide-data.js`, the cover's two families and two colours, the CTA asset, and the density bands (or the `density-budget` exception). Take all six from that brand's `preset.md` — never from this file and never from La Casa's values. A brand that needs a different layout altogether, not just different colours on this one, gets its own numbered template instead.
+| Archivo | Que es | Se toca |
+|---|---|---|
+| `tokens.css` | La identidad: familias tipograficas y paleta. | Solo al llevar el estilo a otra marca. |
+| `grid.css` | La grilla compartida: margenes, arranque de cada rol, ritmo. | Nunca por carrusel. |
+| `styles.css` | Como se dibuja cada pieza. Importa los dos de arriba. | Al agregarle una pieza al estilo. |
+| `index.html` | El `render()` del estilo. | Al agregarle una pieza al estilo. |
+| `slide-data.js` | La configuracion del carrusel, **con `slides: []`**. | Es donde se compone el carrusel. |
+| `cta-*.html`, `make-cta.mjs` | Solo si el CTA hay que regenerarlo. | — |
+
+Mas los archivos de fuente a `<package>/assets/fonts/`.
+
+**El paquete arranca sin placas, y eso es a proposito.** `slides` viene vacio porque las placas de este carrusel todavia no existen: se componen desde el contenido, corriendo `references/composicion.md` placa por placa en el gate de aprobacion de copy. No hay nada que rellenar.
+
+**El carrusel con el que se armo cada estilo esta en `ejemplos/<NN-nombre>/slide-data.js`, fuera de la ruta de copia.** Sirve para ver el estilo renderizado y como fixture de regresion cuando se toca el CSS. No se copia al paquete y no dice cuantas placas entran: es un carrusel, no la capacidad del estilo.
+
+`tokens.css` y `grid.css` son la razon por la que la serie se ve alineada y de la misma familia. Un hex escrito a mano en el `styles.css` de un paquete, o una altura de arranque cambiada para que una placa entre, son errores: rompen la consistencia que esos dos archivos existen para garantizar.
+
+**Si la marca no es La Casa pero usa un template existente**, el encabezado de `tokens.css` lista lo que hay que cambiar antes del primer render: el bloque `@font-face` mas los archivos de fuente de la marca, la paleta entera del `:root`, `footerBrand` / `footerSwipe` en `slide-data.js`, las dos familias y los dos colores de la portada, el asset de CTA, y las bandas de densidad (o la excepcion `density-budget`). Todo eso sale del `preset.md` de esa marca, nunca de este archivo ni de los valores de La Casa. Una marca que necesita otro layout, y no otros colores, se lleva su propio template numerado.
 
 ## Files
 

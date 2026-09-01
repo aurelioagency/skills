@@ -1,11 +1,17 @@
-// Datos del carrusel para 05-plano-de-taller. Todo el contenido sale de la fuente;
-// nada inventado. `width`/`height` los lee render-and-audit.mjs para fijar el viewport:
-// manteneles el formato.
+// 05-plano-de-taller — DATOS DEL CARRUSEL. Arranca sin placas, a proposito.
 //
-// Los slides de abajo son el carrusel de ejemplo con el que se armo el template
-// (costo por tarea con GPT-5.6). Sirven para ver cada layout renderizado; se reemplazan
-// enteros al armar un carrusel nuevo.
-
+// `slides` esta vacio porque las placas de este carrusel todavia no existen: se
+// componen a partir del contenido. Cuantas hay lo decide el material y lo
+// confirma el usuario; que recurso visual lleva cada una sale de
+// references/composicion.md; como se dibuja ese recurso, del estilo.md de este
+// template.
+//
+// El carrusel con el que se armo el estilo esta en ejemplos/05-plano-de-taller/.
+// No se copia aca. Rellenar sus campos es lo que produce carruseles todos
+// iguales con las palabras cambiadas.
+//
+// `width`/`height` los lee render-and-audit.mjs para fijar el viewport:
+// manteneles el formato.
 window.CAROUSEL = {
   slug: 'nombre-del-carrusel',
   template: '05-plano-de-taller',
@@ -29,82 +35,5 @@ window.CAROUSEL = {
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
-  slides: [
-    // PORTADA. Titular condensado + regla con la magnitud + bajada + el corte.
-    // `h` de cada pieza es su altura en px y sale del dato: una caja mas alta
-    // afirma una magnitud. Si la fuente no la publica, no va.
-    {
-      type: 'cover',
-      tab: 'COSTO POR TAREA',
-      headline: 'Mismo resultado,<br>25× menos costo',
-      ruleWidth: 80,
-      ruleLabel: 'FACTOR 25:1',
-      lede: 'Nadie calcula una viga para 25 veces la carga real. Con los modelos de IA, casi todos lo hacen.<br><span class="soft">Mismo benchmark, tres meses de diferencia.</span>',
-      a: { v: '$33,27', h: 300, tone: 'naranja', cap: 'GPT-5.5 · 84,36 %' },
-      b: { v: '$1,33',  h: 120, tone: 'azul',    cap: '5.6 LUNA · 84,04 %' },
-      cartucho: [
-        { k: 'DATO',   v: 'BROWSECOMP',   flex: 2 },
-        { k: 'FUENTE', v: 'OPENAI 08/26', flex: 1 }
-      ]
-    },
-
-    // NODOS. Tres piezas del sistema, cada una con su figura de la biblioteca,
-    // separadas por linea de eje. Las figuras salen de figures.js: id + tamanio +
-    // trama. La trama dice que es — azul es "lo bueno / lo nuevo".
-    {
-      type: 'nodos',
-      tab: 'ARQUITECTURA',
-      headline: 'Lo que cambia<br>no es el modelo',
-      ruleWidth: 62,
-      lede: 'Tres intervenciones de diseño, no un modelo más grande.',
-      nodos: [
-        { fig: { id: 'B-01', px: 120, trama: 'normal' }, k: '01 · MEMORIA',  name: 'No repensar lo pensado',        desc: 'Razonamiento persistente + compactación.' },
-        { fig: { id: 'B-02', px: 120, trama: 'normal' }, k: '02 · PARALELO', name: 'Repartir la carga',             desc: 'Subagentes simultáneos, uno sintetiza.' },
-        { fig: { id: 'B-03', px: 120, trama: 'azul' },   k: '03 · CÓDIGO',   name: 'Lo repetitivo, fuera del modelo', desc: '−21 % tokens de entrada, misma calidad.' }
-      ],
-      cartucho: [
-        { k: 'TEMA',   v: 'RESPONSES API', flex: 2 },
-        { k: 'FUENTE', v: 'OPENAI 08/26',  flex: 1 }
-      ]
-    },
-
-    // BARRAS RAYADAS + FACTOR. `w` sale del dato medido. El factor es la cifra
-    // dominante de la slide; una sola por placa.
-    {
-      type: 'bars',
-      tab: 'RESULTADO MEDIDO',
-      headline: 'Dos ajustes,<br>casi 3× el<br>resultado',
-      ruleWidth: 56,
-      bars: [
-        { lbl: 'CONFIGURACIÓN POR DEFECTO', val: '13,3 %', w: 35,  tone: 'naranja' },
-        { lbl: 'CON DOS AJUSTES',           val: '38,3 %', w: 100, tone: 'azul' }
-      ],
-      factor: { n: '6×', t: 'menos tokens de salida<br>para casi el triple de acierto' },
-      sellos: [
-        { t: 'MISMO MODELO', tone: 'azul' },
-        { t: 'SIN REESCRIBIR PROMPT' }
-      ],
-      cartucho: [
-        { k: 'DATO',   v: 'ARC-AGI-3 · 5.6 SOL', flex: 2 },
-        { k: 'FUENTE', v: 'OPENAI 08/26',        flex: 1 }
-      ]
-    },
-
-    // CIERRE. Titular, regla, bajada y el checklist.
-    {
-      type: 'cta',
-      tab: 'CIERRE',
-      headline: '¿Cuánto estás<br>pagando<br>de más?',
-      ruleWidth: 74,
-      lede: 'Si tu automatización con IA se armó hace seis meses, corre con la configuración vieja y paga de más todos los días.',
-      checks: [
-        'Mapa de costo por paso',
-        'Modelo correcto por tarea',
-        'Ahorro mensual estimado'
-      ],
-      cartucho: [
-        { k: 'TEMA', v: 'AUDITORÍA DE COSTO EN IA', flex: 2 }
-      ]
-    }
-  ]
+  slides: [],
 };

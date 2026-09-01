@@ -1,11 +1,17 @@
-// Datos del carrusel para 06-handmade. Todo el contenido sale de la fuente; nada
-// inventado. `width`/`height` los lee render-and-audit.mjs para fijar el viewport:
-// manteneles el formato.
+// 06-handmade — DATOS DEL CARRUSEL. Arranca sin placas, a proposito.
 //
-// Los slides de abajo son el carrusel de ejemplo con el que se armo el template
-// (que es una base de datos, explicado simple). Sirven para ver los cinco layouts
-// renderizados; se reemplazan enteros al armar un carrusel nuevo.
-
+// `slides` esta vacio porque las placas de este carrusel todavia no existen: se
+// componen a partir del contenido. Cuantas hay lo decide el material y lo
+// confirma el usuario; que recurso visual lleva cada una sale de
+// references/composicion.md; como se dibuja ese recurso, del estilo.md de este
+// template.
+//
+// El carrusel con el que se armo el estilo esta en ejemplos/06-handmade/.
+// No se copia aca. Rellenar sus campos es lo que produce carruseles todos
+// iguales con las palabras cambiadas.
+//
+// `width`/`height` los lee render-and-audit.mjs para fijar el viewport:
+// manteneles el formato.
 window.CAROUSEL = {
   slug: 'nombre-del-carrusel',
   template: '06-handmade',
@@ -35,69 +41,5 @@ window.CAROUSEL = {
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
-  slides: [
-    // 01 · PORTADA — la pregunta que el otro no se atreve a hacer, mas la escena.
-    // Los iconos salen de icons.js: nombre + tamanio + pastel.
-    {
-      type: 'cover',
-      titulo: '¿Qué es una<br>base de datos?',
-      subWidth: 62,
-      bajada: 'Pensala como una biblioteca: todo guardado con un orden para poder encontrarlo.',
-      escena: [
-        { name: 'documento', px: 200, pastel: 'celeste' },
-        { name: 'buscar',    px: 200, pastel: 'verde' },
-        { name: 'ok',        px: 200, pastel: 'lila' }
-      ],
-      // Nombra lo que muestran los iconos. Sin esto la portada deja un agujero
-      // entre la bajada y la escena — lo marca el chequeo de hueco interno.
-      pieEscena: 'Guardar · encontrar · confirmar'
-    },
-
-    // 02 · LISTA ETIQUETADA — icono + termino resaltado + definicion.
-    // UN PASTEL = UN CONCEPTO. Si "Tabla" es verde aca, es verde en todo el carrusel.
-    {
-      type: 'lista',
-      titulo: 'La analogía,<br>pieza por pieza',
-      subWidth: 58,
-      lista: [
-        { ico: { name: 'documento', px: 96, pastel: 'verde' },   pastel: 'verde',   k: 'Tabla', t: '= un estante' },
-        { ico: { name: 'crear',     px: 96, pastel: 'celeste' }, pastel: 'celeste', k: 'Fila',  t: '= un libro' },
-        { ico: { name: 'buscar',    px: 96, pastel: 'lila' },    pastel: 'lila',    k: 'Campo', t: '= un dato del libro' }
-      ]
-    },
-
-    // 03 · ANTES -> DESPUES — dos cajas irregulares y una flecha.
-    {
-      type: 'antes',
-      titulo: 'Buscar sin orden<br>y buscar con orden',
-      subWidth: 66,
-      bajada: 'Es la misma biblioteca. Cambia cuánto tardás en encontrar el libro.',
-      a: { k: 'SIN ORDEN', t: 'Revisás todos los libros hasta dar con el que buscabas.' },
-      b: { k: 'CON ORDEN',  t: 'Vas directo al estante, y ahí al libro.' }
-    },
-
-    // 04 · SEMAFORO — estado + valor + consecuencia. El color del estado no es
-    // decorativo: verde bien, amarillo atencion, coral mal.
-    {
-      type: 'semaforo',
-      titulo: 'Cómo sabés<br>que anda bien',
-      subWidth: 56,
-      semaforo: [
-        { pastel: 'verde',    k: 'RÁPIDA', t: 'responde antes de que lo notes' },
-        { pastel: 'amarillo', k: 'LENTA',  t: 'falta un índice en la tabla' },
-        { pastel: 'coral',    k: 'CAÍDA',  t: 'nadie puede leer ni escribir' }
-      ]
-    },
-
-    // 05 · CIERRE — pedido de guardado + firma grande.
-    {
-      type: 'cta',
-      titulo: '¿Guardaste esto?',
-      subWidth: 52,
-      bajada: 'Volvé la próxima vez que alguien te hable de <span class="hl verde">tablas</span> y no entiendas nada.',
-      // Corte de linea manual: el wrap automatico dejaba "explicados simple" como
-      // viuda. Se parte a mano, nunca se baja el cuerpo para que entre.
-      cierre: 'Seguime para más temas<br><span class="uline lila">explicados simple</span>'
-    }
-  ]
+  slides: [],
 };

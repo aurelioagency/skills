@@ -25,29 +25,24 @@ neutro, la línea base).
   `#F2EFE7`. A 0.07 daba 15 y no se veia en un telefono; el umbral medido por la marca es
   14. No bajarla. (2026-09-01)
 
-## Piezas construidas
+## Las piezas que este estilo ya dibuja
 
-Lo que el `render()` de `index.html` ya sabe dibujar hoy, con los campos que lee cada
-pieza. **Es un punto de partida, no un menú cerrado**: cada carrusel compone sus placas
-dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bloque en
-`render()` + sus clases en `styles.css`. Los tres, o la pieza no existe.
+Estan en `ejemplos/03-cuaderno-de-taller/piezas.md`, con los campos que lee cada una.
+Viven ahi y no aca a proposito: son las placas del carrusel con el que se armo el
+estilo, no un menu de donde elegir.
 
-| `type` | Qué dibuja | Campos |
-|---|---|---|
-| `cover` | pestaña · titular manuscrito 104px · regla de cota · bajada · dos cajas comparadas · pie | `tab`, `headline`, `ruleWidth`, `lede`, `a`/`b`, `source` |
-| `compare` | cabeza estándar + dos cajas pasteles con flecha, valor adentro y epígrafe debajo | `a`/`b` = `{ v, h, tone, cap }` |
-| `parts` | cabeza estándar + piezas con etiqueta `P-01`, nombre manuscrito y descripción | `parts` = `[{ tag, tone, name, desc }]`, `img` opcional |
-| `bars` | cabeza estándar + barras horizontales con rótulo y valor, párrafo y nota manuscrita | `bars` = `[{ lbl, val, w, tone }]`, `after`, `note` |
-| `ficha` | ficha de respuesta con renglones de texto y el campo `FUENTE` en blanco, con un pie manuscrito. Alternativa a `compare` en la portada cuando no hay dos magnitudes que comparar | `ficha` = `{ lbl, lines, foot }` |
-| `cta` | titular · regla · bajada · pasos numerados · firma grande | `headline`, `lede`, `steps`, `source` |
+Que lleva cada placa lo decide el contenido — el arbol de
+`references/composicion.md`. Recien con el recurso ya elegido se mira si este
+estilo lo dibuja.
 
-`tone`: `rosa` · `celeste` · `amarillo` · `gris`.
+**Cuando no lo dibuja, se agrega al estilo**, con las reglas de arriba: la entrada
+en `piezas.md`, el bloque en el `render()` de `index.html`, y sus clases en
+`styles.css` usando solo variables de `tokens.css` y la grilla de `grid.css`. Los
+tres, o la pieza no existe. Eso es componer dentro del sistema visual.
 
-**Sobre `compare`:** `h` es la altura en px y la elegís vos — no es un gráfico a escala.
-Las dos cajas muestran que una es mucho más chica que la otra; la magnitud exacta la lee
-el lector del número escrito adentro, a 56px. Por eso funciona con un factor de 25:1,
-que dibujado a escala sería ilegible. Lo único que no podés hacer es invertir la
-relación: si el valor es menor, la caja va más chica.
+Lo que no se hace es al reves: elegir una pieza porque ya esta hecha y despues
+buscar con que llenarle los campos. **Si tuviste que inventar el contenido de un
+campo para que la pieza no quede vacia, esa pieza no va en esa placa.**
 
 ## Iconos de Lucide/Tabler
 

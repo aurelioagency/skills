@@ -66,21 +66,24 @@ Todo el hecho a mano sale de cuatro recursos repetidos.
 `#C9DCC4` verde · `#C3D8EA` celeste · `#D5CCE8` lila · `#F5B5AB` coral · `#FAE0A6`
 amarillo · `#A8C3B4` línea · `#1B1A18` tinta · `#6E6E6E` firma
 
-## Piezas construidas
+## Las piezas que este estilo ya dibuja
 
-La receta declara **cinco plantillas y nada más**: la repetición es lo que lo hace ver
-profesional, no la variedad. Antes de agregar una sexta, mirá si alguna de estas sirve.
+Estan en `ejemplos/06-handmade/piezas.md`, con los campos que lee cada una.
+Viven ahi y no aca a proposito: son las placas del carrusel con el que se armo el
+estilo, no un menu de donde elegir.
 
-| `type` | Qué dibuja | Campos |
-|---|---|---|
-| `cover` | título · subrayado · bajada · escena de iconos | `titulo`, `subWidth`, `bajada`, `escena` = `[{ name, px, pastel }]` o `img` |
-| `lista` | título · subrayado · bajada opcional · filas de icono + término resaltado + definición | `lista` = `[{ ico, pastel, k, t }]` |
-| `antes` | título · subrayado · dos cajas irregulares con una flecha entre ellas | `a`/`b` = `{ k, t }` |
-| `semaforo` | título · subrayado · filas de luz de color + chip de estado + consecuencia | `semaforo` = `[{ pastel, k, t }]` |
-| `cta` | título · subrayado · bajada · mancha · frase de cierre · firma grande | `titulo`, `bajada`, `cierre` |
+Que lleva cada placa lo decide el contenido — el arbol de
+`references/composicion.md`. Recien con el recurso ya elegido se mira si este
+estilo lo dibuja.
 
-En `semaforo` el color del estado no es decorativo: verde bien, amarillo atención, coral
-mal.
+**Cuando no lo dibuja, se agrega al estilo**, con las reglas de arriba: la entrada
+en `piezas.md`, el bloque en el `render()` de `index.html`, y sus clases en
+`styles.css` usando solo variables de `tokens.css` y la grilla de `grid.css`. Los
+tres, o la pieza no existe. Eso es componer dentro del sistema visual.
+
+Lo que no se hace es al reves: elegir una pieza porque ya esta hecha y despues
+buscar con que llenarle los campos. **Si tuviste que inventar el contenido de un
+campo para que la pieza no quede vacia, esa pieza no va en esa placa.**
 
 ## Sobre las ilustraciones
 

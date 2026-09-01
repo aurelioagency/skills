@@ -1,0 +1,64 @@
+/* 01-editorial-oscuro — TOKENS. La identidad de marca de este estilo y nada mas:
+   familias tipograficas y paleta. Es lo unico que se cambia para llevar este
+   estilo a otra marca; ninguna regla de layout vive aca.
+
+   Un hex escrito a mano en un paquete es un error: todo color sale de estas
+   variables. */
+
+/* Base del sistema de carrusel. Copiala al paquete y agregale los layouts por slide.
+   Trae resueltas las trampas que ya nos costaron rondas de correccion:
+   footer con centrado optico compensado, safe area por tamano, y balance de texto.
+
+   Los colores y familias son los de La Casa de Aurelio (references/la-casa-preset.md).
+
+   SI LA MARCA NO ES LA CASA, hay que tocar estas seis cosas. Ninguna es opcional:
+     1. Los @font-face de aca abajo + copiar los archivos de fuente de la marca a
+        assets/fonts/ del paquete. Una fuente que no carga es red issue.
+     2. El bloque :root entero: neutros y las cuatro familias de acento.
+     3. El footer: `footerBrand` en slide-data.js (el texto de abajo a la izquierda)
+        y el texto de swipe si la marca usa otro.
+     4. La portada: familia y color del titular y del giro (.s-cover h1 y .twist).
+        Tienen que ser dos familias y dos colores distintos.
+     5. El asset de CTA: el de la marca, en assets/, referenciado desde slide-data.js.
+     6. Las bandas de densidad de render-and-audit.mjs, o la excepcion 'density-budget'.
+   Todo eso se decide una sola vez y queda escrito en el preset de la marca
+   (social-carousels/brands/<marca>/preset.md). */
+
+@font-face {
+  font-family: 'Archivo Black';
+  src: url('assets/fonts/ArchivoBlack.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('assets/fonts/RobotoMono-VF.ttf') format('truetype');
+  font-weight: 100 700;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/Inter-VF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: block;
+}
+
+:root {
+  --bg: #000000;
+  --field: #050505;
+  --grid: #0e0e0e;
+  --ink: #f6f2e9;
+  --cream: #ede8de;
+  --panel: #191716;
+  --panel-2: #2f2c2b;
+
+  --terracotta: #d66f50;
+  --terracotta-dark: #964f3a;
+  --sage: #6ea48c;
+  --sage-dark: #2c614a;
+  --ochre: #d6b85e;
+  --ochre-dark: #9c843c;
+  --pink: #ecacc7;
+  --pink-dark: #604854;
+
+}

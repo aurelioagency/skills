@@ -26,26 +26,24 @@ apretada. El tono es autoridad y prueba — afirma y muestra el número.
   campo `#101418`. A 0.05 daba 8, la mitad del umbral medido por la marca (14). No
   bajarla. (2026-09-01)
 
-## Piezas construidas
+## Las piezas que este estilo ya dibuja
 
-Lo que el `render()` de `index.html` ya sabe dibujar hoy, con los campos que lee cada
-pieza. **Es un punto de partida, no un menú cerrado**: cada carrusel compone sus placas
-dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bloque en
-`render()` + sus clases en `styles.css`. Los tres, o la pieza no existe.
+Estan en `ejemplos/04-plano-en-negativo/piezas.md`, con los campos que lee cada una.
+Viven ahi y no aca a proposito: son las placas del carrusel con el que se armo el
+estilo, no un menu de donde elegir.
 
-| `type` | Qué dibuja | Campos |
-|---|---|---|
-| `cover` | encabezado con estado · titular 112px · filete · bajada · dos cifras con flecha · chips · pie | `tab`, `state`, `headline`, `lede`, `a`/`b`, `chips`, `source` |
-| `stack` | cabeza estándar + fichas sobre panel con filete de acento, rótulo mono y una línea | `stack` = `[{ lbl, t, tone }]`, `img` opcional |
-| `bars` | cabeza estándar + barras verticales con base compartida, párrafo y remate | `vbars` = `[{ val, h, on }]`, `after`, `punch`, `punchTone` |
-| `cta` | titular 100px · filete · bajada · checklist · firma grande | `headline`, `lede`, `checks`, `state`, `source` |
+Que lleva cada placa lo decide el contenido — el arbol de
+`references/composicion.md`. Recien con el recurso ya elegido se mira si este
+estilo lo dibuja.
 
-`tone` / `punchTone`: `teal` · `amber` · `blue`. `state` = `{ t, tone }`.
+**Cuando no lo dibuja, se agrega al estilo**, con las reglas de arriba: la entrada
+en `piezas.md`, el bloque en el `render()` de `index.html`, y sus clases en
+`styles.css` usando solo variables de `tokens.css` y la grilla de `grid.css`. Los
+tres, o la pieza no existe. Eso es componer dentro del sistema visual.
 
-En `vbars`, `h` es el porcentaje del alto y `on` marca la barra que lleva el acento; el
-hueco a la derecha las devuelve a lo que son —dos puntos de una comparación— en vez de
-un gráfico de dos categorías sobre todo el ancho. En `chips`, el primero lleva el acento
-y los demás quedan apagados: dos encendidos no dicen nada.
+Lo que no se hace es al reves: elegir una pieza porque ya esta hecha y despues
+buscar con que llenarle los campos. **Si tuviste que inventar el contenido de un
+campo para que la pieza no quede vacia, esa pieza no va en esa placa.**
 
 ## Iconos de Lucide/Tabler
 

@@ -1,86 +1,9 @@
-/* 02-editorial-oscuro-v2 — sistema visual del carrusel.
-   Segunda version del campo editorial oscuro de La Casa de Aurelio. Copiala al
-   paquete y agregale los layouts por slide.
+/* 02-editorial-oscuro-v2 — COMPOSICION. Como se dibujan las piezas de este estilo.
+   Los colores y las familias salen de tokens.css; la grilla compartida entre
+   placas, de grid.css. Aca no se define ningun hex ni ninguna familia. */
 
-   QUE LA DIFERENCIA DE 01-editorial-oscuro:
-     - Campo plano #08080A: sin grilla de puntos y sin curvas de contorno. El unico
-       relieve es un glow radial por slide, que rota de esquina.
-     - Barra de progreso de segmentos arriba de cada slide, en el acento de esa slide.
-     - Tipografia: Archivo 900 (titulares) / Source Serif 4 (bajadas y giro) /
-       JetBrains Mono (eyebrows, numeros, rotulos). No hay Archivo Black ni Inter.
-     - Tres acentos con funcion asignada, no cuatro familias intercambiables.
-     - El CTA es una slide HTML de este mismo template, no un PNG fijo.
-
-   SI LA MARCA NO ES LA CASA, hay que tocar estas cinco cosas. Ninguna es opcional:
-     1. Los @font-face de aca abajo + copiar los archivos de fuente de la marca a
-        assets/fonts/ del paquete. Una fuente que no carga es red issue.
-     2. El bloque :root entero: neutros y los tres acentos.
-     3. El footer: `footerBrand` en slide-data.js y el texto de swipe.
-     4. La portada: familia y color del titular y del giro (.s-cover h1 y .twist).
-        Tienen que ser dos familias y dos colores distintos.
-     5. El texto del CTA (.s-cta) y las bandas de densidad de render-and-audit.mjs,
-        o la excepcion 'density-budget'.
-
-   PISO TIPOGRAFICO: este template usa deliberadamente tamanios por debajo de los
-   40px de SKILL.md en su capa de referencia (eyebrow 26px, footer 30px, rotulos de
-   eje 22px, chips 38px). Es decision de disenio, registrada como excepcion
-   documentada 'typography-floor-02' en slide-data.js y en manifest.json. El cuerpo
-   de texto y los titulares SI estan por encima del piso. */
-
-@font-face {
-  font-family: 'Archivo';
-  src: url('assets/fonts/Archivo.ttf') format('truetype');
-  font-weight: 100 900;
-  font-display: block;
-}
-@font-face {
-  font-family: 'Source Serif 4';
-  src: url('assets/fonts/SourceSerif4.ttf') format('truetype');
-  font-weight: 200 900;
-  font-style: normal;
-  font-display: block;
-}
-@font-face {
-  font-family: 'Source Serif 4';
-  src: url('assets/fonts/SourceSerif4-Italic.ttf') format('truetype');
-  font-weight: 200 900;
-  font-style: italic;
-  font-display: block;
-}
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
-  font-weight: 100 800;
-  font-display: block;
-}
-
-:root {
-  --field: #08080a;
-  --ink: #f5f1e6;
-  --ink-2: #ede8dc;          /* texto de items y chips */
-  --muted: #b9b4aa;          /* bajadas en serif */
-  --dim: #8a857a;            /* rotulos de eje */
-  --dimmer: #6e6a62;         /* labels de diagrama, contador */
-  --panel: #111114;
-  --rule: #1e1e22;           /* separadores de lista y bordes de panel */
-  --rule-soft: #1c1c1f;      /* borde superior del footer */
-  --track: #26262a;          /* segmento apagado de la barra de progreso */
-  --slab: #2a2a2f;           /* renglon apagado del diagrama de documento */
-
-  /* Tres acentos, cada uno con su funcion:
-       coral   -> problema, causa, lo que falla
-       verde   -> dato, evidencia, solucion
-       dorado  -> apertura, cierre, slide neutra */
-  --coral: #e0714a;
-  --coral-deep: #2e1d16;     /* numero gigante sobre campo */
-  --coral-edge: #4a2a1e;     /* borde de chip */
-  --verde: #7fbba0;
-  --dorado: #e3c05c;
-  --dorado-deep: #332b14;
-  --dorado-soft: #c9ae68;    /* giro en serif italica */
-
-  --pad-x: 88px;             /* margen lateral del disenio. NO se reduce. */
-}
+@import url('tokens.css');
+@import url('grid.css');
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -169,10 +92,6 @@ h2 { font-size: 104px; }
   margin-bottom: 88px;
 }
 
-.head { padding: 0 var(--pad-x); margin-top: 88px; }
-.head h2 { margin-top: 32px; }
-.head .lede { margin-top: 40px; }
-
 /* ---------- Footer ---------- */
 
 .footer {
@@ -196,8 +115,6 @@ h2 { font-size: 104px; }
 }
 
 /* ---------- Layout: portada ---------- */
-
-.s-cover .head { margin-top: 96px; }
 .s-cover .twist {
   font-family: 'Source Serif 4', serif;
   font-style: italic;
@@ -268,7 +185,6 @@ h2 { font-size: 104px; }
 .chart .axis .mid { color: var(--coral); }
 
 /* ---------- Componente: numero gigante ---------- */
-
 
 /* ---------- Componente: chips ---------- */
 
@@ -438,7 +354,6 @@ h2 { font-size: 104px; }
 /* Con icono, la fila lo pone a la izquierda y el texto pasa a .rt. */
 .rows .row { display: flex; align-items: center; gap: 22px; }
 .rows .row .rt { flex: 1; }
-
 
 /* ---------- Componente: dos cifras medidas ----------
    Para resultados sueltos que no forman ni una curva ni una serie. */

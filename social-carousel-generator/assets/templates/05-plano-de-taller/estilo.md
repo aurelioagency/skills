@@ -34,24 +34,21 @@ formas, sus 6 tramas, los 8 tipos de línea ISO 128-20 y la simbología normaliz
   media altura, asi que una etiqueta larga queda tachada por la linea. `SI` / `NO` entra;
   `NO LA VES` sale tachado. (2026-09-01)
 
-## Piezas construidas
+## Las piezas que este estilo ya dibuja
 
-Lo que el `render()` de `index.html` ya sabe dibujar hoy, con los campos que lee cada
-pieza. **Es un punto de partida, no un menú cerrado**: cada carrusel compone sus placas
-dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bloque en
-`render()` + sus clases en `styles.css`. Los tres, o la pieza no existe.
+Estan en `ejemplos/05-plano-de-taller/piezas.md`, con los campos que lee cada una.
+Viven ahi y no aca a proposito: son las placas del carrusel con el que se armo el
+estilo, no un menu de donde elegir.
 
-| `type` | Qué dibuja | Campos |
-|---|---|---|
-| `cover` | encabezado · titular condensado 112px · regla de cota con la magnitud · bajada · corte y sección · cartucho | `tab`, `headline`, `ruleWidth`, `ruleLabel`, `lede`, `a`/`b`, `cartucho` |
-| `nodos` | cabeza estándar + nodos con figura, rótulo mono azul, nombre condensado y descripción, separados por línea de eje | `nodos` = `[{ fig:{ id, px, trama }, k, name, desc }]`, `img` opcional |
-| `bars` | cabeza estándar + barras rayadas, línea de eje, cifra dominante y sellos | `bars` = `[{ lbl, val, w, tone }]`, `factor` = `{ n, t }`, `sellos`, `cartucho` |
-| `ficha` | ficha de respuesta en lenguaje de plano: renglones con trama, linea de corte punteada y el campo `FUENTE` en blanco. Alternativa a `corte` en la portada cuando no hay dos magnitudes que comparar | `ficha` = `{ lbl, lines, foot }` |
-| `cta` | titular condensado 116px · regla · bajada · checklist · cartucho | `headline`, `ruleWidth`, `lede`, `checks`, `cartucho` |
+Que lleva cada placa lo decide el contenido — el arbol de
+`references/composicion.md`. Recien con el recurso ya elegido se mira si este
+estilo lo dibuja.
 
-`tone`: `azul` · `naranja` · `normal` · `invert` · `densa`. Los `id` de figura y las
-tramas están en `figures.md`.
+**Cuando no lo dibuja, se agrega al estilo**, con las reglas de arriba: la entrada
+en `piezas.md`, el bloque en el `render()` de `index.html`, y sus clases en
+`styles.css` usando solo variables de `tokens.css` y la grilla de `grid.css`. Los
+tres, o la pieza no existe. Eso es componer dentro del sistema visual.
 
-El `ruleLabel` de la portada lleva la magnitud (`FACTOR 25:1`), no una etiqueta
-genérica: es una cota, y una cota siempre mide algo. El `factor` es la cifra dominante
-de la placa: una sola, porque dos compiten y ninguna se lee.
+Lo que no se hace es al reves: elegir una pieza porque ya esta hecha y despues
+buscar con que llenarle los campos. **Si tuviste que inventar el contenido de un
+campo para que la pieza no quede vacia, esa pieza no va en esa placa.**

@@ -1,0 +1,26 @@
+/* 04-plano-en-negativo — GRILLA COMPARTIDA.
+   Donde arranca cada cosa y cuanto respira, igual en las nueve placas. Es el archivo
+   que hace que la serie se lea alineada: si un titular empieza mas abajo que los
+   demas, se ve como un error de armado aunque la placa por separado este bien.
+
+   NO se toca para cerrar un aviso del audit. Si una placa necesita otra altura de
+   arranque, le falta contenido — ver *Proporcion y consistencia* en SKILL.md.
+   scripts/audit-serie.mjs compara el arranque real de cada rol contra estos valores. */
+
+:root {
+  --canvas-w: 1080px;
+  --canvas-h: 1440px;
+
+  --gutter: 80px;            /* margen parejo del disenio. NO se reduce. */
+  --grid-top: 60px;          /* arranque de la cabecera, medido desde el margen */
+  --head-gap: 26px;
+
+  --pad: var(--gutter);      /* alias historico */
+  --pad-x: var(--gutter);
+}
+
+.head { margin-top: var(--grid-top); display: flex; flex-direction: column; gap: var(--head-gap); }
+
+/* Desviacion declarada: las placas que cargan un diagrama alto suben la cabecera
+   12px. Es la unica excepcion a --grid-top en este estilo. */
+.head.tight { margin-top: calc(var(--grid-top) - 12px); gap: 22px; }

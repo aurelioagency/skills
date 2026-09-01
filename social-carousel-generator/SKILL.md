@@ -93,29 +93,50 @@ Two things a new brand must decide explicitly, because inheriting La Casa's answ
 
 ## Template Resolution
 
-A **template** is a visual layout system — the HTML/CSS skeleton, its field treatment, and its component set. A **preset** is a brand's decisions on top of one (palette, fonts, footer, CTA, caption). Several presets can point at the same template; a brand that needs a genuinely different layout, not just different colours, gets a new template instead of bending an existing one.
+Un **template** es un **sistema visual**: tipografias, paleta, grilla, margenes, ritmo, trazo, tratamiento de ilustracion y de datos. Nada mas que eso. No trae guion, no trae cantidad de placas y no trae una secuencia de contenido. Un **preset** son las decisiones de una marca sobre uno (paleta, fuentes, footer, CTA, caption). Varios presets pueden apuntar al mismo template; una marca que necesita otro layout, y no otros colores, se lleva un template nuevo.
 
-Templates live in `assets/templates/`, one folder per design, numbered and named:
+**Lo que el template decide y lo que no**, porque es la confusion que produce carruseles copiados:
+
+| Decide el template | No lo decide el template |
+|---|---|
+| Familias, pesos y roles tipograficos | Cuantas placas tiene el carrusel |
+| Paleta y que significa cada acento | Que dice cada placa |
+| Grilla, margenes, arranques, ritmo vertical | Que recurso visual va en cada placa |
+| Grosores de linea y tratamiento de relleno | Si hay grafico, tabla o ilustracion |
+| Como se dibuja un recurso, una vez elegido | Cual se elige |
+
+La cantidad de placas sale del objetivo y del contenido, y la confirma el usuario. Los graficos, tablas y recursos visuales son opcionales y responden a datos reales del tema: **no se copian por estar presentes en una referencia.** Cada placa tiene una funcion narrativa propia; no se recorta ni se estira el contenido para imitar la cantidad de placas de un ejemplo.
+
+Archivos de un template:
 
 ```text
-assets/templates/01-editorial-oscuro/
-  index.html
-  styles.css
-  slide-data.js
-  cta-<variant>.html   # CTA source(s) built on this template's field, if any
-  make-cta.mjs
+assets/templates/<NN-nombre>/
+  tokens.css           # identidad: familias y paleta. Lo unico que cambia por marca.
+  grid.css             # grilla compartida: margenes, arranques, ritmo
+  styles.css           # como se dibuja cada pieza. Importa los dos de arriba.
+  index.html           # el render() del estilo
+  slide-data.js        # configuracion del carrusel, con slides: []
+  estilo.md            # las reglas del sistema visual
+  cta-<variant>.html   # fuente del CTA, si lo tiene
+  figures.js/icons.js  # libreria de ilustracion propia, si la tiene
+
+ejemplos/<NN-nombre>/  # FUERA de la ruta de copia
+  slide-data.js        # el carrusel con el que se armo el estilo
+  piezas.md            # las piezas que ese render() ya dibuja
 ```
 
-Templates today:
+**El `ejemplos/` no se copia al paquete.** Es para mirar el estilo renderizado y como fixture de regresion cuando se toca el CSS. Un carrusel es evidencia de un carrusel: no dice cuantas placas soporta el estilo ni que placa corresponde a que contenido.
+
+Templates hoy:
 
 | # | Template | Sistema visual |
 |---|---|---|
-| 01 | `01-editorial-oscuro` | Campo negro con grilla de puntos, curvas de contorno y dos glows. Archivo Black / Roboto Mono / Inter / Georgia itálica. Portada centrada. CTA como PNG fijo, dos variantes. |
-| 02 | `02-editorial-oscuro-v2` | Segunda versión del mismo campo, plana: sin grilla ni curvas, un glow que rota de esquina, barra de progreso arriba. Archivo / Source Serif 4 / JetBrains Mono. Portada alineada a la izquierda con el titular partido en dos mitades. CTA como slide HTML. |
+| 01 | `01-editorial-oscuro` | Campo negro con grilla de puntos, curvas de contorno y dos glows. Archivo Black / Roboto Mono / Inter / Georgia itálica. CTA como PNG fijo, dos variantes. |
+| 02 | `02-editorial-oscuro-v2` | Segunda versión del mismo campo, plana: sin grilla ni curvas, un glow que rota de esquina, barra de progreso arriba. Archivo / Source Serif 4 / JetBrains Mono. CTA como slide HTML. |
 | 03 | `03-cuaderno-de-taller` | Papel `#F2EFE7` con retícula de 60px. Titulares manuscritos (Architects Daughter), cuerpo Space Grotesk, rótulos JetBrains Mono. Regla de cota rombo-línea-rombo. Cuatro pasteles con borde de tinta. Tono didáctico. |
 | 04 | `04-plano-en-negativo` | Campo `#101418` con retícula turquesa. Una sola familia (Space Grotesk) haciendo toda la jerarquía por peso y tamaño. Estado con punto de color en el encabezado. Tono de autoridad y prueba. |
 | 05 | `05-plano-de-taller` | Papel `#EDEAE3`, Barlow Condensed en mayúsculas, relleno sólo por trama diagonal, dos grosores de línea en proporción 2:1, línea de eje como separador y cartucho ISO al pie. Trae **biblioteca de figuras** (`figures.js` / `figures.md`): 24 formas × 6 tramas, los 8 tipos de línea ISO 128-20 y simbología normalizada. |
-| 06 | `06-handmade` | Papel crema `#FCEFE3`, dos manuscritas (Gochi Hand / Patrick Hand), cinco pasteles y cuatro marcas hechas con cajas de radio irregular. Cinco plantillas fijas y nada más. Trae **set de iconos** (`icons.js` / `icons.md`). |
+| 06 | `06-handmade` | Papel crema `#FCEFE3`, dos manuscritas (Gochi Hand / Patrick Hand), cinco pasteles y cuatro marcas hechas con cajas de radio irregular. Trae **set de iconos** (`icons.js` / `icons.md`) y la excepcion declarada `repeticion-deliberada`: la repeticion de plantilla es parte de su identidad. |
 
 Los seis son de La Casa de Aurelio y comparten la marca; lo que cambia es el sistema visual entero. Los 03, 04 y 05 son tres variantes de una misma estética de ingeniería, pero cada uno es un template independiente: no comparten paleta, tipografía ni componentes. Un diseño nuevo (`07-<nombre>`, …) entra como carpeta numerada nueva, nunca como variante pegada encima de los archivos de otro template.
 

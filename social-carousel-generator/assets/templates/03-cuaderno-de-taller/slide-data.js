@@ -1,11 +1,17 @@
-// Datos del carrusel para 03-cuaderno-de-taller. Todo el contenido sale de la fuente;
-// nada inventado. `width`/`height` los lee render-and-audit.mjs para fijar el viewport:
-// manteneles el formato.
+// 03-cuaderno-de-taller — DATOS DEL CARRUSEL. Arranca sin placas, a proposito.
 //
-// Los slides de abajo son el carrusel de ejemplo con el que se armo el template
-// (costo por tarea con GPT-5.6). Sirven para ver cada layout renderizado; se reemplazan
-// enteros al armar un carrusel nuevo.
-
+// `slides` esta vacio porque las placas de este carrusel todavia no existen: se
+// componen a partir del contenido. Cuantas hay lo decide el material y lo
+// confirma el usuario; que recurso visual lleva cada una sale de
+// references/composicion.md; como se dibuja ese recurso, del estilo.md de este
+// template.
+//
+// El carrusel con el que se armo el estilo esta en ejemplos/03-cuaderno-de-taller/.
+// No se copia aca. Rellenar sus campos es lo que produce carruseles todos
+// iguales con las palabras cambiadas.
+//
+// `width`/`height` los lee render-and-audit.mjs para fijar el viewport:
+// manteneles el formato.
 window.CAROUSEL = {
   slug: 'nombre-del-carrusel',
   template: '03-cuaderno-de-taller',
@@ -35,67 +41,5 @@ window.CAROUSEL = {
   // midieron para este template, no inventes numeros: usa la excepcion 'density-budget'.
   // densityBudget: { ... },
 
-  slides: [
-    // PORTADA. Titular manuscrito + regla de cota + bajada + la comparacion abajo.
-    // `h` de cada caja es su altura en px: ver la nota del componente en estilo.md
-    // — no es un grafico a escala, el dato va escrito adentro de la caja.
-    {
-      type: 'cover',
-      tab: 'GPT-5.6',
-      headline: 'El mismo<br>resultado por<br>25 veces menos',
-      ruleWidth: 76,
-      lede: 'OpenAI publicó qué cambió al construir agentes con GPT-5.6. Te lo traduzco a decisiones de plata.',
-      a: { v: 'US$33,27', h: 300, tone: 'rosa',    cap: 'ANTES · GPT-5.5<br>84,36 % acierto' },
-      b: { v: 'US$1,33',  h: 140, tone: 'celeste', cap: 'AHORA · 5.6 Luna<br>84,04 % acierto' },
-      source: 'FUENTE: BROWSECOMP · OPENAI 08/2026'
-    },
-
-    // DESPIECE. Piezas con etiqueta P-01, nombre manuscrito y descripcion.
-    // `ico` es opcional: se copia el INTERIOR del <svg> de lucide.dev o tabler.io/icons
-    // (los <path>, sin la etiqueta <svg>). El grosor lo calcula el template solo, con el
-    // valor medido para este estilo; no se escribe stroke-width a mano.
-    // `img` opcional si el slide lleva una imagen.
-    {
-      type: 'parts',
-      tab: 'DESPIECE',
-      headline: 'Las 3 piezas<br>que bajan el costo',
-      ruleWidth: 64,
-      parts: [
-        { tag: 'P-01', tone: 'celeste',  ico: { d: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' }, name: 'Guardar el razonamiento',      desc: 'El agente no vuelve a pensar lo que ya pensó entre paso y paso.' },
-        { tag: 'P-02', tone: 'amarillo', ico: { d: '<path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/>' }, name: 'Repartir en paralelo',          desc: 'Varios agentes trabajando a la vez, uno que ordena y sintetiza.' },
-        { tag: 'P-03', tone: 'gris',     ico: { d: '<path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/>' }, name: 'Mover lo repetitivo a código',  desc: 'Filtrar y sumar lo hace un script. El modelo sólo juzga.' }
-      ],
-      source: 'CONJUNTO: RESPONSES API'
-    },
-
-    // ENSAYO. Barras cuyo ancho `w` sale del dato medido, mas una nota manuscrita.
-    // Una sola nota por slide: dos le sacan el peso a las dos.
-    {
-      type: 'bars',
-      tab: 'ENSAYO',
-      headline: 'Dos ajustes,<br>el triple de<br>rendimiento',
-      ruleWidth: 58,
-      bars: [
-        { lbl: 'HARNESS ESTÁNDAR',                val: '13,3 %', w: 35,  tone: 'gris' },
-        { lbl: 'CON RAZONAMIENTO + COMPACTACIÓN', val: '38,3 %', w: 100, tone: 'celeste' }
-      ],
-      after: 'Mismo modelo. Mismo prompt. Casi <b>3×</b> el resultado usando <b>6× menos</b> tokens de salida.',
-      note: 'La mayoría no tiene un problema de modelo. Tiene un problema de configuración.',
-      source: 'FUENTE: ARC-AGI-3 · GPT-5.6 SOL'
-    },
-
-    // CIERRE. Titular, regla, bajada y los pasos. La firma va grande en el pie.
-    {
-      type: 'cta',
-      tab: 'CIERRE',
-      headline: '¿Cuánto estás<br>pagando de más?',
-      ruleWidth: 70,
-      lede: 'Si tu automatización con IA se armó hace seis meses, está corriendo con la configuración vieja. Se puede medir en una tarde.',
-      steps: [
-        'Guardá esta ficha',
-        'Escribime "COSTO" por mensaje'
-      ],
-      source: 'AUTOMATIZACIONES CON IA'
-    }
-  ]
+  slides: [],
 };

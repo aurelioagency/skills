@@ -1,0 +1,76 @@
+/* 05-plano-de-taller — TOKENS. La identidad de marca de este estilo y nada mas:
+   familias tipograficas y paleta. Es lo unico que se cambia para llevar este
+   estilo a otra marca; ninguna regla de layout vive aca.
+
+   Un hex escrito a mano en un paquete es un error: todo color sale de estas
+   variables. */
+
+/* 05-plano-de-taller — sistema visual del carrusel.
+   Plano tecnico real: el lenguaje visual del dibujo de ingenieria aplicado tal cual,
+   sin metaforas. Es el mas denso de la familia y el que mas autoridad transmite.
+
+   QUE LO DIFERENCIA DE LOS OTROS:
+     - Papel #EDEAE3 con reticula de 60px al 6%.
+     - Titulares en Barlow Condensed 600 EN MAYUSCULAS. Cuerpo en Barlow. Rotulos y
+       cifras en JetBrains Mono. La condensada es la firma del template.
+     - Relleno SOLO por trama diagonal, nunca color plano. Ver figures.js.
+     - Dos grosores de linea y nada mas, en proporcion 2:1 — gruesa 6px, fina 3px.
+       Un tercer grosor es lo que hace que un plano se vea amateur.
+     - Linea de eje (trazo y punto) como separador entre bloques.
+     - Cartucho al pie: dato / fuente / autor en columnas. Obliga a citar.
+
+   SI LA MARCA NO ES LA CASA, hay que tocar: los @font-face y sus archivos, el
+   bloque :root, `footerBrand` en slide-data.js, y el texto del CTA (.s-cta).
+
+   PISO TIPOGRAFICO: la capa de referencia va por debajo de los 40px de SKILL.md
+   (rotulos mono 22-30px). Excepcion documentada 'typography-floor'.
+   SAFE AREA: el margen del disenio es 80px parejo (5,5% vertical), no el 10%.
+   Excepcion documentada 'safe-area'. Las dos estan en slide-data.js. */
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('assets/fonts/Barlow-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Barlow';
+  src: url('assets/fonts/Barlow-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Barlow';
+  src: url('assets/fonts/Barlow-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  src: url('assets/fonts/BarlowCondensed-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: block;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: block;
+}
+
+:root {
+  --paper: #edeae3;
+  --edge: #c5c1b6;
+  --ink: #14171a;
+  --body: #2e3236;
+  --muted: #6b6f73;
+
+  /* Dos acentos, con significado fijo. La trama azul es "lo bueno / lo nuevo" y la
+     naranja "el problema". Nunca al reves y nunca por gusto estetico. */
+  --azul: #2c6e8f;
+  --naranja: #e2762b;
+
+  /* Dos grosores, proporcion 2:1. No hay un tercero. */
+  --gruesa: 6px;
+  --fina: 3px;
+}

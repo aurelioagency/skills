@@ -1,0 +1,77 @@
+/* 06-handmade — TOKENS. La identidad de marca de este estilo y nada mas:
+   familias tipograficas y paleta. Es lo unico que se cambia para llevar este
+   estilo a otra marca; ninguna regla de layout vive aca.
+
+   Un hex escrito a mano en un paquete es un error: todo color sale de estas
+   variables. */
+
+/* 06-handmade — sistema visual del carrusel.
+   Cuaderno a mano: papel crema, dos manuscritas, cinco pasteles y cuatro marcas
+   hechas con cajas y bordes. Ninguna ilustracion dibujada hace falta.
+
+   Este template NO se transcribio de un carrusel: se construyo desde la receta de
+   siete decisiones del archivo de origen. Los valores de abajo son los que esa
+   receta declara, no estimaciones.
+
+   QUE LO DIFERENCIA DE LOS OTROS:
+     - Papel crema #FCEFE3 en TODAS las placas, sin degradados y sin excepcion.
+     - Dos manuscritas, nunca tres: Gochi Hand para titulos, Patrick Hand para
+       cuerpo. El cuerpo lleva tracking abierto (+0.02em) y mucho aire entre lineas,
+       para que se lea como escrito con marcador fino y no como fuente.
+     - Titulo SIEMPRE arriba y centrado, con subrayado verde debajo.
+     - Los pasteles NUNCA son fondo: solo resaltador, relleno de caja o subrayado.
+       Un pastel por concepto, y ese pastel vuelve cada vez que el concepto vuelve.
+     - Ningun radio de borde es simetrico. Es el detalle que hace la magia: escribir
+       `border-radius: 22px 20px 24px 18px` en vez de `20px` y el ojo lo lee como
+       trazo humano.
+
+   SI LA MARCA NO ES LA CASA, hay que tocar: los @font-face y sus archivos, el
+   bloque :root, `footerBrand` en slide-data.js, y el texto del CTA (.s-cta).
+
+   PISO TIPOGRAFICO: la receta declara su propio piso —nada por debajo de 38px— que
+   es mas bajo que los 40px de SKILL.md, y los rotulos mono quedan aun mas abajo.
+   Excepcion documentada 'typography-floor'.
+   SAFE AREA: el margen de la receta es 88px a los lados y 96px arriba y abajo
+   (6,7% vertical), no el 10%. Excepcion documentada 'safe-area'. */
+
+@font-face {
+  font-family: 'Gochi Hand';
+  src: url('assets/fonts/GochiHand.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Patrick Hand';
+  src: url('assets/fonts/PatrickHand.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Patrick Hand SC';
+  src: url('assets/fonts/PatrickHandSC.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
+  font-weight: 100 800;
+  font-display: block;
+}
+
+:root {
+  --papel: #fcefe3;
+  --tinta: #1b1a18;
+  --texto: #2a2825;
+  --firma: #6e6e6e;
+  --linea: #a8c3b4;         /* el verde del subrayado de titulo */
+
+  /* Los cinco pasteles. Un pastel = un concepto, en TODO el carrusel.
+     Si "Tabla" es verde en la placa 2, sigue siendo verde en la 7. */
+  --verde: #c9dcc4;
+  --celeste: #c3d8ea;
+  --lila: #d5cce8;
+  --coral: #f5b5ab;
+  --amarillo: #fae0a6;
+
+}

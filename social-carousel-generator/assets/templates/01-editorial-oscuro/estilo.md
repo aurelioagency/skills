@@ -27,26 +27,24 @@ respetar al componer.
 - **La lista de "nunca en una placa" del preset es cerrada.** Sin badges de esquina, sin
   monogramas, sin watermark, sin logo en placas de contenido.
 
-## Piezas construidas
+## Las piezas que este estilo ya dibuja
 
-Lo que el `render()` de `index.html` ya sabe dibujar hoy, con los campos que lee cada
-pieza. **Es un punto de partida, no un menú cerrado**: cada carrusel compone sus placas
-dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bloque en
-`render()` + sus clases en `styles.css`. Los tres, o la pieza no existe.
+Estan en `ejemplos/01-editorial-oscuro/piezas.md`, con los campos que lee cada una.
+Viven ahi y no aca a proposito: son las placas del carrusel con el que se armo el
+estilo, no un menu de donde elegir.
 
-Este estilo no tiene placas con nombre: se compone a mano combinando componentes dentro
-de la gramática de arriba.
+Que lleva cada placa lo decide el contenido — el arbol de
+`references/composicion.md`. Recien con el recurso ya elegido se mira si este
+estilo lo dibuja.
 
-| Componente | Qué dibuja |
-|---|---|
-| `fanout` | Un nodo que se abre hacia varios destinos. Patrón por defecto del gráfico de tapa. |
-| `verdict` | Caja con borde de acento y una frase en mayúsculas. |
-| `checklist` | Ítems con marca de color. |
-| `flow` | Cajas verticales con flecha hacia abajo. |
-| `grid` | Grilla 2x2 de tarjetas. |
-| `bars` | Tres barras de acento, anchos decrecientes. |
-| `mascot` | El personaje de la marca. **Nunca solo en su fila**: siempre con un componente al lado, a la misma altura. |
-| `userImg` | Imagen que pasó el usuario. Transparente va directo; opaca va enmarcada. |
+**Cuando no lo dibuja, se agrega al estilo**, con las reglas de arriba: la entrada
+en `piezas.md`, el bloque en el `render()` de `index.html`, y sus clases en
+`styles.css` usando solo variables de `tokens.css` y la grilla de `grid.css`. Los
+tres, o la pieza no existe. Eso es componer dentro del sistema visual.
+
+Lo que no se hace es al reves: elegir una pieza porque ya esta hecha y despues
+buscar con que llenarle los campos. **Si tuviste que inventar el contenido de un
+campo para que la pieza no quede vacia, esa pieza no va en esa placa.**
 
 ## Iconos de Lucide/Tabler
 

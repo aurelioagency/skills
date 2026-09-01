@@ -1,57 +1,9 @@
-/* 04-plano-en-negativo — sistema visual del carrusel.
-   Plano tecnico en negativo: campo oscuro, reticula turquesa tenue, tipografia
-   geometrica apretada. El tono es autoridad y prueba — afirma y muestra el numero.
+/* 04-plano-en-negativo — COMPOSICION. Como se dibujan las piezas de este estilo.
+   Los colores y las familias salen de tokens.css; la grilla compartida entre
+   placas, de grid.css. Aca no se define ningun hex ni ninguna familia. */
 
-   QUE LO DIFERENCIA DE LOS OTROS:
-     - Campo #101418 con reticula turquesa de 60px al 5%. Es el unico oscuro de la
-       familia de ingenieria.
-     - Una sola familia de texto: Space Grotesk. El peso y el tamanio hacen toda la
-       jerarquia. JetBrains Mono solo para rotulos y cifras.
-     - Titulares 700 con tracking negativo fuerte (-0.03em) y line-height ~1.
-     - Estado en el encabezado: un punto de color y una palabra (VERIFICADO, MISMO
-       MODELO, CUPOS ABIERTOS). Es la firma del template.
-     - Tres acentos con funcion asignada, no intercambiables.
-
-   SI LA MARCA NO ES LA CASA, hay que tocar: los @font-face y sus archivos, el
-   bloque :root, `footerBrand` en slide-data.js, y el texto del CTA (.s-cta).
-
-   PISO TIPOGRAFICO: la capa de referencia va por debajo de los 40px de SKILL.md
-   (rotulos mono 26-28px). Excepcion documentada 'typography-floor'.
-   SAFE AREA: el margen del disenio es 80px parejo (5,5% vertical), no el 10%.
-   Excepcion documentada 'safe-area'. Las dos estan en slide-data.js. */
-
-@font-face {
-  font-family: 'Space Grotesk';
-  src: url('assets/fonts/SpaceGrotesk.ttf') format('truetype');
-  font-weight: 300 700;
-  font-display: block;
-}
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: url('assets/fonts/JetBrainsMono.ttf') format('truetype');
-  font-weight: 100 800;
-  font-display: block;
-}
-
-:root {
-  --field: #101418;
-  --edge: #262c33;          /* borde del lienzo */
-  --ink: #e6eaee;
-  --body: #aeb6be;          /* cuerpo de texto */
-  --dim: #7d868f;           /* rotulos mono y pie */
-  --rule: #2e353d;          /* filetes y bordes apagados */
-  --panel: #1a2027;         /* fondo de las fichas */
-
-  /* Tres acentos, cada uno con su funcion:
-       turquesa -> lo bueno, lo verificado, el resultado
-       ambar    -> la advertencia, el caso viejo, lo que hay que mirar
-       azul     -> la tercera via, cuando hacen falta tres categorias */
-  --teal: #4fd1c5;
-  --amber: #f5a524;
-  --blue: #6c8cff;
-
-  --pad: 80px;              /* margen del disenio. NO se reduce. */
-}
+@import url('tokens.css');
+@import url('grid.css');
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -139,10 +91,6 @@ h2 { font-size: 88px; line-height: 1; }
   max-width: 840px;
   text-wrap: pretty;
 }
-
-.head { margin-top: 60px; display: flex; flex-direction: column; gap: 26px; }
-.head.tight { margin-top: 48px; gap: 22px; }
-
 /* Remate: frase con filete de acento a la izquierda. Una por slide. */
 .punch {
   font-size: 46px;

@@ -1,0 +1,32 @@
+/* 01-editorial-oscuro — GRILLA COMPARTIDA.
+   Donde arranca cada cosa y cuanto respira, igual en las nueve placas. Es el archivo
+   que hace que la serie se lea alineada: si un titular empieza mas abajo que los
+   demas, se ve como un error de armado aunque la placa por separado este bien.
+
+   NO se toca para cerrar un aviso del audit. Si una placa necesita otra altura de
+   arranque, le falta contenido — ver *Proporcion y consistencia* en SKILL.md.
+   scripts/audit-serie.mjs compara el arranque real de cada rol contra estos valores. */
+
+:root {
+  --canvas-w: 1080px;
+  --canvas-h: 1440px;
+
+  --gutter: 54px;            /* margen lateral. NO se reduce. */
+  --grid-top: 144px;         /* arranque del contenido: borde superior del .stage */
+  --grid-bottom: 144px;      /* espejo del anterior + 82px reservados al footer */
+
+  /* Alias historicos: las reglas de styles.css los siguen usando. */
+  --pad-x: var(--gutter);
+  --pad-y: var(--grid-top);
+}
+
+.stage {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: var(--grid-top);
+  bottom: calc(var(--grid-bottom) + 82px);   /* deja lugar al footer */
+  display: flex;
+  flex-direction: column;
+  z-index: 4;
+}

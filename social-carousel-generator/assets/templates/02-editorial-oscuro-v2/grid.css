@@ -1,0 +1,28 @@
+/* 02-editorial-oscuro-v2 — GRILLA COMPARTIDA.
+   Donde arranca cada cosa y cuanto respira, igual en las nueve placas. Es el archivo
+   que hace que la serie se lea alineada: si un titular empieza mas abajo que los
+   demas, se ve como un error de armado aunque la placa por separado este bien.
+
+   NO se toca para cerrar un aviso del audit. Si una placa necesita otra altura de
+   arranque, le falta contenido — ver *Proporcion y consistencia* en SKILL.md.
+   scripts/audit-serie.mjs compara el arranque real de cada rol contra estos valores. */
+
+:root {
+  --canvas-w: 1080px;
+  --canvas-h: 1440px;
+
+  --gutter: 88px;            /* margen lateral del disenio. NO se reduce. */
+  --grid-top: 88px;          /* arranque del bloque de cabecera en toda placa */
+  --head-gap: 32px;          /* rotulo -> titular */
+  --lede-gap: 40px;          /* titular -> bajada */
+
+  --pad-x: var(--gutter);    /* alias historico */
+}
+
+.head { padding: 0 var(--gutter); margin-top: var(--grid-top); }
+.head h2 { margin-top: var(--head-gap); }
+.head .lede { margin-top: var(--lede-gap); }
+
+/* La portada arranca 8px mas abajo que el resto. Es la unica desviacion declarada
+   de --grid-top en este estilo, y esta aca para que se vea, no enterrada abajo. */
+.s-cover .head { margin-top: calc(var(--grid-top) + 8px); }
