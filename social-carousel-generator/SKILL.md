@@ -238,8 +238,6 @@ Estructura: [la secuencia de ese arquetipo aplicada a este tema]
 
 **El arquetipo puede fijar la cantidad de slides.** Tutorial es un paso por slide y listicle un item por slide: ahi la cuenta la da el material, no una eleccion. Si un proceso tiene 12 pasos son dos carruseles, porque el techo de 10 imagenes no se mueve.
 
-**Antes de escribir el plan de placas, corré el test de *Las placas son las dimensiones del tema* (en *Slide Grammar*).** Un plan cuyos titulos son ejemplos de la fuente en vez de dimensiones del tema se aprueba igual de facil y se descubre recien con la copy escrita.
-
 **State the slide count you are proposing for each carousel, and why that number** — it is part of what the user is confirming here, and it is far cheaper to change now than after the copy is drafted. Size and the text budget per slide are fixed by the skill; the count is not. See Format, length and density below.
 
 ## Format, length and density
@@ -361,33 +359,6 @@ Es la secuencia por defecto, y vale para todo template y toda marca. Es tambien 
 Steps 4 to 6 are where a carousel earns extra slides without padding: they split one crowded slide into the claim and the thing that backs it. If a step has nothing real to say, drop the step. A source that only supports steps 1, 3 and 7 makes a three-slide carousel, and that is a finished carousel, not a short one.
 
 Prefer more, clearer slides over dense ones. Each slide gets one job.
-
-### Las placas son las dimensiones del tema, no los ejemplos de la fuente
-
-Cuando el tema es **una cosa** — un modelo, una herramienta, un producto, una tecnica, una
-empresa — las placas son sus **dimensiones**: que es, que tan bueno es, que cuesta, que te
-deja hacer, que riesgos tiene, que limites tiene. Los ejemplos que da la fuente son la
-**evidencia que llena** esas placas. Nunca el titulo de una.
-
-El defecto se ve asi. La fuente cuenta que el modelo encontro un bug imposible en un fondo
-de inversion, diseno proteinas validadas en laboratorio y mapeo un tercio de Venus, y el
-plan de placas sale `Millennium` · `Proteinas` · `Venus`. Las tres son ciertas y ninguna es
-una placa de un carrusel sobre un modelo nuevo: son tres anecdotas sueltas donde tenian que
-ir tres dimensiones. El que lee quiere saber si le sirve el modelo, y no encuentra donde
-mirar.
-
-La correccion es mecanica y se hace **antes de proponer el split**: agrupa cada ejemplo bajo
-la dimension que prueba. El bug imposible prueba *capacidades*. Las proteinas, Venus y los
-kernels prueban *investigacion cientifica*. Las tres anecdotas pasan a ser el contenido de
-dos placas, y las placas se llaman por lo que el lector esta buscando.
-
-**El test, sobre el plan de placas y antes de escribir una linea:** leé los titulos solos,
-sin el contenido. Si son ejemplos — nombres propios, casos, anecdotas — falta el paso de
-agrupar. Si son las preguntas que alguien se hace sobre el tema, esta bien.
-
-Vale al reves tambien: cuando el tema **es** un caso — un cliente, un experimento, una
-historia — las placas si son los momentos de ese caso. Lo que decide es que es el tema, no
-que trae la fuente.
 
 **A slide that looks empty is missing content, not size.** Add a fact from the source — the number behind the claim, the counter-case, the second experiment — or accept the air. Never fill a slide by enlarging what is already on it. Scaling type or graphics to occupy the canvas produces a slide that is bigger and says the same, and it is how a carousel drifts out of the brand: the type outgrows the headline level, the graphics turn into walls, and every later correction is about size. If the source has nothing more to say on that slide, the slide is finished at the size the content needs.
 
