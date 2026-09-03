@@ -389,6 +389,20 @@ Vale al reves tambien: cuando el tema **es** un caso — un cliente, un experime
 historia — las placas si son los momentos de ese caso. Lo que decide es que es el tema, no
 que trae la fuente.
 
+**Y si la fuente ya viene estructurada, esa es la estructura.** Antes de agrupar por tu
+cuenta, mira si la fuente ya agrupo: subtitulos, secciones, una tabla, una lista numerada.
+Cuando estan, esos nombres son los de la placa y los de sus items — copiados, no
+reformulados. Es la misma regla que *Si la fuente ya lo explica bien, se dice igual que la
+fuente* (`references/redaccion.md`), aplicada a la estructura en vez de a la frase.
+
+El caso testigo: una seccion titulada *Scientific research* con tres subtitulos en negrita
+—*Molecular design*, *Computational analysis and modeling*, *Computational biology*— y la
+placa salio con la lista `proteinas` · `Venus` · `kernels de GPU`. Otra vez los ejemplos en
+el lugar de las categorias, con el agravante de que las categorias estaban escritas y
+alcanzaba con leerlas. La descripcion breve de cada item es donde va la anecdota.
+
+Aplica igual a los items de una lista adentro de una placa que a las placas del carrusel.
+
 **A slide that looks empty is missing content, not size.** Add a fact from the source — the number behind the claim, the counter-case, the second experiment — or accept the air. Never fill a slide by enlarging what is already on it. Scaling type or graphics to occupy the canvas produces a slide that is bigger and says the same, and it is how a carousel drifts out of the brand: the type outgrows the headline level, the graphics turn into walls, and every later correction is about size. If the source has nothing more to say on that slide, the slide is finished at the size the content needs.
 
 There is deliberately **no minimum fill metric**. `measure-stage.mjs` reports slack and flags overflow; it does not judge how full a slide is, because a threshold there gets chased and the chase is the defect.
