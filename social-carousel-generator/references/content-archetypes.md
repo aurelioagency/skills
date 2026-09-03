@@ -1,76 +1,87 @@
-# Selección de arquetipo narrativo para carrusel
+# Estructura de contenido del carrusel
 
-Dado un tema o fuente de contenido, seleccioná el arquetipo narrativo más adecuado
-siguiendo este orden de evaluación. Evaluá las condiciones en secuencia y detenete en la
-primera que se cumpla.
+Qué dice cada placa y en qué orden. Se corre sobre la `Lectura`, antes de escribir un
+solo slide.
 
-El orden importa: es lo que define la precedencia cuando un tema cumple más de una
-condición.
+## El método
 
-1. **¿La fuente es un paper, estudio o research externo con un hallazgo o dato
-   sorprendente?**
-   → Usar **Data-driven narrative**: dato impactante (slide 1) → qué significa (slides
-   medios) → consejo accionable (cierre).
+Corre **siempre**, sobre cualquier tema. Es una pregunta:
 
-2. **¿El tema corrige una creencia específica y reconocible que la audiencia
-   probablemente tiene?**
-   → Usar **Myth-busting**: mito instalado → corrección con datos/razón.
-   Requisito: debe existir un mito real y reconocible, no forzarlo si no lo hay.
+> ¿Qué quiere saber alguien sobre esto, y en qué orden lo preguntaría?
 
-3. **¿Hay un resultado propio o de un cliente con números reales de por medio?**
-   → Usar **Case study con números**: resultado (slide 1) → cómo se llegó ahí
-   (desarrollo) → takeaway replicable.
+Escribí esas preguntas sobre la `Lectura`, en el orden en que alguien las haría. **Esas
+son las placas**, y la respuesta a cada una es su contenido.
 
-4. **¿El tema es un proceso con pasos que deben ejecutarse en un orden obligatorio?**
-   → Usar **Tutorial/step-by-step**: un paso = un slide, secuencial, numerado, cierre
-   con resumen.
+La salida cambia según qué **es** el tema, y eso es exactamente el punto:
 
-5. **¿Es una lista de ítems sin dependencia entre ellos (herramientas, recursos, tips
-   sueltos)?**
-   → Usar **Listicle numerado**: variante liviana del tutorial, sin orden obligatorio
-   entre ítems.
+| Si el tema es | Las preguntas son |
+|---|---|
+| Una cosa — un modelo, una herramienta, un producto | Qué es · qué tan bueno es · qué cuesta · qué te deja hacer · qué riesgos tiene |
+| Una técnica o un método | Qué problema resuelve · cómo funciona · cuándo sirve · cuándo no |
+| Un hecho o un caso | Qué pasó · cómo · qué resultó · qué cambia |
+| Una afirmación discutible | Qué se dice · qué muestra la evidencia · qué queda en pie |
 
-6. **¿Hay un "antes" y un "después" que se pueda mostrar visualmente (no solo
-   explicar)?**
-   → Usar **Before/After**: contraste visual directo entre estado inicial y estado
-   final.
+**Esas cuatro filas son ejemplos de salida, no opciones para elegir.** Si tu tema no se
+parece a ninguna, el método igual funciona: la pregunta no cambia.
 
-7. **¿El tema es un problema con consecuencias concretas si no se resuelve?**
-   → Usar **PAS (Problem-Agitate-Solve)**: problema → consecuencias de no resolverlo →
-   solución.
+### El chequeo
 
-8. **¿Son dudas o resistencias repetidas y reales que tiene la audiencia sobre algo?**
-   → Usar **FAQ/Objeciones**: pregunta/objeción → respuesta que la disuelve.
+Leídos solos, los títulos de las placas tienen que ser **las preguntas que alguien se
+hace sobre el tema**.
 
-9. **Si ninguna condición se cumple con claridad:**
-   → Default a la **Slide Grammar** de `SKILL.md` (gancho → contexto → insight →
-   evidencia → ejemplo → contracaso → conclusión → cierre), o marcar que falta contexto
-   para decidir.
+Si son los **roles de un relato** —evidencia, ejemplo, contracaso— la estructura salió de
+una grilla narrativa y no del tema. Si son **los nombres propios y las anécdotas que trae
+la fuente**, salió del material y tampoco del tema. En los dos casos se rehace: son las
+dos maneras en que esto falla, y las dos se ven en diez segundos leyendo los títulos
+seguidos.
+
+## Formas que se repiten
+
+Ocho formas que aparecen seguido. **Son una guía de consulta, no un árbol de decisión.**
+No se evalúan en orden, no hay precedencia entre ellas y no hay que encajar el tema en
+ninguna. Si lo que dio el método se parece a una, mirá su secuencia: te ahorra pensar el
+orden. Si no se parece a ninguna, no falta nada — la estructura ya la tenés.
+
+**Forzar un tema adentro de una de estas es de donde salen los errores.** La mayoría de
+los temas no es ninguna de las ocho, y eso es normal, no un problema a resolver.
+
+- **Data-driven narrative** — cuando la fuente es un paper o un estudio con un hallazgo
+  sorprendente. Dato impactante → qué significa → consejo accionable.
+- **Myth-busting** — cuando el tema corrige una creencia instalada y reconocible. Mito →
+  corrección con datos. Sólo si el mito existe de verdad; si hay que inventarlo, no es
+  esto.
+- **Case study con números** — cuando hay un resultado propio o de un cliente con cifras
+  reales. Resultado → cómo se llegó → takeaway replicable.
+- **Tutorial/step-by-step** — cuando el proceso tiene pasos en orden obligatorio. Un paso
+  por placa, numerado, cierre con resumen.
+- **Listicle numerado** — ítems sin dependencia entre sí. Variante liviana del tutorial,
+  sin orden obligatorio.
+- **Before/After** — cuando el contraste entre dos estados **se puede mostrar**, no sólo
+  explicar. Si el estilo activo no tiene con qué mostrarlo, no es esta forma.
+- **PAS (Problem-Agitate-Solve)** — un problema con consecuencias concretas si no se
+  resuelve. Problema → consecuencias → solución.
+- **FAQ/Objeciones** — dudas o resistencias repetidas y reales de la audiencia.
+  Pregunta → respuesta que la disuelve.
 
 ## Salida esperada
 
-Al aplicar esto, indicar:
+- **La estructura derivada**: la lista de preguntas, en orden, una por placa, aplicada al
+  tema puntual.
+- Si se parece a una de las formas de arriba, nombrarla. Es opcional y no cambia nada: es
+  para que el usuario ubique rápido de qué va.
 
-- Arquetipo elegido
-- Por qué (qué condición del árbol se cumplió)
-- Estructura de slides sugerida para ese arquetipo aplicada al tema puntual
+Va en el mismo mensaje que el split y los ganchos, y se confirma todo junto. Se registra
+en `carousel-brief.md` y en `manifest.json` bajo `content_archetype`.
 
 ## Cuándo se corre
 
 Después de escribir la `Lectura` en `carousel-brief.md` (ver *Understanding the topic
-before writing it* en `references/redaccion.md`) y antes de escribir un solo slide. **Primero se
-entiende el tema, después se elige el arquetipo** — al revés, el arquetipo decide qué se
-busca en la fuente y aparecen pasos inventados para completarlo.
+before writing it* en `references/redaccion.md`). **Primero se entiende el tema, después
+se deriva la estructura** — al revés, la estructura decide qué se busca en la fuente y
+aparecen placas inventadas para completarla.
 
-La salida esperada va en el mismo mensaje que el split y los ganchos, y se confirma todo
-junto. Se registra en `carousel-brief.md` y en `manifest.json` bajo `content_archetype`.
+## La estructura no elige el estilo ni la pieza
 
-## El arquetipo no elige el estilo ni la pieza
-
-Son ejes independientes. Que el arquetipo sea Before/After no significa que la placa vaya
-en una pieza llamada `antes` o `compare`: la pieza la decide el material dentro del
-estilo activo, en el gate de aprobación de copy.
-
-La condición 6 es la única que mira el estilo, y sólo para evaluarse: pide que el
-contraste **se pueda mostrar**, no sólo explicar. Si el estilo activo no tiene con qué
-mostrarlo, esa condición no se cumple y el árbol sigue bajando.
+Son ejes independientes. Que la estructura contraste dos estados no significa que la
+placa vaya en una pieza llamada `antes` o `compare`: la pieza la decide el material
+dentro del estilo activo, en el gate de aprobación de copy (`references/composicion.md`).

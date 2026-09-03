@@ -166,19 +166,15 @@ funcionaba se tira. Con la `Lectura` escrita y clara diez minutos antes, así se
 
 La columna del medio pasa el presupuesto de caracteres, pasa el piso tipográfico y no dice nada.
 
-### Los tres chequeos, antes de mostrar una sola placa
+### Los dos chequeos, antes de mostrar una sola placa
 
-Se hacen sobre el texto escrito, y los tres se ven — no se cumplen declarando que se cumplieron.
+Se hacen sobre el texto escrito, y los dos se ven — no se cumplen declarando que se cumplieron.
 
 1. **Trazá cada titular a su frase.** En `carousel-brief.md` va la tabla `Titular` ·
    `Frase de la Lectura`, con la frase textual. **Una celda derecha vacía significa que ese
    titular es invención**, y se reescribe antes de seguir. Es el único chequeo que agarra el
    cambio de registro sin que nadie tenga que juzgar si la línea está buena.
-2. **Verbo conjugado, o no es un titular.** `Enseñarle algo nuevo.` · `Razonar más.` ·
-   `Tres que funcionan.` · `No todas se chequean igual.` — frases nominales o sin sujeto
-   recuperable. Un titular sin verbo conjugado le pasa el trabajo a la bajada, y la bajada se
-   lee después, si se lee.
-3. **Leé los titulares solos, seguidos, sin las bajadas.** Tienen que contar el carrusel
+2. **Leé los titulares solos, seguidos, sin las bajadas.** Tienen que contar el carrusel
    entero **y engancharse uno con otro**: cada titular sigue del anterior, como las oraciones
    de un párrafo. Si son ocho frases buenas que no van a ningún lado, falta el hilo y la
    redacción no está terminada — no importa cuán buena sea cada placa por separado. Es la

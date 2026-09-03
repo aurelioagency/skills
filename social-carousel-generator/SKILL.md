@@ -46,9 +46,9 @@ De ahi salen las cuatro consecuencias que hay que tener a mano:
 2. **Entender la fuente y escribir la `Lectura`.**
    Listo cuando: todo el material sale de la fuente que paso el usuario y de ninguna otra (`references/fidelidad.md`), y la `Lectura` — la fuente recontada en lenguaje comun, en prosa — esta escrita **antes** de cualquier gancho o copy (`references/redaccion.md`).
 3. **Arquetipo, split, ganchos y template — todo junto, y se confirma.**
-   Listo cuando: se corrio el arbol de `references/content-archetypes.md` sobre la `Lectura`, y el usuario confirmo, redujo o cambio el arquetipo, la cantidad de carruseles, **la cantidad de placas**, el gancho y el template, antes de que se escriba un solo slide.
+   Listo cuando: se derivo la estructura con el metodo de `references/content-archetypes.md` sobre la `Lectura`, y el usuario confirmo, redujo o cambio esa estructura, la cantidad de carruseles, **la cantidad de placas**, el gancho y el template, antes de que se escriba un solo slide.
 4. **Escribir la copy y elegir el recurso de cada placa. Gate de aprobacion.**
-   Listo cuando: cada titular esta trazado a su frase de la `Lectura` en `srcFrase`, tiene verbo conjugado y entra en dos renglones; cada cifra tiene su `srcDato`; cada placa declara su recurso, corrido desde el contenido con `references/composicion.md`; cada placa declara su asset y las alternativas viables del banco; y el usuario aprobo todo eso **como texto plano**, antes de que exista un solo HTML.
+   Listo cuando: cada titular esta trazado a su frase de la `Lectura` en `srcFrase` y entra en dos renglones; cada cifra tiene su `srcDato`; cada placa declara su recurso, corrido desde el contenido con `references/composicion.md`; cada placa declara su asset y las alternativas viables del banco; y el usuario aprobo todo eso **como texto plano**, antes de que exista un solo HTML.
 5. **Armar el paquete y renderizar.**
    Listo cuando: la carpeta de entrega (`<tema-en-kebab-case>`) tiene los PNG ordenados a `1080x1440`, con el CTA solo si el preset lo pide.
 6. **QA. Los dos scripts, y despues las placas.**
@@ -228,15 +228,15 @@ Include the two hook options per carousel (see Hooks), **el arquetipo narrativo*
 
 Anunciar el template como supuesto —"sigo con el 01 salvo que digas otro"— **no cuenta como preguntarlo**: deja la decisión hecha y le pasa al usuario el costo de deshacerla, y arrancar con el template equivocado termina en un carrusel rehecho entero.
 
-El arquetipo sale de correr el arbol de decision de `references/content-archetypes.md` sobre la `Lectura`. Su salida son tres lineas, y van antes del split:
+La estructura sale de correr el metodo de `references/content-archetypes.md` sobre la `Lectura`: que quiere saber alguien sobre esto, y en que orden lo preguntaria. Esas preguntas son las placas. Su salida son tres lineas, y van antes del split:
 
 ```text
-Arquetipo: [nombre]
-Por que: [que condicion del arbol se cumplio]
-Estructura: [la secuencia de ese arquetipo aplicada a este tema]
+Estructura: [las preguntas, en orden, una por placa]
+Por que: [por que alguien preguntaria eso, y en ese orden]
+Se parece a: [una de las formas de content-archetypes.md, o "ninguna" — es opcional]
 ```
 
-**El arquetipo puede fijar la cantidad de slides.** Tutorial es un paso por slide y listicle un item por slide: ahi la cuenta la da el material, no una eleccion. Si un proceso tiene 12 pasos son dos carruseles, porque el techo de 10 imagenes no se mueve.
+**La estructura puede fijar la cantidad de slides.** Tutorial es un paso por slide y listicle un item por slide: ahi la cuenta la da el material, no una eleccion. Si un proceso tiene 12 pasos son dos carruseles, porque el techo de 10 imagenes no se mueve.
 
 **State the slide count you are proposing for each carousel, and why that number** — it is part of what the user is confirming here, and it is far cheaper to change now than after the copy is drafted. Size and the text budget per slide are fixed by the skill; the count is not. See Format, length and density below.
 
@@ -345,7 +345,9 @@ otra decision. Se registra en `carousel-brief.md` y en `manifest.json`.
 
 ## Slide Grammar
 
-Es la secuencia por defecto, y vale para todo template y toda marca. Es tambien el paso 9 del arbol de `references/content-archetypes.md`: lo que se usa cuando ninguna condicion se cumple con claridad. Use this default grammar unless the source demands a different structure:
+**No es el default.** Es **una** forma posible de la estructura: la que sirve cuando el tema es una afirmacion que hay que sostener con evidencia. La estructura se deriva siempre del tema con el metodo de `references/content-archetypes.md` (*El metodo*), y a veces esa derivacion da esta secuencia. Usarla sin haber corrido el metodo es lo que produce placas tituladas por el rol que cumplen —evidencia, ejemplo— en vez de por lo que el lector quiere saber.
+
+Cuando el metodo da esta forma, la secuencia es:
 
 1. Hook or claim.
 2. Context or problem.
@@ -388,7 +390,7 @@ Primero los titulares solos. Si estos no cuentan el carrusel, no hace falta leer
 ...
 ```
 
-No es un resumen de cortesía: es el chequeo 3 de *Los tres chequeos* de `references/redaccion.md`, hecho donde el
+No es un resumen de cortesía: es el chequeo 2 de *Los dos chequeos* de `references/redaccion.md`, hecho donde el
 usuario también lo ve. Enterrados adentro de nueve bloques completos, los titulares flojos no
 se notan: nueve placas donde seis titulares no dicen nada se aprueban sin que nadie lo vea,
 y el problema aparece recién cuando se los lee de corrido. Cuesta diez segundos y es el único
