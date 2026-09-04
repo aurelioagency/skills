@@ -48,7 +48,7 @@ De ahi salen las cuatro consecuencias que hay que tener a mano:
 3. **Arquetipo, split, ganchos y template — todo junto, y se confirma.**
    Listo cuando: se derivo la estructura con el metodo de `references/content-archetypes.md` sobre la `Lectura`, y el usuario confirmo, redujo o cambio esa estructura, la cantidad de carruseles, **la cantidad de placas**, el gancho y el template, antes de que se escriba un solo slide.
 4. **Escribir la copy y elegir el recurso de cada placa. Gate de aprobacion.**
-   Listo cuando: cada titular esta trazado a su frase de la `Lectura` en `srcFrase` y entra en dos renglones; cada cifra tiene su `srcDato`; cada placa declara su recurso, corrido desde el contenido con `references/composicion.md`; cada placa declara su asset y las alternativas viables del banco; y el usuario aprobo todo eso **como texto plano**, antes de que exista un solo HTML.
+   Listo cuando: cada linea esta trazada a su oracion de la fuente en `srcFrase` y entra en dos renglones; cada cifra tiene su `srcDato`; cada placa declara su recurso, corrido desde el contenido con `references/composicion.md`; cada placa declara su asset y las alternativas viables del banco; y el usuario aprobo todo eso **como texto plano**, antes de que exista un solo HTML.
 5. **Armar el paquete y renderizar.**
    Listo cuando: la carpeta de entrega (`<tema-en-kebab-case>`) tiene los PNG ordenados a `1080x1440`, con el CTA solo si el preset lo pide.
 6. **QA. Los dos scripts, y despues las placas.**
@@ -409,10 +409,10 @@ Placa 4 — COSTO POR TAREA
            de la placa es la brecha · srcDato: "43,6% frente a 34,4%" (párrafo 7)
 ```
 
-- **`srcFrase` es la frase de la `Lectura` de la que se recortó el titular.** Vacía significa
-  que el titular es invención y se reescribe antes de seguir. No es documentación: es el único
-  chequeo que agarra el cambio de registro sin que nadie tenga que juzgar si la línea está
-  buena.
+- **`srcFrase` es la oración textual de la fuente de la que se extrajo la línea.** Vacía
+  significa que la línea es tuya: o es un titular —lo único que la fuente no trae— o una
+  reformulación declarada por ser la fuente ilegible. Cualquier otra cosa se reescribe
+  extrayendo (*De dónde sale cada línea*, en `references/redaccion.md`).
 - **`srcDato` es la cita textual de la fuente** para cada cifra que se muestra o se dibuja. Sin
   ella no hay barra, altura, área, proporción ni escala.
 - **El recurso se elige corriendo `references/composicion.md`**, desde el contenido — no

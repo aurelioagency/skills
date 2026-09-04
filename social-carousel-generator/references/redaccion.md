@@ -8,7 +8,8 @@ Del otro lado hay una persona leyendo. Si lee la placa y no entiende que le diji
 importa que el dato sea correcto ni que entre en el presupuesto de caracteres.
 
 El orden no se invierte: primero la `Lectura`, despues el arquetipo, despues el gancho,
-despues las placas. Cada titular se **recorta** de la `Lectura`; no se escribe de nuevo
+despues las placas. Cada linea se **extrae** de la fuente; no se reformula con palabras
+propias
 al llegar al slide.
 
 ## Understanding the topic before writing it
@@ -164,33 +165,57 @@ qué costo y de qué.
 De ahí que "escribir cercano" no autorice a aflojar el vocabulario. La voz de la marca la
 define su preset; lo que dice esta sección vale para todas.
 
-### El titular se recorta de la Lectura. No se escribe de nuevo.
+### De dónde sale cada línea: se extrae, no se reformula
 
-Esta es la regla, y las tres de abajo existen sólo para que se cumpla.
+**El default es extraer.** La fuente ya hizo el trabajo de decirlo bien; volver a decirlo con
+otras palabras sólo lo empeora, y es de donde salen las placas que no se entienden.
 
-La `Lectura` ya dice el tema en frases enteras que se entienden. **Cada titular sale de una de
-esas frases, sacándole palabras.** Nunca es una formulación nueva escrita al llegar al slide.
+En este orden, para cada línea:
 
-El defecto no es escribir mal: es **cambiar de registro**. Al pasar de la prosa al slide aparece
-una voz de titular —frases nominales, telegráficas, que *suenan* a portada— y la oración que ya
-funcionaba se tira. Con la `Lectura` escrita y clara diez minutos antes, así se ve:
+1. **Buscá en la fuente la oración que dice esa cosa.**
+2. **Traducila conservando su estructura y sus palabras.**
+3. **Si no entra, sacá palabras — no las reemplaces por otras tuyas.** Acortar es quitar;
+   reformular es reemplazar. Sólo lo primero es seguro.
+4. **Reformulá únicamente cuando la fuente es demasiado técnica o enredada para
+   entenderse.** Ahí la reformulación es para aclarar, nunca para decirlo mejor, y va con
+   vocabulario profesional — nunca coloquial (*El registro no es una escala de formalidad*,
+   arriba).
+5. **Escribí de tu puño sólo lo que la fuente no tiene:** los titulares, porque un artículo
+   no trae titulares de placa. Ahí valen las mismas exigencias que en todo lo demás.
 
-| La Lectura decía | Al slide llegó | Recortado como corresponde |
-|---|---|---|
-| *si le enseñás cosas que no sabía, aprende a inventar* | `Enseñarle algo nuevo.` | **Si le enseñás algo que no sabía, aprende a inventar.** |
-| *los modelos que razonan paso a paso inventan más, no menos* | `Razonar más.` | **Los que razonan inventan más, no menos.** |
-| *el modelo no tiene manera de saber que no sabe* | `No sabe que no sabe.` | **No tiene manera de saber que no sabe.** |
-| *llevamos años premiando al que adivina* | `9 de cada 10 castigan el «no sé».` | **Llevamos años premiando al que adivina.** |
+Buscar una manera nueva de decir algo que ya estaba bien dicho es lo que produce las placas
+rebuscadas. No hay ningún premio por decirlo distinto.
 
-La columna del medio pasa el presupuesto de caracteres, pasa el piso tipográfico y no dice nada.
+#### Cuando sacás un nombre propio, rehacé la oración entera
+
+Borrar la palabra y dejar el resto deja un arranque huérfano. La fuente decía *"in testing by
+the investment firm Millennium"*; sin el nombre quedó *"en pruebas de un fondo de inversión"*,
+que abre la placa con un dato que a nadie le importa. La oración se vuelve a armar desde el
+hecho: *"encontró la causa de un fallo poco frecuente en los sistemas internos de una
+empresa"*.
+
+#### `srcFrase` apunta a la fuente, nunca a la `Lectura`
+
+Recortar el titular del propio resumen es reformular dos veces, porque la `Lectura` ya es tu
+versión del tema: dos capas de palabras propias antes de llegar a la placa. **La `Lectura`
+sirve para entender; los extractos salen del original.**
+
+#### El test es el lector, no la fidelidad
+
+Si no se entiende, la línea está mal aunque sea textual. Un extracto fiel que deja al lector
+sin saber qué se le dijo falla igual que una invención. Somos un profesional explicándole algo
+a alguien que quiere entenderlo: la palabra precisa, adentro de una oración que cualquiera
+sigue.
 
 ### Los dos chequeos, antes de mostrar una sola placa
 
 Se hacen sobre el texto escrito, y los dos se ven — no se cumplen declarando que se cumplieron.
 
-1. **Trazá cada titular a su frase.** En `carousel-brief.md` va la tabla `Titular` ·
-   `Frase de la Lectura`, con la frase textual. **Una celda derecha vacía significa que ese
-   titular es invención**, y se reescribe antes de seguir. Es el único chequeo que agarra el
+1. **Trazá cada línea a su oración de la fuente.** En `carousel-brief.md` va la tabla
+   `Línea` · `Oración de la fuente`, con la cita textual. **Una celda derecha vacía significa
+   que esa línea es tuya**, y entonces tiene que ser un titular (lo único que la fuente no
+   trae) o una reformulación declarada por ser la fuente ilegible. Cualquier otra cosa se
+   reescribe extrayendo. Es el único chequeo que agarra el
    cambio de registro sin que nadie tenga que juzgar si la línea está buena.
 2. **Leé los titulares solos, seguidos, sin las bajadas.** Tienen que contar el carrusel
    entero **y engancharse uno con otro**: cada titular sigue del anterior, como las oraciones

@@ -8,7 +8,7 @@ Se verifica con dos campos obligatorios en `slide-data.js`, uno por placa:
 
 | Campo | Que lleva | Sin el |
 |---|---|---|
-| `srcFrase` | La frase textual de la `Lectura` de la que se recorto el titular. | El titular es invencion. Se reescribe antes de seguir. |
+| `srcFrase` | La oracion textual **de la fuente** de la que se extrajo la linea. | La linea es tuya: o es un titular, o es una reformulacion declarada, o se reescribe extrayendo. |
 | `srcDato` | La cita textual de la fuente para cada cifra que se muestra o se dibuja. | No se dibuja barra, altura, area, proporcion ni escala. |
 
 No son documentacion: son la condicion para que la placa exista. Una celda vacia es el
