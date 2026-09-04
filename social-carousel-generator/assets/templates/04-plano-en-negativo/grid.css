@@ -23,4 +23,7 @@
 
 /* Desviacion declarada: las placas que cargan un diagrama alto suben la cabecera
    12px. Es la unica excepcion a --grid-top en este estilo. */
-.head.tight { margin-top: calc(var(--grid-top) - 12px); gap: 22px; }
+/* `tight` cierra el espaciado interno, no el arranque: con `- 12px` la cabecera de las
+   placas de contenido empezaba 12px mas arriba que la de la portada y el bloque saltaba al
+   deslizar. El arranque es el mismo para todas (2026-09-04). */
+.head.tight { margin-top: var(--grid-top); gap: 22px; }

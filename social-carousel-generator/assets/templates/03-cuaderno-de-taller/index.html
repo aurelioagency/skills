@@ -42,7 +42,7 @@ function head(s) {
   return `
     <div class="head">
       <h2${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h2>
-      <div class="rule" style="width:${s.ruleWidth || 70}%"><i></i><span></span><i class="r"></i></div>
+      <div class="rule"><i></i><span></span><i class="r"></i></div>
       ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
     </div>`;
 }
@@ -160,7 +160,7 @@ function render(s, i, total) {
     inner = `
       <div class="head">
         <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
-        <div class="rule" style="width:${s.ruleWidth || 76}%"><i></i><span></span><i class="r"></i></div>
+        <div class="rule"><i></i><span></span><i class="r"></i></div>
         <div class="lede">${s.lede}</div>
       </div>
       ${s.ficha ? ficha(s) : compare(s)}`;
@@ -180,7 +180,7 @@ function render(s, i, total) {
     inner = `
       <div class="body">
         <h2 style="font-size:${s.hsize || 100}px">${s.headline}</h2>
-        <div class="rule" style="width:${s.ruleWidth || 70}%"><i></i><span></span><i class="r"></i></div>
+        <div class="rule"><i></i><span></span><i class="r"></i></div>
         <div class="lede">${s.lede}</div>
         ${steps(s.steps)}
       </div>`;

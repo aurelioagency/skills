@@ -77,3 +77,26 @@ cuanto un ícono vaya a otro tamaño.
 Para que una pieza más acepte ícono hay que tocar los tres archivos: `index.html` (que
 lo dibuje), `styles.css` (cómo se alinea) y este archivo (que quede documentado). Los
 tres, o el dato queda en `slide-data.js` y no aparece nada.
+
+## Consistencia de serie (2026-09-04)
+
+Decidido por el usuario despues de armar el carrusel de Claude Fable 5.1. **Lo que se
+repite en todas las placas tiene que caer siempre en el mismo lugar**: al deslizar, una
+linea que salta 20px se ve mas que cualquier detalle de composicion.
+
+- **El pie va anclado al borde inferior**, fuera del flujo. Antes lo empujaba el contenido:
+  una placa con un parrafo de mas lo bajaba 49px y la fila saltaba. El `padding-bottom` de
+  `.slide` reserva su lugar.
+- **Si el contenido no entra, se acorta el contenido.** No se corre el pie ni se achica el
+  cuerpo del texto. `render-and-audit.mjs` marca como red issue el texto que queda debajo
+  del pie anclado — es un chequeo que antes no existia, porque con el pie fuera del flujo
+  el desbalance vertical ya no se dispara.
+- **El arranque de la cabecera es uno solo** para portada y contenido.
+- **La cota va a la misma altura y con el mismo ancho en toda la serie.** El titular tiene
+  altura fija de tres renglones, asi que con dos renglones el bloque igual ocupa tres y la
+  cota no se mueve; el ancho salio de `ruleWidth` por slide y paso a ser uno solo. Cuando el
+  tema lo permita, se escribe el titular a tres renglones: con dos queda aire entre el
+  titular y la cota.
+
+Cuando toques el layout, medi: renderiza cada placa y compara la posicion de cabecera, cota
+y pie. Si un valor no se repite en toda la serie, es un defecto — no una variante.

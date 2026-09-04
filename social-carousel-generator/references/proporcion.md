@@ -77,6 +77,30 @@ element respects, and the extra width buys nothing: text baked into an image is 
 this canvas size either way (see below), so the pixels gained do not buy legibility — only a
 broken margin.
 
+**Trim the image's own dead margin before framing it, and keep the container's padding
+small.** A published chart almost always arrives with generous whitespace between its own
+border and the plot — measured on the CursorBench chart of 2026-09: 69 px izquierda, 67
+derecha, 82 arriba, 92 abajo, sobre 2640 px de ancho. Ese aire se suma al padding del
+contenedor, y el resultado es un grafico chico flotando en un recuadro grande. Se recorta al
+margen real de la tinta dejando ~14 px de respiro, y el contenedor va con un padding chico
+(10 px), no con un marco ancho.
+
+Recortar el aire vacio no es re-encuadrar el grafico: no se toca ni un pixel de lo dibujado,
+se saca papel en blanco. Lo que sigue prohibido es escalar, estirar, recortar contenido o
+redibujar.
+
+```python
+# margen real de tinta, salteando el borde del contenedor
+from PIL import Image; import numpy as np
+im = Image.open(f); g = np.array(im.convert('L')); h, w = g.shape
+inner = g[8:h-8, 8:w-8]
+bg = int(np.bincount(inner.flatten()).argmax())
+ink = inner < bg - 12
+cols = np.where(ink.any(axis=0))[0]; rows = np.where(ink.any(axis=1))[0]
+pad = 14
+im.crop((8+cols.min()-pad, 8+rows.min()-pad, 8+cols.max()+pad+1, 8+rows.max()+pad+1)).save(f)
+```
+
 Beyond that, the ordinary rules hold: inside the safe area, never under or over text, and it
 counts toward the slide's density like any other block.
 

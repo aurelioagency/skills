@@ -124,7 +124,14 @@ for (let i = 1; i <= count; i++) {
     const fontsMissing = webFonts.filter(f => !document.fonts.check(`${FLOOR}px "${f}"`));
 
     // 2) piso tipografico + 3) safe area + 6) huerfanas
-    const small = [], outside = [], orphans = [];
+    const small = [], outside = [], orphans = [], overFoot = [];
+
+    // Pie anclado: los estilos que lo sacan del flujo (`position: absolute`) ganan que
+    // este siempre a la misma altura, pero a cambio el contenido que no entra ya no lo
+    // empuja — se le mete debajo y ningun otro chequeo lo ve. Este lo mira.
+    const footEl = document.querySelector('.footer, .cartucho, .foot');
+    const footTop = footEl && getComputedStyle(footEl).position === 'absolute'
+      ? footEl.getBoundingClientRect().top : null;
     const walk = (el) => {
       if (SKIP.has(el.tagName)) return;
       for (const node of el.childNodes) {
@@ -141,6 +148,11 @@ for (let i = 1; i <= count; i++) {
           if (r.width && (r.left < padX - 0.5 || r.right > W - padX + 0.5 ||
                           r.top < padTop - 0.5 || r.bottom > padBot + 0.5)) {
             outside.push({ txt, box: [r.left, r.top, r.right, r.bottom].map(Math.round) });
+          }
+
+          if (footTop !== null && !p.closest('.footer, .cartucho, .foot') && r.height &&
+              r.bottom > footTop + 0.5) {
+            overFoot.push({ txt, invade: Math.round(r.bottom - footTop) });
           }
 
           // huerfana: la ultima linea del bloque es mucho mas angosta que la mas ancha
@@ -281,7 +293,7 @@ for (let i = 1; i <= count; i++) {
       });
     });
 
-    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, fontsMissing, small, outside, orphans, overflow, brokenImages, hook, balance, counter, chrome };
+    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
   }, { W, H });
 
   // El PNG se saca siempre: el chequeo optico se hace sobre pixeles reales.
@@ -496,6 +508,10 @@ for (const r of report) {
   for (const s of r.small) at(excepted('typography-floor') ? notes : red, `"${s.txt}" a ${s.size}px, piso ${s.floor}px`);
   for (const o of r.outside) at(excepted('safe-area') ? notes : red, `"${o.txt}" fuera del safe area [${o.box}]`);
   for (const o of r.orphans) at(red, `posible huerfana: "${o.txt}" — ultima linea ${o.lastLine}px vs ${o.widest}px`);
+  // Contenido metido debajo del pie anclado. No lo agarra ningun otro chequeo: con el pie
+  // fuera del flujo, el desbalance vertical ya no se dispara y el safe area suele estar
+  // exceptuado. Es red issue siempre — un texto tapado por el pie no se entrega.
+  for (const o of r.overFoot) at(red, `"${o.txt}" queda debajo del pie anclado (invade ${o.invade}px). Acorta el contenido; no corras el pie ni achiques el cuerpo.`);
   for (const b of r.brokenImages) at(red, `asset no cargado: ${b}`);
   if (r.overflow.h > H + 1 || r.overflow.w > W + 1) at(red, `overflow ${r.overflow.w}x${r.overflow.h} (canvas ${W}x${H})`);
 

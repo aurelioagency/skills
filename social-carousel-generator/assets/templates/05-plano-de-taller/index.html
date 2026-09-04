@@ -49,12 +49,15 @@ function tab(s, i, total) {
 // Cartucho ISO 7200. Las celdas salen de slide-data.js; la ultima es la firma y
 // sale de `footerBrand`, no escrita en duro aca.
 // ?video=1 no cambia el cartucho: no hay prompt de swipe en este template.
-function cartucho(s) {
-  const cells = (s.cartucho || []).map(c =>
-    `<div class="cell" style="flex:${c.flex || 1}"><span class="k">${c.k}</span><span>${c.v}</span></div>`).join('');
+// El cartucho es identico en las diez placas, asi que sale de aca y no de cada slide.
+// Antes cada placa traia su propio DATO/FUENTE: los valores tenian largos distintos, las
+// columnas eran flexibles, y el pie caia diferente en cada placa. Y repetir la fuente
+// diez veces no aportaba nada. Un cartucho de plano dice quien lo dibujo.
+function cartucho() {
+  const d = window.CAROUSEL;
   return `<div class="cartucho">
-    ${cells}
-    <div class="cell end" style="flex:1"><span class="k">POR</span><span>${window.CAROUSEL.footerBrand}</span></div>
+    <div class="cell"><span class="k">AUTOMATIZÓ</span><span>${d.footerBrand}</span></div>
+    <div class="cell end"><span class="k">DIBUJÓ</span><span>${d.footerAuthor}</span></div>
   </div>`;
 }
 
@@ -72,7 +75,7 @@ function head(s, tight) {
 // La regla lleva un rotulo central opcional con la magnitud (FACTOR 25:1).
 function rule(s) {
   const k = s.ruleLabel ? `<span class="k">${s.ruleLabel}</span><span></span>` : '';
-  return `<div class="rule" style="width:${s.ruleWidth || 70}%"><i></i><span></span>${k}<i class="r"></i></div>`;
+  return `<div class="rule"><i></i><span></span>${k}<i class="r"></i></div>`;
 }
 
 // Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
@@ -124,10 +127,53 @@ const nodos = items => `
         ${fig(n.fig)}
         <div class="t">
           <div class="k">${n.k}</div>
-          <div class="name">${n.name}</div>
-          <div class="desc">${n.desc}</div>
+          ${n.name ? `<div class="name">${n.name}</div>` : ''}
+          ${n.desc ? `<div class="desc">${n.desc}</div>` : ''}
         </div>
       </div>`).join('')}
+  </div>`;
+
+// Secuencia numerada. Un paso por renglon, con su numero en mono y la linea de eje
+// como separador, igual que en `nodos`. Va cuando los pasos tienen orden obligatorio y
+// no hay magnitud que comparar.
+// Campos: `pasos` = [{ n, t }].
+const pasos = items => `
+  <div class="pasos">
+    ${items.map((x, k) => `
+      ${k ? '<div class="eje"></div>' : ''}
+      <div class="paso">
+        <div class="n">${x.n}</div>
+        <div class="t">${x.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Dos cifras independientes, cada una con su rotulo y su detalle. Va cuando las dos
+// magnitudes NO se comparan entre si (una es un precio y la otra un porcentaje, por
+// ejemplo) y por eso no pueden ser barras: una barra afirma una proporcion.
+// Campos: `cifras` = [{ n, u, lbl, t }].
+const cifras = items => `
+  <div class="cifras">
+    ${items.map((c, k) => `
+      ${k ? '<div class="eje"></div>' : ''}
+      <div class="cifra">
+        <div class="n">${c.n}${c.u ? `<span class="u">${c.u}</span>` : ''}</div>
+        <div class="t">
+          <div class="lbl">${c.lbl}</div>
+          <div class="d">${c.t}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+
+// Secciones: los bloques en que se divide el tema, en cuadros con rotulo mono. Es el
+// grafico de portada cuando lo que hay para mostrar es de que partes se compone, y no
+// dos magnitudes que comparar.
+// Campos: `secciones` = { lbl, items: [str] }.
+const secciones = s => `
+  <div class="secciones diagram">
+    <div class="sec-lbl">${s.secciones.lbl}</div>
+    <div class="sec-row">
+      ${s.secciones.items.map(t => `<div class="sec">${t}</div>`).join('')}
+    </div>
   </div>`;
 
 // Barras rayadas. `w` es el ancho en porcentaje y sale del dato medido.
@@ -163,11 +209,16 @@ function render(s, i, total) {
         ${rule(s)}
         <div class="lede">${s.lede}</div>
       </div>
-      ${s.ficha ? ficha(s) : corte(s)}`;
+      ${s.secciones ? secciones(s) : (s.ficha ? ficha(s) : corte(s))}`;
   }
 
   if (s.type === 'nodos') inner = `${head(s, true)}${nodos(s.nodos)}${userImg(s)}`;
   if (s.type === 'bars')  inner = `${head(s, true)}${bars(s)}`;
+  if (s.type === 'pasos') inner = `${head(s, true)}${pasos(s.pasos)}`;
+  if (s.type === 'cifras') inner = `${head(s, true)}${cifras(s.cifras)}`;
+  // Imagen que publica la fuente: encabezado + la imagen enmarcada. El encuadre sale de
+  // userImg(); la tarjeta se achica en vez de empujar el cartucho.
+  if (s.type === 'image') inner = `${head(s, true)}${userImg(s)}`;
 
   // ...un bloque mas por cada layout que pida el carrusel. Patron:
   // head(s) + un componente. Un grafico propio va dentro de un contenedor `chart` o
@@ -179,7 +230,7 @@ function render(s, i, total) {
         <h2 style="font-size:${s.hsize || 116}px">${s.headline}</h2>
         ${rule(s)}
         <div class="lede">${s.lede}</div>
-        ${checks(s.checks)}
+        ${s.checks ? checks(s.checks) : ''}
       </div>`;
   }
 
@@ -187,7 +238,7 @@ function render(s, i, total) {
     <div class="grid"></div>
     ${tab(s, i, total)}
     ${inner}
-    ${cartucho(s)}
+    ${cartucho()}
   </div>`;
 }
 

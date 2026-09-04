@@ -17,6 +17,7 @@ html, body { background: #e8e6e1; }
   border: 1px solid var(--edge);
   overflow: hidden;
   padding: var(--pad);
+  padding-bottom: 177px;   /* alto del cartucho + su margen: el contenido no lo pisa */
   display: flex;
   flex-direction: column;
   font-family: 'Barlow', sans-serif;
@@ -51,15 +52,28 @@ html, body { background: #e8e6e1; }
 
 /* Cartucho ISO 7200: quien dibujo, que, de donde. Obliga a citar la fuente, y eso
    solo ya separa del resto. Cada celda es rotulo chico arriba, valor abajo. */
-.cartucho {
+/* El cartucho va anclado al pie, no empujado por el contenido: es la fila que la persona
+   ve fija mientras desliza. Antes iba en el flujo y una placa con mas contenido lo bajaba
+   49px, asi que la fila saltaba entre placa y placa. Con `absolute` eso es imposible; si el
+   contenido no entra, lo marca el audit en vez de correr el pie. */
+.slide > .cartucho {
+  position: absolute;
+  left: var(--gutter); right: var(--gutter); bottom: 81px;
   display: flex;
   border-top: var(--gruesa) solid var(--ink);
   padding-top: 20px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 28px;
 }
-.cartucho .cell { display: flex; flex-direction: column; gap: 4px; }
-.cartucho .cell .k { color: var(--muted); font-size: 22px; }
+/* Columnas de ancho igual y una sola linea por celda. Con anchos flexibles y valores
+   largos, cada placa partia sus celdas en distinta cantidad de renglones y el pie se
+   leia distinto en cada una. El valor que no entra se acorta en los datos, no aca. */
+.cartucho .cell {
+  display: flex; flex-direction: column; gap: 4px;
+  flex: 1 1 0; min-width: 0;
+}
+.cartucho .cell .k { color: var(--muted); font-size: 22px; white-space: nowrap; }
+.cartucho .cell > span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cartucho .cell.end { align-items: flex-end; }
 
 /* ---------- Tipografia ---------- */
@@ -85,7 +99,20 @@ h2 { font-size: 104px; }
 
 /* Regla de cota: rombo - linea - [rotulo] - linea - rombo, en azul. El rotulo del
    medio es opcional y lleva la magnitud (FACTOR 25:1). */
-.rule { display: flex; align-items: center; gap: 14px; }
+/* Ancho unico: la cota no mide nada distinto en cada placa, asi que un ancho por slide
+   solo hacia que la linea saltara de largo al pasar de una a otra. */
+.rule { display: flex; align-items: center; gap: 14px; width: 62%; }
+
+/* Altura fija del titular = tres renglones. Con dos renglones el bloque igual ocupa
+   tres, asi la cota arranca a la misma altura en toda la serie y no salta al deslizar. */
+/* El titular arranca ARRIBA de su caja de tres renglones (probado apoyarlo abajo el
+   2026-09-04; el usuario prefirio asi). Con dos renglones queda aire entre el titular y
+   la cota: cuando el tema lo permita, se escribe el titular a tres renglones. */
+.head h2 { min-height: 293px; }
+.s-cover h1 { min-height: 257px; }
+/* En la portada el titular es de 112px: con el gap del `.head` a secas, la cota queda
+   pegada al bloque de texto. */
+.s-cover .rule { margin-top: 22px; margin-bottom: 10px; }
 .rule i {
   width: 14px; height: 14px; flex: none;
   border-left: var(--fina) solid var(--azul);
@@ -141,9 +168,9 @@ h2 { font-size: 104px; }
 
 /* ---------- Componente: nodos con figura ---------- */
 
-.nodos { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+.nodos { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
 .nodos .nodo { display: flex; align-items: center; gap: 22px; }
-.nodos .nodo .t { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.nodos .nodo .t { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .nodos .nodo .k {
   font-family: 'JetBrains Mono', monospace;
   font-size: 28px; font-weight: 700; color: var(--azul);
@@ -196,7 +223,7 @@ h2 { font-size: 104px; }
 .ext-plain img { display: block; width: 100%; height: auto; }
 .ext-card {
   margin-top: auto;
-  padding: 18px;
+  padding: 10px;
   background: var(--paper);
   border: var(--fina) solid var(--ink);
 }
@@ -231,4 +258,60 @@ h2 { font-size: 104px; }
   font-family: 'Barlow Condensed', sans-serif; font-weight: 600; text-transform: uppercase;
   font-size: 44px; letter-spacing: 0.02em; color: var(--ink);
   margin-top: 34px; text-align: center;
+}
+
+/* ---------- Componente: secuencia numerada ---------- */
+
+/* Mismo ritmo que `nodos`: renglon, linea de eje, renglon. El numero va en mono, del
+   ancho de dos digitos, para que los textos arranquen todos en la misma columna. */
+.pasos { display: flex; flex-direction: column; margin-top: auto; margin-bottom: auto; }
+.pasos .paso { display: flex; gap: 34px; align-items: baseline; padding: 26px 0; }
+.pasos .paso .n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 30px; color: var(--azul); flex: 0 0 62px;
+}
+.pasos .paso .t { font-family: Barlow, sans-serif; font-size: 42px; line-height: 1.28; }
+
+/* ---------- Layout: placa de imagen ---------- */
+
+/* La tarjeta se achica para no correr el cartucho: si empuja, esa placa deja de alinear
+   con la serie. */
+.s-image .ext-card { margin-top: 44px; margin-bottom: auto; flex: 0 1 auto; min-height: 0; }
+.s-image .ext-card img { max-height: 100%; object-fit: contain; }
+
+/* ---------- Componente: dos cifras independientes ---------- */
+
+.cifras { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.cifras .cifra { display: flex; align-items: center; gap: 30px; padding: 38px 0; }
+/* Aire a los dos lados de la linea de eje: pegada al texto, el bloque se lee apretado. */
+.cifras .eje { margin: 6px 0; }
+.cifras .cifra .n {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 96px; line-height: 0.9;
+  color: var(--azul); flex: 0 0 236px;
+}
+.cifras .cifra .n .u { font-size: 46px; margin-left: 6px; }
+.cifras .cifra .t { flex: 1; }
+.cifras .cifra .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.cifras .cifra .d { font-family: Barlow, sans-serif; font-size: 36px; line-height: 1.24; }
+
+/* ---------- Componente: secciones del tema ---------- */
+
+.secciones { margin-top: auto; margin-bottom: auto; }
+.secciones .sec-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 26px;
+}
+.secciones .sec-row { display: flex; gap: 18px; }
+.secciones .sec {
+  flex: 1; padding: 30px 22px;
+  border: var(--fina) solid var(--edge);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px; letter-spacing: 0.06em; text-transform: uppercase;
+  line-height: 1.35;
 }

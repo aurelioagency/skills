@@ -12,7 +12,7 @@
   --canvas-h: 1440px;
 
   --gutter: 80px;            /* margen parejo del disenio. NO se reduce. */
-  --grid-top: 56px;          /* arranque de la cabecera, medido desde el margen */
+  --grid-top: 34px;          /* arranque de la cabecera, medido desde el margen */
   --head-gap: 26px;
 
   --pad: var(--gutter);      /* alias historico */

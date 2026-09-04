@@ -17,6 +17,7 @@ html, body { background: #e8e6e1; }
   border: 1px solid var(--edge);
   overflow: hidden;
   padding: var(--pad);
+  padding-bottom: 180px;   /* alto del pie + su margen: el contenido no lo pisa */
   display: flex;
   flex-direction: column;
   font-family: 'Space Grotesk', sans-serif;
@@ -204,3 +205,15 @@ h2 { font-size: 88px; line-height: 1; }
 .stack .card { flex-direction: row; align-items: center; gap: 22px; }
 .stack .card .ct { flex: 1; display: flex; flex-direction: column; gap: 10px; }
 .checks .ck { align-items: center; }
+
+/* ---------- Consistencia de serie (2026-09-04) ----------
+   Decidido por el usuario: al deslizar, el pie tiene que estar siempre en el mismo lugar.
+   Antes iba en el flujo y una placa con mas contenido lo empujaba hacia abajo, asi que la
+   fila saltaba de una placa a otra. Anclado, eso es imposible; si el contenido no entra,
+   se ve en el render y hay que acortarlo — nunca correr el pie ni achicar el cuerpo.
+   El `padding-bottom` de `.slide` reserva su lugar para que el contenido no lo pise.
+   El selector lleva `.slide >` para ganarle a `.slide > *:not(.grid) { position: relative }`. */
+.slide > .foot {
+  position: absolute;
+  left: var(--gutter); right: var(--gutter); bottom: 80px;
+}
