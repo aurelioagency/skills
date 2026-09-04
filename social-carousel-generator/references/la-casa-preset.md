@@ -20,7 +20,28 @@ Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aure
 - Tamaño y densidad de texto **no se definen acá**: son reglas de la skill, iguales para toda marca. Están en `SKILL.md`, sección *Format, length and density* — un solo tamaño `1080x1440` y de 120 a 220 caracteres por slide de contenido. La Casa no las pisa.
 - **Largo habitual de La Casa: 7 a 10 imágenes exportadas** (6 a 9 slides de contenido más el CTA). Esto es formato de marca, no una regla de la skill: el techo de 10 lo pone `SKILL.md` y no se toca, pero el piso de 6 es de acá, porque los temas que publica La Casa —papers, procesos, comparativas— casi siempre necesitan separar afirmación de evidencia. Si un carrusel puntual no da para tanto, sale más corto: nunca se rellena para llegar al piso.
 - Language: Spanish by default.
-- Voice: practical, sharp, useful, human. Prefer clear Spanish.
+- **Voz: un ingeniero que enseña.** Un profesional con vocabulario que sabe explicarle a
+  cualquiera, sin bajarle el nivel al vocabulario. Son tres cosas y van las tres juntas:
+  - **Redacta bien.** Oraciones enteras, con sujeto y verbo, sin relleno ni frases hechas.
+  - **Tiene vocabulario.** La palabra exacta, nunca la aproximación: `diagnosticó`, no
+    *encontró la causa*; `costo por tarea`, no *plata*; `resultado`, no *puntaje*.
+  - **Baja el tema a tierra.** El que lee entiende sin ser del rubro. El término conserva su
+    nombre real y la oración de al lado lo deja claro (*Grounding Technical Terms* en
+    `references/redaccion.md`).
+
+  **Solas se rompen, y hacia lados opuestos:** vocabulario sin bajar a tierra da jerga;
+  bajar a tierra sin vocabulario da "plata" y "puntaje". El registro correcto es donde las
+  dos se cumplen a la vez — *Diagnosticó una falla de cuatro años* tiene la palabra técnica
+  y la entiende cualquiera.
+
+  **Lo coloquial no compra cercanía: cuesta precisión y claridad al mismo tiempo.** *"Saca
+  más puntaje por menos plata"* no se entiende —puntaje de qué, plata de quién— y *"Mejor
+  resultado, menor costo por tarea"* se entiende y además es exacta. La palabra precisa
+  suele ser también la más clara, porque nombra la cosa en vez de señalarla de lejos.
+
+  Esta línea decía `practical, sharp, useful, human` hasta el 2026-09-03. Cuatro adjetivos
+  que no restringen nada: `human` se leyó como permiso para el registro coloquial, y de ahí
+  salieron las dos líneas de arriba. Se cambió por eso.
 - **Voseo rioplatense, siempre y en todo el paquete.** La marca es argentina: `seguime`, `guardá`,
   `elegí`, `probá`, `mirá`, `tenés`. Nunca `sígueme`, `guarda`, `elige`, `tienes`. Vale para las
   placas, el CTA, el caption y cualquier texto que lea una persona. El tuteo neutro suena
