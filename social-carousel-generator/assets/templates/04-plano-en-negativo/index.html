@@ -31,10 +31,11 @@ function tab(s, i, total) {
 // de esta. En el cierre la firma va grande.
 // ?video=1 no cambia este pie: no hay prompt de swipe en este template.
 function foot(s, big) {
+  const d = window.CAROUSEL;
   return `
   <div class="foot${big ? ' big' : ''}">
-    <span>${s.source}</span>
-    <span class="sign">${window.CAROUSEL.footerBrand}</span>
+    <span>${d.footerBrand}</span>
+    <span class="sign">${d.footerAuthor}</span>
   </div>`;
 }
 
@@ -115,6 +116,44 @@ const stack = items => `
       </div>`).join('')}
   </div>`;
 
+// Secciones: los bloques en que se divide el tema. Es el grafico de portada cuando lo que
+// hay para mostrar es de que partes se compone, y no dos magnitudes que comparar.
+// Campos: `secciones` = { lbl, items: [str] }.
+const secciones = s => `
+  <div class="secciones diagram">
+    <div class="sec-lbl">${s.secciones.lbl}</div>
+    <div class="sec-row">
+      ${s.secciones.items.map(t => `<div class="sec">${t}</div>`).join('')}
+    </div>
+  </div>`;
+
+// Secuencia numerada: un paso por ficha, con su numero en mono. Va cuando los pasos tienen
+// orden obligatorio y no hay magnitud que comparar.
+// Campos: `pasos` = [{ n, t }].
+const pasos = items => `
+  <div class="pasos">
+    ${items.map(x => `
+      <div class="paso">
+        <div class="n">${x.n}</div>
+        <div class="t">${x.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Dos cifras independientes, cada una con su rotulo y su detalle. Va cuando las dos
+// magnitudes NO se comparan entre si: una barra afirmaria una proporcion que no existe.
+// Campos: `cifras` = [{ n, u, lbl, t }].
+const cifras = items => `
+  <div class="cifras">
+    ${items.map(c => `
+      <div class="cifra">
+        <div class="n">${c.n}${c.u ? `<span class="u">${c.u}</span>` : ''}</div>
+        <div class="t">
+          <div class="lbl">${c.lbl}</div>
+          <div class="d">${c.t}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+
 // Barras verticales con linea de base compartida. `h` es el porcentaje del alto y
 // sale del dato medido. `pad` deja aire a la derecha para que dos barras no se
 // lean como un grafico de dos categorias sobre todo el ancho.
@@ -151,13 +190,18 @@ function render(s, i, total) {
         <div class="hr"></div>
         <div class="lede">${s.lede}</div>
       </div>
+      ${s.secciones ? secciones(s) : `
       <div class="mid">
         ${duo(s)}
         ${chips(s.chips)}
-      </div>`;
+      </div>`}`;
   }
 
   if (s.type === 'stack') inner = `${head(s, true)}${stack(s.stack)}${userImg(s)}`;
+  if (s.type === 'pasos')  inner = `${head(s, true)}${pasos(s.pasos)}`;
+  if (s.type === 'cifras') inner = `${head(s, true)}${cifras(s.cifras)}`;
+  // Imagen publicada por la fuente: encabezado + la imagen enmarcada.
+  if (s.type === 'image')  inner = `${head(s, true)}${userImg(s)}`;
 
   if (s.type === 'bars') {
     inner = `
@@ -179,7 +223,7 @@ function render(s, i, total) {
         <h2 style="font-size:${s.hsize || 100}px">${s.headline}</h2>
         <div class="hr"></div>
         <div class="lede">${s.lede}</div>
-        ${checks(s.checks)}
+        ${s.checks ? checks(s.checks) : ''}
       </div>`;
   }
 

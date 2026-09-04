@@ -17,7 +17,7 @@ html, body { background: #e8e6e1; }
   border: 1px solid var(--edge);
   overflow: hidden;
   padding: var(--pad);
-  padding-bottom: 172px;   /* alto del pie + su margen: el contenido no lo pisa */
+  padding-bottom: 158px;   /* alto del pie + su margen: el contenido no lo pisa */
   display: flex;
   flex-direction: column;
   font-family: 'Space Grotesk', sans-serif;
@@ -68,7 +68,10 @@ html, body { background: #e8e6e1; }
   font-size: 30px;
   color: var(--ink);
 }
-.foot.big .sign { font-size: 52px; }
+/* La firma del cierre iba mas grande cuando era la marca. Ahora ese lugar lo ocupa el
+   autor, y agrandarlo solo en la ultima placa rompe la consistencia de la serie: el pie
+   se lee igual en las diez (2026-09-04). */
+.foot.big .sign { font-size: inherit; }
 
 /* ---------- Tipografia ---------- */
 
@@ -138,7 +141,7 @@ h2 { font-size: 92px; }
 
 /* ---------- Componente: despiece (piezas numeradas) ---------- */
 
-.parts { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 34px; }
+.parts { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
 .parts .part { display: flex; gap: 24px; align-items: flex-start; }
 .parts .tag {
   font-family: 'JetBrains Mono', monospace;
@@ -146,9 +149,9 @@ h2 { font-size: 92px; }
   border: 3px solid var(--ink);
   padding: 6px 14px; flex: none;
 }
-.parts .t { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.parts .t .name { font-family: 'Architects Daughter', cursive; font-size: 56px; line-height: 1.05; }
-.parts .t .desc { font-size: 42px; line-height: 1.35; color: var(--body); }
+.parts .t { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.parts .t .name { font-family: 'Architects Daughter', cursive; font-size: 46px; line-height: 1.02; }
+.parts .t .desc { font-size: 40px; line-height: 1.3; color: var(--body); }
 
 /* ---------- Componente: barras de ensayo ---------- */
 
@@ -257,4 +260,59 @@ h2 { font-size: 92px; }
 /* La portada lleva el titular manuscrito mas grande, asi que su cota caia 24px por debajo
    de la de las placas de contenido. Se sube para que la linea este a la misma altura en
    toda la serie (2026-09-04). */
-.s-cover .rule { margin-top: -24px; }
+.s-cover .rule { margin-top: 84px; }
+
+/* ---------- Componente: secuencia numerada ---------- */
+
+.pasos { display: flex; flex-direction: column; gap: 30px; margin-top: auto; margin-bottom: auto; }
+.pasos .paso { display: flex; gap: 28px; align-items: baseline; }
+.pasos .paso .n {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 40px; color: var(--ink); flex: 0 0 58px;
+}
+.pasos .paso .t { font-family: 'Space Grotesk', sans-serif; font-size: 40px; line-height: 1.32; }
+
+/* ---------- Componente: dos cifras independientes ---------- */
+
+.cifras { display: flex; flex-direction: column; gap: 44px; margin-top: auto; margin-bottom: auto; }
+.cifras .cifra { display: flex; align-items: center; gap: 30px; }
+.cifras .cifra .n {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 96px; line-height: 1; color: var(--ink); flex: 0 0 250px;
+}
+.cifras .cifra .n .u { font-size: 48px; margin-left: 6px; }
+.cifras .cifra .t { flex: 1; }
+.cifras .cifra .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.cifras .cifra .d { font-family: 'Space Grotesk', sans-serif; font-size: 38px; line-height: 1.3; }
+
+/* ---------- Layout: placa de imagen ---------- */
+
+.s-image .ext-card { margin-top: auto; margin-bottom: auto; flex: 0 1 auto; min-height: 0; }
+.s-image .ext-card img { max-height: 100%; object-fit: contain; }
+
+/* ---------- Componente: secciones del tema ---------- */
+
+.secciones { margin-top: auto; margin-bottom: auto; }
+.secciones .sec-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+}
+.secciones .sec-row { display: flex; gap: 16px; }
+.secciones .sec {
+  flex: 1; padding: 28px 20px;
+  border: 3px solid var(--ink); border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 30px; line-height: 1.3;
+}
+
+/* El pie es identico en todas las placas y sale del render, no de cada slide: repetir la
+   fuente en las diez no aportaba nada, y los valores de largo distinto hacian que cayera
+   diferente en cada una. Dos campos, como en el 05 (2026-09-04). */
+.foot .cell { display: flex; flex-direction: column; gap: 4px; }
+.foot .cell.end { align-items: flex-end; text-align: right; }
+.foot .cell .k { font-size: 22px; opacity: 0.62; }

@@ -26,6 +26,10 @@ dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bl
 | `cover` | encabezado con estado · titular 112px · filete · bajada · dos cifras con flecha · chips · pie | `tab`, `state`, `headline`, `lede`, `a`/`b`, `chips`, `source` |
 | `stack` | cabeza estándar + fichas sobre panel con filete de acento, rótulo mono y una línea | `stack` = `[{ lbl, t, tone }]`, `img` opcional |
 | `bars` | cabeza estándar + barras verticales con base compartida, párrafo y remate | `vbars` = `[{ val, h, on }]`, `after`, `punch`, `punchTone` |
+| `pasos` | cabeza estandar + secuencia numerada, un paso por renglon | `pasos` = `[{ n, t }]` |
+| `cifras` | cabeza estandar + dos cifras independientes con rotulo y detalle. Va cuando las dos magnitudes NO se comparan entre si | `cifras` = `[{ n, u, lbl, t }]` |
+| `image` | cabeza estandar + una imagen publicada por la fuente, enmarcada | `img`, `imgTransparent` opcional |
+| `secciones` | grafico de portada: los bloques en que se divide el tema | `secciones` = `{ lbl, items: [str] }` |
 | `cta` | titular 100px · filete · bajada · checklist · firma grande | `headline`, `lede`, `checks`, `state`, `source` |
 
 `tone` / `punchTone`: `teal` · `amber` · `blue`. `state` = `{ t, tone }`.
@@ -34,3 +38,17 @@ En `vbars`, `h` es el porcentaje del alto y `on` marca la barra que lleva el ace
 hueco a la derecha las devuelve a lo que son —dos puntos de una comparación— en vez de
 un gráfico de dos categorías sobre todo el ancho. En `chips`, el primero lleva el acento
 y los demás quedan apagados: dos encendidos no dicen nada.
+
+
+## Densidad compartida con la familia de ingenieria (2026-09-04)
+
+El `03`, el `04` y el `05` comparten escala y estructura, para que un carrusel escrito una
+vez entre en cualquiera de los tres sin reeditar la copy:
+
+- **Cuerpo de la descripcion: 40px.** El `03` y el `04` estaban en 42.
+- **Un item es rotulo + descripcion.** El `parts` del `03` dibujaba ademas un nombre
+  manuscrito: tres bloques donde los otros dos tienen dos, y en una placa de cuatro items
+  eso son 208px que no existen en los demas. `tag` y `name` quedaron opcionales.
+- **Arranque de cabecera `--grid-top: 34px`** en los tres.
+- **El pie sale del render**, con `footerBrand` y `footerAuthor`, y se lee igual en todas
+  las placas — incluida la de cierre, que antes agrandaba la firma.

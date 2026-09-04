@@ -17,7 +17,7 @@ html, body { background: #e8e6e1; }
   border: 1px solid var(--edge);
   overflow: hidden;
   padding: var(--pad);
-  padding-bottom: 180px;   /* alto del pie + su margen: el contenido no lo pisa */
+  padding-bottom: 152px;   /* alto del pie + su margen: el contenido no lo pisa */
   display: flex;
   flex-direction: column;
   font-family: 'Space Grotesk', sans-serif;
@@ -66,10 +66,13 @@ html, body { background: #e8e6e1; }
   color: var(--dim);
 }
 .foot .sign { font-family: 'JetBrains Mono', monospace; }
+/* La firma del cierre iba mas grande cuando era la marca. Ahora ese lugar lo ocupa el
+   autor, y agrandarlo solo en la ultima placa rompe la consistencia de la serie: el pie
+   se lee igual en las diez (2026-09-04). */
 .foot.big .sign {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 44px; font-weight: 700;
-  letter-spacing: -0.02em; color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: inherit; font-weight: inherit;
+  letter-spacing: inherit; color: inherit;
 }
 
 /* ---------- Tipografia ---------- */
@@ -133,12 +136,15 @@ h2 { font-size: 88px; line-height: 1; }
 
 /* ---------- Componente: fichas apiladas ---------- */
 
-.stack { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 34px; }
+/* `space-evenly`: cuando las fichas llenan el area se comporta igual que `center`, y
+   cuando son pocas las reparte en vez de agruparlas al medio dejando un hueco unico
+   (2026-09-04). */
+.stack { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 10px; }
 .stack .card {
   background: var(--panel);
   border-left: 5px solid var(--teal);
-  padding: 26px 30px;
-  display: flex; flex-direction: column; gap: 10px;
+  padding: 20px 30px;
+  display: flex; flex-direction: column; gap: 6px;
 }
 .stack .card.amber { border-left-color: var(--amber); }
 .stack .card.blue  { border-left-color: var(--blue); }
@@ -148,7 +154,7 @@ h2 { font-size: 88px; line-height: 1; }
 }
 .stack .card.amber .lbl { color: var(--amber); }
 .stack .card.blue  .lbl { color: var(--blue); }
-.stack .card .t { font-size: 42px; line-height: 1.32; color: var(--ink); }
+.stack .card .t { font-size: 40px; line-height: 1.32; color: var(--ink); }
 
 /* ---------- Componente: barras verticales ---------- */
 
@@ -156,7 +162,7 @@ h2 { font-size: 88px; line-height: 1; }
    comparables dos barras (references/data-encoding.md). */
 .vbars { display: flex; align-items: flex-end; gap: 8px; width: 100%; height: 280px; }
 .vbars .col {
-  flex: 1; display: flex; flex-direction: column;
+  flex: 0 0 226px; display: flex; flex-direction: column;
   justify-content: flex-end; gap: 12px; height: 100%;
 }
 .vbars .val { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; color: var(--dim); }
@@ -217,3 +223,67 @@ h2 { font-size: 88px; line-height: 1; }
   position: absolute;
   left: var(--gutter); right: var(--gutter); bottom: 80px;
 }
+
+/* ---------- Componente: secuencia numerada ---------- */
+
+.pasos { display: flex; flex-direction: column; gap: 22px; margin-top: auto; margin-bottom: auto; }
+.pasos .paso {
+  display: flex; gap: 26px; align-items: baseline;
+  background: var(--panel); border-left: 3px solid var(--teal);
+  padding: 26px 30px;
+}
+.pasos .paso .n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; color: var(--teal); flex: 0 0 52px;
+}
+.pasos .paso .t { font-family: 'Space Grotesk', sans-serif; font-size: 38px; line-height: 1.3; color: var(--ink); }
+
+/* ---------- Componente: dos cifras independientes ---------- */
+
+.cifras { display: flex; flex-direction: column; gap: 40px; margin-top: auto; margin-bottom: auto; }
+.cifras .cifra { display: flex; align-items: center; gap: 30px; }
+.cifras .cifra .n {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 96px; line-height: 1; color: var(--teal); flex: 0 0 250px;
+}
+.cifras .cifra .n .u { font-size: 46px; margin-left: 4px; }
+.cifras .cifra .t { flex: 1; }
+.cifras .cifra .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 10px;
+}
+.cifras .cifra .d { font-family: 'Space Grotesk', sans-serif; font-size: 36px; line-height: 1.3; color: var(--body); }
+
+/* ---------- Layout: placa de imagen ---------- */
+
+.s-image .ext-card { margin-top: auto; margin-bottom: auto; flex: 0 1 auto; min-height: 0; }
+.s-image .ext-card img { max-height: 100%; object-fit: contain; }
+
+/* ---------- Componente: secciones del tema ---------- */
+
+.secciones { margin-top: auto; margin-bottom: auto; }
+.secciones .sec-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 24px;
+}
+.secciones .sec-row { display: flex; gap: 16px; }
+.secciones .sec {
+  flex: 1; padding: 46px 24px;
+  background: var(--panel); border-left: 3px solid var(--teal);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 30px; line-height: 1.3; color: var(--ink);
+}
+
+/* Las columnas tienen ancho fijo y el grupo se centra en el ancho util. Antes eran
+   `flex: 1`: al sacar el relleno de la derecha (`vbarsPad: false`) no se centraban, se
+   estiraban a todo el ancho — que es agrandar, no centrar (2026-09-04). */
+.vbars { justify-content: center; }
+
+/* El pie es identico en todas las placas y sale del render, no de cada slide: repetir la
+   fuente en las diez no aportaba nada, y los valores de largo distinto hacian que cayera
+   diferente en cada una. Dos campos, como en el 05 (2026-09-04). */
+.foot .cell { display: flex; flex-direction: column; gap: 4px; }
+.foot .cell.end { align-items: flex-end; text-align: right; }
+.foot .cell .k { font-size: 22px; opacity: 0.62; }

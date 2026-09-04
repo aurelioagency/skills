@@ -27,10 +27,11 @@ function tab(s, i, total) {
 // con el pie de esta.
 // ?video=1 no cambia este pie: no hay prompt de swipe en este template.
 function foot(s, big) {
+  const d = window.CAROUSEL;
   return `
   <div class="foot${big ? ' big' : ''}">
-    <span>${s.source}</span>
-    <span class="sign">${window.CAROUSEL.footerBrand}</span>
+    <span>${d.footerBrand}</span>
+    <span class="sign">${d.footerAuthor}</span>
   </div>`;
 }
 
@@ -119,10 +120,49 @@ const parts = s => `
     ${s.parts.map(p => `
       <div class="part">
         ${p.ico ? ico({ ...p.ico, px: p.ico.px || 52 }) : ''}
-        <span class="tag" style="background:${pastel(p.tone)}">${p.tag}</span>
+        ${p.tag ? `<span class="tag" style="background:${pastel(p.tone)}">${p.tag}</span>` : ''}
         <div class="t">
-          <div class="name">${p.name}</div>
-          <div class="desc">${p.desc}</div>
+          ${p.name ? `<div class="name">${p.name}</div>` : ''}
+          ${p.desc ? `<div class="desc">${p.desc}</div>` : ''}
+        </div>
+      </div>`).join('')}
+  </div>`;
+
+// Secciones: los bloques en que se divide el tema. Es el grafico de portada cuando lo que
+// hay para mostrar es de que partes se compone, y no dos magnitudes que comparar.
+// Campos: `secciones` = { lbl, items: [str] }.
+const secciones = s => `
+  <div class="secciones diagram">
+    <div class="sec-lbl">${s.secciones.lbl}</div>
+    <div class="sec-row">
+      ${s.secciones.items.map(t => `<div class="sec">${t}</div>`).join('')}
+    </div>
+  </div>`;
+
+// Secuencia numerada: un paso por renglon, con su numero manuscrito. Va cuando los pasos
+// tienen orden obligatorio y no hay magnitud que comparar.
+// Campos: `pasos` = [{ n, t }].
+const pasos = items => `
+  <div class="pasos">
+    ${items.map(x => `
+      <div class="paso">
+        <div class="n">${x.n}</div>
+        <div class="t">${x.t}</div>
+      </div>`).join('')}
+  </div>`;
+
+// Dos cifras independientes, cada una con su rotulo y su detalle. Va cuando las dos
+// magnitudes NO se comparan entre si (una es un precio y la otra un porcentaje): una barra
+// o dos cajas proporcionales afirmarian una relacion que no existe.
+// Campos: `cifras` = [{ n, u, lbl, t }].
+const cifras = items => `
+  <div class="cifras">
+    ${items.map(c => `
+      <div class="cifra">
+        <div class="n">${c.n}${c.u ? `<span class="u">${c.u}</span>` : ''}</div>
+        <div class="t">
+          <div class="lbl">${c.lbl}</div>
+          <div class="d">${c.t}</div>
         </div>
       </div>`).join('')}
   </div>`;
@@ -163,12 +203,16 @@ function render(s, i, total) {
         <div class="rule"><i></i><span></span><i class="r"></i></div>
         <div class="lede">${s.lede}</div>
       </div>
-      ${s.ficha ? ficha(s) : compare(s)}`;
+      ${s.secciones ? secciones(s) : (s.ficha ? ficha(s) : compare(s))}`;
   }
 
   if (s.type === 'compare') inner = `${head(s)}${compare(s)}`;
   if (s.type === 'parts')   inner = `${head(s)}${parts(s)}${userImg(s)}`;
   if (s.type === 'bars')    inner = `${head(s)}${bars(s)}`;
+  if (s.type === 'pasos')   inner = `${head(s)}${pasos(s.pasos)}`;
+  if (s.type === 'cifras')  inner = `${head(s)}${cifras(s.cifras)}`;
+  // Imagen publicada por la fuente: encabezado + la imagen enmarcada.
+  if (s.type === 'image')   inner = `${head(s)}${userImg(s)}`;
 
   // ...un bloque mas por cada layout que pida el carrusel. Patron:
   // head(s) + un componente. Un grafico propio va dentro de un contenedor `chart` o
@@ -182,7 +226,7 @@ function render(s, i, total) {
         <h2 style="font-size:${s.hsize || 100}px">${s.headline}</h2>
         <div class="rule"><i></i><span></span><i class="r"></i></div>
         <div class="lede">${s.lede}</div>
-        ${steps(s.steps)}
+        ${s.steps ? steps(s.steps) : ''}
       </div>`;
   }
 
