@@ -146,6 +146,24 @@ técnico y no se entiende: te deja esperando la segunda mitad, que nunca llega. 
 investigación abierta"*, que tiene adentro un término discutible y se entiende perfecto, porque
 el resto de la oración está armado.
 
+### El registro no es una escala de formalidad
+
+Lo coloquial parece la opción que resigna precisión y compra cercanía. No compra nada:
+**cuesta precisión y claridad al mismo tiempo.**
+
+| | |
+|---|---|
+| *Saca más puntaje por menos plata.* | No se entiende: puntaje de qué, plata de quién. |
+| **Mejor resultado, menor costo por tarea.** | Se entiende, y además es exacta. |
+
+La segunda no es la versión formal de la primera: es la versión que dice algo. La palabra
+precisa suele ser también la más clara, porque **nombra la cosa en vez de señalarla de
+lejos** — `costo por tarea` no es más técnico que `plata`, es más entendible, porque dice
+qué costo y de qué.
+
+De ahí que "escribir cercano" no autorice a aflojar el vocabulario. La voz de la marca la
+define su preset; lo que dice esta sección vale para todas.
+
 ### El titular se recorta de la Lectura. No se escribe de nuevo.
 
 Esta es la regla, y las tres de abajo existen sólo para que se cumpla.

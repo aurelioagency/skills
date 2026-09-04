@@ -34,10 +34,9 @@ Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aure
   dos se cumplen a la vez — *Diagnosticó una falla de cuatro años* tiene la palabra técnica
   y la entiende cualquiera.
 
-  **Lo coloquial no compra cercanía: cuesta precisión y claridad al mismo tiempo.** *"Saca
-  más puntaje por menos plata"* no se entiende —puntaje de qué, plata de quién— y *"Mejor
-  resultado, menor costo por tarea"* se entiende y además es exacta. La palabra precisa
-  suele ser también la más clara, porque nombra la cosa en vez de señalarla de lejos.
+  Por qué el registro coloquial no es una opción más suelta sino una peor:
+  *El registro no es una escala de formalidad* en `references/redaccion.md`. Vale para
+  cualquier marca, por eso no vive acá.
 
   Esta línea decía `practical, sharp, useful, human` hasta el 2026-09-03. Cuatro adjetivos
   que no restringen nada: `human` se leyó como permiso para el registro coloquial, y de ahí
