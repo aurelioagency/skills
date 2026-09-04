@@ -218,8 +218,7 @@ const stats = items => `
   <div class="stats">
     ${items.map(c => `
       <div class="st">
-        <div class="fig">${c.fig}</div>
-        <div class="sub">${c.sub}</div>
+        <div class="figrow"><span class="fig">${c.fig}</span><span class="sub">${c.sub}</span></div>
         <div class="lbl">${c.lbl}</div>
         <div class="t">${c.t}</div>
       </div>`).join('')}
@@ -266,6 +265,9 @@ function render(s, i, total) {
   }
 
   if (s.type === 'rows')   inner = `${head(s)}${rows(s)}${userImg(s)}`;
+  // Placa de imagen: titular + una imagen que publica la fuente, sin componente propio.
+  // El encuadre sale de userImg(): opaca va enmarcada, transparente va directa sobre el campo.
+  if (s.type === 'image')  inner = `${head(s)}${userImg(s)}${close(s)}`;
   if (s.type === 'chart')  inner = `${head(s)}${chart(s)}${close(s)}`;
   if (s.type === 'docs')   inner = `${head(s)}${docs(s.docs)}${close(s)}`;
   if (s.type === 'list')   inner = `${head(s)}${list(s)}${close(s)}`;

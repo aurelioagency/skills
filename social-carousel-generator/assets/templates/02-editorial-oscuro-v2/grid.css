@@ -21,6 +21,9 @@
 
 .head { padding: 0 var(--gutter); margin-top: var(--grid-top); }
 .head h2 { margin-top: var(--head-gap); }
+/* La portada usa h1, no h2, asi que la regla de arriba no la alcanzaba y el rotulo
+   quedaba pegado al titular. Mismo --head-gap, no una constante nueva. */
+.head h1:first-of-type { margin-top: var(--head-gap); }
 .head .lede { margin-top: var(--lede-gap); }
 
 /* La portada arranca 8px mas abajo que el resto. Es la unica desviacion declarada

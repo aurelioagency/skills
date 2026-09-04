@@ -32,6 +32,7 @@ dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bl
 | `list` | eyebrow · titular · bajada · ítems numerados separados por filete · cierre | `items`, `close` |
 | `cards` | eyebrow · titular · bajada opcional · tres tarjetas en fila · remate con parte resaltada | `cards` = `[{ lbl, t, tone }]`, `lede` opcional, `punch`, `aside` opcional |
 | `stats` | eyebrow · titular · bajada · dos cifras grandes con su unidad, rótulo y detalle | `stats` = `[{ fig, sub, lbl, t }]` |
+| `image` | eyebrow · titular · bajada · una imagen publicada por la fuente, enmarcada, que se achica para no correr el footer · cierre | `img`, `imgTransparent` opcional, `close` opcional |
 | `cta` | firma · titular · subtítulo en serif · filete · sitio · contador | `signature`, `headline`, `sub` |
 
 Cada ítem de `list` entra en una línea a 44px, ~40 caracteres. Si no entra, se acorta el

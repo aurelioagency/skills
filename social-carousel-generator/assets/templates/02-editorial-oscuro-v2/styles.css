@@ -68,8 +68,11 @@ h1, h2 {
   color: var(--ink);
   text-transform: uppercase;
 }
-h1 { font-size: 132px; line-height: 0.9; letter-spacing: -0.045em; }
-h2 { font-size: 104px; }
+/* `balance` reparte los renglones del titular en vez de llenar el primero y dejar el
+   ultimo corto: "RESULTADOS EN / TRES / DISCIPLINAS." pasa a "RESULTADOS / EN TRES /
+   DISCIPLINAS.". Va en el estilo y no como salto a mano en un slide. */
+h1 { font-size: 132px; line-height: 0.9; letter-spacing: -0.045em; text-wrap: balance; }
+h2 { font-size: 104px; text-wrap: balance; }
 
 /* Bajada: serif, no la sans de los titulares. */
 .lede {
@@ -143,9 +146,11 @@ h2 { font-size: 104px; }
 .strip .axis .mid { color: #5a564e; }
 
 /* Rotulo que encabeza un componente. Capa de referencia: 22px por disenio. */
+/* 26px y --dim, igual que el eyebrow: a 22px en --dimmer el rotulo no se leia en el
+   telefono y el bloque quedaba sin encabezado visible. */
 .dlabel {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 22px; letter-spacing: 0.2em; color: var(--dimmer);
+  font-size: 26px; letter-spacing: 0.2em; color: var(--dim);
   margin-bottom: 22px;
 }
 .dlabel.coral { color: var(--coral); }
@@ -190,7 +195,7 @@ h2 { font-size: 104px; }
 
 .chips { display: flex; gap: 14px; }
 .chips .chip {
-  flex: 1; text-align: center; padding: 22px 0;
+  flex: 1; text-align: center; padding: 26px 22px;
   border: 2px solid var(--coral-edge); border-radius: 12px;
   font-size: 38px; color: var(--ink-2);
 }
@@ -365,6 +370,9 @@ h2 { font-size: 104px; }
   border-radius: 18px;
   padding: 30px 26px 32px;
 }
+/* Cifra y unidad en la misma linea de base: "52,6%" es un dato, no dos.
+   Apilados se leian como dos valores distintos. */
+.stats .figrow { display: flex; align-items: baseline; gap: 6px; }
 .stats .fig {
   font-family: 'Archivo', sans-serif;
   font-weight: 800;
@@ -375,11 +383,11 @@ h2 { font-size: 104px; }
 }
 .stats .sub {
   font-family: 'Archivo', sans-serif;
-  font-weight: 400;
-  font-size: 38px;
-  line-height: 1;
-  color: var(--dim);
-  margin-top: 12px;
+  font-weight: 800;
+  font-size: 62px;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--verde);
 }
 .stats .lbl {
   font-family: 'JetBrains Mono', monospace;
@@ -389,6 +397,10 @@ h2 { font-size: 104px; }
   text-transform: uppercase;
   color: var(--coral);
   margin-top: 30px;
+  /* Alto fijo de dos renglones: con rotulos de largo distinto, una tarjeta empujaba
+     su descripcion mas abajo que la otra y la fila se leia desalineada. */
+  min-height: 2.4em;
+  line-height: 1.2;
 }
 .stats .t {
   font-family: 'Archivo', sans-serif;
@@ -431,3 +443,12 @@ h2 { font-size: 104px; }
   color: var(--muted);
   line-height: 1.2;
 }
+
+/* ---------- Layout: placa de imagen ---------- */
+
+/* La tarjeta se centra en el espacio que queda entre el encabezado y el footer, en vez
+   de apoyarse contra el footer como en `rows`, donde comparte lugar con la columna.
+   `min-height: 0` + `flex-shrink` es lo que la hace encogerse en vez de empujar: sin eso
+   una imagen alta corre el footer hacia abajo y esa placa deja de alinear con la serie. */
+.s-image .ext-card { margin-top: auto; margin-bottom: auto; flex: 0 1 auto; min-height: 0; }
+.s-image .ext-card img { max-height: 100%; object-fit: contain; }
