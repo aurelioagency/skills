@@ -115,14 +115,14 @@ h2 { font-size: 104px; }
    y por eso rompe el eje y la escala del resto (ver *La portada* en references/proporcion.md).
    Concretamente en este estilo:
 
-   - Titular a 220px contra los 112px del resto. Es el maximo que entra sin partir la
-     linea mas larga del set de prueba (866px de los 918 utiles). Un titular que no entra
-     no se achica: se acorta.
+   - Titular con techo de 220px contra los 112px del resto. Los 220 son el maximo del CSS;
+     el cuerpo de cada carrusel se mide con `hsize` y crece hasta llenar los 918px utiles.
+     Un titular que no entra no se achica: se acorta.
    - La mitad de arriba del lienzo es del titular y la cota cae en la mitad exacta
      (y=720 de 1440). La caja de 517px es lo que va del arranque de la cabecera a esa
-     altura; el `padding-top` centra el titular adentro en vez de dejar todo el aire abajo.
-   - La cota mide el titular, no un 62% arbitrario: cierra el bloque en vez de cortarlo.
-     Si cambia el cuerpo del titular, se vuelve a medir la linea mas larga.
+     altura; el titular se centra adentro con grid, no con un padding calculado a mano.
+   - La cota mide el titular, no un 62% arbitrario: cierra el bloque en vez de cortarlo,
+     y lo hace sola (ver `fit-content` abajo).
    - Todo el bloque va centrado. Es la unica placa centrada del template; las otras nueve
      mantienen el eje izquierdo. Por eso la portada NO necesita la excepcion
      `cover-hook-centered`, que este template declaraba de fabrica. */

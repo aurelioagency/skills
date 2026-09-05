@@ -20,6 +20,7 @@ uno de ellos, y el archivo donde vive el arreglo esta en la ultima columna.
 | **Fidelidad** | Todo dato, ejemplo, comparacion o grafico sale de la fuente. Sin numeros no hay barras. Sin material no se rellena. | `references/fidelidad.md` |
 | **Creatividad con limites** | El template es un sistema visual, no un guion. La composicion y el recurso varian segun la idea, sin perder familia visual ni repetir por inercia. | `references/composicion.md` |
 | **Proporcion y consistencia** | Grilla compartida, arranques fijos por rol, espaciado reglado. Y una QA que mira la serie, no solo la placa. | `references/proporcion.md` |
+| **La portada** | La placa 1 no se compone como el resto: titular mas grande, mitad de arriba del lienzo, separador en la mitad exacta y midiendo el titular, centrada, poca informacion. Vale para cualquier template; como lo cumple cada uno esta en su `estilo.md`. | `references/proporcion.md` > *La portada* |
 
 **La regla de precedencia, que es la que se rompe mas seguido:**
 

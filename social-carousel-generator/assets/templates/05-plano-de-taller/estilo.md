@@ -58,15 +58,19 @@ campo para que la pieza no quede vacia, esa pieza no va en esa placa.**
 Las reglas generales de portada estan en *La portada* en `references/proporcion.md` y
 valen para todos los templates. Lo que este estilo resuelve distinto:
 
-- **Titular a 220px** contra los 112px del resto de la serie. El techo lo puso el ancho:
-  `MYTHOS 5.1` mide 866px de los 918 utiles. Si un titular no entra a 220, se acorta el
-  titular — no se baja el cuerpo.
+- **Titular con techo de 220px** contra los 112px del resto de la serie. Los 220 son el
+  maximo del CSS, no el cuerpo de cada carrusel: ese se mide con `hsize`, que crece hasta
+  que la linea mas larga llena los 918px utiles. En el carrusel de Fable 5.1 dio 220
+  (`MYTHOS 5.1` mide 916); en otro con un titular mas largo va a dar menos. Si un titular
+  no entra, se acorta el titular — no se baja el cuerpo.
 - **La cota cae en y=720**, la mitad exacta del lienzo. La caja del titular es de 517px
-  (del arranque de la cabecera a esa altura) y el `padding-top: 56px` lo centra adentro,
-  para que el aire no quede todo de un lado.
-- **La cota mide 866px**, el ancho del titular, en vez del 62% que usa el resto de la
-  serie. Es el unico lugar donde la cota no comparte ancho con las demas placas, y esta
-  bien: aca no esta midiendo una magnitud, esta cerrando el titular.
+  (del arranque de la cabecera a esa altura, menos los 48 que la separan de la cota), y el
+  titular queda centrado adentro con `display: grid` + `align-content: center`, que aguanta
+  cualquier cantidad de renglones.
+- **La cota mide el titular**, en vez del 62% que usa el resto de la serie, y lo hace sola:
+  titular y cota van envueltos en `.covertitle` con `width: fit-content`, asi que la caja se
+  achica al renglon mas largo y la cota toma el 100% de esa caja. No hay un ancho clavado ni
+  una medicion a mano por carrusel — cambia el titular y la cota lo sigue.
 - **Todo el bloque va centrado.** Es la unica placa centrada del template. Por eso la
   portada dejo de necesitar la excepcion `cover-hook-centered`, que este template
   declaraba de fabrica y se saco.
