@@ -109,10 +109,37 @@ h2 { font-size: 104px; }
    2026-09-04; el usuario prefirio asi). Con dos renglones queda aire entre el titular y
    la cota: cuando el tema lo permita, se escribe el titular a tres renglones. */
 .head h2 { min-height: 293px; }
-.s-cover h1 { min-height: 257px; }
-/* En la portada el titular es de 112px: con el gap del `.head` a secas, la cota queda
-   pegada al bloque de texto. */
-.s-cover .rule { margin-top: 22px; margin-bottom: 10px; }
+
+/* ---------- PORTADA ----------
+   La portada no es una placa mas de la serie: es la unica que tiene que parar el scroll,
+   y por eso rompe el eje y la escala del resto (ver *La portada* en references/proporcion.md).
+   Concretamente en este estilo:
+
+   - Titular a 220px contra los 112px del resto. Es el maximo que entra sin partir la
+     linea mas larga del set de prueba (866px de los 918 utiles). Un titular que no entra
+     no se achica: se acorta.
+   - La mitad de arriba del lienzo es del titular y la cota cae en la mitad exacta
+     (y=720 de 1440). La caja de 517px es lo que va del arranque de la cabecera a esa
+     altura; el `padding-top` centra el titular adentro en vez de dejar todo el aire abajo.
+   - La cota mide el titular, no un 62% arbitrario: cierra el bloque en vez de cortarlo.
+     Si cambia el cuerpo del titular, se vuelve a medir la linea mas larga.
+   - Todo el bloque va centrado. Es la unica placa centrada del template; las otras nueve
+     mantienen el eje izquierdo. Por eso la portada NO necesita la excepcion
+     `cover-hook-centered`, que este template declaraba de fabrica. */
+.s-cover h1 {
+  font-size: 220px;
+  min-height: 517px;
+  text-align: center;
+  /* `grid` + `align-content: center` centra el titular dentro de su caja sea cual sea la
+     cantidad de renglones: todo el contenido en linea, `<br>` incluido, forma un solo
+     item anonimo. Con `padding-top` fijo esto solo funcionaba para dos renglones. */
+  display: grid;
+  align-content: center;
+}
+.s-cover .rule {
+  margin-top: 22px; margin-bottom: 10px;
+  width: 866px; margin-left: auto; margin-right: auto;
+}
 .rule i {
   width: 14px; height: 14px; flex: none;
   border-left: var(--fina) solid var(--azul);
@@ -304,14 +331,17 @@ h2 { font-size: 104px; }
 .secciones { margin-top: auto; margin-bottom: auto; }
 .secciones .sec-lbl {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 26px; letter-spacing: 0.2em; text-transform: uppercase;
+  font-size: 34px; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--muted); margin-bottom: 26px;
 }
+/* Las secciones son el grafico de la portada, no una nota al pie: van a 34px, en negrita
+   y en tinta plena. A 26px y en gris se leian como un pie de pagina. */
+.s-cover .secciones .sec-lbl, .s-cover .secciones .sec { text-align: center; }
 .secciones .sec-row { display: flex; gap: 18px; }
 .secciones .sec {
   flex: 1; padding: 30px 22px;
   border: var(--fina) solid var(--edge);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 26px; letter-spacing: 0.06em; text-transform: uppercase;
-  line-height: 1.35;
+  font-size: 34px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  line-height: 1.35; color: var(--ink);
 }

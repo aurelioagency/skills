@@ -72,10 +72,28 @@ The hook is the first slide's only job: stop the scroll. Write and approve hooks
 
 ### Structure
 
-Every hook is two parts:
+Every hook has one obligatory part and one optional one:
 
-1. Setup line: a strong, specific claim — the main headline.
+1. Setup line: a strong, specific claim — the main headline. **Obligatoria.**
 2. Twist line: the tension, break, or consequence. It must contrast with the headline in **both font and colour** — the active preset defines how (La Casa: serif italic in the carousel's dominant accent, sentence case). Never hardcode a colour.
+
+**El remate es opcional, y la portada sin remate es una salida legitima.** La condicion
+es la de siempre: que el lector pueda decir de que es el carrusel. Si el titular nombra el
+tema y el kicker lo ubica, el remate no esta agregando nada y lo que agrega es densidad en
+la unica placa que no la quiere.
+
+Lo que la portada **nunca** lleva es un parrafo que la explique. La linea divisoria no es
+"con texto de apoyo o sin", es esta:
+
+| | |
+|---|---|
+| Un remate | dice en una linea que es el tema. `Un modelo, dos resguardos.` |
+| Un parrafo | resume el carrusel. `Los modelos mas avanzados del mundo para la codificacion y el trabajo del conocimiento.` |
+
+El segundo es el que hay que sacar, tenga el largo que tenga: no aporta, no se recuerda y
+convierte la portada en una placa de contenido mas. **Si el remate que sale es de ese tipo,
+la portada va sin remate.** Escribir uno peor para no dejar el lugar vacio es el error que
+esta regla existe para evitar.
 
 **Dos patrones. El primero es el default y hay que tener un motivo para no usarlo.**
 
@@ -91,7 +109,7 @@ El contraste de fuente y color entre las dos líneas no cambia en ninguno de los
 
 Both lines are centered, and both must be short enough to hold the typography floor without shrinking. If a line only works small, rewrite it shorter.
 
-The cover also carries one simple graphic. A cover that is only type reads as a title card, not as a hook — see the preset for the default pattern.
+The cover also carries one simple graphic. A cover that is only type reads as a title card, not as a hook — see the preset for the default pattern. Ese grafico es lo que reemplaza al parrafo: cuando la portada se queda corta de contenido, lo que le falta es grafico, no texto. Como se compone la portada —escala del titular, el separador, el centrado, el aire— esta en *La portada* en `references/proporcion.md`.
 
 ### Approval gate
 

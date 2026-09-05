@@ -191,6 +191,57 @@ Hard QA rules:
 - Expand the composition deliberately within that safe area. Increase type, reflow visual elements, and use the available width and height before accepting large empty regions around small content. An unnecessarily small composition surrounded by avoidable empty space is a red issue.
 - **A small character/mascot asset is never the only thing in its row.** A brand mascot rendered at ~20-30% of canvas height (the size that keeps it from competing with the type) leaves most of that row empty if nothing sits beside it — this has shipped as a real defect more than once. Whenever a slide places a mascot, put a real component in the same row next to it (a verdict/punch box, a stat, a short card) so the row has content across its width, not a character floating alone against a blank field. Stacking a component above or below the mascot does not fix this: the empty space the reader notices is *beside* the character, at the same height, and only something occupying that height fixes it. Check this specifically before calling a render done — it will not show up as a red issue in `render-and-audit.mjs` (ink-coverage and block-count checks are per-slide totals, not per-row), so it has to be caught by eye on the contact sheet.
 - **The cover's graphic has to depict the hook, not the carousel's table of contents.** Its job is to sell the claim in the headline/twist, so it draws that claim (a before/after, a comparison, the mechanism) — never a preview of slide topics or categories that haven't been introduced yet (e.g. don't put the four use-cases from a later slide on a cover about a speed claim: they have nothing to do with the hook and read as a non-sequitur before the reader knows what they mean). If the default fan-out pattern doesn't fit what the hook is actually claiming, use a different simple graphic (a two-card comparison, a before/after) instead of forcing unrelated content into the fan-out's destination slots.
+
+## La portada
+
+**La portada no se compone como el resto de la serie.** Las otras placas las lee alguien
+que ya decidio quedarse; la portada tiene que conseguir esa decision, y compite contra
+todo lo demas del feed en la miniatura. Una portada que se compone con la misma escala y
+la misma densidad que una placa de contenido no falla por fea: falla porque no se
+distingue de nada.
+
+Estas reglas valen para **cualquier template**. Como las cumple cada uno esta en su
+`estilo.md`.
+
+- **El titular es la placa.** Va sensiblemente mas grande que el titular de contenido — el
+  salto tiene que verse a simple vista, no medirse. En el `05-plano-de-taller` son 220px
+  contra los 112px del resto de la serie.
+
+  **El cuerpo no es una constante del template: se mide por carrusel.** El titular crece
+  hasta que la linea mas larga llena el ancho util, y ahi para — el valor que trae el CSS
+  es el techo, para un titular corto. Se renderiza, se mide la linea mas larga, y ese es
+  el cuerpo.
+
+  De ahi sale la unica regla de largo que tiene la portada: **cuanto mas larga la frase,
+  mas chico entra**. Un titular de tres palabras va al doble que el de contenido; uno de
+  ocho, apenas mas grande, y entonces la portada dejo de distinguirse. Por eso el titular
+  de portada se escribe corto — no por elegancia, porque es lo que lo deja ir grande.
+  **Un titular que no entra no se achica, se acorta.**
+- **La mitad de arriba del lienzo es del titular**, y el separador —regla, filete, cota,
+  lo que el template use— cae en la mitad exacta. Es lo que hace que la portada se lea
+  distinta de un vistazo, antes de leer una palabra.
+- **El separador mide el titular**, no una fraccion arbitraria del ancho. Un filete mas
+  corto que el titular lo corta por la mitad; uno del ancho del titular lo cierra. Se mide
+  la linea mas larga renderizada y ese es el ancho. Si cambia el cuerpo del titular, se
+  vuelve a medir.
+- **La portada va centrada, incluso en templates alineados a la izquierda.** Es la
+  excepcion al eje del template, y es deliberada: la portada es la unica placa que no
+  pertenece a la lectura corrida. Un template cuya portada esta centrada **no necesita** la
+  excepcion `cover-hook-centered` — sacala de `layoutExceptions` en vez de arrastrarla.
+- **Poca informacion.** Titular, y el grafico. Nada mas es el default. Lo que la portada
+  nunca lleva es un parrafo que explique el carrusel: eso es lo primero que la vuelve una
+  placa de contenido mas. Sobre el remate opcional, ver *Hooks* en `references/redaccion.md`.
+- **El grafico si va**, y ocupa el espacio que le queda abajo con cuerpo suficiente para
+  leerse en la miniatura. Un grafico de portada compuesto como una nota al pie —cuerpo
+  chico, gris, contra el borde— no aporta y ademas ensucia. Que dibuja ese grafico esta
+  unas lineas mas arriba: el gancho, nunca el indice del carrusel.
+- **El aire que queda no se rellena.** Sacar el parrafo deja hueco, y el hueco es correcto:
+  el chequeo de `internal-gap` sigue valiendo, y si avisa, el arreglo es subir o agrandar
+  el grafico — nunca devolver el parrafo ni inventar una linea para tapar el agujero.
+
+**Esto es composicion, no copy.** Que dice la portada esta en `references/redaccion.md`;
+esta seccion dice como se ve.
+
 - Center the main information inside the canvas.
 - Keep every text element fully visible.
 - Keep meaningful text out of app overlay zones by enforcing the `5%` side and `10%` top/bottom safe area. Do not use a weaker overlay clearance for headlines, labels, body text, CTA copy, logos, or footers.

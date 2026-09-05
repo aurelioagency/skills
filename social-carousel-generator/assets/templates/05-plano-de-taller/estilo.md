@@ -53,6 +53,30 @@ Lo que no se hace es al reves: elegir una pieza porque ya esta hecha y despues
 buscar con que llenarle los campos. **Si tuviste que inventar el contenido de un
 campo para que la pieza no quede vacia, esa pieza no va en esa placa.**
 
+## La portada (2026-09-05)
+
+Las reglas generales de portada estan en *La portada* en `references/proporcion.md` y
+valen para todos los templates. Lo que este estilo resuelve distinto:
+
+- **Titular a 220px** contra los 112px del resto de la serie. El techo lo puso el ancho:
+  `MYTHOS 5.1` mide 866px de los 918 utiles. Si un titular no entra a 220, se acorta el
+  titular — no se baja el cuerpo.
+- **La cota cae en y=720**, la mitad exacta del lienzo. La caja del titular es de 517px
+  (del arranque de la cabecera a esa altura) y el `padding-top: 56px` lo centra adentro,
+  para que el aire no quede todo de un lado.
+- **La cota mide 866px**, el ancho del titular, en vez del 62% que usa el resto de la
+  serie. Es el unico lugar donde la cota no comparte ancho con las demas placas, y esta
+  bien: aca no esta midiendo una magnitud, esta cerrando el titular.
+- **Todo el bloque va centrado.** Es la unica placa centrada del template. Por eso la
+  portada dejo de necesitar la excepcion `cover-hook-centered`, que este template
+  declaraba de fabrica y se saco.
+- **El remate es opcional** y por default no va (`s.lede` esta guardado en `index.html`).
+- **Las `secciones` van a 34px, en negrita y en tinta plena.** A 26px y en gris se leian
+  como un pie de pagina, y son el grafico de la portada.
+
+La consistencia de serie de abajo **no aplica a la portada**: su arranque, su escala y su
+eje son propios por diseno, y `audit-serie.mjs` la deja fuera de la comparacion.
+
 ## Consistencia de serie (2026-09-04)
 
 Decidido por el usuario despues de armar el carrusel de Claude Fable 5.1. **Lo que se

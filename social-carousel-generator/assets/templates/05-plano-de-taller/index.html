@@ -200,14 +200,16 @@ const checks = items => `
 function render(s, i, total) {
   let inner = '';
 
-  // Portada: titular condensado de 112px, regla con la magnitud, bajada, y el corte
-  // ocupando el resto. Es la unica slide con h1.
+  // Portada: titular de 220px ocupando la mitad de arriba, cota a la altura media y al
+  // ancho del titular, y el grafico ocupando el resto. Es la unica slide con h1 y la
+  // unica centrada. El remate es OPCIONAL y por default no va: la portada nombra el tema
+  // y muestra el grafico, no lo explica (ver *La portada* en references/proporcion.md).
   if (s.type === 'cover') {
     inner = `
       <div class="head">
         <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
         ${rule(s)}
-        <div class="lede">${s.lede}</div>
+        ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
       </div>
       ${s.secciones ? secciones(s) : (s.ficha ? ficha(s) : corte(s))}`;
   }

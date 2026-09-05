@@ -28,12 +28,13 @@ window.CAROUSEL = {
   //   'typography-floor' -> la capa de referencia va por debajo de los 40px de
   //      SKILL.md: rotulos del cartucho y de eje en mono a 22-30px.
   //   'safe-area' -> el margen del disenio es 80px parejo (5,5% vertical), no el 10%.
-  //   'cover-hook-centered' -> la portada alinea a la izquierda contra el margen.
+  // ('cover-hook-centered' se saco el 2026-09-05: la portada de este template pasó a
+  //  estar centrada, asi que el chequeo de centrado pasa solo y la excepcion sobraba.)
   //   'density-budget' -> las bandas estan medidas sobre el set publicado del
   //      01-editorial-oscuro. Este template todavia no tiene set propio.
   // Bajan a nota TODOS los avisos de su tipo, asi que hay que leer las notas del
   // reporte: un error real se cuela ahi adentro sin bloquear la entrega.
-  layoutExceptions: ['typography-floor', 'safe-area', 'cover-hook-centered', 'density-budget'],
+  layoutExceptions: ['typography-floor', 'safe-area', 'density-budget'],
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
@@ -50,10 +51,15 @@ window.CAROUSEL = {
     {
       type: 'cover',
       tab: 'COSTO POR TAREA',
+      // `hsize` se MIDE por carrusel: el titular crece hasta que la linea mas larga llena
+      // el ancho util (918px) y ahi para. Aca 140px da 916px. Los 220px que trae el CSS
+      // son el techo, para un titular corto — cuanto mas larga la frase, mas chico entra,
+      // y por eso la portada se escribe corta: para poder ir grande.
       headline: 'Mismo resultado,<br>25× menos costo',
-      ruleWidth: 80,
+      hsize: 140,
       ruleLabel: 'FACTOR 25:1',
-      lede: 'Nadie calcula una viga para 25 veces la carga real. Con los modelos de IA, casi todos lo hacen.<br><span class="soft">Mismo benchmark, tres meses de diferencia.</span>',
+      // Sin remate: la portada nombra el tema y muestra el grafico, no lo explica.
+      // Ver *La portada* en references/proporcion.md y *Hooks* en references/redaccion.md.
       a: { v: '$33,27', h: 300, tone: 'naranja', cap: 'GPT-5.5 · 84,36 %' },
       b: { v: '$1,33',  h: 120, tone: 'azul',    cap: '5.6 LUNA · 84,04 %' },
       cartucho: [
