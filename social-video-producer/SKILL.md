@@ -568,11 +568,18 @@ With no flag this freezes **Inter Black**, the skill default, from the fonts bun
 
 Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video.
 
-**House default:** Inter Black at 104px, chunk reveal, `accent-mode active` — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns cyan `#30D5FF` as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. That is what the scripts produce with no style arguments, and **it is what ships.** It is a decided house style, not a starting point for a menu.
+**House default:** Inter Black at 104px, chunk reveal, `accent-mode active` — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns colour as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. That is what the scripts produce with no style arguments beyond the accent colour, and the reveal/font/timing choices in it **ship as-is** — they are a decided house style, not a starting point for a menu.
 
-The alternative is `accent-mode keyword` (`--accent-mode keyword --accent-terms "..."`) — only hand-picked key terms ever turn cyan, everything else stays white for the whole video. Switch to it only if the user asks for that specific look; do not default to it. `accent-mode` is only meaningful with `reveal=chunk`; with `reveal=word` it is a no-op since word reveal already colours the currently-spoken word.
+The accent colour itself has two standing options — ask the user which one before the first render of a new project, then reuse that answer for the rest of the project without asking again per segment:
 
-5. **Render ONE preview frame of the house default and keep going.** Burn the default `.ass` onto a real frame of this video, show that single image, and proceed straight to the full burn. This is a sanity check on placement over *this* footage — that the captions clear the speaker's face and any on-screen UI — not a style decision.
+1. **Cyan `#30D5FF`** (original default). Best when the caption band sits over dark/medium backgrounds — skin, hair, dark clothing, shadowed interiors. Contrast against black/dark backgrounds ~12:1; against white/light backgrounds it washes out (~1.7:1).
+2. **Blue `#2F6FED`** (option 2). Best when the caption band sits over light/white backgrounds — screen recordings, light UI, bright rooms. Contrast against white ~4.6:1; against black ~5.1:1 — the more balanced of the two options across light and dark backgrounds, at a slightly softer saturation than a pure primary blue.
+
+Look at a couple of representative frames from the actual footage before asking — if the caption band consistently falls over one kind of background, say so and recommend the matching colour rather than posing it as a coin flip. If it's genuinely mixed or unclear from the frames, ask the user directly which of the two to use.
+
+The alternative is `accent-mode keyword` (`--accent-mode keyword --accent-terms "..."`) — only hand-picked key terms ever turn the accent colour, everything else stays white for the whole video. Switch to it only if the user asks for that specific look; do not default to it. `accent-mode` is only meaningful with `reveal=chunk`; with `reveal=word` it is a no-op since word reveal already colours the currently-spoken word.
+
+5. **Render ONE preview frame of the house default (with the chosen accent colour) and keep going.** Burn the default `.ass` onto a real frame of this video, show that single image, and proceed straight to the full burn. This is a sanity check on placement over *this* footage — that the captions clear the speaker's face and any on-screen UI — not a style decision.
 
    **Do not offer 2-3 style candidates.** The skill already made the style decision; re-opening it hands a solved problem back to the user, wastes their attention, and implies the default is arbitrary. Generate alternative styles only when the user asks for a different look, and then render exactly the alternatives they described.
 
@@ -583,6 +590,8 @@ The alternative is `accent-mode keyword` (`--accent-mode keyword --accent-terms 
 ```powershell
 node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.approved.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --video-width <source-width> --video-height <source-height> --size 104 --accent "#30D5FF"
 ```
+
+Pass `--accent "#2F6FED"` instead when the user picked option 2 (blue) at the accent-colour question above.
 
 `accent-mode` defaults to `active` (karaoke-style, no `--accent-terms` needed). Only add `--accent-mode keyword --accent-terms "<key terms>"` if the user asked for that specific keyword-only look instead.
 
@@ -873,10 +882,14 @@ nudge the block with `--y-offset` (positive is down, in source pixels) and rebui
   eye as *"the letters look half transparent"* — the fill is fully opaque, just wrong. PNG
   output declares `None`. `build-cover.mjs` samples the rendered strip and fails if the fill
   does not match, so this cannot ship again.
-- **The profile grid crops the cover to a centred square.** Text sitting low in a 9:16
-  frame is outside that crop and nobody reads it. The script reports `insideGridCrop`;
-  treat `false` as a blocker, not a warning. (The Reels tab shows a taller thumbnail than
-  the square, so the square is the conservative gate — a cover that clears it clears both.)
+- **The profile grid crops the cover to a centred 3:4 tile**, not to a square. Instagram
+  moved the grid off 1:1 in early 2025; for a 1080x1920 cover the surviving band is
+  y=240..1680. `build-cover.mjs` hardcoded a centred square until this was caught, which
+  pushed headlines ~180px further from the top of the frame than necessary and made
+  "arriba" and "dentro del grid" look mutually exclusive when they are not. The script
+  reports `insideGridCrop` against the 3:4 tile; treat `false` as a blocker, not a warning.
+  Do not quote a grid measurement to the user without reading it out of the script — the
+  number lives at `scripts/build-cover.mjs` `gridCropHeight`, and it was wrong once.
 
 ## Post Description (Social Caption)
 
