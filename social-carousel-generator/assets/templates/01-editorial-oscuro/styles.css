@@ -161,6 +161,12 @@ h1 {
 .s-cover .kicker { margin-bottom: 34px; }
 /* Dale a cada titular su cuerpo explicito y colocá los <br> a mano: asi se controlan
    los cortes de linea en vez de detectarlos despues como huerfanas. */
+/* 90px es el techo REAL de esta portada, no una eleccion conservadora: Archivo Black es
+   una fuente muy ancha y a 90px un titular de dos palabras ya llena los 972px utiles.
+   Este template no puede cumplir el "titular sensiblemente mas grande" de *La portada*
+   (references/proporcion.md) subiendo el cuerpo — lo unico que consigue es sumar
+   renglones. Lo que distingue esta portada es el centrado, el giro en serif italica y el
+   grafico, no la escala. Medido el 2026-09-05. */
 .s-cover h1 { font-size: 90px; text-align: center; }
 .s-cover .twist {
   font-family: Georgia, 'Lora', serif;

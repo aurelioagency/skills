@@ -217,6 +217,14 @@ Estas reglas valen para **cualquier template**. Como las cumple cada uno esta en
   ocho, apenas mas grande, y entonces la portada dejo de distinguirse. Por eso el titular
   de portada se escribe corto — no por elegancia, porque es lo que lo deja ir grande.
   **Un titular que no entra no se achica, se acorta.**
+
+  **Hay templates donde este salto no se puede dar, y no es un defecto.** Con una tipografia
+  de titulos muy ancha, dos palabras ya llenan el ancho util y el titular esta en su techo
+  antes de despegarse del de contenido: subir el cuerpo solo suma renglones. Medido el
+  2026-09-05 sobre Archivo Black en `01-editorial-oscuro` (techo 90px) y
+  `02-editorial-oscuro-v2` (techo 132px contra 104px de contenido). En esos templates lo
+  que distingue la portada es el centrado, el remate en otra familia y el grafico. Antes de
+  dar por perdido el salto, medilo — no lo supongas por la pinta de la fuente.
 - **La mitad de arriba del lienzo es del titular**, y el separador —regla, filete, cota,
   lo que el template use— cae en la mitad exacta. Es lo que hace que la portada se lea
   distinta de un vistazo, antes de leer una palabra.

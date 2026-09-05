@@ -96,3 +96,18 @@ linea que salta 20px se ve mas que cualquier detalle de composicion.
 
 Cuando toques el layout, medi: renderiza cada placa y compara la posicion de cabecera, cota
 y pie. Si un valor no se repite en toda la serie, es un defecto — no una variante.
+
+## La portada (2026-09-05)
+
+Reglas generales en *La portada* (`references/proporcion.md`). Lo de este estilo:
+
+- **Titular a 220px de techo** contra los 112px del resto, centrado, caja de 520px.
+- **El filete cae en y=720 y mide el titular**, por el mismo mecanismo que el `03`.
+- **El remate es opcional** y por default no va.
+- **El grafico se apoya contra el filete en vez de centrarse en el hueco.** Centrado
+  partia el sobrante en dos y dejaba un agujero de 382px entre titular y grafico, que el
+  chequeo de `internal-gap` bloqueaba. Ahora el aire sobrante queda abajo, de una pieza.
+- **El grafico de portada va mas grande que el de contenido** (cifras a 132px, rotulos a
+  32px, chips a 32px) y centrado. Agrandarlo es el arreglo que pide *La portada* cuando
+  sobra aire; bajar el titular o devolver un parrafo, no.
+- Se retiro la excepcion `cover-hook-centered`.

@@ -95,3 +95,22 @@ cuanto un ícono vaya a otro tamaño.
 Para que una pieza más acepte ícono hay que tocar los tres archivos: `index.html` (que
 lo dibuje), `styles.css` (cómo se alinea) y este archivo (que quede documentado). Los
 tres, o el dato queda en `slide-data.js` y no aparece nada.
+
+## La portada (2026-09-05)
+
+Reglas generales en *La portada* (`references/proporcion.md`). Lo de este estilo:
+
+- **La portada va centrada.** Era el unico template con la portada contra el margen
+  izquierdo por decision de marca; paso a estar centrada, rotulo del grafico incluido, y
+  con eso dejo de necesitar la excepcion `cover-hook-centered`, que declaraba de fabrica.
+- **La caja del titular termina en y=720**, la mitad exacta del lienzo. Este template no
+  tiene filete en la portada, asi que lo que cae en la mitad es el borde de abajo del
+  titular.
+- **El titular NO sube de 132px, y no es conservadurismo: es el techo de la fuente.**
+  Archivo Black es tan ancho que a 132px dos palabras ya llenan los 904px utiles. Medido:
+  `MÁS CONTEXTO` en un solo renglon entra hasta 110px, o sea menos que los 132 actuales.
+  Contra los 104px del titular de contenido, el salto es chico y no hay como agrandarlo:
+  subir el cuerpo solo suma renglones. Lo que distingue esta portada es el centrado, el
+  giro en serif italica y la tira.
+- **El giro es opcional** en el render. En este template conviene mantenerlo: el contraste
+  de dos familias y dos colores es la formula de portada de la marca.

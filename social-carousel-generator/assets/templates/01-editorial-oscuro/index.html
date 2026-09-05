@@ -135,7 +135,7 @@ function render(s, i, total) {
       <div class="stage">
         <div class="kicker ${s.accent || ''}">${s.kicker}</div>
         <h1>${s.headline}</h1>
-        <div class="twist">${s.twist}</div>
+        ${s.twist ? `<div class="twist">${s.twist}</div>` : ''}
         <div class="spacer"></div>
         <div class="fanout">
           <div class="hub">${s.hub}</div>

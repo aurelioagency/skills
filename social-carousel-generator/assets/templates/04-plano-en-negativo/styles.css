@@ -265,7 +265,7 @@ h2 { font-size: 88px; line-height: 1; }
 .secciones { margin-top: auto; margin-bottom: auto; }
 .secciones .sec-lbl {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 24px; letter-spacing: 0.18em; text-transform: uppercase;
+  font-size: 32px; letter-spacing: 0.18em; text-transform: uppercase;
   color: var(--dim); margin-bottom: 24px;
 }
 .secciones .sec-row { display: flex; gap: 16px; }
@@ -273,7 +273,7 @@ h2 { font-size: 88px; line-height: 1; }
   flex: 1; padding: 46px 24px;
   background: var(--panel); border-left: 3px solid var(--teal);
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 30px; line-height: 1.3; color: var(--ink);
+  font-size: 36px; font-weight: 600; line-height: 1.3; color: var(--ink);
 }
 
 /* Las columnas tienen ancho fijo y el grupo se centra en el ancho util. Antes eran
@@ -287,3 +287,51 @@ h2 { font-size: 88px; line-height: 1; }
 .foot .cell { display: flex; flex-direction: column; gap: 4px; }
 .foot .cell.end { align-items: flex-end; text-align: right; }
 .foot .cell .k { font-size: 22px; opacity: 0.62; }
+
+/* ---------- PORTADA ----------
+   La portada no se compone como el resto de la serie (ver *La portada* en
+   references/proporcion.md). Titular sensiblemente mas grande, la mitad de arriba del
+   lienzo para el, el separador cayendo en la mitad exacta y midiendo el titular, y todo
+   el bloque centrado aunque las otras nueve placas alineen a la izquierda.
+
+   `fit-content` hace que la caja se achique al ancho del renglon mas largo del titular,
+   y el separador adentro toma todo el ancho de esa caja: mide el titular solo, sin
+   numeros clavados ni una medicion a mano por carrusel.
+
+   Los 220px son el TECHO, para un titular corto. El cuerpo se mide por carrusel con
+   `hsize`: crece hasta que la linea mas larga llena el ancho util y ahi para.
+
+   Por estar centrada, la portada NO necesita la excepcion `cover-hook-centered`, que
+   este template declaraba de fabrica y se saco. */
+.s-cover .covertitle { width: fit-content; margin: 0 auto; }
+.s-cover h1 {
+  font-size: 220px;
+  min-height: 520px;   /* del arranque de la cabecera (152) a la mitad del lienzo (720),
+                          menos los 48px que separan el titular del separador */
+  text-align: center;
+  /* `grid` + `align-content: center` centra el titular en su caja sea cual sea la
+     cantidad de renglones: todo el contenido en linea, `<br>` incluido, forma un solo
+     item anonimo. Con un `padding-top` fijo esto solo funciona para dos renglones. */
+  display: grid;
+  align-content: center;
+}
+.s-cover .covertitle .hr { width: 100%; margin-top: 48px; }
+
+/* Las secciones son el grafico de la portada, no una nota al pie: van a 34px, en negrita
+   y en tinta plena. A 26px y en gris se leian como un pie de pagina. */
+.s-cover .secciones .sec-lbl, .s-cover .secciones .sec { text-align: center; }
+
+/* En la portada el grafico se apoya contra el separador en vez de centrarse en el hueco
+   que queda: centrado partia el sobrante en dos y dejaba un agujero de 382px entre el
+   titular y el grafico. El aire sobrante va abajo, de una sola pieza. Y va centrado,
+   como el resto de la portada. */
+.s-cover .mid { justify-content: flex-start; padding-top: 58px; align-items: center; gap: 52px; }
+.s-cover .duo, .s-cover .chips { justify-content: center; }
+/* El grafico de portada va mas grande que el de contenido: tiene que leerse en la
+   miniatura, y ademas es lo que cierra el hueco que deja el titular grande. Agrandarlo
+   es el arreglo que pide *La portada*; bajar el titular o devolver un parrafo, no. */
+.s-cover .duo .fig { font-size: 132px; }
+.s-cover .duo .lbl { font-size: 32px; }
+.s-cover .duo .arrow { font-size: 56px; }
+.s-cover .chips { font-size: 32px; }
+.s-cover .chips .chip { padding: 12px 22px; }

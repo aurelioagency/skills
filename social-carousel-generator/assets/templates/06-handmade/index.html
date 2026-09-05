@@ -25,11 +25,16 @@
 const VIDEO = new URLSearchParams(location.search).has('video');
 const ico = (i) => i ? window.ICONS.icon(i.name, i.px || 104, i.pastel, '#fcefe3') : '';
 
-// Titulo + subrayado. El ancho del subrayado va entre 55% y 70% del titulo.
+// Titulo + subrayado. En las placas de contenido el ancho del subrayado va entre 55% y
+// 70% del titulo (`subWidth`). En la PORTADA no: ahi el subrayado mide el titular entero
+// —lo cierra en vez de cortarlo— y para eso el par va envuelto en `.covertitle`, que se
+// achica al ancho del renglon mas largo (ver *La portada* en references/proporcion.md).
 function titulo(s, tag = 'h2') {
-  return `
-    <${tag}${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.titulo}</${tag}>
-    <div class="sub-titulo" style="width:${s.subWidth || 62}%"></div>`;
+  const t = `<${tag}${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.titulo}</${tag}>`;
+  if (tag === 'h1') {
+    return `<div class="covertitle">${t}<div class="sub-titulo"></div></div>`;
+  }
+  return `${t}<div class="sub-titulo" style="width:${s.subWidth || 62}%"></div>`;
 }
 
 // Firma: SIEMPRE en la misma esquina, en todas las placas. Sale de slide-data.js.

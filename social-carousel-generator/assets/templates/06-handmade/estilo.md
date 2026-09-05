@@ -108,3 +108,16 @@ carrusel.**
 - Margen libre: 88px a los lados, 96px arriba y abajo
 - Firma en la misma esquina en todas
 - Un solo set de ilustraciones
+
+## La portada (2026-09-05)
+
+Reglas generales en *La portada* (`references/proporcion.md`). Esta portada ya estaba
+centrada, asi que lo que faltaba era la escala y el subrayado:
+
+- **Titular de portada a 160px de techo.** Antes portada y contenido eran los dos de
+  108px: la primera placa no se distinguia de ninguna otra.
+- **El subrayado mide el titular entero** en vez del 55-70% que usan las placas de
+  contenido. `titulo()` envuelve el par en `.covertitle` cuando el tag es `h1`, y ahi el
+  subrayado toma el 100% de una caja que se achico al renglon mas largo. `subWidth` sigue
+  valiendo para las placas de contenido y se ignora en la portada.
+- La bajada ya era opcional.

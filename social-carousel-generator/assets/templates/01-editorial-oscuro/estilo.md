@@ -79,3 +79,15 @@ cuanto un ícono vaya a otro tamaño.
 Para que una pieza más acepte ícono hay que tocar los tres archivos: `index.html` (que
 lo dibuje), `styles.css` (cómo se alinea) y este archivo (que quede documentado). Los
 tres, o el dato queda en `slide-data.js` y no aparece nada.
+
+## La portada (2026-09-05)
+
+Reglas generales en *La portada* (`references/proporcion.md`). Esta portada ya estaba
+centrada y con su grafico, asi que casi todo ya se cumplia. Lo que cambio:
+
+- **El giro pasa a ser opcional** en el render.
+- **El titular no puede ir mas grande: 90px es el techo de la fuente.** Archivo Black es
+  muy ancho y a 90px un titular de dos palabras ya llena los 972px utiles; subir el cuerpo
+  solo suma renglones. Este template no cumple el "titular sensiblemente mas grande" de
+  *La portada* por escala — lo cumple por centrado, contraste de familias y grafico.
+  Medido el 2026-09-05.

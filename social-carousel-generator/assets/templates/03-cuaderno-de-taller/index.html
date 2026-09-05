@@ -199,9 +199,11 @@ function render(s, i, total) {
   if (s.type === 'cover') {
     inner = `
       <div class="head">
-        <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
-        <div class="rule"><i></i><span></span><i class="r"></i></div>
-        <div class="lede">${s.lede}</div>
+        <div class="covertitle">
+          <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headline}</h1>
+          <div class="rule"><i></i><span></span><i class="r"></i></div>
+        </div>
+        ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
       </div>
       ${s.secciones ? secciones(s) : (s.ficha ? ficha(s) : compare(s))}`;
   }

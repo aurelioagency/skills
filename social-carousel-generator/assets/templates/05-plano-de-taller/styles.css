@@ -126,9 +126,14 @@ h2 { font-size: 104px; }
    - Todo el bloque va centrado. Es la unica placa centrada del template; las otras nueve
      mantienen el eje izquierdo. Por eso la portada NO necesita la excepcion
      `cover-hook-centered`, que este template declaraba de fabrica. */
+/* `fit-content` hace que la caja se achique al ancho del renglon mas largo del titular,
+   y la cota adentro toma el 100% de esa caja: mide el titular sola, sin numeros clavados
+   ni una medicion a mano por carrusel. Cambia el titular y la cota lo sigue. */
+.s-cover .covertitle { width: fit-content; margin: 0 auto; }
 .s-cover h1 {
   font-size: 220px;
-  min-height: 517px;
+  min-height: 517px;   /* del arranque de la cabecera (155) a la mitad del lienzo (720),
+                          menos los 48px que separan el titular de la cota */
   text-align: center;
   /* `grid` + `align-content: center` centra el titular dentro de su caja sea cual sea la
      cantidad de renglones: todo el contenido en linea, `<br>` incluido, forma un solo
@@ -136,9 +141,9 @@ h2 { font-size: 104px; }
   display: grid;
   align-content: center;
 }
-.s-cover .rule {
-  margin-top: 22px; margin-bottom: 10px;
-  width: 866px; margin-left: auto; margin-right: auto;
+.s-cover .covertitle .rule {
+  width: 100%;
+  margin-top: 48px; margin-bottom: 10px;
 }
 .rule i {
   width: 14px; height: 14px; flex: none;

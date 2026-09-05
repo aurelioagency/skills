@@ -28,7 +28,7 @@ window.CAROUSEL = {
   //   'typography-floor' -> la capa de referencia va por debajo de los 40px de
   //      SKILL.md: rotulos de ficha y de pie en mono a 26-28px.
   //   'safe-area' -> el margen del disenio es 80px parejo (5,5% vertical), no el 10%.
-  //   'cover-hook-centered' -> la portada alinea a la izquierda contra el margen. El
+  // ('cover-hook-centered' se saco el 2026-09-05: la portada paso a estar centrada.) El
   //      peso lo da el titular manuscrito a 104px, no la simetria.
   //   'density-budget' -> las bandas de render-and-audit.mjs estan medidas sobre el set
   //      publicado del 01-editorial-oscuro. Este template tiene otro peso visual (papel
@@ -37,7 +37,7 @@ window.CAROUSEL = {
   //      abajo en `densityBudget`, y esta excepcion se saca.
   // Las dos bajan a nota TODOS los avisos de su tipo, asi que hay que leer las notas
   // del reporte: un error real se cuela ahi adentro sin bloquear la entrega.
-  layoutExceptions: ['typography-floor', 'safe-area', 'cover-hook-centered', 'density-budget'],
+  layoutExceptions: ['typography-floor', 'safe-area', 'density-budget'],
 
   // Bandas de densidad propias de la marca, copiadas de su preset.md. Si todavia no se
   // midieron para este template, no inventes numeros: usa la excepcion 'density-budget'.
@@ -56,9 +56,13 @@ window.CAROUSEL = {
     {
       type: 'cover',
       tab: 'GPT-5.6',
-      headline: 'El mismo<br>resultado por<br>25 veces menos',
-      ruleWidth: 76,
-      lede: 'OpenAI publicó qué cambió al construir agentes con GPT-5.6. Te lo traduzco a decisiones de plata.',
+      // Portada: titular corto para poder ir grande, y sin remate. El titular anterior
+      // ('El mismo resultado por 25 veces menos', tres renglones) entraba a 120px — apenas
+      // por encima de los 104px del resto de la serie, o sea que la portada no se
+      // distinguia. Ver *La portada* en references/proporcion.md.
+      // `hsize` se mide por carrusel: crece hasta llenar el ancho util y ahi para.
+      headline: '25× menos<br>por lo mismo',
+      hsize: 150,
       a: { v: 'US$33,27', h: 300, tone: 'rosa',    cap: 'ANTES · GPT-5.5<br>84,36 % acierto' },
       b: { v: 'US$1,33',  h: 140, tone: 'celeste', cap: 'AHORA · 5.6 Luna<br>84,04 % acierto' },
       source: 'FUENTE: BROWSECOMP · OPENAI 08/2026'

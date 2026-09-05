@@ -100,3 +100,20 @@ linea que salta 20px se ve mas que cualquier detalle de composicion.
 
 Cuando toques el layout, medi: renderiza cada placa y compara la posicion de cabecera, cota
 y pie. Si un valor no se repite en toda la serie, es un defecto — no una variante.
+
+## La portada (2026-09-05)
+
+Reglas generales en *La portada* (`references/proporcion.md`). Lo de este estilo:
+
+- **Titular a 220px de techo** contra los 104px del resto de la serie, centrado, con la
+  caja de 520px que va del arranque de la cabecera a la mitad del lienzo.
+- **La cota cae en y=720 y mide el titular**, no el 62% que usa el resto de la serie.
+  Sale de envolver titular y cota en `.covertitle` con `width: fit-content`: la cota toma
+  el 100% de esa caja, asi que sigue al titular sin numeros clavados.
+- **El remate es opcional** y por default no va.
+- **Las `secciones` van a 32/36px en negrita** en vez de 24/30px: son el grafico de la
+  portada, no una nota al pie.
+- Se retiro la excepcion `cover-hook-centered`.
+- El titular del fixture se acorto: el anterior entraba a 120px, apenas por encima de los
+  104px de contenido, o sea que la portada no se distinguia. Es el caso tipico de *cuanto
+  mas larga la frase, mas chico entra*.

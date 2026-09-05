@@ -117,7 +117,29 @@ h2 { font-size: 104px; text-wrap: balance; }
   font-size: 30px; font-weight: 800; color: var(--ink); justify-self: end;
 }
 
-/* ---------- Layout: portada ---------- */
+/* ---------- Layout: portada ----------
+   La portada no se compone como el resto de la serie (ver *La portada* en
+   references/proporcion.md): titular sensiblemente mas grande, la mitad de arriba del
+   lienzo para el, y todo el bloque centrado aunque las otras placas alineen a la
+   izquierda. Este template no tiene filete en la portada, asi que lo que cae en la mitad
+   exacta del lienzo (y=720) es el borde de abajo del titular.
+
+   Los 132px que trae `h1` son el TECHO. El cuerpo se mide por carrusel con `hsize`:
+   crece hasta que la linea mas larga llena el ancho util y ahi para — cuanto mas larga la
+   frase, mas chico entra, y por eso el titular de portada se escribe corto.
+
+   Por estar centrada, la portada dejo de necesitar la excepcion `cover-hook-centered`,
+   que este template declaraba de fabrica. */
+.s-cover .head { text-align: center; }
+.s-cover .covertitle {
+  width: fit-content; margin: 0 auto;
+  min-height: 498px;   /* del arranque del titular (222) a la mitad del lienzo (720) */
+  display: grid; align-content: center;
+}
+.s-cover .twist { margin-left: auto; margin-right: auto; }
+/* El grafico de la portada tambien se alinea al eje centrado, rotulo incluido: dejarlo
+   contra el margen izquierdo era el unico bloque fuera de eje de toda la placa. */
+.s-cover .dlabel { text-align: center; }
 .s-cover .twist {
   font-family: 'Source Serif 4', serif;
   font-style: italic;

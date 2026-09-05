@@ -28,14 +28,14 @@ window.CAROUSEL = {
   //   'typography-floor' -> la capa de referencia va por debajo de los 40px de
   //      SKILL.md: rotulos de encabezado y de pie en mono a 26-28px.
   //   'safe-area' -> el margen del disenio es 80px parejo (5,5% vertical), no el 10%.
-  //   'cover-hook-centered' -> la portada alinea a la izquierda contra el margen. El
+  // ('cover-hook-centered' se saco el 2026-09-05: la portada paso a estar centrada.) El
   //      peso lo da el titular de 112px a peso 700, no la simetria.
   //   'density-budget' -> las bandas estan medidas sobre el set publicado del
   //      01-editorial-oscuro. Este template todavia no tiene set propio. Cuando lo
   //      tenga, se miden sus bandas, se declaran en `densityBudget` y esta sale.
   // Bajan a nota TODOS los avisos de su tipo, asi que hay que leer las notas del
   // reporte: un error real se cuela ahi adentro sin bloquear la entrega.
-  layoutExceptions: ['typography-floor', 'safe-area', 'cover-hook-centered', 'density-budget'],
+  layoutExceptions: ['typography-floor', 'safe-area', 'density-budget'],
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
@@ -53,8 +53,11 @@ window.CAROUSEL = {
       type: 'cover',
       tab: 'BENCHMARK',
       state: { t: 'VERIFICADO', tone: 'teal' },
-      headline: 'Tu agente<br>cuesta 25×<br>más de lo<br>necesario',
-      lede: 'Mismo benchmark, misma precisión, tres meses de diferencia.',
+      // Portada: titular corto para poder ir grande, y sin remate. El anterior tenia
+      // cuatro renglones y entraba a 130px, apenas por encima de los 112px del resto.
+      // Ver *La portada* en references/proporcion.md.
+      headline: 'Tu agente<br>cuesta 25× más',
+      hsize: 126,
       a: { lbl: 'GPT-5.5 · 84,36 %',  v: '$33,27', tone: 'amber' },
       b: { lbl: '5.6 LUNA · 84,04 %', v: '$1,33',  tone: 'teal' },
       chips: [

@@ -257,9 +257,11 @@ function render(s, i, total) {
              con mitades desparejas (una palabra arriba, dos abajo) se lee como un error
              de render, no como jerarquia. El contraste lo dan el giro en serif y el
              tamanio, que ya alcanzan. -->
-        <h1>${s.headTop}</h1>
-        <h1>${s.headBottom}</h1>
-        <div class="twist">${s.twist}</div>
+        <div class="covertitle">
+          <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headTop}</h1>
+          <h1${s.hsize ? ` style="font-size:${s.hsize}px"` : ''}>${s.headBottom}</h1>
+        </div>
+        ${s.twist ? `<div class="twist">${s.twist}</div>` : ''}
       </div>
       ${s.devices ? devstrip(s) : strip(s)}`;
   }

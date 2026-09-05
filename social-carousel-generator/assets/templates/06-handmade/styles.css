@@ -224,3 +224,18 @@ h1, h2 {
 .ext-card img { display: block; width: 100%; height: auto; border-radius: 8px; }
 
 .spacer { flex: 1 1 auto; }
+
+/* ---------- PORTADA ----------
+   La portada no se compone como el resto de la serie (ver *La portada* en
+   references/proporcion.md). Aca ya estaba centrada, asi que lo que faltaba era la
+   escala y el subrayado.
+
+   Antes el titular de portada y el de contenido eran los dos de 108px: la primera placa
+   no se distinguia de ninguna otra. Los 160px son el TECHO, para un titular corto; el
+   cuerpo se mide por carrusel con `hsize`.
+
+   `fit-content` achica la caja al ancho del renglon mas largo y el subrayado adentro
+   toma todo ese ancho, asi mide el titular solo. */
+.s-cover .covertitle { width: fit-content; margin: 0 auto; }
+.s-cover h1 { font-size: 160px; }
+.s-cover .covertitle .sub-titulo { width: 100%; margin-top: 22px; }

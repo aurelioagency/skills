@@ -33,7 +33,7 @@ window.CAROUSEL = {
   //      Titulares, bajadas, items de lista y remates SI estan por encima del piso.
   //   'safe-area' -> el footer se apoya a 64px del borde inferior (4,4%), no al 10%.
   //      Es la fila de cierre del disenio, debajo de su regla de 1px.
-  //   'cover-hook-centered' -> la portada de este template alinea a la izquierda contra
+  // ('cover-hook-centered' se saco el 2026-09-05: la portada paso a estar centrada.) Antes,
   //      el margen de 88px, no al centro. El contraste lo dan las dos mitades del
   //      titular (gris/blanco) y el giro en serif, no la simetria.
   // Las tres bajan a nota TODOS los avisos de su tipo, asi que hay que leer las notas del
@@ -43,7 +43,7 @@ window.CAROUSEL = {
   //      template lleva Archivo a 100px y, desde que el titular va entero en blanco
   //      (2026-08-29), una portada de cuatro renglones supera la banda por diseno, no
   //      por estar sobrecargada.
-  layoutExceptions: ['typography-floor', 'safe-area', 'cover-hook-centered', 'density-budget'],
+  layoutExceptions: ['typography-floor', 'safe-area', 'density-budget'],
 
   // Bandas de densidad propias de la marca, copiadas de su preset.md. Lo que declares
   // pisa solo esas claves; el resto sale de las de La Casa. Si la marca todavia no las
@@ -69,6 +69,14 @@ window.CAROUSEL = {
       accent: 'dorado',
       glow: 'tl',
       eyebrow: 'CÓMO LEE UN LLM',
+      // Portada. Ver *La portada* en references/proporcion.md.
+      //
+      // Aca el titular NO sube de 132px, y no es un descuido: Archivo Black es tan ancho
+      // que dos palabras ya llenan los 904px utiles. Medido el 2026-09-05: 'MÁS CONTEXTO'
+      // en un solo renglon entra hasta 110px — menos que los 132 actuales. O sea que en
+      // este template el titular de portada ya esta en su techo, y lo que lo distingue del
+      // de contenido (104px) es poco. Es una limitacion de la fuente, no algo para
+      // forzar: subir el cuerpo aca solo agrega renglones.
       headTop: 'MÁS<br>CONTEXTO',
       headBottom: 'NO ES MÁS<br>PRECISIÓN.',
       twist: 'A veces es exactamente lo contrario.',
