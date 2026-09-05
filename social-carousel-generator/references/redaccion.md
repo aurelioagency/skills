@@ -198,8 +198,16 @@ En este orden, para cada línea:
    entenderse.** Ahí la reformulación es para aclarar, nunca para decirlo mejor, y va con
    vocabulario profesional — nunca coloquial (*El registro no es una escala de formalidad*,
    arriba).
-5. **Escribí de tu puño sólo lo que la fuente no tiene:** los titulares, porque un artículo
-   no trae titulares de placa. Ahí valen las mismas exigencias que en todo lo demás.
+5. **Escribí de tu puño sólo lo que la fuente no tiene:** casi siempre el titular de placa,
+   porque un artículo no trae titulares de placa. Pero no es una prohibición de usar un
+   título o un subtítulo de la fuente: si está bien dicho, se usa literal y su celda de
+   trazabilidad no queda vacía — vale la misma regla madre que en todo lo demás, no hay
+   ningún premio por decirlo distinto. Escribís el titular vos cuando la fuente no tiene uno
+   que sirva, no por defecto.
+
+Cuando sí ponés palabras propias —un titular o una reformulación declarada— la exigencia es
+la misma que en todo el resto: profesional, nunca coloquial (*El registro no es una escala
+de formalidad*, arriba).
 
 Buscar una manera nueva de decir algo que ya estaba bien dicho es lo que produce las placas
 rebuscadas. No hay ningún premio por decirlo distinto.
@@ -231,9 +239,10 @@ Se hacen sobre el texto escrito, y los dos se ven — no se cumplen declarando q
 
 1. **Trazá cada línea a su oración de la fuente.** En `carousel-brief.md` va la tabla
    `Línea` · `Oración de la fuente`, con la cita textual. **Una celda derecha vacía significa
-   que esa línea es tuya**, y entonces tiene que ser un titular (lo único que la fuente no
-   trae) o una reformulación declarada por ser la fuente ilegible. Cualquier otra cosa se
-   reescribe extrayendo. Es el único chequeo que agarra el
+   que esa línea es tuya**, y entonces tiene que ser un titular que la fuente no traía o una
+   reformulación declarada por ser la fuente ilegible. Si la fuente sí tenía un título que
+   servía, se usa literal y la celda no queda vacía. Cualquier otra cosa se reescribe
+   extrayendo. Es el único chequeo que agarra el
    cambio de registro sin que nadie tenga que juzgar si la línea está buena.
 2. **Leé los titulares solos, seguidos, sin las bajadas.** Tienen que contar el carrusel
    entero **y engancharse uno con otro**: cada titular sigue del anterior, como las oraciones
