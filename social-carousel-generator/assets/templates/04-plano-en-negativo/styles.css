@@ -327,6 +327,10 @@ h2 { font-size: 88px; line-height: 1; }
    como el resto de la portada. */
 .s-cover .mid { justify-content: flex-start; padding-top: 58px; align-items: center; gap: 52px; }
 .s-cover .duo, .s-cover .chips { justify-content: center; }
+/* Lo mismo para el grafico de `secciones`: centrado en el hueco dejaba 288px entre el
+   titular y las tarjetas (el filete es de 2px y no cuenta como bloque). Se apoya mas
+   arriba y el sobrante queda abajo. */
+.s-cover .secciones { margin-top: 120px; margin-bottom: auto; }
 /* El grafico de portada va mas grande que el de contenido: tiene que leerse en la
    miniatura, y ademas es lo que cierra el hueco que deja el titular grande. Agrandarlo
    es el arreglo que pide *La portada*; bajar el titular o devolver un parrafo, no. */
