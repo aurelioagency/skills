@@ -579,11 +579,15 @@ Look at a couple of representative frames from the actual footage before asking 
 
 The alternative is `accent-mode keyword` (`--accent-mode keyword --accent-terms "..."`) — only hand-picked key terms ever turn the accent colour, everything else stays white for the whole video. Switch to it only if the user asks for that specific look; do not default to it. `accent-mode` is only meaningful with `reveal=chunk`; with `reveal=word` it is a no-op since word reveal already colours the currently-spoken word.
 
-5. **Render ONE preview frame of the house default (with the chosen accent colour) and keep going.** Burn the default `.ass` onto a real frame of this video, show that single image, and proceed straight to the full burn. This is a sanity check on placement over *this* footage — that the captions clear the speaker's face and any on-screen UI — not a style decision.
+5. **Check placement across every camera framing in the video, not one frame.** Burn the default `.ass` onto real frames and look — but the frames that matter are one per *distinct framing* the video uses. A talking-head video is almost never one static shot: the speaker leans in, a background screen-recording appears and the face drops, a wide "full body" intro cuts to a tight close-up. The caption band is fixed in the `.ass`; the face is not. A band that clears the chin in the intro lands across the mouth the moment the framing tightens.
+
+   So: scan the whole clip (a 1 fps contact sheet of the lower half is enough), identify each shot/framing and roughly where the chin sits in it — **the LOWEST the chin gets inside that shot**, not an average — then burn a preview frame at the worst moment of each. Show the user those frames. Then proceed to the full burn.
+
+   If the chin's vertical position changes materially between shots, the captions **must** follow it — a single fixed `--margin-bottom` is wrong. Use `--zones` (step 6). "The captions sit below my face" means below it *in every shot*, and also not marooned at the very bottom of the frame in the shots where the face is high. Getting this wrong costs a full 4K re-burn, so spend the minutes here.
 
    **Do not offer 2-3 style candidates.** The skill already made the style decision; re-opening it hands a solved problem back to the user, wastes their attention, and implies the default is arbitrary. Generate alternative styles only when the user asks for a different look, and then render exactly the alternatives they described.
 
-   The one thing that IS worth confirming per video is caption placement when the preview frame shows a conflict the guidelines can't resolve blind — a face in the lower third, a burned-in logo, on-screen UI under the caption band. Ask about that specific frame, not about taste.
+   The one thing that IS worth confirming per video is caption placement when a preview frame shows a conflict the guidelines can't resolve blind — a face in the lower third, a burned-in logo, on-screen UI under the caption band. Ask about that specific frame, not about taste.
 
 6. Generate the subtitle file.
 
@@ -596,6 +600,25 @@ Pass `--accent "#2F6FED"` instead when the user picked option 2 (blue) at the ac
 `accent-mode` defaults to `active` (karaoke-style, no `--accent-terms` needed). Only add `--accent-mode keyword --accent-terms "<key terms>"` if the user asked for that specific keyword-only look instead.
 
 Pass the SOURCE's real dimensions, and scale every caption dimension by `sourceWidth / 1080` — the geometry defaults are expressed against the 1080-wide house design. On a 2160x3840 source that is `--video-width 2160 --video-height 3840 --size 208 --outline 14 --shadow 10 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their intended size, and it passes the width gate while doing it, because the gate measures against the same wrong width.
+
+**When the face moves vertically between shots, pass `--zones` instead of relying on one `--margin-bottom`.** Write a JSON array of shot windows, each with its own `marginBottom` chosen so the caption clears that shot's LOWEST chin by a small gap (~70px at 1080-scale, scaled to the source) without floating at the very bottom:
+
+```json
+[
+  { "start": 0,    "end": 3.4,  "marginBottom": 1480 },
+  { "start": 3.4,  "end": 8.0,  "marginBottom": 830 },
+  { "start": 8.0,  "end": 38.0, "marginBottom": 650 },
+  { "start": 38.0, "end": 39.6, "marginBottom": 545 },
+  { "start": 39.6, "end": 60,   "marginBottom": 650 }
+]
+```
+
+Each caption takes the `marginBottom` of the first zone whose `[start, end)` contains its start time; gaps and any time past the last zone fall back to `--margin-bottom`. Keep the zones file in the project (`manifests\caption-zones.json`) so the captions can be re-tuned and reburned in seconds.
+
+Two failure modes this example encodes, both found the hard way:
+
+- **A "wide intro" is not one zone.** In the example above the first shot is a wide framing where the face rides high (`marginBottom 1480`, caption near mid-frame just under the chin); at 3.4s it cuts to a tighter shot and the face drops, so the caption must drop with it (`marginBottom 830`). One zone for "the intro" left the caption stranded far below a high face — which is its own defect: *below the face* also means *not marooned at the bottom of the frame*. Put a zone boundary on every shot change where the chin moves, and land it exactly on the cut so the reposition is invisible.
+- **A 2-line chunk grows upward from the baseline**, so in a low-face shot it can touch the chin even when the 1-line captions clear it, and the width gate cannot see this. Give that chunk's moment its own lower micro-zone (the 38.0–39.6 window), or size the type down so nothing wraps.
 
 Use `--corrections "source\corrections.json"` for plain one-word substitutions. When a fix merges or splits tokens (`ultra` + `liviano` → `ultraliviano`), the corrections format cannot express it: write the corrected `<slug>.approved.json` directly, keep the raw `.transcript.json` untouched, and build from the approved copy.
 
@@ -712,8 +735,9 @@ node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input 
 
 Caption positioning over video with people:
 
-- Before fixing the vertical caption position, inspect frames of the clip (screenshots at 2-3 timestamps) to locate the speaker's face.
+- Before fixing the vertical caption position, inspect frames of the clip to locate the speaker's face. Sample **every distinct camera framing in the video**, not "2-3 timestamps" blindly — a talking-head clip cuts between a wide intro and a tight close-up, the speaker leans in, a background screen appears and the face drops. For each framing, find the LOWEST the chin gets.
 - Captions must NOT cover the face. If the face is in the upper/middle third, place captions in the visible lower third (but above the platform UI safe zone). If the face is centered, use the band between the chin and the safe zone.
+- **The caption band follows the face across shots; it is never one fixed Y for a video whose framing changes.** If the chin's vertical position moves materially between shots, a fixed band that clears the face in one shot lands across the mouth in another. For burned-in captions this is what `--zones` on `build-burn-in-captions.mjs` is for (see the Burn-In branch). "Below the face" also means *not* stranded at the very bottom of the frame in the shots where the face rides high — each shot gets a band just below its own chin.
 - Minimum horizontal padding: 120px per side at 1080px width.
 - `overflow: hidden` on every caption container.
 - Chunks of at most 2 words for word-by-word captions; chunk-cut gap threshold: 0.35s (with 3-word chunks and a larger threshold, a chunk can hide before its last word appears).

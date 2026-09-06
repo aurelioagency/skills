@@ -24,6 +24,7 @@ function usage() {
       [--primary "#FFFFFF"] [--accent "#30D5FF"]
       [--video-width 1080] [--video-height 1920]
       [--margin-lr 120] [--margin-bottom 500]
+      [--zones <zones.json>]         per-shot vertical position; see below
       [--reveal chunk|word] [--max-words 2] [--gap-cut 0.35] [--hold 0.45]
       [--accent-mode keyword|active]          which words get the accent colour (default active)
       [--accent-terms "Fable,Haiku,Sonnet"]   accent-mode=keyword: which words get the accent colour
@@ -38,7 +39,17 @@ accent-mode=active   (default) the whole chunk is visible at once (reveal=chunk)
                       colour moves word to word in sync with the audio, then returns to primary —
                       a karaoke-style highlight. Ignores --accent-terms. With reveal=word this
                       is a no-op: word mode already colours the currently-spoken word.
-accent-mode=keyword  only the words listed in --accent-terms ever turn accent colour.`);
+accent-mode=keyword  only the words listed in --accent-terms ever turn accent colour.
+
+--zones  A JSON array of shot windows so the caption band tracks the speaker's face
+         instead of sitting at one fixed Y for the whole video. When the framing
+         changes and the face drops, a fixed band ends up across the chin.
+           [{ "start": 0, "end": 7.5, "marginBottom": 720 },
+            { "start": 7.5, "end": 60, "marginBottom": 650 }]
+         Each caption uses the marginBottom of the first zone whose [start,end)
+         contains its start time; caption text still grows upward from that baseline,
+         so measure the LOWEST chin position inside each shot, not one frame. Gaps
+         between zones and any time past the last zone fall back to --margin-bottom.`);
 }
 
 function parseArgs(argv) {
@@ -174,6 +185,22 @@ function main() {
     return accentTerms.has(word.replace(/[.,!?;:]+$/, '').toLowerCase());
   };
 
+  // Per-shot vertical position. A single fixed band lands across the chin the moment
+  // the framing changes and the face drops (or rises). Each zone maps a time window
+  // to its own marginBottom; a caption picks the first zone containing its start time.
+  let zones = [];
+  if (args.zones) {
+    zones = JSON.parse(fs.readFileSync(path.resolve(args.zones), 'utf8'));
+    if (!Array.isArray(zones) || zones.some((z) => !Number.isFinite(z.start) || !Number.isFinite(z.end) || !Number.isFinite(z.marginBottom))) {
+      throw new Error('--zones must be a JSON array of { start, end, marginBottom } numbers');
+    }
+    zones = zones.slice().sort((a, b) => a.start - b.start);
+  }
+  const marginBottomAt = (t) => {
+    for (const z of zones) if (t >= z.start && t < z.end) return z.marginBottom;
+    return marginBottom;
+  };
+
   const words = loadWords(path.resolve(args.transcript), args.corrections && path.resolve(args.corrections));
   const chunks = chunkWords(words, maxWords, gapCut);
 
@@ -182,12 +209,18 @@ function main() {
   const separators = chunks.map((_, i) => (widths[i] > usableWidth ? '\\N' : ' '));
 
   const baseX = Math.round(videoWidth / 2);
-  const baseY = videoHeight - marginBottom;
-  const move = `\\move(${baseX},${baseY + risePx},${baseX},${baseY},0,${riseMs})`;
-  const tags = `{\\an2${move}\\fad(${fadeMs},0)}`;
-  const staticTags = `{\\an2\\pos(${baseX},${baseY})}`;
   const primaryTag = `{\\c${assColour(primary)}}`;
   const accentTag = `{\\c${assColour(accent)}}`;
+  const baseYUsed = new Set();
+  // Precompute the tag builders for a given baseline; called once per chunk.
+  const tagsFor = (baseY) => {
+    baseYUsed.add(baseY);
+    return {
+      enter: `{\\an2\\move(${baseX},${baseY + risePx},${baseX},${baseY},0,${riseMs})\\fad(${fadeMs},0)}`,
+      static: `{\\an2\\pos(${baseX},${baseY})}`,
+    };
+  };
+  const defaultBaseY = videoHeight - marginBottom;
 
   const events = [];
   chunks.forEach((chunk, index) => {
@@ -195,6 +228,9 @@ function main() {
     const next = chunks[index + 1];
     let chunkEnd = chunk[chunk.length - 1].end + hold;
     if (next) chunkEnd = Math.min(chunkEnd, next[0].start);
+
+    const baseY = videoHeight - marginBottomAt(chunk[0].start);
+    const { enter: tags, static: staticTags } = tagsFor(baseY);
 
     if (reveal === 'chunk' && accentMode === 'active') {
       // Whole chunk stays visible and in place (no reflow); only the colour of the
@@ -270,7 +306,8 @@ Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
     events: events.length,
     wrappedChunks: separators.filter((s) => s === '\\N').length,
     usableWidthPx: usableWidth,
-    anchorY: baseY,
+    anchorY: zones.length ? [...baseYUsed].sort((a, b) => a - b) : defaultBaseY,
+    zones: zones.length || undefined,
   }, null, 2));
 }
 
