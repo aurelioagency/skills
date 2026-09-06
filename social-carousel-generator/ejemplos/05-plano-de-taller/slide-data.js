@@ -45,7 +45,7 @@ window.CAROUSEL = {
   seriesExceptions: ['trazabilidad'],
 
   slides: [
-    // PORTADA. Titular condensado + regla con la magnitud + bajada + el corte.
+    // PORTADA. Titular condensado + linea de cota + bajada + el corte.
     // `h` de cada pieza es su altura en px y sale del dato: una caja mas alta
     // afirma una magnitud. Si la fuente no la publica, no va.
     {
@@ -57,7 +57,6 @@ window.CAROUSEL = {
       // y por eso la portada se escribe corta: para poder ir grande.
       headline: 'Mismo resultado,<br>25× menos costo',
       hsize: 140,
-      ruleLabel: 'FACTOR 25:1',
       // Sin remate: la portada nombra el tema y muestra el grafico, no lo explica.
       // Ver *La portada* en references/proporcion.md y *Hooks* en references/redaccion.md.
       a: { v: '$33,27', h: 300, tone: 'naranja', cap: 'GPT-5.5 · 84,36 %' },
@@ -110,18 +109,13 @@ window.CAROUSEL = {
       ]
     },
 
-    // CIERRE. Titular, regla, bajada y el checklist.
+    // CIERRE. Titular, linea de cota y bajada.
     {
       type: 'cta',
       tab: 'CIERRE',
       headline: '¿Cuánto estás<br>pagando<br>de más?',
       ruleWidth: 74,
       lede: 'Si tu automatización con IA se armó hace seis meses, corre con la configuración vieja y paga de más todos los días.',
-      checks: [
-        'Mapa de costo por paso',
-        'Modelo correcto por tarea',
-        'Ahorro mensual estimado'
-      ],
       cartucho: [
         { k: 'TEMA', v: 'AUDITORÍA DE COSTO EN IA', flex: 2 }
       ]

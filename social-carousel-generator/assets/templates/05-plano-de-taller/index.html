@@ -72,10 +72,9 @@ function head(s, tight) {
     </div>`;
 }
 
-// La regla lleva un rotulo central opcional con la magnitud (FACTOR 25:1).
+// Linea de cota: separador entre titular y bajada. Sin rotulo.
 function rule(s) {
-  const k = s.ruleLabel ? `<span class="k">${s.ruleLabel}</span><span></span>` : '';
-  return `<div class="rule"><i></i><span></span>${k}<i class="r"></i></div>`;
+  return `<div class="rule"><i></i><span></span><i class="r"></i></div>`;
 }
 
 // Imagen que pasa el usuario (SKILL.md > Images the user supplies). El encuadre no se
@@ -190,11 +189,6 @@ const bars = s => `
     ${s.sellos ? `<div class="sellos">${s.sellos.map(x => `<span class="s ${x.tone || ''}">${x.t}</span>`).join('')}</div>` : ''}
   </div>`;
 
-const checks = items => `
-  <div class="checks">
-    ${items.map(t => `<div class="ck"><span class="mk">▪</span><span>${t}</span></div>`).join('')}
-  </div>`;
-
 // ---------- Render ----------
 
 function render(s, i, total) {
@@ -234,7 +228,6 @@ function render(s, i, total) {
         <h2 style="font-size:${s.hsize || 116}px">${s.headline}</h2>
         ${rule(s)}
         <div class="lede">${s.lede}</div>
-        ${s.checks ? checks(s.checks) : ''}
       </div>`;
   }
 

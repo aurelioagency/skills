@@ -97,8 +97,7 @@ h2 { font-size: 104px; }
 }
 .lede .soft { color: var(--muted); }
 
-/* Regla de cota: rombo - linea - [rotulo] - linea - rombo, en azul. El rotulo del
-   medio es opcional y lleva la magnitud (FACTOR 25:1). */
+/* Linea de cota: rombo - linea - rombo, en azul. Sin rotulo. */
 /* Ancho unico: la cota no mide nada distinto en cada placa, asi que un ancho por slide
    solo hacia que la linea saltara de largo al pasar de una a otra. */
 .rule { display: flex; align-items: center; gap: 14px; width: 62%; }
@@ -238,16 +237,6 @@ h2 { font-size: 104px; }
 .sellos .s { border: var(--fina) solid var(--ink); color: var(--ink); padding: 8px 16px; }
 .sellos .s.azul { border-color: var(--azul); color: var(--azul); }
 .sellos .s.naranja { border-color: var(--naranja); color: var(--naranja); }
-
-/* ---------- Componente: checklist ---------- */
-
-.checks {
-  display: flex; flex-direction: column; gap: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 30px; font-weight: 600; color: var(--ink);
-}
-.checks .ck { display: flex; gap: 16px; align-items: center; }
-.checks .mk { color: var(--azul); }
 
 /* Imagen que pasa el usuario. Transparente va directo; opaca va enmarcada con la
    linea gruesa del sistema. Ver SKILL.md > Images the user supplies. */
