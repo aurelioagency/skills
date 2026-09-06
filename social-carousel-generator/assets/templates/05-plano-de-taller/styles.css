@@ -301,8 +301,8 @@ h2 { font-size: 104px; }
    costados cuando la imagen es mas ancha que alta. La imagen manda su tamanio (hasta el
    tope de alto); la tarjeta se achica a ese ancho y queda centrada, y no llega al
    cartucho (si empuja, esa placa deja de alinear con la serie). */
-.s-image .ext-card { margin: 32px auto auto; align-self: center; flex: 0 0 auto; }
-.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 580px; }
+.s-image .ext-card { margin: 28px auto auto; align-self: center; flex: 0 1 auto; min-height: 0; }
+.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 470px; }
 
 /* ---------- Componente: dos cifras independientes ---------- */
 
