@@ -49,7 +49,7 @@ De ahi salen las cuatro consecuencias que hay que tener a mano:
 3. **Arquetipo, split, ganchos y template — todo junto, y se confirma.**
    Listo cuando: se derivo la estructura con el metodo de `references/content-archetypes.md` sobre la `Lectura`, y el usuario confirmo, redujo o cambio esa estructura, la cantidad de carruseles, **la cantidad de placas**, el gancho y el template, antes de que se escriba un solo slide.
 4. **Escribir la copy y elegir el recurso de cada placa. Gate de aprobacion.**
-   Listo cuando: cada linea esta trazada a su oracion de la fuente en `srcFrase` y entra en dos renglones; cada cifra tiene su `srcDato`; cada placa declara su recurso, corrido desde el contenido con `references/composicion.md`; cada placa declara su asset y las alternativas viables del banco; y el usuario aprobo todo eso **como texto plano**, antes de que exista un solo HTML.
+   Listo cuando: existe **una sola tabla** con una fila por imagen exportada — portada incluida como fila 1 — y columnas `# · Kicker · Titular · Bajada · Recurso · Extracto de la fuente` (*Copy Approval Gate*); cada titular es corto y entra en dos renglones; cada fila trazada a su oracion de la fuente en la columna de extracto, con la cita de cada cifra; cada fila declara su recurso corrido desde `references/composicion.md` y su asset (o `sin asset`); y el usuario aprobo esa tabla entera, de una, antes de que exista un solo HTML. Nada de una lista de titulares aparte antes ni un bloque de assets aparte despues.
 5. **Armar el paquete y renderizar.**
    Listo cuando: la carpeta de entrega (`<tema-en-kebab-case>`) tiene los PNG ordenados a `1080x1440`, con el CTA solo si el preset lo pide.
 6. **QA. Los dos scripts, y despues las placas.**
@@ -380,65 +380,52 @@ del gate estan en **`references/redaccion.md`**.
 
 ## Copy Approval Gate
 
-**El mensaje arranca con los titulares solos, en orden, y nada más.** Numerados, sin kicker, sin
-bajada, sin piezas, sin assets. Recién después va el detalle placa por placa.
+La propuesta de copy es **una sola tabla, entregada una vez, completa**. Nada suelto y nada
+en etapas: ni una lista de titulares aparte antes, ni un bloque de assets aparte después.
+Mostrar la copy de a pasos hace perder tiempo y termina en cambios a mitad de camino.
 
-```text
-Primero los titulares solos. Si estos no cuentan el carrusel, no hace falta leer el resto:
+**Una fila por imagen exportada** — la portada, cada placa de contenido y el CTA. La portada
+es la fila 1 y nunca se omite. Columnas, en este orden exacto:
 
-1. <titular de portada> — <remate>
-2. <titular>
-...
-```
+| # | Kicker | Titular | Bajada | Recurso | Extracto de la fuente |
+|---|---|---|---|---|---|
+| 1 | — | GPT-6 ASTRA | *(remate si lo hay, debajo)* | portada: titular + gráfico | nombre del tema, textual |
+| 2 | RAZONAMIENTO | De 7,8% a 99,9% en una misma prueba. | ARC-AGI-3 mide si el modelo resuelve entornos que nunca vio. | comparación cuantitativa · pieza `image` (chart de la fuente) | *"Astra also saturates ARC-AGI-3 with a 99.9% score"* · dato: *"99.9% … 7.8% … 30.2%"* |
 
-No es un resumen de cortesía: es el chequeo 2 de *Los dos chequeos* de `references/redaccion.md`, hecho donde el
-usuario también lo ve. Enterrados adentro de nueve bloques completos, los titulares flojos no
-se notan: nueve placas donde seis titulares no dicen nada se aprueban sin que nadie lo vea,
-y el problema aparece recién cuando se los lee de corrido. Cuesta diez segundos y es el único
-momento en que el defecto se ve entero.
+- **`#`** — número de imagen. La portada es la 1; el CTA, la última.
+- **`Kicker`** — el rótulo mono. `—` en portada y CTA si el template no lo lleva.
+- **`Titular`** — el titular de la placa. **Corto: es un titular, no la idea de la placa
+  escrita entera** — convertir la descripción del contenido en el titular es lo que produce
+  titulares de dos oraciones. En la portada va el nombre del tema; el remate opcional, en la
+  misma celda debajo.
+- **`Bajada`** — el cuerpo. Una idea. Dentro del presupuesto de *Format, length and density*.
+- **`Recurso`** — qué recurso visual lleva la placa, corrido desde el contenido con
+  `references/composicion.md`, y la pieza del template que lo dibuja. Más el asset del banco
+  que va, o `sin asset` con el candidato más cercano si lo hay. El recurso es lo que más se
+  saltea: una placa sin recurso decidido se renderiza con lo que el layout deje por defecto,
+  y el carrusel sale como una tira de marcos casi iguales y medio vacíos.
+- **`Extracto de la fuente`** — la(s) oración(es) **textuales de la fuente** de las que sale
+  la fila: la frase de la que se recortaron el titular y la bajada, y la cita de cada cifra
+  que se muestra o se dibuja. Es la trazabilidad, a la vista. **Una celda vacía significa que
+  la línea es tuya**, y entonces tiene que ser un titular propio (lo único que la fuente no
+  trae) o una reformulación declarada por ser la fuente ilegible — se marca en la celda.
+  Cualquier otra cosa se reescribe extrayendo (`references/redaccion.md`). En `slide-data.js`
+  esta columna se separa en los campos `srcFrase` (la frase) y `srcDato` (la cita de cada
+  cifra); `audit-serie.mjs` bloquea la entrega si falta `srcFrase`, y sin `srcDato` no se
+  dibuja barra, altura, área, proporción ni escala.
 
-Después de esa lista, y en el mismo mensaje, va cada placa completa como texto plano —
-kicker, titular, bajada, rótulos y remate—, **con su recurso visual y su trazabilidad en la
-misma entrada**. Ese es el formato, y las cuatro líneas son obligatorias:
+Los dos chequeos de *Los dos chequeos* (`references/redaccion.md`) se hacen **sobre esta
+tabla**: la columna `Extracto de la fuente` es la trazabilidad línea por línea, y la columna
+`Titular` leída de arriba a abajo es la lectura de titulares seguidos.
 
-```text
-Placa 4 — COSTO POR TAREA
-  Titular: Llevamos años premiando al que adivina.
-  Bajada:  <...>
-  srcFrase: "los benchmarks llevan años premiando al modelo que arriesga una respuesta"
-  Recurso: comparación cuantitativa · por qué: la fuente publica los dos números y el punto
-           de la placa es la brecha · srcDato: "43,6% frente a 34,4%" (párrafo 7)
-```
+La copy de la tabla ya pasó el filtro de *Grounding Technical Terms* (`references/redaccion.md`):
+cada término del que depende el argumento se lee en su placa, y no se explica lo que no hacía
+falta.
 
-- **`srcFrase` es la oración textual de la fuente de la que se extrajo la línea.** Vacía
-  significa que la línea es tuya: o es un titular —lo único que la fuente no trae— o una
-  reformulación declarada por ser la fuente ilegible. Cualquier otra cosa se reescribe
-  extrayendo (*De dónde sale cada línea*, en `references/redaccion.md`).
-- **`srcDato` es la cita textual de la fuente** para cada cifra que se muestra o se dibuja. Sin
-  ella no hay barra, altura, área, proporción ni escala.
-- **El recurso se elige corriendo `references/composicion.md`**, desde el contenido — no
-  eligiendo una pieza del template y buscándole con qué llenar los campos. Los dos campos van a
-  `slide-data.js` con esos nombres, y `audit-serie.mjs` bloquea la entrega si falta `srcFrase`.
-
-**El recurso de cada placa es lo que más se saltea.** Una placa cuyo recurso nunca se decidió no
-termina sin recurso: termina con lo que el layout deje por defecto, y un carrusel donde eso pasa
-en la mayoría de las placas se renderiza como una tira de marcos casi iguales y medio vacíos. El
-síntoma es inconfundible en el contact sheet e invisible en la copy, y por eso se resuelve acá,
-en texto, antes de que se construya nada.
-
-Deciding the component is also what makes the density budget reachable: prose spends the character budget without filling the canvas, while the same facts inside a component fill it and read faster. If a slide has nothing to put in a component, that is worth knowing at this gate — it usually means the slide is carrying less than it should.
-
-**The asset plan is part of this same gate.** For every slide, show which asset from the brand's bank goes on it and **which other bank assets could also work**, so the user chooses instead of discovering the agent's pick inside a rendered image:
-
-```text
-Slide 2 — asset propuesto: personaje/tiburon-agobiado-cubierto-de-postits.png (es el slide del problema)
-          tambien podrian ir: personaje/tiburon-preocupado-rascandose-la-cabeza.png · iconos/pila-de-papeles.png
-Slide 4 — sin asset (el diagrama de pasos comunica mejor) · podria ir: iconos/engranajes-conectados.png
-```
-
-List every viable alternative the bank actually has for that slide's job — if there is only one candidate, or none, say that. Do not build a single slide until the user has approved copy **and** assets together; swapping an asset costs nothing at this stage and a re-render round after.
-
-Rendering before this gate wastes work and hides copy and asset problems inside images, where they are slower to spot and slower to fix.
+**No se construye una sola placa hasta que el usuario aprobó la tabla entera** — copy,
+recurso y asset juntos. Cambiar algo en esta etapa no cuesta nada; una vuelta de render
+después, sí. Renderizar antes de este gate malgasta trabajo y esconde los problemas de copy
+y de asset adentro de imágenes, donde son más lentos de ver y de arreglar.
 
 The copy shown here has already passed the filter in *Grounding Technical Terms* (`references/redaccion.md`): every term the argument depends on is readable on its own slide, and nothing is explained that did not need to be.
 

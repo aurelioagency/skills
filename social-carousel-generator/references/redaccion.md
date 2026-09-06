@@ -235,19 +235,19 @@ sigue.
 
 ### Los dos chequeos, antes de mostrar una sola placa
 
-Se hacen sobre el texto escrito, y los dos se ven — no se cumplen declarando que se cumplieron.
+Se hacen **sobre la tabla del gate** (*Copy Approval Gate* en `SKILL.md`), y los dos se ven —
+no se cumplen declarando que se cumplieron.
 
-1. **Trazá cada línea a su oración de la fuente.** En `carousel-brief.md` va la tabla
-   `Línea` · `Oración de la fuente`, con la cita textual. **Una celda derecha vacía significa
-   que esa línea es tuya**, y entonces tiene que ser un titular que la fuente no traía o una
-   reformulación declarada por ser la fuente ilegible. Si la fuente sí tenía un título que
-   servía, se usa literal y la celda no queda vacía. Cualquier otra cosa se reescribe
-   extrayendo. Es el único chequeo que agarra el
-   cambio de registro sin que nadie tenga que juzgar si la línea está buena.
-2. **Leé los titulares solos, seguidos, sin las bajadas.** Tienen que contar el carrusel
-   entero **y engancharse uno con otro**: cada titular sigue del anterior, como las oraciones
-   de un párrafo. Si son ocho frases buenas que no van a ningún lado, falta el hilo y la
-   redacción no está terminada — no importa cuán buena sea cada placa por separado. Es la
+1. **Trazá cada línea a su oración de la fuente.** Es la columna `Extracto de la fuente` de
+   esa tabla, con la cita textual. **Una celda vacía significa que esa línea es tuya**, y
+   entonces tiene que ser un titular que la fuente no traía o una reformulación declarada por
+   ser la fuente ilegible. Si la fuente sí tenía un título que servía, se usa literal y la
+   celda no queda vacía. Cualquier otra cosa se reescribe extrayendo. Es el único chequeo que
+   agarra el cambio de registro sin que nadie tenga que juzgar si la línea está buena.
+2. **Leé la columna `Titular` de arriba a abajo, sin las bajadas.** Tienen que contar el
+   carrusel entero **y engancharse uno con otro**: cada titular sigue del anterior, como las
+   oraciones de un párrafo. Si son ocho frases buenas que no van a ningún lado, falta el hilo
+   y la redacción no está terminada — no importa cuán buena sea cada placa por separado. Es la
    lectura que hace la persona que pasa rápido, y es la que nunca se hacía.
 
 Y sigue valiendo lo de siempre, que es de dónde sale la frase larga: **escribí la línea varias
