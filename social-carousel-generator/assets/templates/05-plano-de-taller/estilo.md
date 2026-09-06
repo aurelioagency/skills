@@ -34,6 +34,9 @@ formas, sus 6 tramas, los 8 tipos de línea ISO 128-20 y la simbología normaliz
   media altura, asi que una etiqueta larga queda tachada por la linea. `SI` / `NO` entra;
   `NO LA VES` sale tachado. (2026-09-01)
 
+- **La linea de eje separadora lleva aire a los dos lados: `margin: 12px 0`.** Pegada al
+  texto el bloque se lee apretado. Vale en `nodos`, `pasos` y `cifras`. (2026-09-05)
+
 ## Las piezas que este estilo ya dibuja
 
 Estan en `ejemplos/05-plano-de-taller/piezas.md`, con los campos que lee cada una.

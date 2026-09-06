@@ -199,7 +199,9 @@ h2 { font-size: 104px; }
 
 /* ---------- Componente: nodos con figura ---------- */
 
-.nodos { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+.nodos { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+/* Aire a los dos lados de la linea de eje: pegada al texto, el bloque se lee apretado. */
+.nodos .eje { margin: 12px 0; }
 .nodos .nodo { display: flex; align-items: center; gap: 22px; }
 .nodos .nodo .t { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .nodos .nodo .k {
