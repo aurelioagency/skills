@@ -179,6 +179,19 @@ Los seis son de La Casa de Aurelio y comparten la marca; lo que cambia es el sis
 
 Starting a package copies the named template's folder, not a hardcoded path — see *Starting the package* in `references/html-rendering.md`.
 
+**No inventes valores del template, y no le atribuyas a un carrusel de la marca lo que
+nunca dijo.** Un string en `piezas.md`, `estilo.md` o un `slide-data.js` de ejemplo —
+`FACTOR 25:1`, un `checks` de muestra, un `ruleLabel` cualquiera— es un ejemplo del campo,
+no un valor que tenga que ir en este carrusel ni algo que un carrusel anterior haya usado.
+Decir "en el carrusel de X decía Y" cuando Y salió de un ejemplo de la doc es una
+invención, aunque el string exista en la skill. Dos reglas:
+
+- **Un campo cuyo contenido la doc no especifica va vacío, o se pregunta.** Nunca se le
+  inventa un propósito ("tipo mini-resumen", "suele llevar…") ni se lo llena para no
+  dejarlo en blanco. Un campo vacío es una salida válida.
+- **Antes de afirmar que un carrusel publicado de la marca usó tal valor, abrilo y
+  miralo.** Si no lo miraste, no lo afirmes: decí que es un ejemplo de la doc.
+
 ## Source Intake
 
 La fuente que te pasan es la unica fuente: el carrusel sale de ahi y de ningun otro lado.
