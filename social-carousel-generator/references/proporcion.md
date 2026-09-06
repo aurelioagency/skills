@@ -72,14 +72,21 @@ little padding, with the image inside it. Opaque artwork usually carries a light
 own, and without a container that pale rectangle sits on the field looking like it was dropped
 there. The container is what makes it read as a deliberate element.
 
-**El recuadro envuelve la imagen justa — vale para todos los templates.** El contenedor se
-achica al ancho y al alto reales de la imagen; no es una caja de tamaño fijo con la imagen
-adentro. Nada de `object-fit: contain` sobre un `img` a `width: 100%`: eso deja aire del color
-del papel a los costados cuando la imagen es más ancha que alta, y el marco deja de leerse como
-que envuelve algo. El patrón correcto: la imagen manda su tamaño (`width: auto; height: auto;
-max-width: 100%` y un tope de alto para que no toque el pie), y el contenedor va `align-self:
-center` para achicarse a ese ancho. Si un template todavía tiene el `object-fit`, es un bug de
-ese template, no una variante.
+**El recuadro envuelve la imagen justa — regla transversal, idéntica en los seis templates.**
+El contenedor se achica al ancho y al alto reales de la imagen; no es una caja de tamaño fijo
+con la imagen adentro. Nada de `object-fit: contain` sobre un `img` a `width: 100%`: eso deja
+aire del color del papel a los costados cuando la imagen es más ancha que alta, y el marco deja
+de leerse como que envuelve algo. El bloque va copiado igual en cada `styles.css`, y si dos
+difieren, uno está mal:
+
+```css
+.s-image .ext-card { margin-top: auto; margin-bottom: auto; flex: 0 1 auto; min-height: 0; align-self: center; }
+.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 480px; }
+```
+
+Esto es layout, no identidad visual: el template define tipografía, paleta, grilla y trazo —
+no cómo se enmarca una imagen. La mayoría de las reglas de composición son así, transversales;
+lo propio de cada template es el sistema visual, no el comportamiento de layout.
 
 **Never bleed an opaque image to the canvas edge.** It breaks the side clearance every other
 element respects, and the extra width buys nothing: text baked into an image is unreadable at

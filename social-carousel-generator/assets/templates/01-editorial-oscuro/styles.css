@@ -424,3 +424,10 @@ h1 {
 .ico { flex: none; color: var(--terracotta); }
 /* .ci ya es flex; con icono la marca de color no va, solo hay que centrar. */
 .checklist .ci { align-items: center; }
+
+/* ---------- Layout: placa de imagen ---------- */
+/* Regla transversal (references/proporcion.md > Framing): el recuadro envuelve la
+   imagen justa, sin object-fit ni aire a los costados, y con tope de alto para que
+   no toque el pie. Bloque identico en los seis templates. */
+.s-image .ext-card { margin-top: auto; margin-bottom: auto; flex: 0 1 auto; min-height: 0; align-self: center; }
+.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 480px; }

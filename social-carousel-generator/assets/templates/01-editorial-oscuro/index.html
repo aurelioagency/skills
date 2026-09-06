@@ -166,6 +166,19 @@ function render(s, i, total) {
   // Un grafico propio va dentro de un contenedor `chart` o `diagram`: eso es lo que
   // habilita el piso de 24px para sus rotulos, marcas de escala y referencias.
 
+  // Imagen que publica la fuente: encabezado + la imagen enmarcada. El encuadre sale de
+  // userImg() (opaca enmarcada, transparente directa). El recuadro envuelve la imagen
+  // justa — regla transversal, ver references/proporcion.md > Framing.
+  if (s.type === 'image') {
+    inner = `
+      <div class="stage">
+        ${head(s)}
+        <div class="spacer"></div>
+        ${userImg(s)}
+        <div class="spacer"></div>
+      </div>`;
+  }
+
   if (isCTA) {
     inner = `<img class="cta-base" src="${s.asset}" alt="CTA">
              <div class="footer cta-footer"><div class="counter">${total}/${total}</div></div>`;

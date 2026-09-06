@@ -132,6 +132,15 @@ function render(s, i, total) {
   // dice que con esas cinco se arma todo: la repeticion es lo que lo hace ver
   // profesional, no la variedad. Antes de agregar una sexta, mira si alguna sirve.
 
+  // Imagen que publica la fuente: titulo + bajada + la imagen enmarcada. El recuadro
+  // envuelve la imagen justa — regla transversal, ver references/proporcion.md > Framing.
+  if (s.type === 'image') {
+    inner = `
+      ${titulo(s)}
+      ${s.bajada ? `<div class="bajada">${s.bajada}</div>` : ''}
+      <div class="zona">${userImg(s)}</div>`;
+  }
+
   // CIERRE: pedido de guardado + firma grande.
   if (s.type === 'cta') {
     inner = `
