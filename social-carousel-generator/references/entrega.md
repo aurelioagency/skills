@@ -5,8 +5,8 @@ carpeta de entrega, el Short vertical, la caption, y **la revision visual, que e
 parte que ningun script hace**.
 
 La regla que ordena esta ultima: antes de decir una sola palabra sobre como quedo un
-carrusel, hay que abrir cada PNG a tamano real y mirarlo. El contact sheet es para el
-ritmo de la serie; la placa a tamano real es para todo lo demas.
+carrusel, hay que abrir cada PNG a tamano real y mirarlo, uno por uno. No se arma contact
+sheet — no le sirve al usuario y no se usa para juzgar nada.
 
 ## Rendering
 
@@ -248,15 +248,14 @@ And in the chat: la caption pegada entera, la nota de QA visual (tamano, legibil
 ### Mirar las placas, no el reporte
 
 **Antes de decir una sola palabra sobre cómo quedó un carrusel, hay que abrir cada PNG a
-tamaño real y mirarlo.** Uno por uno, los nueve. No el contact sheet: los archivos.
+tamaño real y mirarlo.** Uno por uno. Los archivos, en la carpeta — no un 10-up.
 
 No es una recomendación. Es el paso que evita el peor error posible, que es afirmarle al
 usuario que una placa está bien sin haberla visto.
 
-**El contact sheet no sirve para esto.** A esa escala una palabra cortada se ve como una
-palabra. Una portada donde `ALUCINACIONES` sale como `ALUCINACIONI` —la palabra se va del
-lienzo— se ve entera en el contact sheet sin que se note. El
-contact sheet es para el ritmo de la serie; la placa a tamaño real es para todo lo demás.
+**Un 10-up no sirve para esto.** A esa escala una palabra cortada se ve como una palabra:
+una portada donde `ALUCINACIONES` sale como `ALUCINACIONI` —la palabra se va del lienzo— se
+ve entera sin que se note. Por eso no se arma contact sheet; se abren los PNG.
 
 **`QA automática OK` no quiere decir que esté bien.** Dice que ningún chequeo programático
 saltó, y los chequeos no leen. En ese mismo carrusel el reporte salió limpio con:
@@ -361,25 +360,23 @@ puestos por el agente, uno de ellos arriba de un kicker que decía `SEGUNDA CAUS
 Y en general: **un campo opcional del template no se llena sin que el usuario lo pida.** Va
 al gate de aprobación de copy como cualquier otra decisión de composición.
 
-### Mandale la imagen, no se la cuentes
+### Nada de contact sheet — la revisión es sobre los PNG, en la carpeta
 
-**Cada vez que se renderiza, el contact sheet va al chat.** No alcanza con mirarlo vos y
-describir lo que ves: la revisión visual la hace el usuario, y sólo la puede hacer sobre
-la imagen. Contarle que "quedó bien" es pedirle que confíe en el mismo ojo que compuso la
-placa.
+**No se arma ni se manda contact sheet.** El 10-up no le sirve al usuario: a esa escala no
+se juzga un cuerpo, una separación ni una palabra cortada, y ver las diez juntas es un
+render al pedo. Decidido por el usuario el 2026-09-05.
 
-- **Después de cada tanda de render**, el contact sheet, aunque la QA automática haya
-  dado limpia.
-- **Si el pedido es sobre una placa puntual**, esa placa a tamaño completo. Un recorte de
-  contact sheet no sirve para juzgar cuerpos ni separaciones.
-- **Después de cada corrección**, la placa corregida. Una corrección que el usuario no
-  ve no está confirmada.
-- El atajo para abrir la carpeta sigue yendo, pero **no reemplaza mandar la imagen**: es
-  para el archivo final, no para revisar.
+Después de cada tanda de render va **el bloque que abre la carpeta de entrega** (ver *El
+atajo para abrir la carpeta*, abajo). El usuario abre los PNG ahí y los mira uno por uno a
+tamaño real. No alcanza con mirarlos vos y describir lo que ves: la revisión visual la hace
+el usuario, sobre la imagen.
 
-Que el usuario mande recortes para marcar algo puntual está perfecto y es lo más
-preciso que hay: la regla no existe para evitar eso. Existe porque quien compuso la placa
-no puede ser el único que la mira.
+- **Si el pedido es sobre una placa puntual**, o después de una corrección, esa placa **sí
+  va al chat**, a tamaño completo. Una corrección que el usuario no ve no está confirmada.
+- Que el usuario mande recortes para marcar algo puntual está perfecto y es lo más preciso
+  que hay.
+
+`contact-sheet.mjs` queda sin uso en el flujo.
 
 ### Una referencia ambigua se pregunta, no se elige
 
