@@ -32,12 +32,17 @@ window.CAROUSEL = {
   //   'typography-floor' -> la capa de referencia va por debajo de los 40px de
   //      SKILL.md: rotulos del cartucho y de eje en mono a 22-30px.
   //   'safe-area' -> el margen del disenio es 80px parejo (5,5% vertical), no el 10%.
-  //   'cover-hook-centered' -> la portada alinea a la izquierda contra el margen.
   //   'density-budget' -> las bandas estan medidas sobre el set publicado del
   //      01-editorial-oscuro. Este template todavia no tiene set propio.
   // Bajan a nota TODOS los avisos de su tipo, asi que hay que leer las notas del
   // reporte: un error real se cuela ahi adentro sin bloquear la entrega.
-  layoutExceptions: ['typography-floor', 'safe-area', 'cover-hook-centered', 'density-budget'],
+  //
+  // 'cover-hook-centered' NO va de fabrica: la portada del 05 es centrada por
+  // default (ver estilo.md > La portada, 2026-09-05). Queda disponible como
+  // opcion para un carrusel puntual que quiera la portada alineada a la
+  // izquierda contra el margen — se agrega a esta lista solo si el usuario lo
+  // decide. Decidido por el usuario el 2026-09-05.
+  layoutExceptions: ['typography-floor', 'safe-area', 'density-budget'],
 
   // densityBudget: { ... },   // cuando se midan las bandas propias del template
 
