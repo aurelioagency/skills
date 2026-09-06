@@ -473,4 +473,4 @@ h2 { font-size: 104px; text-wrap: balance; }
    `min-height: 0` + `flex-shrink` es lo que la hace encogerse en vez de empujar: sin eso
    una imagen alta corre el footer hacia abajo y esa placa deja de alinear con la serie. */
 .s-image .ext-card { margin-top: auto; margin-bottom: auto; flex: 0 1 auto; min-height: 0; align-self: center; }
-.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 480px; }
+.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 540px; }

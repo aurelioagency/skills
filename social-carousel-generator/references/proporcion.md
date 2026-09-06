@@ -81,7 +81,7 @@ difieren, uno está mal:
 
 ```css
 .s-image .ext-card { margin-top: auto; margin-bottom: auto; flex: 0 1 auto; min-height: 0; align-self: center; }
-.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 480px; }
+.s-image .ext-card img { display: block; width: auto; height: auto; max-width: 100%; max-height: 540px; }
 ```
 
 Esto es layout, no identidad visual: el template define tipografía, paleta, grilla y trazo —
