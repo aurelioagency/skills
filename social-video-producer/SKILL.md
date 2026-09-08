@@ -826,6 +826,14 @@ is `t = (row * columns + column) / fps`. Pick a frame with:
 - eyes to camera;
 - a clean band under the face for the text, clear of hands and props.
 
+**When the subject holds a handheld mic just under the chin** (this account does, every
+video), there is no clean three-line band in *any* frame — the mic and hand sit right where
+the block wants to go. Do not force three lines onto the jaw or over the hand. Drop to a
+**two-line headline** (big line + one small line) and place it with `--y-offset` in the
+narrow gap between the chin and the mic, clear of both. The face never gets covered; that
+outranks keeping the third line. A face graze at the top of the big line still counts as
+covering the face — nudge until the block sits fully below the jaw.
+
 ### Writing The Headline
 
 Restate the video's strongest idea, then decide which WORDS carry it and set those big.
