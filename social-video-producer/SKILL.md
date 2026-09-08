@@ -559,16 +559,16 @@ The script reports `lowConfidence` words. Read the transcript from the JSON file
 node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>"
 ```
 
-With no flag this freezes **Inter Black**, the skill default, from the fonts bundled in `assets\fonts\`. All bundled fonts are SIL Open Font License, and the licence text is copied next to the frozen file, so the project carries its own proof and looks identical on any machine.
+With no flag this freezes **Neue Montreal Bold**, the skill default, from the fonts bundled in `assets\fonts\`. The licence text is copied next to the frozen file so the project carries its own proof and looks identical on any machine. Neue Montreal is a commercial face bundled under Aurelio Agency's own licence (its `.LICENSE.txt` says so and `freeze-caption-font.mjs` records it accurately); the other four bundled fonts are SIL Open Font License.
 
 - `--list` shows the bundled set and the system candidates.
-- `--bundled <name>` picks another bundled font: `archivoblack` (wider, more shout), `anton` (condensed, classic social), `bebasneue` (tall condensed caps, good for long words).
+- `--bundled <name>` picks another bundled font: `inter` (Inter Black — heavier, more shout per word), `archivoblack` (wider and heavier still), `anton` (condensed, classic social), `bebasneue` (tall condensed caps, good for long words).
 - `--system` copies the heaviest sans already installed instead, for a look the bundled set does not cover. Redistribution rights are then unverified, and the record says so.
 - `--source <file-or-direct-url>` freezes a specific font. Direct font file only, never a zip.
 
-Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video.
+Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video; Neue Montreal Bold is the lightest weight that still holds up, chosen for its editorial look — do not "fix" it back to a black weight.
 
-**House default:** Inter Black at 104px, chunk reveal, `accent-mode active` — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns colour as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. That is what the scripts produce with no style arguments beyond the accent colour, and the reveal/font/timing choices in it **ship as-is** — they are a decided house style, not a starting point for a menu.
+**House default:** Neue Montreal Bold at 104px, chunk reveal, `accent-mode active` — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns colour as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. That is what the scripts produce with no style arguments beyond the accent colour, and the reveal/font/timing choices in it **ship as-is** — they are a decided house style, not a starting point for a menu.
 
 The accent colour itself has two standing options — ask the user which one before the first render of a new project, then reuse that answer for the rest of the project without asking again per segment:
 
@@ -651,7 +651,7 @@ Give the user the folder link from `folderUrl` before anything else.
 
 ### libass Behaviour That Costs A Render Cycle
 
-- **The font family name is not the file name.** `Inter-Black.ttf` declares the family `Inter Black`; asking for `Inter` makes libass fall back to another font *silently* and the captions render at the wrong weight. `build-burn-in-captions.mjs` reads the family from the TTF name table, so let it auto-detect instead of passing `--font-name` by hand.
+- **The font family name is not the file name.** `Inter-Black.ttf` declares the family `Inter Black`; asking for `Inter` makes libass fall back to another font *silently* and the captions render at the wrong weight. `build-burn-in-captions.mjs` reads the family from the TTF name table, so let it auto-detect instead of passing `--font-name` by hand. The default `NeueMontreal-Bold.otf` declares the generic family `Neue Montreal` (weight 700), not `Neue Montreal Bold` — it still renders Bold because it is the only face in the project `assets\fonts\` and the burn always passes `--fonts-dir` at that folder. If a burn ever comes out in a lighter weight, check that `--fonts-dir` points at the project fonts folder and nothing else.
 - **`\pos` and `\move` disable margin-based wrapping.** Once an event carries either tag, `MarginL`/`MarginR` no longer bound the line and long text runs straight off the frame. Line breaks must be inserted explicitly as `\N`, decided by measuring against the real font metrics.
 - **ASS colour is `&HBBGGRR&`,** the reverse of CSS hex. Reversing it turns the accent into its complement, which is easy to miss on a warm frame.
 - **Escape the Windows drive letter inside a filter argument** (`C\:/path/file.ass`), or ffmpeg reads the colon as the next filter option.
@@ -776,7 +776,7 @@ user as a question — bring them the result and let them veto it.
 
 ### House Style (decided; not a menu)
 
-- Frozen project caption font, Inter Black by default — the same file the captions use.
+- Frozen project caption font, Neue Montreal Bold by default — the same file the captions use.
 - **All the text in cyan `#30D5FF`**, the same cyan as the caption accent. Cover and
   captions speaking one colour is what makes the profile grid recognisable.
 - **Three lines, one block, anchored bottom.** Small setup line, big line, small payoff
@@ -987,8 +987,8 @@ node "<skill-dir>\scripts\check-overflow.cjs" --project "<project>" --at "32.35,
 node "<skill-dir>\scripts\scan-text-inventory.mjs" --file "<project>\public\index.html"
 node "<skill-dir>\scripts\verify-render.mjs" --file "<project>\renders\final\video-opening2.mp4" --expect-width 1080 --expect-height 1920
 node "<skill-dir>\scripts\transcribe-media.mjs" --input "<project>\raws\source.mp4" --out-audio "<project>\assets\voice\source.wav" --out-transcript "<project>\assets\voice\source.transcript.json" --language es
-node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\assets\voice\source.transcript.json" --output "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --size 104 --accent "#30D5FF"
-node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\Inter-Black.ttf" --output "<project>\manifests\audits\caption-width.json"
+node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\assets\voice\source.transcript.json" --output "<project>\renders\source.ass" --font-file "<project>\assets\fonts\NeueMontreal-Bold.otf" --size 104 --accent "#30D5FF"
+node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\NeueMontreal-Bold.otf" --output "<project>\manifests\audits\caption-width.json"
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.mp4" --ass "<project>\renders\source.ass" --output "<project>\renders\final\source-subs.mp4" --fonts-dir "<project>\assets\fonts"
 node "<skill-dir>\scripts\build-cover.mjs" --scan --input "<project>\raws\source.mp4" --output "<project>\snapshots\cover-scan.png"
 node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\source.mp4" --frame 19.0 --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --fit
@@ -1013,7 +1013,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `snapshot-qa.cjs`: capture exact timestamps for visual review.
 - `check-overflow.cjs`: inspect visible DOM boxes for clipped/off-frame text. Browser compositions only — it cannot see burned-in captions.
 - `scan-text-inventory.mjs`: catch leaked metadata strings such as `question hook`.
-- `freeze-caption-font.mjs`: copy a caption font into the project. Defaults to the bundled Inter Black (SIL OFL, licence copied alongside); `--bundled` picks another shipped font, `--system` takes the heaviest sans installed on the machine, `--source` takes a file or direct URL.
+- `freeze-caption-font.mjs`: copy a caption font into the project. Defaults to the bundled Neue Montreal Bold (commercial, bundled under Aurelio Agency licence, licence copied alongside and recorded accurately in the `.source.json`); `--bundled inter` gives SIL OFL Inter Black, `--bundled` also takes `archivoblack`/`anton`/`bebasneue`, `--system` takes the heaviest sans installed on the machine, `--source` takes a file or direct URL.
 - `transcribe-media.mjs`: extract speech audio from any video/audio file and produce a word-level transcript, reporting low-confidence words to take to the Transcript Approval Gate.
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.

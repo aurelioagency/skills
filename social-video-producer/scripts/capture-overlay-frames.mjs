@@ -137,7 +137,7 @@ async function main() {
 
   const fontSrc = args.font
     ? path.resolve(args.font)
-    : path.join(projectDir, 'assets', 'fonts', 'Inter-Black.ttf');
+    : path.join(projectDir, 'assets', 'fonts', 'NeueMontreal-Bold.otf');
   if (!fs.existsSync(fontSrc)) throw new Error(`Missing font: ${fontSrc}. Freeze one with freeze-caption-font.mjs first.`);
 
   const templateSrc = fs.readFileSync(path.join(SKILL_ROOT, 'assets', 'overlay-template.html'), 'utf8');

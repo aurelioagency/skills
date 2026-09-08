@@ -163,14 +163,15 @@ The agent copies your original into a project (never edits it in place), transcr
 
 Needs Python with `faster-whisper` and `Pillow` (`pip install faster-whisper Pillow`). Nothing else — the skill ships its own caption fonts.
 
-**House style, and what you get without asking for anything:** Inter Black at 104px, white with the key words in cyan, two words at a time, sitting in the lower third clear of your face and above the platform UI. Four fonts ship with the skill, all SIL Open Font License, so a caption looks the same on every machine:
+**House style, and what you get without asking for anything:** Neue Montreal Bold at 104px, white with the key words in cyan, two words at a time, sitting in the lower third clear of your face and above the platform UI. Five fonts ship with the skill; a caption looks the same on every machine:
 
 | Font | When |
 |---|---|
-| **Inter Black** | The default. Neutral modern grotesque, reads clean over anything. |
-| Archivo Black | Wider and heavier — more shout per word. |
-| Anton | Condensed heavy, the classic social-caption look. |
-| Bebas Neue | Tall condensed caps, fits long words on one line. |
+| **Neue Montreal Bold** | The default. Editorial grotesque — clean, a touch lighter than a black weight. Commercial face, bundled under Aurelio Agency's licence. |
+| Inter Black | `--bundled inter`. Heavier neutral grotesque, more shout per word. SIL OFL. |
+| Archivo Black | Wider and heavier still. SIL OFL. |
+| Anton | Condensed heavy, the classic social-caption look. SIL OFL. |
+| Bebas Neue | Tall condensed caps, fits long words on one line. SIL OFL. |
 
 Want something else entirely? `--system` uses the heaviest font already on your machine, and `--source` takes any font file or direct URL.
 

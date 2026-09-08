@@ -18,7 +18,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 function usage() {
   console.error(`Usage:
   node build-burn-in-captions.mjs --transcript <words.json> --output <captions.ass>
-      [--font-file <font.ttf>]       defaults to the bundled Inter Black
+      [--font-file <font.ttf>]       defaults to the bundled Neue Montreal Bold
       [--font-name "<family>"]        auto-detected from the TTF name table when omitted
       [--size 104] [--outline 7] [--shadow 5]
       [--primary "#FFFFFF"] [--accent "#30D5FF"]
@@ -149,7 +149,7 @@ function main() {
 
   // Falls back to the bundled default so a caption can be generated with no font
   // argument at all; a project-frozen font should still be passed explicitly.
-  const fontFile = path.resolve(args.fontFile || path.join(HERE, '..', 'assets', 'fonts', 'Inter-Black.ttf'));
+  const fontFile = path.resolve(args.fontFile || path.join(HERE, '..', 'assets', 'fonts', 'NeueMontreal-Bold.otf'));
   if (!fs.existsSync(fontFile)) throw new Error(`Missing font file: ${fontFile}`);
   const detectedFamily = readFontFamily(fontFile);
   const fontName = args.fontName || detectedFamily;
