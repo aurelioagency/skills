@@ -561,9 +561,9 @@ node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>"
 
 With no flag this freezes **Neue Montreal Bold**, the skill default, from the fonts bundled in `assets\fonts\`, so the project looks identical on any machine.
 
-- `--list` shows the bundled set and the system candidates.
-- `--bundled <name>` picks another bundled font: `inter` (Inter Black — heavier, more shout per word), `archivoblack` (wider and heavier still), `anton` (condensed, classic social), `bebasneue` (tall condensed caps, good for long words).
-- `--system` copies the heaviest sans already installed instead, for a look the bundled set does not cover. Redistribution rights are then unverified, and the record says so.
+- The skill ships one caption font, Neue Montreal Bold. `Inter-Black.ttf` is kept in `assets\fonts\` as a fallback for older projects; `--bundled inter` selects it.
+- `--list` shows what is bundled and the system candidates.
+- `--system` copies the heaviest sans already installed instead, for a look the bundled font does not cover. Redistribution rights are then unverified, and the record says so.
 - `--source <file-or-direct-url>` freezes a specific font. Direct font file only, never a zip.
 
 Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video.
@@ -1007,7 +1007,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `snapshot-qa.cjs`: capture exact timestamps for visual review.
 - `check-overflow.cjs`: inspect visible DOM boxes for clipped/off-frame text. Browser compositions only — it cannot see burned-in captions.
 - `scan-text-inventory.mjs`: catch leaked metadata strings such as `question hook`.
-- `freeze-caption-font.mjs`: copy a caption font into the project. Defaults to the bundled Neue Montreal Bold; `--bundled` also takes `inter`/`archivoblack`/`anton`/`bebasneue`, `--system` takes the heaviest sans installed on the machine, `--source` takes a file or direct URL.
+- `freeze-caption-font.mjs`: copy a caption font into the project. Defaults to the bundled Neue Montreal Bold; `--bundled inter` selects the kept-as-fallback Inter Black, `--system` takes the heaviest sans installed on the machine, `--source` takes a file or direct URL.
 - `transcribe-media.mjs`: extract speech audio from any video/audio file and produce a word-level transcript, reporting low-confidence words to take to the Transcript Approval Gate.
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.

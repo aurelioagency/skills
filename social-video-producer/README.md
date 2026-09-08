@@ -161,19 +161,11 @@ Put subtitles on C:\path\to\my-video.mp4
 
 The agent copies your original into a project (never edits it in place), transcribes the real audio with word-level timing, and **stops to show you the transcript with the suspicious words flagged** — ASR reliably mangles proper nouns and product names, and fixing one there costs seconds instead of a whole re-render. It then freezes a caption font into the project, shows you 2–3 style candidates rendered over real frames of *your* video so you pick by looking rather than imagining, and burns the captions in a single encode pass so the picture is never re-compressed twice.
 
-Needs Python with `faster-whisper` and `Pillow` (`pip install faster-whisper Pillow`). Nothing else — the skill ships its own caption fonts.
+Needs Python with `faster-whisper` and `Pillow` (`pip install faster-whisper Pillow`). Nothing else — the skill ships its own caption font.
 
-**House style, and what you get without asking for anything:** Neue Montreal Bold at 104px, all white, one word at a time, sitting in the lower third clear of your face and above the platform UI. A cyan or blue accent on the spoken word is opt-in. Five fonts ship with the skill; a caption looks the same on every machine:
+**House style, and what you get without asking for anything:** Neue Montreal Bold at 104px, all white, one word at a time, sitting in the lower third clear of your face and above the platform UI. A cyan or blue accent on the spoken word is opt-in.
 
-| Font | When |
-|---|---|
-| **Neue Montreal Bold** | The default. Editorial grotesque — clean, a touch lighter than a black weight. |
-| Inter Black | `--bundled inter`. Heavier neutral grotesque, more shout per word. |
-| Archivo Black | Wider and heavier still. |
-| Anton | Condensed heavy, the classic social-caption look. |
-| Bebas Neue | Tall condensed caps, fits long words on one line. |
-
-Want something else entirely? `--system` uses the heaviest font already on your machine, and `--source` takes any font file or direct URL.
+The skill ships one caption font, **Neue Montreal Bold**. `Inter-Black.ttf` stays bundled as a fallback for older projects (`--bundled inter`). Want something else entirely? `--system` uses the heaviest font already on your machine, and `--source` takes any font file or direct URL.
 
 ### Multiple videos and repairs
 

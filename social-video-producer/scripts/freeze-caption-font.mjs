@@ -18,11 +18,8 @@ const BUNDLED_DIR = path.resolve(HERE, '..', 'assets', 'fonts');
 // inheriting whatever that OS happens to install.
 // Ordered best-first; the first entry is the default.
 const BUNDLED = [
-  ['NeueMontreal-Bold.otf', 'Neue Montreal Bold — editorial grotesque. The default.'],
-  ['Inter-Black.ttf', 'Inter Black — heavier neutral grotesque, more shout per word.'],
-  ['ArchivoBlack-Regular.ttf', 'Archivo Black — wider and heavier still.'],
-  ['Anton-Regular.ttf', 'Anton — condensed heavy, the classic social-caption look.'],
-  ['BebasNeue-Regular.ttf', 'Bebas Neue — tall condensed caps, fits long words on one line.'],
+  ['NeueMontreal-Bold.otf', 'Neue Montreal Bold — the house default and the caption font this skill ships.'],
+  ['Inter-Black.ttf', 'Inter Black — heavier fallback, kept for older projects.'],
 ];
 
 function usage() {
@@ -35,7 +32,7 @@ function usage() {
       [--list]                           show bundled and system candidates, then exit
 
 (no flag)  freezes the skill's default bundled font, ${BUNDLED[0][0]}.
---bundled  picks another bundled font by name, e.g. --bundled anton.
+--bundled  picks a bundled font by name; the skill ships Neue Montreal Bold, with Inter Black kept as a fallback.
 --system   copies the best caption font already installed on this machine instead.
 --source   freezes a specific font file or direct font URL (no zip archives).
 
