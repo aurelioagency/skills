@@ -451,7 +451,7 @@ The source's native resolution is the floor for the deliverable, always. A 2160x
 - The `1080x1920` in this document is the *default composition canvas* for videos this skill generates from scratch, not a ceiling imposed on footage the user shot. When the user supplies the video, its own dimensions are the target.
 - Scale only when the user explicitly asks for a specific smaller size, and only inside an already-budgeted encode pass — never as an extra pass.
 - Consequently, verify the burn against the SOURCE dimensions: `verify-render.mjs --expect-width <source-width> --expect-height <source-height>`, read from ffprobe, not from a hardcoded 1080x1920.
-- Caption geometry is expressed against the 1080-wide house design, so scale every caption dimension by `sourceWidth / 1080` before building the `.ass`: at 2160 wide that means `--size 208 --outline 0 --shadow 10 --blur 5 --margin-lr 240 --margin-bottom 1000`. Passing the 1080 numbers onto a 4K frame renders captions at half their intended size. **`--outline 0`**: the house caption style has NO hard black keyline — white text with a soft blurred drop shadow, the reference look. Pass `--outline N` only if a keyline is explicitly wanted.
+- Caption geometry is expressed against the 1080-wide house design, so scale every caption dimension by `sourceWidth / 1080` before building the `.ass`: at 2160 wide that means `--size 208 --outline 0 --shadow 8 --blur 0 --margin-lr 240 --margin-bottom 1000`. Passing the 1080 numbers onto a 4K frame renders captions at half their intended size. **House caption style: CRISP solid-white fill, `--outline 0` (no black keyline), `--blur 0` (no blur on the glyph — a blurred letter reads as broken, not soft), a plain drop shadow the only depth.** Pass `--outline N` for a keyline or `--blur N` for a softened shadow only if explicitly wanted.
 
 5. Assemble final variants.
 
@@ -593,9 +593,9 @@ For a keyword-only highlight (only hand-picked terms ever get the accent), add `
 node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.approved.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --video-width <source-width> --video-height <source-height> --size 104
 ```
 
-With no style flags this is the house default: Neue Montreal Bold, all white, one word at a time, **no hard outline** — a soft blurred drop shadow is the only depth (`--outline 0`, on by default; `--blur` softens it). A black keyline around every word is the wrong style. Only add colour when the user asks for it — `--accent "#30D5FF"` (cyan) or `--accent "#2F6FED"` (blue), and `--accent-mode keyword --accent-terms "<key terms>"` on top of that for a keyword-only highlight.
+With no style flags this is the house default: Neue Montreal Bold, all white, one word at a time, **crisp solid-white fill** — `--outline 0` (no black keyline) and `--blur 0` (no blur on the letters; a blurred glyph reads as broken, not soft). A plain drop shadow is the only depth. A black keyline around every word, or a blurred fill, is the wrong style. Only add colour when the user asks for it — `--accent "#30D5FF"` (cyan) or `--accent "#2F6FED"` (blue), and `--accent-mode keyword --accent-terms "<key terms>"` on top of that for a keyword-only highlight.
 
-Pass the SOURCE's real dimensions, and scale every caption dimension by `sourceWidth / 1080` — the geometry defaults are expressed against the 1080-wide house design. On a 2160x3840 source that is `--video-width 2160 --video-height 3840 --size 208 --outline 0 --shadow 10 --blur 5 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their intended size, and it passes the width gate while doing it, because the gate measures against the same wrong width.
+Pass the SOURCE's real dimensions, and scale every caption dimension by `sourceWidth / 1080` — the geometry defaults are expressed against the 1080-wide house design. On a 2160x3840 source that is `--video-width 2160 --video-height 3840 --size 208 --outline 0 --shadow 8 --blur 0 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their intended size, and it passes the width gate while doing it, because the gate measures against the same wrong width.
 
 **When the face moves vertically between shots, pass `--zones` instead of relying on one `--margin-bottom`.** Write a JSON array of shot windows, each with its own `marginBottom` chosen so the caption clears that shot's LOWEST chin by a small gap (~70px at 1080-scale, scaled to the source) without floating at the very bottom:
 
@@ -775,10 +775,11 @@ user as a question — bring them the result and let them veto it.
   seen side by side in the feed, so a cover in the other style reads as a mistake. There are
   two, and `build-cover.mjs --style` picks between them:
   - **`--style white`** — pairs with the house-default captions (Neue Montreal Bold, **all
-    white**, one word at a time, no accent). The cover is **white fill, NO outline**, just a
-    single low-contrast blurred drop shadow — the same treatment those caption words carry.
-    A black outline on this style looks wrong. This is the default for a burn-in-captions job
-    that shipped the plain white captions.
+    white**, one word at a time, no accent). The cover is **crisp solid-white fill, NO
+    outline, NO blur on the letters**, just a plain low-contrast drop shadow — the same
+    treatment those caption words carry. A black outline, or a blurred fill, looks wrong on
+    this style. This is the default for a burn-in-captions job that shipped the plain white
+    captions.
   - **`--style cyan`** — pairs with Inter Black captions that use the cyan `#30D5FF` accent.
     The cover is **cyan fill with a fully opaque black outline** plus a soft drop. Cover and
     captions speaking one colour is what makes that grid recognisable. `--accent-big` (white
@@ -799,9 +800,9 @@ user as a question — bring them the result and let them veto it.
 - **Outline is a per-style decision, not always-on.** The `cyan` style carries a fully
   opaque black outline (a semi-transparent one lets the background bleed through the ring
   around every glyph and the cyan reads washed out). The `white` style carries **no outline
-  at all** — only the blurred drop shadow — because a black stroke does not belong to that
-  look. The shadow, in both styles, stays soft and semi-transparent: it is a drop, not a
-  second outline. Both styles gate the rendered fill against the requested colour, so the
+  at all and no blur** — the letters stay crisp and solid, and a plain semi-transparent drop
+  shadow is the only depth, because a black stroke (or a fuzzed-out fill) does not belong to
+  that look. Both styles gate the rendered fill against the requested colour, so the
   `YCbCr Matrix: None` / TV.709 dimming bug still cannot ship.
 
 Why cyan (for that style) and not the lime yellow the Spanish IG-tips niche defaults to:
@@ -826,13 +827,12 @@ is `t = (row * columns + column) / fps`. Pick a frame with:
 - eyes to camera;
 - a clean band under the face for the text, clear of hands and props.
 
-**When the subject holds a handheld mic just under the chin** (this account does, every
-video), there is no clean three-line band in *any* frame — the mic and hand sit right where
-the block wants to go. Do not force three lines onto the jaw or over the hand. Drop to a
-**two-line headline** (big line + one small line) and place it with `--y-offset` in the
-narrow gap between the chin and the mic, clear of both. The face never gets covered; that
-outranks keeping the third line. A face graze at the top of the big line still counts as
-covering the face — nudge until the block sits fully below the jaw.
+**If the user hands you a specific frame, use that frame. Do not swap it for another one.**
+
+**The headline never covers the face — not the jaw, not the neck right under it.** If the
+block would touch the face, push it DOWN with `--y-offset` until it clears — onto the chest,
+and over the mic / hands / whatever the person is holding if that is what is down there.
+Text over a prop is fine; text on the face is not. Keep all the lines; just lower the block.
 
 ### Writing The Headline
 
@@ -1037,7 +1037,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.
 - `burn-in-captions.mjs`: burn an `.ass` file into a video in a single encode pass, copying the original audio.
-- `build-cover.mjs`: `--scan` writes a head-and-shoulders contact sheet for choosing the cover frame by looking at it; the build mode extracts that frame at native resolution and composes the house headline onto it. Takes the headline as repeated `--line`s, sets the words wrapped in `*asterisks*` at the big size so the emphasis lands per word rather than per line, places the single block with `--anchor top|center|bottom`, and with `--fit` grows the type until the widest line fills the usable width (`--small-size`/`--big-size` set the starting ratio). `--style white|cyan` picks the treatment to match the video's captions: `white` = white fill, no outline, soft blurred drop (Neue Montreal / all-white captions); `cyan` = cyan fill + opaque black outline (Inter/cyan captions), default. Gates text width against the real font metrics, verifies the rendered fill colour against the requested hex, and reports whether the block survives the profile grid's centred square crop. The legacy `--top/--big/--bottom` form still builds the fixed three-line block.
+- `build-cover.mjs`: `--scan` writes a head-and-shoulders contact sheet for choosing the cover frame by looking at it; the build mode extracts that frame at native resolution and composes the house headline onto it. Takes the headline as repeated `--line`s, sets the words wrapped in `*asterisks*` at the big size so the emphasis lands per word rather than per line, places the single block with `--anchor top|center|bottom`, and with `--fit` grows the type until the widest line fills the usable width (`--small-size`/`--big-size` set the starting ratio). `--style white|cyan` picks the treatment to match the video's captions: `white` = crisp white fill, no outline, no blur, plain drop shadow (Neue Montreal / all-white captions); `cyan` = cyan fill + opaque black outline (Inter/cyan captions), default. Gates text width against the real font metrics, verifies the rendered fill colour against the requested hex, and reports whether the block survives the profile grid's centred square crop. The legacy `--top/--big/--bottom` form still builds the fixed three-line block.
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.

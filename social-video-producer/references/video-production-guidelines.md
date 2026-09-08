@@ -193,7 +193,7 @@ These rules capture generic production taste and QA decisions established across
   - captions usually belong in the bottom rail;
   - keep them large enough to read;
   - prevent overlap with cards, titles, screenshots, and callouts.
-- Font choice should fit the piece, but readability wins. The house default caption is Neue Montreal Bold, all white, one word at a time, with **no hard outline** — depth comes from a soft blurred drop shadow only (the reference caption look). A black keyline around every word is the wrong style; `build-burn-in-captions.mjs` defaults to `--outline 0` and a `--blur`ed shadow for this reason.
+- Font choice should fit the piece, but readability wins. The house default caption is Neue Montreal Bold, all white, one word at a time, **crisp solid-white fill** — no hard outline (no black keyline) and no blur on the letters. A plain drop shadow is the only depth. A black keyline, or a blurred/fuzzed glyph, is the wrong style; `build-burn-in-captions.mjs` defaults to `--outline 0 --blur 0` for this reason.
 - Use emphasis by color, weight, or motion, not by inserting unnatural spaces between words.
 - Do not add artificial horizontal gaps inside a phrase. Number-word pairs such as `80 preguntas` must read as one phrase.
 - Avoid negative letter spacing and viewport-scaled font sizes. Use stable sizes and responsive constraints instead.

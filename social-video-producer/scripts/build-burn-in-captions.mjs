@@ -20,9 +20,10 @@ function usage() {
   node build-burn-in-captions.mjs --transcript <words.json> --output <captions.ass>
       [--font-file <font.ttf>]       defaults to the bundled Neue Montreal Bold
       [--font-name "<family>"]        auto-detected from the TTF name table when omitted
-      [--size 104] [--outline 0] [--shadow 5] [--blur 2.5]
-                                    house style is white text with NO hard keyline — just a
-                                    soft blurred drop shadow. Pass --outline N for a keyline.
+      [--size 104] [--outline 0] [--shadow 6] [--blur 0]
+                                    house style is CRISP solid-white text, NO keyline, NO blur
+                                    on the fill — a plain drop shadow is the only depth. Pass
+                                    --outline N for a keyline, --blur N to soften the shadow.
       [--primary "#FFFFFF"] [--accent "<hex>"]   accent defaults to primary (all-white); pass --accent to highlight the spoken word
       [--video-width 1080] [--video-height 1920]
       [--margin-lr 120] [--margin-bottom 500]
@@ -161,12 +162,13 @@ function main() {
   const videoHeight = args.videoHeight || 1920;
   const marginLr = args.marginLr ?? 120;
   const marginBottom = args.marginBottom ?? 500;
-  // House style: white text, NO hard keyline (outline 0) — depth comes from a soft blurred
-  // drop shadow, the same treatment as the reference caption look. A black keyline around
-  // every word was the wrong style. Pass --outline N to bring a keyline back.
+  // House style: white text, NO hard keyline (outline 0), and the fill stays CRISP — solid
+  // white, no blur on the glyph. Depth is a plain drop shadow only. A black keyline around
+  // every word is the wrong style; blurring the text so it goes soft is also wrong. Pass
+  // --outline N for a keyline, or --blur N if a softened shadow is explicitly wanted.
   const outline = args.outline ?? 0;
-  const shadow = args.shadow ?? 5;
-  const blur = args.blur ?? 2.5;
+  const shadow = args.shadow ?? 6;
+  const blur = args.blur ?? 0;
   const primary = args.primary || '#FFFFFF';
   // House default is all-white: the accent only shows when --accent is passed.
   const accent = args.accent || primary;
@@ -292,7 +294,7 @@ YCbCr Matrix: TV.709
 
 [V4+ Styles]
 Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
-Style: Cap,${fontName},${size},${assStyleColour(primary)},${assStyleColour(primary)},&H00101010,&H4B000000,0,0,0,0,100,100,0,0,1,${outline},${shadow},2,${marginLr},${marginLr},${marginBottom},1
+Style: Cap,${fontName},${size},${assStyleColour(primary)},${assStyleColour(primary)},&H00101010,&H55000000,0,0,0,0,100,100,0,0,1,${outline},${shadow},2,${marginLr},${marginLr},${marginBottom},1
 
 [Events]
 Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text

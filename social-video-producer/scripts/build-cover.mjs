@@ -34,10 +34,10 @@ const BASE = {
   bigSize: 160,
   outline: 2.5,
   shadow: 6,
-  // Soft-shadow (white) style: no outline at all, a low-contrast blurred drop. The glyph
-  // edge stays essentially crisp; softBlur is small and mostly softens the drop shadow.
+  // Soft-shadow (white) style: no outline at all, a plain drop shadow. The glyph fill stays
+  // CRISP — solid white, no blur. softBlur is 0; a blurred fill reads as broken, not soft.
   softShadow: 5,
-  softBlur: 2,
+  softBlur: 0,
   // A cover line may run wider than a caption line: it is read once, big, not followed
   // word by word. 70 in 1080-space still leaves a real gate against a runaway headline.
   marginLr: 70,
