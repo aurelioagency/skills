@@ -34,6 +34,10 @@ const BASE = {
   bigSize: 160,
   outline: 2.5,
   shadow: 6,
+  // Soft-shadow (white) style: no outline at all, a low-contrast blurred drop. The glyph
+  // edge stays essentially crisp; softBlur is small and mostly softens the drop shadow.
+  softShadow: 5,
+  softBlur: 2,
   // A cover line may run wider than a caption line: it is read once, big, not followed
   // word by word. 70 in 1080-space still leaves a real gate against a runaway headline.
   marginLr: 70,
@@ -60,6 +64,26 @@ const ANCHORS = { top: 0.17, center: 0.5, bottom: 0.693 };
 // language on purpose: that repetition is what makes the grid recognisable.
 const HOUSE_COLOR = '#30D5FF';
 
+// The cover MUST speak the same visual language as the captions burned into the video,
+// because the two are seen together in the feed. There are two caption styles in this
+// skill and therefore two cover styles:
+//
+//   cyan   Inter Black captions with a cyan (#30D5FF) accent. Cover: cyan fill, a fully
+//          opaque black outline for a hard edge on any background, plus a soft drop.
+//
+//   white  Neue Montreal Bold captions, all white, one word at a time (the house default
+//          of build-burn-in-captions.mjs). Cover: white fill, NO outline — a single low
+//          -contrast blurred drop shadow, the same treatment those caption words carry.
+//          A black outline on this style looks wrong; it belongs to the cyan style only.
+//
+// Pick the cover style to match the style the captions were actually built in. `--style`
+// is authoritative; `--color` still overrides just the fill within the chosen style.
+const STYLES = {
+  cyan: { color: '#30D5FF', outline: BASE.outline, shadow: BASE.shadow, outlineColour: '&H00000000', backColour: '&H80000000', blur: 0 },
+  white: { color: '#FFFFFF', outline: 0, shadow: BASE.softShadow, outlineColour: '&H00000000', backColour: '&H55000000', blur: BASE.softBlur },
+};
+const DEFAULT_STYLE = 'cyan';
+
 function usage() {
   console.error(`Usage:
   Choose the frame first (look at the sheet, pick a closed mouth / slight smile):
@@ -73,8 +97,12 @@ function usage() {
       [--fit]                       grow both sizes until the widest line fills the width
       [--output <cover.png>]        defaults to renders/final/<slug>-portada.png
       [--font-file <font.ttf>]      defaults to the project's frozen caption font
-      [--color "#30D5FF"]           house cyan
-      [--accent-big]                white text with only the *emphasised* words in --color
+      [--style cyan|white]          match the video's caption style; default cyan.
+                                    cyan  = cyan fill + opaque black outline (Inter/cyan captions)
+                                    white = white fill, NO outline, soft blurred drop
+                                            (Neue Montreal / all-white captions)
+      [--color "#30D5FF"]           override just the fill within the chosen style
+      [--accent-big]                cyan style only: white text with only the *emphasised* words in --color
       [--y-offset <px>]             nudge the whole block; + is down, in SOURCE pixels
       [--python python] [--ffmpeg <path>]
 
@@ -105,6 +133,7 @@ function parseArgs(argv) {
     else if (item === '--output') args.output = argv[++i];
     else if (item === '--font-file') args.fontFile = argv[++i];
     else if (item === '--color' || item === '--colour') args.color = argv[++i];
+    else if (item === '--style') args.style = argv[++i];
     else if (item === '--accent-big') args.accentBig = true;
     else if (item === '--y-offset') args.yOffset = Number(argv[++i]);
     else if (item === '--scan') args.scan = true;
@@ -353,9 +382,18 @@ function buildMode(args) {
   let bigSize = Math.round((args.bigSize || BASE.bigSize) * scale);
   const usableWidth = width - Math.round(BASE.marginLr * scale) * 2;
 
-  const color = args.color || HOUSE_COLOR;
-  const primary = assColor(args.accentBig ? '#FFFFFF' : color);
+  const styleName = args.style || DEFAULT_STYLE;
+  if (!(styleName in STYLES)) {
+    throw new Error(`Unknown --style "${styleName}". Use one of: ${Object.keys(STYLES).join(', ')}.`);
+  }
+  const styleDef = STYLES[styleName];
+  const accentBig = Boolean(args.accentBig) && styleName === 'cyan';
+  const color = args.color || styleDef.color;
+  const primary = assColor(accentBig ? '#FFFFFF' : color);
   const bigColor = assColor(color);
+  const outlinePx = (styleDef.outline * scale).toFixed(1);
+  const shadowPx = (styleDef.shadow * scale).toFixed(1);
+  const blurPx = styleDef.blur ? Number((styleDef.blur * scale).toFixed(2)) : 0;
 
   // The legacy three-line form is just the general form with the whole middle line
   // emphasised, so it goes through exactly the same layout and gates.
@@ -419,21 +457,26 @@ function buildMode(args) {
   });
   const centerX = Math.round(width / 2);
 
+  const blurTag = blurPx ? `\\blur${blurPx}` : '';
   const events = lines.map((runs, i) => {
     const body = runs.map((run) => {
       const size = run.big ? bigSize : smallSize;
-      const colorTag = args.accentBig ? `\\c${run.big ? bigColor : primary}&` : '';
+      const colorTag = accentBig ? `\\c${run.big ? bigColor : primary}&` : '';
       return `{\\fs${size}${colorTag}}${run.text}`;
     }).join('');
-    return `{\\an5\\pos(${centerX},${ys[i]})}${body}`;
+    return `{\\an5\\pos(${centerX},${ys[i]})${blurTag}}${body}`;
   });
 
-  // Two alpha decisions in the style line, and they are not the same decision:
-  // the OUTLINE is fully opaque black (&H00......) so the fill keeps a hard edge — a
-  // semi-transparent outline lets the background bleed through the ring around every
-  // glyph and the colour reads washed out even though the fill itself is solid. The
-  // SHADOW stays semi-transparent (&H80......) because it is meant to be a soft drop,
-  // not a second outline.
+  // Outline and shadow are set by the chosen --style, and the two alpha decisions in the
+  // style line are not the same decision:
+  //  - cyan style: the OUTLINE is fully opaque black (&H00......) so the cyan fill keeps a
+  //    hard edge on any background — a semi-transparent outline lets the background bleed
+  //    through the ring around every glyph and the colour reads washed out.
+  //  - white style: NO outline at all (Outline 0). The only depth is a single low-contrast
+  //    blurred drop shadow, the same treatment the all-white caption words carry. A black
+  //    outline here reads as the wrong style.
+  // The SHADOW is always semi-transparent (BackColour alpha &H55.. / &H80..): it is a soft
+  // drop, not a second outline.
   //
   // `YCbCr Matrix: None` is load-bearing for PNG output. See the header comment.
   const ass = `[Script Info]
@@ -446,7 +489,7 @@ YCbCr Matrix: None
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cover,${fontFamily},${smallSize},${primary},${primary},&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,${(BASE.outline * scale).toFixed(1)},${(BASE.shadow * scale).toFixed(1)},5,${Math.round(BASE.marginLr * scale)},${Math.round(BASE.marginLr * scale)},60,1
+Style: Cover,${fontFamily},${smallSize},${primary},${primary},${styleDef.outlineColour},${styleDef.backColour},0,0,0,0,100,100,0,0,1,${outlinePx},${shadowPx},5,${Math.round(BASE.marginLr * scale)},${Math.round(BASE.marginLr * scale)},60,1
 
 [Events]
 Format: Layer, Start, End, Style, MarginL, MarginR, MarginV, Effect, Text
@@ -490,10 +533,13 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
     );
   }
 
-  // The profile grid crops the cover to a centred square, and that is the size a viewer
-  // decides at. Text below the square's bottom edge is text nobody reads.
-  const squareTop = Math.round((height - width) / 2);
-  const squareBottom = squareTop + width;
+  // The profile grid crops the cover to a centred 3:4 portrait tile, and that is the size
+  // a viewer decides at. Text outside it is text nobody reads. Instagram moved the grid
+  // off the 1:1 square in early 2025; this was hardcoded as a centred square until then,
+  // which pushed headlines needlessly far from the top of the frame.
+  const gridCropHeight = Math.min(height, Math.round((width * 4) / 3));
+  const squareTop = Math.round((height - gridCropHeight) / 2);
+  const squareBottom = squareTop + gridCropHeight;
   // \an5 centres each line on its own box, so the visible extent above and below the
   // anchor is roughly 0.45em — cap height one way, descender the other. Using the full
   // font size as the half-extent would flag a block that is demonstrably inside the crop.
@@ -504,7 +550,7 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
   const gridPreview = path.join(coverDir, `${slug}-portada-gridcrop.png`);
   run(ffmpeg, [
     '-y', '-v', 'error', '-i', output,
-    '-vf', `crop=${width}:${width}:0:${squareTop},scale=540:-1`,
+    '-vf', `crop=${width}:${gridCropHeight}:0:${squareTop},scale=540:-1`,
     '-frames:v', '1', gridPreview,
   ]);
 
@@ -519,8 +565,12 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
     source: { width, height, scale: Number(scale.toFixed(3)) },
     font: { file: fontFile, family: fontFamily },
     style: {
+      name: styleName,
       color,
-      accentBig: Boolean(args.accentBig),
+      outline: Number(outlinePx),
+      shadow: Number(shadowPx),
+      blur: blurPx,
+      accentBig,
       smallSize,
       bigSize,
       fit: Boolean(args.fit),
@@ -542,7 +592,7 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
     insideGridCrop,
     next: insideGridCrop
       ? 'Look at BOTH the full cover and the grid-crop preview. Check the text does not land on the hands or a prop; nudge with --y-offset if it does.'
-      : 'WARNING: the text block falls outside the centred square the profile grid crops to. Nudge it back with --y-offset before delivering.',
+      : 'WARNING: the text block falls outside the centred 3:4 tile the profile grid crops to. Nudge it back with --y-offset before delivering.',
   }, null, 2));
 }
 

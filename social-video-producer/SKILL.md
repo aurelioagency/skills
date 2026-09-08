@@ -771,8 +771,19 @@ user as a question — bring them the result and let them veto it.
 ### House Style (decided; not a menu)
 
 - Frozen project caption font, Neue Montreal Bold by default — the same file the captions use.
-- **All the text in cyan `#30D5FF`**, the same cyan as the caption accent. Cover and
-  captions speaking one colour is what makes the profile grid recognisable.
+- **The cover's treatment MUST match the caption style burned into the video** — the two are
+  seen side by side in the feed, so a cover in the other style reads as a mistake. There are
+  two, and `build-cover.mjs --style` picks between them:
+  - **`--style white`** — pairs with the house-default captions (Neue Montreal Bold, **all
+    white**, one word at a time, no accent). The cover is **white fill, NO outline**, just a
+    single low-contrast blurred drop shadow — the same treatment those caption words carry.
+    A black outline on this style looks wrong. This is the default for a burn-in-captions job
+    that shipped the plain white captions.
+  - **`--style cyan`** — pairs with Inter Black captions that use the cyan `#30D5FF` accent.
+    The cover is **cyan fill with a fully opaque black outline** plus a soft drop. Cover and
+    captions speaking one colour is what makes that grid recognisable. `--accent-big` (white
+    lines, only the big word cyan) is a cyan-style option for unusually busy footage.
+  - Using the Neue Montreal font at all implies the white style — do not put cyan on it.
 - **Three lines, one block, anchored bottom.** Small setup line, big line, small payoff
   line, sitting over the torso. That is the shape of both approved covers and the shape
   to start from — see **The Shape, From The Two Approved Covers** below.
@@ -785,19 +796,20 @@ user as a question — bring them the result and let them veto it.
   the middle of the frame. Move it only over footage with real empty space up there, and
   only after looking at the frame — `insideGridCrop` checks the thumbnail edges, never
   what is behind the text.
-- **Fully opaque black outline**, plus a semi-transparent drop shadow, always on, even when
-  the background looks easy. It is what survives a backlit or pale-walled shot. The two
-  alphas are different decisions on purpose: a semi-transparent outline lets the background
-  bleed through the ring around every glyph, and the colour then reads washed out and
-  "half transparent" even though the fill itself is solid. The shadow stays soft because it
-  is meant to be a drop, not a second outline.
+- **Outline is a per-style decision, not always-on.** The `cyan` style carries a fully
+  opaque black outline (a semi-transparent one lets the background bleed through the ring
+  around every glyph and the cyan reads washed out). The `white` style carries **no outline
+  at all** — only the blurred drop shadow — because a black stroke does not belong to that
+  look. The shadow, in both styles, stays soft and semi-transparent: it is a drop, not a
+  second outline. Both styles gate the rendered fill against the requested colour, so the
+  `YCbCr Matrix: None` / TV.709 dimming bug still cannot ship.
 
-Why cyan and not the lime yellow that the Spanish IG-tips niche defaults to: yellow sits next
-to skin and warm-wood interiors on the colour wheel and leans on the shadow to separate, and
-half that niche already uses it. Cyan is complementary to those backgrounds and is already
-this account's caption colour. `--accent-big` renders white lines with only the big one in
-cyan — reach for it when the footage is unusually busy and the full-colour block stops
-reading, not as a matter of taste.
+Why cyan (for that style) and not the lime yellow the Spanish IG-tips niche defaults to:
+yellow sits next to skin and warm-wood interiors on the colour wheel and leans on the shadow
+to separate, and half that niche already uses it. Cyan is complementary to those backgrounds
+and is already that account's caption colour. But cyan only makes sense when the captions are
+the Inter/cyan style; when the video shipped plain white Neue Montreal captions, the cover is
+white too.
 
 ### Choosing The Frame
 
@@ -860,8 +872,13 @@ point (the sizes and `--fit` are what make it fill the frame):
 
 ```powershell
 node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\<video>.mp4" --frame 19.0 `
-  --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --fit
+  --style white --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --fit
 ```
+
+**Pass `--style` to match the video's captions** — `white` for the plain white Neue Montreal
+captions (white fill, no outline, soft drop), `cyan` for Inter/cyan captions (cyan fill,
+black outline). Omitting it defaults to `cyan`; a burn-in job that shipped white captions
+wants `--style white`.
 
 **Always pass `--fit`.** The cover is judged at thumbnail size, so a headline that stops
 short of the margin is a headline set too small — `--fit` grows both sizes until the widest
@@ -985,7 +1002,7 @@ node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "<project>\as
 node "<skill-dir>\scripts\audit-caption-width.mjs" --ass "<project>\renders\source.ass" --font-file "<project>\assets\fonts\NeueMontreal-Bold.otf" --output "<project>\manifests\audits\caption-width.json"
 node "<skill-dir>\scripts\burn-in-captions.mjs" --input "<project>\raws\source.mp4" --ass "<project>\renders\source.ass" --output "<project>\renders\final\source-subs.mp4" --fonts-dir "<project>\assets\fonts"
 node "<skill-dir>\scripts\build-cover.mjs" --scan --input "<project>\raws\source.mp4" --output "<project>\snapshots\cover-scan.png"
-node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\source.mp4" --frame 19.0 --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --fit
+node "<skill-dir>\scripts\build-cover.mjs" --project "<project>" --input "raws\source.mp4" --frame 19.0 --style white --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --fit
 node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 node "<skill-dir>\scripts\capture-overlay-frames.mjs" --project "<project>"
 node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input "<project>\raws\source.mp4" --output "<project>\renders\final\source-overlays.mp4"
@@ -1012,7 +1029,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.
 - `burn-in-captions.mjs`: burn an `.ass` file into a video in a single encode pass, copying the original audio.
-- `build-cover.mjs`: `--scan` writes a head-and-shoulders contact sheet for choosing the cover frame by looking at it; the build mode extracts that frame at native resolution and composes the house headline onto it. Takes the headline as repeated `--line`s, sets the words wrapped in `*asterisks*` at the big size so the emphasis lands per word rather than per line, places the single block with `--anchor top|center|bottom`, and with `--fit` grows the type until the widest line fills the usable width (`--small-size`/`--big-size` set the starting ratio). Gates text width against the real font metrics, verifies the rendered fill colour against the requested hex, and reports whether the block survives the profile grid's centred square crop. The legacy `--top/--big/--bottom` form still builds the fixed three-line block.
+- `build-cover.mjs`: `--scan` writes a head-and-shoulders contact sheet for choosing the cover frame by looking at it; the build mode extracts that frame at native resolution and composes the house headline onto it. Takes the headline as repeated `--line`s, sets the words wrapped in `*asterisks*` at the big size so the emphasis lands per word rather than per line, places the single block with `--anchor top|center|bottom`, and with `--fit` grows the type until the widest line fills the usable width (`--small-size`/`--big-size` set the starting ratio). `--style white|cyan` picks the treatment to match the video's captions: `white` = white fill, no outline, soft blurred drop (Neue Montreal / all-white captions); `cyan` = cyan fill + opaque black outline (Inter/cyan captions), default. Gates text width against the real font metrics, verifies the rendered fill colour against the requested hex, and reports whether the block survives the profile grid's centred square crop. The legacy `--top/--big/--bottom` form still builds the fixed three-line block.
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
