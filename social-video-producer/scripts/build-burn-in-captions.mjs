@@ -20,7 +20,9 @@ function usage() {
   node build-burn-in-captions.mjs --transcript <words.json> --output <captions.ass>
       [--font-file <font.ttf>]       defaults to the bundled Neue Montreal Bold
       [--font-name "<family>"]        auto-detected from the TTF name table when omitted
-      [--size 104] [--outline 7] [--shadow 5]
+      [--size 104] [--outline 0] [--shadow 5] [--blur 2.5]
+                                    house style is white text with NO hard keyline — just a
+                                    soft blurred drop shadow. Pass --outline N for a keyline.
       [--primary "#FFFFFF"] [--accent "<hex>"]   accent defaults to primary (all-white); pass --accent to highlight the spoken word
       [--video-width 1080] [--video-height 1920]
       [--margin-lr 120] [--margin-bottom 500]
@@ -55,7 +57,7 @@ accent-mode=keyword  only the words listed in --accent-terms ever turn accent co
 function parseArgs(argv) {
   const args = {};
   const numeric = new Set([
-    '--size', '--outline', '--shadow', '--video-width', '--video-height',
+    '--size', '--outline', '--shadow', '--blur', '--video-width', '--video-height',
     '--margin-lr', '--margin-bottom', '--max-words', '--gap-cut', '--hold',
     '--fade-ms', '--rise-px', '--rise-ms',
   ]);
@@ -159,8 +161,12 @@ function main() {
   const videoHeight = args.videoHeight || 1920;
   const marginLr = args.marginLr ?? 120;
   const marginBottom = args.marginBottom ?? 500;
-  const outline = args.outline ?? 7;
+  // House style: white text, NO hard keyline (outline 0) — depth comes from a soft blurred
+  // drop shadow, the same treatment as the reference caption look. A black keyline around
+  // every word was the wrong style. Pass --outline N to bring a keyline back.
+  const outline = args.outline ?? 0;
   const shadow = args.shadow ?? 5;
+  const blur = args.blur ?? 2.5;
   const primary = args.primary || '#FFFFFF';
   // House default is all-white: the accent only shows when --accent is passed.
   const accent = args.accent || primary;
@@ -215,11 +221,12 @@ function main() {
   const accentTag = `{\\c${assColour(accent)}}`;
   const baseYUsed = new Set();
   // Precompute the tag builders for a given baseline; called once per chunk.
+  const blurTag = blur > 0 ? `\\blur${blur}` : '';
   const tagsFor = (baseY) => {
     baseYUsed.add(baseY);
     return {
-      enter: `{\\an2\\move(${baseX},${baseY + risePx},${baseX},${baseY},0,${riseMs})\\fad(${fadeMs},0)}`,
-      static: `{\\an2\\pos(${baseX},${baseY})}`,
+      enter: `{\\an2\\move(${baseX},${baseY + risePx},${baseX},${baseY},0,${riseMs})\\fad(${fadeMs},0)${blurTag}}`,
+      static: `{\\an2\\pos(${baseX},${baseY})${blurTag}}`,
     };
   };
   const defaultBaseY = videoHeight - marginBottom;
@@ -285,7 +292,7 @@ YCbCr Matrix: TV.709
 
 [V4+ Styles]
 Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
-Style: Cap,${fontName},${size},${assStyleColour(primary)},${assStyleColour(primary)},&H00101010,&H80000000,0,0,0,0,100,100,0,0,1,${outline},${shadow},2,${marginLr},${marginLr},${marginBottom},1
+Style: Cap,${fontName},${size},${assStyleColour(primary)},${assStyleColour(primary)},&H00101010,&H4B000000,0,0,0,0,100,100,0,0,1,${outline},${shadow},2,${marginLr},${marginLr},${marginBottom},1
 
 [Events]
 Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
@@ -303,6 +310,9 @@ Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
     fontNameUsed: fontName,
     reveal,
     accentMode,
+    outline,
+    shadow,
+    blur,
     words: words.length,
     chunks: chunks.length,
     events: events.length,

@@ -451,7 +451,7 @@ The source's native resolution is the floor for the deliverable, always. A 2160x
 - The `1080x1920` in this document is the *default composition canvas* for videos this skill generates from scratch, not a ceiling imposed on footage the user shot. When the user supplies the video, its own dimensions are the target.
 - Scale only when the user explicitly asks for a specific smaller size, and only inside an already-budgeted encode pass — never as an extra pass.
 - Consequently, verify the burn against the SOURCE dimensions: `verify-render.mjs --expect-width <source-width> --expect-height <source-height>`, read from ffprobe, not from a hardcoded 1080x1920.
-- Caption geometry is expressed against the 1080-wide house design, so scale every caption dimension by `sourceWidth / 1080` before building the `.ass`: at 2160 wide that means `--size 208 --outline 14 --shadow 10 --margin-lr 240 --margin-bottom 1000`. Passing the 1080 numbers onto a 4K frame renders captions at half their intended size.
+- Caption geometry is expressed against the 1080-wide house design, so scale every caption dimension by `sourceWidth / 1080` before building the `.ass`: at 2160 wide that means `--size 208 --outline 0 --shadow 10 --blur 5 --margin-lr 240 --margin-bottom 1000`. Passing the 1080 numbers onto a 4K frame renders captions at half their intended size. **`--outline 0`**: the house caption style has NO hard black keyline — white text with a soft blurred drop shadow, the reference look. Pass `--outline N` only if a keyline is explicitly wanted.
 
 5. Assemble final variants.
 
@@ -593,9 +593,9 @@ For a keyword-only highlight (only hand-picked terms ever get the accent), add `
 node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.approved.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --video-width <source-width> --video-height <source-height> --size 104
 ```
 
-With no style flags this is the house default: Neue Montreal Bold, all white, one word at a time. Only add colour when the user asks for it — `--accent "#30D5FF"` (cyan) or `--accent "#2F6FED"` (blue), and `--accent-mode keyword --accent-terms "<key terms>"` on top of that for a keyword-only highlight.
+With no style flags this is the house default: Neue Montreal Bold, all white, one word at a time, **no hard outline** — a soft blurred drop shadow is the only depth (`--outline 0`, on by default; `--blur` softens it). A black keyline around every word is the wrong style. Only add colour when the user asks for it — `--accent "#30D5FF"` (cyan) or `--accent "#2F6FED"` (blue), and `--accent-mode keyword --accent-terms "<key terms>"` on top of that for a keyword-only highlight.
 
-Pass the SOURCE's real dimensions, and scale every caption dimension by `sourceWidth / 1080` — the geometry defaults are expressed against the 1080-wide house design. On a 2160x3840 source that is `--video-width 2160 --video-height 3840 --size 208 --outline 14 --shadow 10 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their intended size, and it passes the width gate while doing it, because the gate measures against the same wrong width.
+Pass the SOURCE's real dimensions, and scale every caption dimension by `sourceWidth / 1080` — the geometry defaults are expressed against the 1080-wide house design. On a 2160x3840 source that is `--video-width 2160 --video-height 3840 --size 208 --outline 0 --shadow 10 --blur 5 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their intended size, and it passes the width gate while doing it, because the gate measures against the same wrong width.
 
 **When the face moves vertically between shots, pass `--zones` instead of relying on one `--margin-bottom`.** Write a JSON array of shot windows, each with its own `marginBottom` chosen so the caption clears that shot's LOWEST chin by a small gap (~70px at 1080-scale, scaled to the source) without floating at the very bottom:
 

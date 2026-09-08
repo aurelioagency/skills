@@ -193,7 +193,7 @@ These rules capture generic production taste and QA decisions established across
   - captions usually belong in the bottom rail;
   - keep them large enough to read;
   - prevent overlap with cards, titles, screenshots, and callouts.
-- Font choice should fit the piece, but readability wins. The house default caption font is Neue Montreal Bold, all white, one word at a time.
+- Font choice should fit the piece, but readability wins. The house default caption is Neue Montreal Bold, all white, one word at a time, with **no hard outline** — depth comes from a soft blurred drop shadow only (the reference caption look). A black keyline around every word is the wrong style; `build-burn-in-captions.mjs` defaults to `--outline 0` and a `--blur`ed shadow for this reason.
 - Use emphasis by color, weight, or motion, not by inserting unnatural spaces between words.
 - Do not add artificial horizontal gaps inside a phrase. Number-word pairs such as `80 preguntas` must read as one phrase.
 - Avoid negative letter spacing and viewport-scaled font sizes. Use stable sizes and responsive constraints instead.
@@ -228,6 +228,7 @@ Everything else in this guide describes captions built as an HTML/GSAP compositi
 - `\pos` and `\move` disable margin-based line wrapping. Any event carrying either tag ignores `MarginL`/`MarginR` for wrapping, so long lines run off the frame. Decide the breaks yourself: measure each line against the real font metrics and insert `\N`.
 - Measure width before encoding, not after. An overflow found in a delivered MP4 costs the entire render.
 - ASS colours are `&HBBGGRR&`, reversed from CSS hex, and style colours carry a leading alpha byte (`&HAABBGGRR&`).
+- **House caption style: white fill, NO outline (`Outline 0`), a soft blurred drop shadow only** (`\blur` on the events + a semi-transparent `BackColour`). This is the reference look. A hard opaque keyline around every word (the old `--outline 7`/`14` default) is the wrong style — do not re-introduce it unless the user asks for a keyline. `build-burn-in-captions.mjs` now defaults to `--outline 0` with `--blur`.
 - On Windows, escape the drive-letter colon inside a filter argument: `ass='C\:/path/captions.ass'`.
 - Bottom-anchored text (`\an2`) grows upward, so a chunk wrapping to two lines keeps its baseline and stays inside the safe zone. Prefer that over shrinking the type to force one line.
 - Copy the original audio stream rather than re-encoding it. The audio was never touched.
