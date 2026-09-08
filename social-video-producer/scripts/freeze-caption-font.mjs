@@ -15,17 +15,14 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BUNDLED_DIR = path.resolve(HERE, '..', 'assets', 'fonts');
 
 // Shipped with the skill so a caption looks the same on every machine instead of
-// inheriting whatever that OS happens to install. Ordered best-first; the first entry
-// is the default. All are SIL Open Font License EXCEPT Neue Montreal, which is a
-// commercial face bundled under Aurelio Agency's own licence (see its .LICENSE.txt).
-const OFL = 'SIL Open Font License 1.1 — licence text copied next to the font.';
+// inheriting whatever that OS happens to install.
+// Ordered best-first; the first entry is the default.
 const BUNDLED = [
-  ['NeueMontreal-Bold.otf', 'Neue Montreal Bold — editorial grotesque, the house default.',
-    'Commercial (Pangram Pangram), bundled under Aurelio Agency licence — see NeueMontreal-Bold.LICENSE.txt. Do not redistribute on its own.'],
-  ['Inter-Black.ttf', 'Inter Black — heavier neutral grotesque, more shout per word.', OFL],
-  ['ArchivoBlack-Regular.ttf', 'Archivo Black — wider and heavier still.', OFL],
-  ['Anton-Regular.ttf', 'Anton — condensed heavy, the classic social-caption look.', OFL],
-  ['BebasNeue-Regular.ttf', 'Bebas Neue — tall condensed caps, fits long words on one line.', OFL],
+  ['NeueMontreal-Bold.otf', 'Neue Montreal Bold — editorial grotesque. The default.'],
+  ['Inter-Black.ttf', 'Inter Black — heavier neutral grotesque, more shout per word.'],
+  ['ArchivoBlack-Regular.ttf', 'Archivo Black — wider and heavier still.'],
+  ['Anton-Regular.ttf', 'Anton — condensed heavy, the classic social-caption look.'],
+  ['BebasNeue-Regular.ttf', 'Bebas Neue — tall condensed caps, fits long words on one line.'],
 ];
 
 function usage() {
@@ -47,7 +44,7 @@ Caption fonts want a heavy weight: at 104px a Regular reads thin against video.`
 
 function bundledFonts() {
   return BUNDLED
-    .map(([file, why, licence]) => ({ file: path.join(BUNDLED_DIR, file), why, licence }))
+    .map(([file, why]) => ({ file: path.join(BUNDLED_DIR, file), why }))
     .filter((entry) => fs.existsSync(entry.file));
 }
 
@@ -196,9 +193,6 @@ async function main() {
   // The frozen file keeps the font's own name; the temp download name never leaks
   // into the project.
   let preferredName = null;
-  // Set when a bundled font is chosen, from its BUNDLED entry, so the recorded
-  // licence is accurate per font instead of assuming OFL.
-  let bundledLicenceLabel = null;
 
   if (args.source && /^https?:\/\//i.test(args.source)) {
     preferredName = decodeURIComponent(path.basename(new URL(args.source).pathname)) || 'caption-font.ttf';
@@ -217,7 +211,6 @@ async function main() {
     sourceFile = chosen.file;
     sourceLabel = `bundled: ${path.basename(chosen.file)}`;
     why = chosen.why;
-    bundledLicenceLabel = chosen.licence || null;
   } else {
     const ranked = rankSystemFonts();
     if (!ranked.length) {
@@ -245,8 +238,7 @@ async function main() {
   let licence = 'UNVERIFIED — check the font licence before publishing or redistributing.';
   if (!args.system && !args.source && fs.existsSync(bundledLicence)) {
     fs.copyFileSync(bundledLicence, `${output}.LICENSE.txt`);
-    // Per-font label from the BUNDLED table; the bundled set is no longer OFL-only.
-    licence = bundledLicenceLabel || 'Bundled font — licence text copied next to the font.';
+    licence = 'SIL Open Font License 1.1 — licence text copied next to the font.';
   }
 
   // Same provenance discipline the skill applies to background music: record where

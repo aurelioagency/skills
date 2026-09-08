@@ -193,7 +193,7 @@ These rules capture generic production taste and QA decisions established across
   - captions usually belong in the bottom rail;
   - keep them large enough to read;
   - prevent overlap with cards, titles, screenshots, and callouts.
-- Font choice should fit the piece, but readability wins. In this project, Inter became the preferred caption font.
+- Font choice should fit the piece, but readability wins. The house default caption font is Neue Montreal Bold, all white, one word at a time.
 - Use emphasis by color, weight, or motion, not by inserting unnatural spaces between words.
 - Do not add artificial horizontal gaps inside a phrase. Number-word pairs such as `80 preguntas` must read as one phrase.
 - Avoid negative letter spacing and viewport-scaled font sizes. Use stable sizes and responsive constraints instead.
@@ -208,11 +208,12 @@ These rules capture generic production taste and QA decisions established across
 
 ### When Stability And Centering Collide
 
-With chunks of more than one word, "existing words stay stable" and "the visible text is actually centered" cannot both hold during a word-by-word reveal. Reserving the chunk's full width keeps the earlier word still but leaves a lone first word rendering off-centre; re-centering on every word keeps it centred but makes the earlier word slide sideways.
+The house default is **one word at a time**: each word is its own chunk, enters centred, holds while spoken, and is replaced. This sidesteps the conflict below entirely.
 
-- **Centering wins.** Default to revealing the whole chunk at once: always centred, never reflowing.
-- Carry emphasis with colour on the words that carry meaning — names, products, numbers — instead of on "whichever word is being spoken". The accent then means something, rather than being a cursor.
-- One-word chunks satisfy both rules and remain a valid choice when the busier rhythm suits the piece.
+If a project overrides to multi-word chunks, "existing words stay stable" and "the visible text is actually centered" cannot both hold during a word-by-word reveal. Reserving the chunk's full width keeps the earlier word still but leaves a lone first word rendering off-centre; re-centering on every word keeps it centred but makes the earlier word slide sideways.
+
+- **Centering wins.** Reveal the whole chunk at once: always centred, never reflowing.
+- Carry any emphasis with colour on the words that carry meaning — names, products, numbers — instead of on "whichever word is being spoken".
 - Re-centering on each new word is never the answer, however well it reads in a still frame.
 
 ## Burned-In Captions (libass/ASS)

@@ -559,25 +559,23 @@ The script reports `lowConfidence` words. Read the transcript from the JSON file
 node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>"
 ```
 
-With no flag this freezes **Neue Montreal Bold**, the skill default, from the fonts bundled in `assets\fonts\`. The licence text is copied next to the frozen file so the project carries its own proof and looks identical on any machine. Neue Montreal is a commercial face bundled under Aurelio Agency's own licence (its `.LICENSE.txt` says so and `freeze-caption-font.mjs` records it accurately); the other four bundled fonts are SIL Open Font License.
+With no flag this freezes **Neue Montreal Bold**, the skill default, from the fonts bundled in `assets\fonts\`, so the project looks identical on any machine.
 
 - `--list` shows the bundled set and the system candidates.
 - `--bundled <name>` picks another bundled font: `inter` (Inter Black — heavier, more shout per word), `archivoblack` (wider and heavier still), `anton` (condensed, classic social), `bebasneue` (tall condensed caps, good for long words).
 - `--system` copies the heaviest sans already installed instead, for a look the bundled set does not cover. Redistribution rights are then unverified, and the record says so.
 - `--source <file-or-direct-url>` freezes a specific font. Direct font file only, never a zip.
 
-Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video; Neue Montreal Bold is the lightest weight that still holds up, chosen for its editorial look — do not "fix" it back to a black weight.
+Caption fonts want a heavy weight. At 104px a Regular reads thin over moving video.
 
-**House default:** Neue Montreal Bold at 104px, chunk reveal, `accent-mode active` — the accent colour moves word to word in sync with the audio (karaoke-style): each word turns colour as it's spoken, then returns to white, while the rest of the chunk stays visible and in place. That is what the scripts produce with no style arguments beyond the accent colour, and the reveal/font/timing choices in it **ship as-is** — they are a decided house style, not a starting point for a menu.
+**House default:** Neue Montreal Bold at 104px, **all white**, **one word at a time** (`--max-words 1`) — each word enters centred, holds while it is spoken, and is replaced by the next. No colour accent. That is what the scripts produce with no style arguments, and the font/reveal/timing choices in it **ship as-is** — they are a decided house style, not a starting point for a menu.
 
-The accent colour itself has two standing options — ask the user which one before the first render of a new project, then reuse that answer for the rest of the project without asking again per segment:
+An accent colour is opt-in, not the default: pass `--accent "<hex>"` to turn the currently-spoken word a colour. Only do this when the user asks for it. When they do, there are two standing options:
 
-1. **Cyan `#30D5FF`** (original default). Best when the caption band sits over dark/medium backgrounds — skin, hair, dark clothing, shadowed interiors. Contrast against black/dark backgrounds ~12:1; against white/light backgrounds it washes out (~1.7:1).
-2. **Blue `#2F6FED`** (option 2). Best when the caption band sits over light/white backgrounds — screen recordings, light UI, bright rooms. Contrast against white ~4.6:1; against black ~5.1:1 — the more balanced of the two options across light and dark backgrounds, at a slightly softer saturation than a pure primary blue.
+1. **Cyan `#30D5FF`**. Best over dark/medium backgrounds — skin, hair, dark clothing, shadowed interiors. Contrast against black/dark ~12:1; washes out over white/light (~1.7:1).
+2. **Blue `#2F6FED`**. Best over light/white backgrounds — screen recordings, light UI, bright rooms. Contrast against white ~4.6:1, against black ~5.1:1 — the more balanced of the two across light and dark.
 
-Look at a couple of representative frames from the actual footage before asking — if the caption band consistently falls over one kind of background, say so and recommend the matching colour rather than posing it as a coin flip. If it's genuinely mixed or unclear from the frames, ask the user directly which of the two to use.
-
-The alternative is `accent-mode keyword` (`--accent-mode keyword --accent-terms "..."`) — only hand-picked key terms ever turn the accent colour, everything else stays white for the whole video. Switch to it only if the user asks for that specific look; do not default to it. `accent-mode` is only meaningful with `reveal=chunk`; with `reveal=word` it is a no-op since word reveal already colours the currently-spoken word.
+For a keyword-only highlight (only hand-picked terms ever get the accent), add `--accent "<hex>" --accent-mode keyword --accent-terms "..."`.
 
 5. **Check placement across every camera framing in the video, not one frame.** Burn the default `.ass` onto real frames and look — but the frames that matter are one per *distinct framing* the video uses. A talking-head video is almost never one static shot: the speaker leans in, a background screen-recording appears and the face drops, a wide "full body" intro cuts to a tight close-up. The caption band is fixed in the `.ass`; the face is not. A band that clears the chin in the intro lands across the mouth the moment the framing tightens.
 
@@ -592,12 +590,10 @@ The alternative is `accent-mode keyword` (`--accent-mode keyword --accent-terms 
 6. Generate the subtitle file.
 
 ```powershell
-node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.approved.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --video-width <source-width> --video-height <source-height> --size 104 --accent "#30D5FF"
+node "<skill-dir>\scripts\build-burn-in-captions.mjs" --transcript "assets\voice\<slug>.approved.json" --output "renders\<slug>.ass" --font-file "assets\fonts\<font>.ttf" --video-width <source-width> --video-height <source-height> --size 104
 ```
 
-Pass `--accent "#2F6FED"` instead when the user picked option 2 (blue) at the accent-colour question above.
-
-`accent-mode` defaults to `active` (karaoke-style, no `--accent-terms` needed). Only add `--accent-mode keyword --accent-terms "<key terms>"` if the user asked for that specific keyword-only look instead.
+With no style flags this is the house default: Neue Montreal Bold, all white, one word at a time. Only add colour when the user asks for it — `--accent "#30D5FF"` (cyan) or `--accent "#2F6FED"` (blue), and `--accent-mode keyword --accent-terms "<key terms>"` on top of that for a keyword-only highlight.
 
 Pass the SOURCE's real dimensions, and scale every caption dimension by `sourceWidth / 1080` — the geometry defaults are expressed against the 1080-wide house design. On a 2160x3840 source that is `--video-width 2160 --video-height 3840 --size 208 --outline 14 --shadow 10 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their intended size, and it passes the width gate while doing it, because the gate measures against the same wrong width.
 
@@ -651,7 +647,7 @@ Give the user the folder link from `folderUrl` before anything else.
 
 ### libass Behaviour That Costs A Render Cycle
 
-- **The font family name is not the file name.** `Inter-Black.ttf` declares the family `Inter Black`; asking for `Inter` makes libass fall back to another font *silently* and the captions render at the wrong weight. `build-burn-in-captions.mjs` reads the family from the TTF name table, so let it auto-detect instead of passing `--font-name` by hand. The default `NeueMontreal-Bold.otf` declares the generic family `Neue Montreal` (weight 700), not `Neue Montreal Bold` — it still renders Bold because it is the only face in the project `assets\fonts\` and the burn always passes `--fonts-dir` at that folder. If a burn ever comes out in a lighter weight, check that `--fonts-dir` points at the project fonts folder and nothing else.
+- **The font family name is not the file name.** `Inter-Black.ttf` declares the family `Inter Black`; asking for `Inter` makes libass fall back to another font *silently* and the captions render at the wrong weight. `build-burn-in-captions.mjs` reads the family from the TTF name table, so let it auto-detect instead of passing `--font-name` by hand.
 - **`\pos` and `\move` disable margin-based wrapping.** Once an event carries either tag, `MarginL`/`MarginR` no longer bound the line and long text runs straight off the frame. Line breaks must be inserted explicitly as `\N`, decided by measuring against the real font metrics.
 - **ASS colour is `&HBBGGRR&`,** the reverse of CSS hex. Reversing it turns the accent into its complement, which is easy to miss on a warm frame.
 - **Escape the Windows drive letter inside a filter argument** (`C\:/path/file.ass`), or ffmpeg reads the colon as the next filter option.
@@ -740,15 +736,13 @@ Caption positioning over video with people:
 - **The caption band follows the face across shots; it is never one fixed Y for a video whose framing changes.** If the chin's vertical position moves materially between shots, a fixed band that clears the face in one shot lands across the mouth in another. For burned-in captions this is what `--zones` on `build-burn-in-captions.mjs` is for (see the Burn-In branch). "Below the face" also means *not* stranded at the very bottom of the frame in the shots where the face rides high — each shot gets a band just below its own chin.
 - Minimum horizontal padding: 120px per side at 1080px width.
 - `overflow: hidden` on every caption container.
-- Chunks of at most 2 words for word-by-word captions; chunk-cut gap threshold: 0.35s (with 3-word chunks and a larger threshold, a chunk can hide before its last word appears).
+- House default is one word at a time (`--max-words 1`). If a project overrides to multi-word chunks, cap at 2 words; chunk-cut gap threshold: 0.35s (with 3-word chunks and a larger threshold, a chunk can hide before its last word appears).
 - The face rule outranks "captions centered in the middle of the screen" in the production guide. In a normal selfie or talking-head shot the face *is* in the middle, so the lower third is the correct answer and the centered-in-frame guidance does not apply. Centered-in-frame is for sections where nothing important sits behind the caption band.
 
-Caption reveal, when stability and centering collide:
+Caption reveal:
 
-- Two rules pull apart with multi-word chunks: existing words must not move when a new word appears, and the visible text must actually look centered. Reserving the chunk's full width holds the first rule but renders a lone first word off-centre; re-centering each state holds the second but makes the earlier word jump sideways.
-- **Centering wins.** Default to chunk-level reveal: the whole chunk enters at once, always centred, never reflowing. Mark emphasis with colour on the words that matter rather than on "the word being spoken".
-- Word-by-word reveal is still correct with one-word chunks, which satisfy both rules at once, at the cost of a much busier rhythm.
-- Never ship the third option — re-centering on every word — however natural it looks in a still frame.
+- **House default: one word at a time, always centred.** Each word is its own chunk, so it enters centred, holds while spoken, and is replaced — no reflow, no lone-word-off-centre problem.
+- If a project overrides to multi-word chunks, two rules pull apart: existing words must not move when a new word appears, and the visible text must actually look centered. Reserving the chunk's full width holds the first but renders a lone first word off-centre; re-centering each state holds the second but makes the earlier word jump sideways. In that case **centering wins** — reveal the whole chunk at once, never word-by-word within a chunk, and never re-centre on every word.
 
 Platform safe zone for TikTok/Reels/Shorts (1080x1920):
 
@@ -1013,7 +1007,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `snapshot-qa.cjs`: capture exact timestamps for visual review.
 - `check-overflow.cjs`: inspect visible DOM boxes for clipped/off-frame text. Browser compositions only — it cannot see burned-in captions.
 - `scan-text-inventory.mjs`: catch leaked metadata strings such as `question hook`.
-- `freeze-caption-font.mjs`: copy a caption font into the project. Defaults to the bundled Neue Montreal Bold (commercial, bundled under Aurelio Agency licence, licence copied alongside and recorded accurately in the `.source.json`); `--bundled inter` gives SIL OFL Inter Black, `--bundled` also takes `archivoblack`/`anton`/`bebasneue`, `--system` takes the heaviest sans installed on the machine, `--source` takes a file or direct URL.
+- `freeze-caption-font.mjs`: copy a caption font into the project. Defaults to the bundled Neue Montreal Bold; `--bundled` also takes `inter`/`archivoblack`/`anton`/`bebasneue`, `--system` takes the heaviest sans installed on the machine, `--source` takes a file or direct URL.
 - `transcribe-media.mjs`: extract speech audio from any video/audio file and produce a word-level transcript, reporting low-confidence words to take to the Transcript Approval Gate.
 - `build-burn-in-captions.mjs`: build an `.ass` subtitle file from an approved transcript, reading the font family from the TTF name table and inserting explicit line breaks measured against the real font metrics.
 - `audit-caption-width.mjs`: pre-encode read-only gate that measures every caption line against the usable width and fails with the offending lines. The burn-in equivalent of `check-overflow.cjs`.

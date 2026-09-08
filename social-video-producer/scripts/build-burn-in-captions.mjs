@@ -21,11 +21,11 @@ function usage() {
       [--font-file <font.ttf>]       defaults to the bundled Neue Montreal Bold
       [--font-name "<family>"]        auto-detected from the TTF name table when omitted
       [--size 104] [--outline 7] [--shadow 5]
-      [--primary "#FFFFFF"] [--accent "#30D5FF"]
+      [--primary "#FFFFFF"] [--accent "<hex>"]   accent defaults to primary (all-white); pass --accent to highlight the spoken word
       [--video-width 1080] [--video-height 1920]
       [--margin-lr 120] [--margin-bottom 500]
       [--zones <zones.json>]         per-shot vertical position; see below
-      [--reveal chunk|word] [--max-words 2] [--gap-cut 0.35] [--hold 0.45]
+      [--reveal chunk|word] [--max-words 1] [--gap-cut 0.35] [--hold 0.45]
       [--accent-mode keyword|active]          which words get the accent colour (default active)
       [--accent-terms "Fable,Haiku,Sonnet"]   accent-mode=keyword: which words get the accent colour
       [--corrections <corrections.json>]      [{ "at": 4.72, "from": "puedes", "to": "podés" }]
@@ -162,9 +162,11 @@ function main() {
   const outline = args.outline ?? 7;
   const shadow = args.shadow ?? 5;
   const primary = args.primary || '#FFFFFF';
-  const accent = args.accent || '#30D5FF';
+  // House default is all-white: the accent only shows when --accent is passed.
+  const accent = args.accent || primary;
   const reveal = args.reveal || 'chunk';
-  const maxWords = args.maxWords || 2;
+  // House default is one word at a time, always centred.
+  const maxWords = args.maxWords || 1;
   const gapCut = args.gapCut ?? 0.35;
   const hold = args.hold ?? 0.45;
   const fadeMs = args.fadeMs ?? 70;
