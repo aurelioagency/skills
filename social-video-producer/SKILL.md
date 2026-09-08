@@ -765,8 +765,10 @@ delivered next to the MP4. **This is not an optional extra and it is not somethi
 about.** A request for subtitles is a request for a publishable post, and the cover is what
 decides whether anyone opens it. Produce it in the same run.
 
-The agent chooses the frame and writes the headline. Do not hand either decision back to the
-user as a question — bring them the result and let them veto it.
+The agent writes the headline. The frame: **if the user supplied a cover image or pointed at
+a specific frame, use exactly that — never swap it for another.** If they did not, the agent
+picks the frame (that silence means "you choose it"). Either way, do not hand the decision
+back as a question — bring the result and let them veto it.
 
 ### House Style (decided; not a menu)
 
@@ -821,18 +823,21 @@ node "<skill-dir>\scripts\build-cover.mjs" --scan --input "raws\<video>.mp4" --o
 ```
 
 The sheet is head-and-shoulders crops at 5 fps, so the mouth is legible. Cell `(row, column)`
-is `t = (row * columns + column) / fps`. Pick a frame with:
+is `t = (row * columns + column) / fps`. **When you are the one choosing the frame** (the
+user gave none), pick one with:
 
 - **mouth closed or a slight smile** — a mid-word open mouth reads as a bad screenshot;
 - eyes to camera;
 - a clean band under the face for the text, clear of hands and props.
 
-**If the user hands you a specific frame, use that frame. Do not swap it for another one.**
+**When the user gave you the frame, you do not get to pick for a clean band — work with
+that frame.** Measure where the chin actually sits (a grid overlay beats eyeballing — the
+chin is usually lower than it looks) and place the block from there.
 
 **The headline never covers the face — not the jaw, not the neck right under it.** If the
-block would touch the face, push it DOWN with `--y-offset` until it clears — onto the chest,
-and over the mic / hands / whatever the person is holding if that is what is down there.
-Text over a prop is fine; text on the face is not. Keep all the lines; just lower the block.
+block would touch the face, push it DOWN with `--y-offset` until the top line clears the
+chin — onto the neck/chest, and over the mic / hands / whatever is down there if that is
+what it takes. Text over a prop is fine; text on the face is not. Keep all the lines.
 
 ### Writing The Headline
 
