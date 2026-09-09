@@ -67,11 +67,13 @@ los temas no es ninguna de las ocho, y eso es normal, no un problema a resolver.
 
 - **La estructura derivada**: la lista de preguntas, en orden, una por placa, aplicada al
   tema puntual.
-- Si se parece a una de las formas de arriba, nombrarla. Es opcional y no cambia nada: es
-  para que el usuario ubique rápido de qué va.
+- Si se parece a una de las formas de arriba, nombrarla. Es opcional.
 
-Va en el mismo mensaje que el split y los ganchos, y se confirma todo junto. Se registra
-en `carousel-brief.md` y en `manifest.json` bajo `content_archetype`.
+**Esto no va al chat como prosa.** Se registra en `carousel-brief.md` y en `manifest.json`
+bajo `content_archetype`. El usuario lo ve convertido en la tabla de la propuesta (*La
+propuesta* en `SKILL.md`): cada `Kicker` es la pregunta que responde esa placa, y el orden
+de las filas es el orden de la estructura. No hay un bloque `Estructura / Por qué / Se
+parece a` separado en el mensaje.
 
 ## Cuándo se corre
 

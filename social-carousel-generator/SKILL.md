@@ -46,10 +46,10 @@ De ahi salen las cuatro consecuencias que hay que tener a mano:
    Listo cuando: el preset activo, el idioma, el footer y el CTA estan explicitos, y el preset no tiene ningun placeholder sin llenar en las secciones que este carrusel usa.
 2. **Entender la fuente y escribir la `Lectura`.**
    Listo cuando: todo el material sale de la fuente que paso el usuario y de ninguna otra (`references/fidelidad.md`), y la `Lectura` — la fuente recontada en lenguaje comun, en prosa — esta escrita **antes** de cualquier gancho o copy (`references/redaccion.md`).
-3. **Arquetipo, split, ganchos y template — todo junto, y se confirma.**
-   Listo cuando: se derivo la estructura con el metodo de `references/content-archetypes.md` sobre la `Lectura`, y el usuario confirmo, redujo o cambio esa estructura, la cantidad de carruseles, **la cantidad de placas**, el gancho y el template, antes de que se escriba un solo slide.
-4. **Escribir la copy y elegir el recurso de cada placa. Gate de aprobacion.**
-   Listo cuando: existe **una sola tabla** con una fila por imagen exportada — portada incluida como fila 1 — y columnas `# · Kicker · Titular · Bajada · Recurso · Extracto de la fuente` (*Copy Approval Gate*); cada titular es corto y entra en dos renglones; cada fila trazada a su oracion de la fuente en la columna de extracto, con la cita de cada cifra; cada fila declara su recurso corrido desde `references/composicion.md` y su asset (o `sin asset`); y el usuario aprobo esa tabla entera, de una, antes de que exista un solo HTML. Nada de una lista de titulares aparte antes ni un bloque de assets aparte despues.
+3. **Preparacion — NO va al chat.** Correr el metodo de `references/content-archetypes.md` sobre la `Lectura`: derivar la estructura (una pregunta por placa), la cantidad de placas y el arquetipo. Resolver el template (si la marca tiene varios y el pedido no lo nombra, esa es la unica pregunta suelta, en una linea).
+   Listo cuando: la estructura, la cantidad de placas y el arquetipo estan en `carousel-brief.md`, y el template esta resuelto. Nada de esto se pega en el chat como prosa.
+4. **La propuesta: un solo mensaje, una sola tabla.**
+   Listo cuando: el mensaje de propuesta es **la tabla y como mucho tres lineas de encabezado**, nada mas suelto (*La propuesta*). Encabezado: `Preset · Template · N carrusel(es) · M placas + CTA`, la pregunta de template si corresponde, y un gancho alternativo si lo hay — una linea cada cosa. Tabla: columnas `# · Kicker · Titular · Bajada · Recurso · Extracto de la fuente`, una fila por imagen exportada, la portada como fila 1 (su titular es el gancho, remate debajo en la misma celda), el CTA como ultima fila. Cada titular corto, en dos renglones; cada fila trazada a su oracion de la fuente en la columna de extracto, con la cita de cada cifra; cada fila con su recurso (corrido desde `references/composicion.md`) y su asset (o `sin asset`). **Nada de `Lectura` en prosa, nada de bloque `Estructura / Por que / Se parece a`, nada de lista de titulares aparte, nada de bloque de assets aparte.** El usuario aprueba o edita la tabla; si cambia el template o la cantidad de placas, se rehace la tabla en el mismo formato — es editar filas, no abrir otro paso.
 5. **Armar el paquete y renderizar.**
    Listo cuando: la carpeta de entrega (`<tema-en-kebab-case>`) tiene los PNG ordenados a `1080x1440`, con el CTA solo si el preset lo pide.
 6. **QA. Los dos scripts, y despues las placas.**
@@ -222,37 +222,27 @@ Scope: this mode is only for carousels that belong to the user or their brand. S
 
 In this mode the target platform is given by the request itself; do not re-ask the platform question. Confirm the brand only if it is not obvious from the original carousel.
 
-## Series Decision
+## La propuesta (un solo mensaje)
 
-Make the best guess for whether the source should become one carousel or a short series.
+La propuesta de un carrusel es **un mensaje con una sola tabla**. No hay un mensaje de "Series Decision" antes, ni un bloque de `Lectura`, ni uno de `Estructura`, ni una lista de ganchos: eso es preparacion y vive en `carousel-brief.md`. Mostrar la propuesta en etapas —split primero, despues ganchos, despues la copy— hace perder tiempo y termina en cambios a mitad de camino. Es un pedido explicito del usuario, registrado.
 
-Then ask for confirmation before rendering:
+El mensaje lleva, en este orden y nada mas:
 
-```text
-I recommend [N] carousel(s):
-1. [title] - [angle]
-2. [title] - [angle]
+1. **Hasta tres lineas de encabezado:**
+   - `Preset: <marca> · Template: <NN> · <N> carrusel(es) · <M> placas + CTA`
+   - Si la marca tiene varios templates vigentes y el pedido no nombra uno, la linea de template es una **pregunta** con la lista corta (una linea por template). Es lo unico que se pregunta suelto.
+   - Un gancho alternativo, **solo si** el patron por default no alcanzo y hay una segunda opcion real. Una linea.
+2. **La tabla**, con las columnas y reglas de *Copy Approval Gate*: `# · Kicker · Titular · Bajada · Recurso · Extracto de la fuente`, todas las filas, portada incluida como fila 1 (titular = gancho, remate debajo en la misma celda), CTA como ultima fila.
 
-Confirm, reduce, or change the split?
-```
+El arquetipo, la estructura y la `Lectura` **no se pegan en el chat**: se registran en `carousel-brief.md` y en `manifest.json > content_archetype`. El usuario los ve reflejados en la tabla — la columna `Kicker` es la pregunta que responde cada placa, la columna `Extracto` es la trazabilidad a la fuente.
 
-Include the two hook options per carousel (see Hooks), **el arquetipo narrativo** and **el template** in the same confirmation message, so archetype, split, hooks and template get approved together.
+**Si el split da mas de un carrusel:** la primera linea del encabezado lo dice (`2 carruseles`) y va **una tabla por carrusel**, cada una completa. No se describe en prosa "carrusel 1 tal angulo, carrusel 2 tal otro" y se espera un ok: van las dos tablas.
 
-**El template se pregunta acá, y no se asume.** Es lo único del preset que no se deduce del material (ver *Template Resolution*): una marca con varios templates vigentes no tiene un "default seguro", y arrancar a componer con el equivocado tira el trabajo entero, porque cada template tiene sus propias piezas y su propia paleta. Si el pedido ya nombra uno, se usa ese y no se pregunta. Si no, va la lista de los que tiene la marca, con una línea de qué es cada uno.
+**La cantidad de placas la puede fijar la estructura.** Tutorial es un paso por placa, listicle un item por placa: ahi la cuenta la da el material. Un proceso de 12 pasos son dos carruseles, porque el techo de 10 imagenes no se mueve. El numero va en el encabezado; el usuario lo cambia editando, y se rehace la tabla.
 
-Anunciar el template como supuesto —"sigo con el 01 salvo que digas otro"— **no cuenta como preguntarlo**: deja la decisión hecha y le pasa al usuario el costo de deshacerla, y arrancar con el template equivocado termina en un carrusel rehecho entero.
+**Una vez que el usuario aprueba la tabla, no se recorta ni se cambia nada por cuenta propia.** Si aparece un motivo para acortar, se dice y decide el usuario.
 
-La estructura sale de correr el metodo de `references/content-archetypes.md` sobre la `Lectura`: que quiere saber alguien sobre esto, y en que orden lo preguntaria. Esas preguntas son las placas. Su salida son tres lineas, y van antes del split:
-
-```text
-Estructura: [las preguntas, en orden, una por placa]
-Por que: [por que alguien preguntaria eso, y en ese orden]
-Se parece a: [una de las formas de content-archetypes.md, o "ninguna" — es opcional]
-```
-
-**La estructura puede fijar la cantidad de slides.** Tutorial es un paso por slide y listicle un item por slide: ahi la cuenta la da el material, no una eleccion. Si un proceso tiene 12 pasos son dos carruseles, porque el techo de 10 imagenes no se mueve.
-
-**State the slide count you are proposing for each carousel, and why that number** — it is part of what the user is confirming here, and it is far cheaper to change now than after the copy is drafted. Size and the text budget per slide are fixed by the skill; the count is not. See Format, length and density below.
+**El template no se asume.** Si la marca tiene varios y el pedido no lo nombra, la linea de template del encabezado es una pregunta. Anunciarlo como supuesto —"voy con el 01 salvo que digas otro"— no cuenta: arrancar con el equivocado tira el trabajo, porque cada template tiene sus piezas y su paleta.
 
 ## Format, length and density
 
@@ -326,9 +316,9 @@ existiendo con el contenido que si hay, en el recurso que corresponda.
 
 ### El alcance aprobado no se reduce por tu cuenta
 
-La cantidad de placas se confirma con el usuario en *Series Decision*, junto al arquetipo
-y al gancho. **Despues de eso no se recorta**, ni por una limitacion del template, ni por
-falta de material, ni por nada.
+La cantidad de placas se confirma con el usuario en la tabla de *La propuesta*. **Despues
+de que la aprueba no se recorta**, ni por una limitacion del template, ni por falta de
+material, ni por nada.
 
 Si aparece un motivo real para acortar, se dice y decide el usuario. Entregar menos de lo
 aprobado y explicar el motivo al final no es avisar: es hacerlo y despues contarlo.
@@ -392,6 +382,10 @@ Los dos patrones, la estructura de las dos lineas, los criterios de calidad y el
 del gate estan en **`references/redaccion.md`**.
 
 ## Copy Approval Gate
+
+Esta tabla **es la propuesta entera** (ver *La propuesta*): no hay un mensaje de split /
+estructura / ganchos antes, y la `Lectura` no se pega en el chat. El unico texto fuera de
+la tabla son las tres lineas de encabezado que describe *La propuesta*.
 
 La propuesta de copy es **una sola tabla, entregada una vez, completa**. Nada suelto y nada
 en etapas: ni una lista de titulares aparte antes, ni un bloque de assets aparte después.

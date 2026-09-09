@@ -111,22 +111,19 @@ Both lines are centered, and both must be short enough to hold the typography fl
 
 The cover also carries one simple graphic. A cover that is only type reads as a title card, not as a hook — see the preset for the default pattern. Ese grafico es lo que reemplaza al parrafo: cuando la portada se queda corta de contenido, lo que le falta es grafico, no texto. Como se compone la portada —escala del titular, el separador, el centrado, el aire— esta en *La portada* en `references/proporcion.md`.
 
-### Approval gate
+### Dónde va el gancho
 
-Draft up to two hook options (A and B) per carousel. Present them together with the split confirmation, each with a one-line rationale, and recommend one. Never draft the remaining slides or render anything before the user picks, edits, or replaces a hook.
+El gancho es la **fila 1 de la tabla de la propuesta** (*La propuesta* en `SKILL.md`): el
+titular de la portada es el setup, y el remate va en la misma celda, debajo. No hay un
+bloque de "Hook A / Hook B" aparte ni un mensaje de confirmación previo.
 
-**Si el patrón por default —el tema + qué es— resuelve el gancho, va uno solo y se dice por qué.** Fabricar una segunda opción para llenar el molde produce justo lo que hay que evitar: una línea rebuscada puesta al lado de una que ya estaba bien, que además hace dudar de la buena.
+**Si el patrón por default —el tema + qué es— resuelve el gancho, va ese y listo.** Si no
+alcanzó y hay una segunda opción real, va **una sola línea** en el encabezado de la
+propuesta con la alternativa —no un bloque—. Fabricar una segunda opción para llenar un
+molde produce justo lo que hay que evitar: una línea rebuscada al lado de una que ya
+estaba bien, que además hace dudar de la buena.
 
-```text
-Carousel 1 - [title]
-Hook A:
-[setup line]
-[twist line]
-Hook B:
-[setup line]
-[twist line]
-Recommendation: [which and why, one line]
-```
+Nunca se dibuja una placa ni se renderiza nada antes de que el usuario apruebe la tabla.
 
 ### Quality criteria
 
