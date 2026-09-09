@@ -26,6 +26,9 @@ window.CAROUSEL = {
   brand: 'La Casa de Aurelio',
   // Firma del cartucho. Sale de aca, no del HTML.
   footerBrand: 'aurelioagency.com',
+  // Quien firma el dibujo (celda "DIBUJO" del cartucho). Valor por defecto de La Casa:
+  // NO se pregunta carrusel a carrusel. Otra marca lo pisa desde su preset.
+  footerAuthor: '@ing.gustavopaz',
 
   // Excepciones de layout DOCUMENTADAS. Vienen de fabrica en este template y NO se
   // sacan. Decididas por el usuario el 2026-08-25:

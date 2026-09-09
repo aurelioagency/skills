@@ -241,6 +241,32 @@ Estas reglas valen para **cualquier template**. Como las cumple cada uno esta en
   `02-editorial-oscuro-v2` (techo 132px contra 104px de contenido). En esos templates lo
   que distingue la portada es el centrado, el remate en otra familia y el grafico. Antes de
   dar por perdido el salto, medilo — no lo supongas por la pinta de la fuente.
+
+- **El titular de portada se mide contra el template ANTES de ponerlo en la tabla de la
+  propuesta.** Es un render rapido: el titular, el `hsize` que lo hace llenar el ancho util,
+  y contar renglones y alto. Poner en la tabla un titular que despues no entra —y peor,
+  "resolverlo" recortando palabras que el usuario ya aprobo— es el error que esta regla
+  existe para cortar. Cuando el titular aprobado no entra al cuerpo de diseño:
+  - **Primero, layout**: mas renglones, `hsize` mayor, o portada **solo titular** ocupando
+    el lienzo entero (cada template dice en su `estilo.md` como lo hace; el `05` tiene la
+    clase `cover-title-only`).
+  - **Recortar el titular necesita el OK del usuario.** Se le propone el recorte; no se
+    aplica y se avisa despues.
+
+  Referencia de largo por template (cuerpo de contenido / cuerpo de portada, aprox., en
+  Barlow Condensed / Archivo Black / etc. — medido, no estimado):
+
+  | Template | Titular de contenido | Titular de portada |
+  |---|---|---|
+  | `01-editorial-oscuro` | Archivo Black, ~2 renglones | techo 90px — casi no despega del de contenido; distingue con centrado + remate + grafico |
+  | `02-editorial-oscuro-v2` | Archivo 104px, mayúsculas, **~22 caracteres en 2 renglones** | techo 132px |
+  | `03-cuaderno-de-taller` | manuscrita, 2–3 renglones | — |
+  | `04-plano-en-negativo` | Space Grotesk por peso | — |
+  | `05-plano-de-taller` | Barlow Condensed 104px, mayúsculas, 3 renglones (`min-height` fijo) | techo 220px, `hsize` medido; titular largo → `cover-title-only` (lienzo entero) |
+  | `06-handmade` | dos manuscritas | — |
+
+  Las celdas con `—` todavia no estan medidas: medilas la primera vez que un carrusel use
+  ese template y completá la fila.
 - **La mitad de arriba del lienzo es del titular**, y el separador —regla, filete, cota,
   lo que el template use— cae en la mitad exacta. Es lo que hace que la portada se lea
   distinta de un vistazo, antes de leer una palabra.

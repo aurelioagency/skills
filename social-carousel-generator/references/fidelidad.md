@@ -78,3 +78,19 @@ For source material, extract one to three shareable angles. Do not summarize the
 - **Every fact on a slide comes from the same passage.** An example borrowed from another section, dropped onto a slide about a specific company, reads as that company's example. That is misattribution even when both facts are true.
 - **Name the action the source describes.** *"After enabling retained reasoning"* is enabling, not implementing: a checklist item that says "guardá lo que el modelo pensó" invents manual work that does not exist.
 - **Body copy is sentences, not notes.** Two fragments without a subject ("Encontrar datos difíciles en la web. La misma prueba, tres meses después.") read as an outline. If a line has no verb and no subject, it is not finished.
+
+## El dato central del carrusel tiene que quedar legible
+
+Si el carrusel trata de un cambio con **fecha** (entra en vigencia el X), de un **precio**,
+o de una **cifra** de la que depende todo el tema, ese dato tiene que leerse en al menos una
+placa — no escondido en un renglón de detalle chico. Es parte de contar el tema con
+fidelidad: un carrusel sobre "esto cambia el 1 de octubre" que nunca dice "1 de octubre"
+está incompleto.
+
+Se chequea en dos momentos:
+
+- **Al derivar la estructura**: la placa que carga ese dato existe y es una de las que se
+  proponen.
+- **Cuando el usuario edita el split** — si pide eliminar o fusionar la placa que tenía el
+  dato central, **avisar en la misma respuesta** que con eso el dato se pierde, y proponer
+  dónde reubicarlo. No se elimina en silencio y se descubre en el render.

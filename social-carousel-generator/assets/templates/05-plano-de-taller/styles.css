@@ -144,6 +144,11 @@ h2 { font-size: 104px; }
   width: 100%;
   margin-top: 48px; margin-bottom: 10px;
 }
+/* Portada SOLO titular (sin grafico): el titular usa el lienzo entero, centrado, en vez
+   de quedar clavado en la mitad de arriba. Para un titular largo que no entra al cuerpo
+   de diseno en la mitad superior — el arreglo es layout, no recortar palabras. */
+.s-cover.cover-title-only .head { flex: 1; justify-content: center; }
+.s-cover.cover-title-only h1 { min-height: 0; }
 .rule i {
   width: 14px; height: 14px; flex: none;
   border-left: var(--fina) solid var(--azul);

@@ -20,6 +20,10 @@ Use this preset when the user asks for La Casa de Aurelio, Agencia Aurelio, Aure
 - Tamaño y densidad de texto **no se definen acá**: son reglas de la skill, iguales para toda marca. Están en `SKILL.md`, sección *Format, length and density* — un solo tamaño `1080x1440` y de 120 a 220 caracteres por slide de contenido. La Casa no las pisa.
 - **Largo habitual de La Casa: 7 a 10 imágenes exportadas** (6 a 9 slides de contenido más el CTA). Esto es formato de marca, no una regla de la skill: el techo de 10 lo pone `SKILL.md` y no se toca, pero el piso de 6 es de acá, porque los temas que publica La Casa —papers, procesos, comparativas— casi siempre necesitan separar afirmación de evidencia. Si un carrusel puntual no da para tanto, sale más corto: nunca se rellena para llegar al piso.
 - Language: Spanish by default.
+- **Firma del cartucho / pie**: `aurelioagency.com` en la celda de marca. En los templates
+  que llevan un cartucho ISO con celda de autor (hoy el `05`), la firma de autor es
+  `@ing.gustavopaz` — **es un default de la marca, no se pregunta carrusel a carrusel**. Vive
+  también en el `slide-data.js` de fábrica de esos templates.
 - **Voz: un ingeniero que enseña.** Un profesional con vocabulario que sabe explicarle a
   cualquiera, sin bajarle el nivel al vocabulario. Son tres cosas y van las tres juntas:
   - **Redacta bien.** Oraciones enteras, con sujeto y verbo, sin relleno ni frases hechas.
@@ -202,6 +206,22 @@ In Adaptation Mode this list outranks the source PNGs: transcribe the copy, take
 - The CTA frame carries only the counter pill (its final number) — no brand line and no swipe prompt. Its own `La Casa de Aurelio` signature stays part of the CTA artwork.
 
 ## Fixed CTA
+
+> **Todo lo que sigue está escrito para el template `01-editorial-oscuro`, cuyo CTA es un
+> PNG fijo.** Del `02` al `06`, el CTA es una **placa HTML** que dibuja el propio template
+> (`type: 'cta'` en `slide-data.js`). Lo que NO cambia entre templates:
+>
+> - **El copy.** Variante normal: `Guardá este post` / `y seguime para más`. Variante
+>   comentario: `Comenta AURELIO` / `y te enviamos la skill por DM`. Es constante de marca:
+>   va textual en el `headline` y el `lede` de la placa `cta`, sin reformular, sea cual sea
+>   el template.
+> - **La marca en el cierre.** La placa de cierre lleva `La Casa de Aurelio` visible
+>   (arriba a la derecha en el `05`; dentro del arte del PNG en el `01`). No se escribe un
+>   rótulo genérico tipo "CIERRE".
+> - **La variante** se deduce del carrusel igual que abajo, no se pregunta.
+>
+> No se ofrece diseñar ni rediseñar el CTA de ningún template mientras este preset esté
+> activo.
 
 La Casa tiene el frame de CTA fijo activado, en **dos variantes**. **No se pregunta cuál va: se deduce del carrusel.**
 

@@ -43,7 +43,10 @@ const fig = (f) => f ? window.FIGURES.figure(f.id, f.px || 120, f.trama, '#edeae
 function tab(s, i, total) {
   const n = String(i + 1).padStart(2, '0');
   const t = String(total).padStart(2, '0');
-  return `<div class="tab"><span>${n} / ${t}</span><span>${s.tab}</span></div>`;
+  // La placa de cierre lleva SIEMPRE el nombre de la marca arriba a la derecha,
+  // no un rotulo generico. Sale de slide-data.js (`brand`), no se escribe por slide.
+  const right = s.type === 'cta' ? (window.CAROUSEL.brand || s.tab) : s.tab;
+  return `<div class="tab"><span>${n} / ${t}</span><span>${right}</span></div>`;
 }
 
 // Cartucho ISO 7200. Las celdas salen de slide-data.js; la ultima es la firma y
@@ -207,7 +210,11 @@ function render(s, i, total) {
         </div>
         ${s.lede ? `<div class="lede">${s.lede}</div>` : ''}
       </div>
-      ${s.secciones ? secciones(s) : (s.ficha ? ficha(s) : corte(s))}`;
+      ${s.secciones ? secciones(s) : (s.ficha ? ficha(s) : (s.a ? corte(s) : ''))}`;
+    // Sin `secciones`/`ficha`/`a`: portada SOLO titular. Es valido cuando el titular
+    // es largo y ocupa el lienzo entero (ver estilo.md > La portada). El titular
+    // corto que deja aire se completa con un grafico real —`secciones`, `corte`,
+    // `ficha`, o una pieza nueva—, nunca con dos cajas vacias.
   }
 
   if (s.type === 'nodos') inner = `${head(s, true)}${nodos(s.nodos)}${userImg(s)}`;
@@ -231,7 +238,10 @@ function render(s, i, total) {
       </div>`;
   }
 
-  return `<div class="slide s-${s.type}">
+  // Portada sin grafico: el titular ocupa el lienzo entero (ver estilo.md > La portada).
+  const titleOnly = s.type === 'cover' && !s.secciones && !s.ficha && !s.a;
+
+  return `<div class="slide s-${s.type}${titleOnly ? ' cover-title-only' : ''}">
     <div class="grid"></div>
     ${tab(s, i, total)}
     ${inner}

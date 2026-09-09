@@ -81,6 +81,28 @@ valen para todos los templates. Lo que este estilo resuelve distinto:
 - **Las `secciones` van a 34px, en negrita y en tinta plena.** A 26px y en gris se leian
   como un pie de pagina, y son el grafico de la portada.
 
+### Titular largo vs titular corto (2026-09-09)
+
+El titular aprobado **no se recorta para que entre**. Segun su largo:
+
+- **Titular largo** — no entra al cuerpo de diseño en la mitad de arriba. Entonces la
+  portada va **solo titular**, ocupando el lienzo entero: sin `secciones`, sin `corte`,
+  sin `ficha`. El `render()` le pone la clase `cover-title-only` y el titular se centra en
+  todo el alto (`.head { flex: 1 }`, `h1 { min-height: 0 }`). El `hsize` se sube hasta que
+  llena el ancho útil con la mayor cantidad de renglones que quepan a lo alto. Es una
+  portada válida: titular + cota, nada más.
+- **Titular corto** — deja aire. Ahí sí va un gráfico **real** que ocupe ese aire:
+  `secciones` (bloques del tema), `corte` (dos magnitudes con altura de dato), `ficha`, o
+  una pieza nueva. **Nunca dos cajas vacías con una palabra adentro** para "no dejar el
+  lugar vacío": eso no dice nada y ensucia. Si no hay un gráfico que aporte, el titular se
+  agranda y se usa la portada solo-titular.
+
+### La placa de cierre lleva la marca
+
+`tab()` fuerza, para `type === 'cta'`, el nombre de la marca (`window.CAROUSEL.brand`)
+arriba a la derecha — no un rótulo escrito por slide. El copy del cierre (titular + lede)
+sale del preset de la marca, igual para cualquier template.
+
 La consistencia de serie de abajo **no aplica a la portada**: su arranque, su escala y su
 eje son propios por diseno, y `audit-serie.mjs` la deja fuera de la comparacion.
 

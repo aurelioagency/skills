@@ -53,7 +53,19 @@ if (!count) {
   process.exit(1);
 }
 
-if (!auditOnly) fs.mkdirSync(outDir, { recursive: true });
+if (!auditOnly) {
+  fs.mkdirSync(outDir, { recursive: true });
+  // Borrar los PNG numerados que ya esten en outDir antes de re-renderizar. En Windows,
+  // un PNG abierto por un visor (o recien escrito) puede dejar el archivo bloqueado y
+  // `writeFileSync` tira `UNKNOWN: open`; sobrescribir sobre el borrado lo evita, y ademas
+  // deja la carpeta sin PNG viejos si el carrusel se acorto.
+  for (const f of fs.readdirSync(outDir)) {
+    if (/^\d{2}\.png$/.test(f)) {
+      try { fs.rmSync(path.join(outDir, f), { force: true }); }
+      catch { try { fs.rmSync(path.join(outDir, f), { force: true, maxRetries: 5, retryDelay: 100 }); } catch {} }
+    }
+  }
+}
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });

@@ -434,6 +434,34 @@ recurso y asset juntos. Cambiar algo en esta etapa no cuesta nada; una vuelta de
 después, sí. Renderizar antes de este gate malgasta trabajo y esconde los problemas de copy
 y de asset adentro de imágenes, donde son más lentos de ver y de arreglar.
 
+### La copy aprobada se vuelca a `slide-data.js` textual
+
+Aprobada la tabla, cada `Titular` y cada `Bajada` van a `slide-data.js` **palabra por
+palabra**, sea cual sea el template. El template solo decide cómo se dibuja: tipografía,
+color, grilla, qué pieza. **No cambia una palabra** — ni la reescribe "mejor", ni la
+acorta, ni la pasa de oración a fragmento, ni le mueve el registro. La única
+transformación permitida es la que impone la pieza sin tocar el texto: mayúsculas si el
+template titula en mayúsculas, y los `<br>` de corte de línea.
+
+Cuando una pieza reparte la bajada en campos (los nodos de un esquema, los pasos de una
+secuencia), **las partes son las palabras de la bajada** — el marco va de lede y los ítems
+salen textuales de esa misma bajada. No se agrega contenido para llenar un campo (ver *El
+test de la pieza forzada*).
+
+Esto no se verifica con un diff: se hace bien. Un campo de `slide-data.js` que diga algo
+distinto de su celda aprobada es invención, y se reescribe con el texto aprobado antes de
+renderizar. Cambiar el template **nunca** es motivo para tocar la copy: si al resolver el
+template aparece la tentación de reformular, esa es la señal de que se está por romper esta
+regla.
+
+**Un caso aparte: el titular de portada que no entra.** Si el titular aprobado no entra en
+la portada del template al cuerpo de diseño, el arreglo es de layout —más renglones, cuerpo
+mayor, el titular ocupando todo el lienzo (ver *La portada* en `references/proporcion.md`)—
+**no recortar palabras**. Recortar el titular aprobado necesita el OK del usuario, y se le
+propone el recorte, no se aplica y se avisa después. Y esto se mira **antes** de poner el
+titular en la tabla: si ya se sabe que no va a entrar al cuerpo default, se dice en la
+propuesta.
+
 The copy shown here has already passed the filter in *Grounding Technical Terms* (`references/redaccion.md`): every term the argument depends on is readable on its own slide, and nothing is explained that did not need to be.
 
 ## Visual Rules
