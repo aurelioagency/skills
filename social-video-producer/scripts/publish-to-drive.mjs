@@ -27,7 +27,7 @@ function usage() {
                        (default on Windows: "G:\\Unidades compartidas\\Aurelio\\Reels")
       --slug <slug>    override the slug (default: from manifests/project.json or folder name)
       --delivery <dir> the <slug>/ folder deliver-package.mjs wrote; inferred from --project
-      --overwrite      replace the dated post folder if it already exists
+      --overwrite      replace the <slug>/ folder in Reels if it already exists
       --dry-run        print what would be copied, copy nothing
 
 Only run after the user approves the delivery. source/ and output/ are copied verbatim.`);
