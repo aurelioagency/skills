@@ -1,7 +1,12 @@
 #!/usr/bin/env node
-// Gathers the finished deliverables into one clean <project>/entrega folder, so the user
-// gets the three things they actually consume without hunting through renders/, manifests/
-// and assets/.
+// Gathers the finished deliverables into one clean <slug>/ folder split into source/ and
+// output/, so the user gets what they actually consume without hunting through renders/,
+// manifests/ and assets/.
+//
+//   <slug>/source/   every media file the skill produced (final video(s), cover PNG,
+//                    readable transcript, the .ass, plus anything passed with --extra)
+//   <slug>/output/   the post description <slug>-caption.txt, and NOTHING else — this is
+//                    the folder the editor drops the finished cut into later
 //
 // It stays INSIDE the project tree on purpose: this harness only makes a path clickable
 // when it lives under the working directory, so a delivery folder written to Downloads can
@@ -9,6 +14,8 @@
 // the tidy folder costs no extra disk.
 //
 // A deliverable the user cannot find is not delivered. This is the last step of every branch.
+// After the user approves it, publish-to-drive.mjs mirrors this same source/output split
+// into the Aurelio "Reels" shared drive.
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -169,6 +176,10 @@ function main() {
     fs.rmSync(dest, { recursive: true, force: true });
   }
   fs.mkdirSync(dest, { recursive: true });
+  const sourceDir = path.join(dest, 'source');
+  const outputDir = path.join(dest, 'output');
+  fs.mkdirSync(sourceDir, { recursive: true });
+  fs.mkdirSync(outputDir, { recursive: true });
 
   const videos = (args.video.length ? args.video : listFinalVideos(projectDir)).map((p) => path.resolve(projectDir, p));
   if (!videos.length) throw new Error(`No final video found under ${path.join(projectDir, 'renders', 'final')}`);
@@ -183,20 +194,21 @@ function main() {
   const coverPath = args.cover ? path.resolve(projectDir, args.cover) : findCover(projectDir);
 
   const delivered = [];
-  for (const video of videos) delivered.push(placeInto(video, dest));
-  if (coverPath) delivered.push(placeInto(coverPath, dest));
-  delivered.push(placeInto(captionPath, dest));
+  // source/ holds every media file; output/ holds only the caption the user pastes.
+  for (const video of videos) delivered.push(placeInto(video, sourceDir));
+  if (coverPath) delivered.push(placeInto(coverPath, sourceDir));
+  delivered.push(placeInto(captionPath, outputDir));
 
   // The word-level JSON is a build input for the caption pipeline, not something the
   // user asked to receive. It stays in the project; only readable text ships.
-  const textPath = path.join(dest, `${slug}-transcript.txt`);
+  const textPath = path.join(sourceDir, `${slug}-transcript.txt`);
   fs.writeFileSync(textPath, transcriptToText(readWords(transcriptPath)), 'utf8');
   delivered.push(textPath);
 
   for (const extra of args.extra) {
     const resolved = path.resolve(projectDir, extra);
     if (!fs.existsSync(resolved)) throw new Error(`Missing extra file: ${resolved}`);
-    delivered.push(placeInto(resolved, dest));
+    delivered.push(placeInto(resolved, sourceDir));
   }
 
   const opened = args.noOpen ? false : openFolder(dest);
@@ -207,7 +219,7 @@ function main() {
     folder: dest,
     opened,
     files: delivered.map((file) => ({
-      name: path.basename(file),
+      name: `${path.basename(path.dirname(file))}/${path.basename(file)}`,
       sizeBytes: fs.statSync(file).size,
     })),
     reportToUser: opened

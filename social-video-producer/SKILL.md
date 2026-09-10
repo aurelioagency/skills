@@ -38,13 +38,17 @@ Every video this skill produces lives under that one root, named after the skill
 
 **The project slug must be descriptive of the video's actual topic, in kebab-case** — the same rule `social-carousel-generator` uses for its `<tema-en-kebab-case>` delivery folder. Never name the project after the source filename, a date, or any other non-descriptive label (`0824`, `video1`, `final2`, `clip`). Derive the slug from what the video is actually about — the hook, the product, or the main topic — once enough of the script or transcript is known to name it (for script-driven projects, right after parsing the script; for burn-in-captions or contextual-overlays projects, right after the Transcript Approval Gate, since the slug is not knowable before the transcript is read). If a project must be created before the topic is known, use a short placeholder and rename the folder plus every file inside it that carries the slug as soon as the topic is confirmed — never ship a delivery folder or final filename still named after a placeholder.
 
-The root holds two things: one delivery folder per video, named after the video, and a single `.work\` folder where every project's working tree lives out of the way.
+The root holds two things: one delivery folder per video, named after the video and split into `source\` (every media file — final video, cover, transcript, `.ass`) and `output\` (the `<slug>-caption.txt` and nothing else, so the editor has one obvious place to drop the finished cut), and a single `.work\` folder where every project's working tree lives out of the way. Once the user approves the delivery, `publish-to-drive.mjs` mirrors that same `source\` + `output\` split into the Aurelio **Reels** shared drive as `<YYYY-MM-DD>_<slug>_post\` (see **Publish To Drive**).
 
 ```text
 social-video-producer\<script-slug>\           <- DELIVERY: only what the user consumes
-  <slug>-subs.mp4
-  <slug>-caption.txt
-  <slug>-transcript.txt
+  source\                                      <- every media file the skill produced
+    <slug>-subs.mp4
+    <slug>-portada.png
+    <slug>-transcript.txt
+    <slug>.ass                                 (when --extra passes it)
+  output\                                      <- ONLY the post description
+    <slug>-caption.txt
 
 social-video-producer\.work\<script-slug>\     <- the project; the user never has to open it
   source\
@@ -645,6 +649,12 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>" --extra "re
 
 Give the user the folder link from `folderUrl` before anything else.
 
+11. Wait for the user's explicit approval, then publish to the Aurelio **Reels** shared drive. See **Publish To Drive**:
+
+```powershell
+node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
+```
+
 ### libass Behaviour That Costs A Render Cycle
 
 - **The font family name is not the file name.** `Inter-Black.ttf` declares the family `Inter Black`; asking for `Inter` makes libass fall back to another font *silently* and the captions render at the wrong weight. `build-burn-in-captions.mjs` reads the family from the TTF name table, so let it auto-detect instead of passing `--font-name` by hand.
@@ -1020,6 +1030,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 node "<skill-dir>\scripts\capture-overlay-frames.mjs" --project "<project>"
 node "<skill-dir>\scripts\composite-overlays.mjs" --project "<project>" --input "<project>\raws\source.mp4" --output "<project>\renders\final\source-overlays.mp4"
 node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
+node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"   # only after the user approves
 ```
 
 - `init-project.mjs`: create the canonical one-folder project layout and starter manifests without overwriting existing files.
@@ -1046,7 +1057,8 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
-- `deliver-package.mjs`: copy the final video(s), the cover PNG, the post description and a readable plain-text transcript into one descriptively named folder in the user's Downloads, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
+- `deliver-package.mjs`: copy the final video(s), the cover PNG and a readable plain-text transcript into `<slug>\source\`, and the post description into `<slug>\output\`, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
+- `publish-to-drive.mjs`: after the user approves, mirror the `<slug>\source\` + `<slug>\output\` delivery folder into the Aurelio **Reels** shared drive (local Google Drive mount) as `<YYYY-MM-DD>_<slug>_post\`. Never run before approval. `--reels`, `--date`, `--overwrite`, `--dry-run`.
 
 If an existing project still has older local tools such as `render-local.cjs`, `snapshot-qa.cjs`, or `check-overflow.cjs`, those may be used for that project, but migrate repeated behavior back into the bundled scripts.
 
@@ -1077,11 +1089,9 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 
 - It lives inside the project, which lives inside the working directory — that is what makes the links clickable. The script refuses to run under a placeholder slug (`tmp-0826`, `video1`, `final2`), because the whole point is that the user can tell which video is which from the folder name.
 - Large files are hardlinked rather than copied, so the tidy folder costs no extra disk. Editing a delivered file edits the one in `renders\final\` too — they are the same bytes. Re-run with `--overwrite` after a re-render.
-- The folder contains exactly four kinds of thing:
-  - every final video from `renders\final\`;
-  - the cover `<slug>-portada.png`;
-  - the post description `<slug>-caption.txt`;
-  - `<slug>-transcript.txt`, the full transcript as readable wrapped prose.
+- The folder is split into exactly two subfolders:
+  - `source\` — every final video from `renders\final\`, the cover `<slug>-portada.png`, `<slug>-transcript.txt` (the full transcript as readable wrapped prose), and any `--extra` file. This is the raw material an editor works from.
+  - `output\` — the post description `<slug>-caption.txt`, and nothing else. This is where the finished, edited reel gets dropped later, so it stays empty of media until then.
 - **The word-level transcript JSON does NOT ship.** It is a build input for the caption pipeline, not a deliverable. It stays in the project under `assets\voice\`. The same goes for every other intermediate: manifests, audits, snapshots, segment renders, the extracted WAV. A delivery folder is what the user consumes, not a copy of the workspace.
 - Add something else only when the user would actually use it, via `--extra` (the `.ass` when they may want to re-edit subtitles, the attribution text for licensed music).
 - **Hand over clickable links, and know exactly what is clickable.** Three rules learned the hard way:
@@ -1097,8 +1107,22 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
   ````
 
   (`open` on macOS, `xdg-open` on Linux.) When the user asks for "a clickable link to the folder", this is the answer — not an apology about what links cannot do. Reach for a Run block whenever the goal is an action rather than viewing a file.
-- Then, underneath: **one link per file**, relative to the working directory — `[<slug>-subs.mp4](social-video-producer/<slug>/<slug>-subs.mp4)` — and the absolute path as plain text to copy-paste. The script also opens the folder once on its own when it finishes.
+- Then, underneath: **one link per file**, relative to the working directory — `[<slug>-subs.mp4](social-video-producer/<slug>/source/<slug>-subs.mp4)`, `[<slug>-caption.txt](social-video-producer/<slug>/output/<slug>-caption.txt)` — and the absolute path as plain text to copy-paste. The script also opens the folder once on its own when it finishes.
 - The script also opens the folder in the file manager (`--no-open` to skip), which is the only way a folder actually opens for the user.
 - Still send the final video itself through the normal file-sending path so it previews in the conversation. If it is too large to upload, say so plainly and point at the folder.
 
 - Report exact final paths, segment paths when relevant, manifests, HeyGen ids/page URLs, and any remaining risk — after the delivery folder link.
+
+## Publish To Drive (after the user approves)
+
+`deliver-package.mjs` hands the delivery folder to the user for review. It does **not** touch Drive. Only once the user has explicitly approved the video, cover and caption, mirror the delivery folder into the Aurelio **Reels** shared drive:
+
+```powershell
+node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
+```
+
+- The shared drive is mounted locally by Google Drive for desktop, so this is a plain folder copy — Drive syncs it up. On Windows the mount is `G:\Unidades compartidas\Aurelio\Reels`; pass `--reels "<path>"` on another machine.
+- It creates one dated post folder per video, `<Reels>\<YYYY-MM-DD>_<slug>_post\`, with the **same `source\` + `output\` split** the delivery folder has. `--date YYYY-MM-DD` overrides the date (defaults to today, local time); `--overwrite` replaces an existing post folder; `--dry-run` shows what would be copied.
+- The finished, human-edited reel is added to that folder's `output\` later by whoever edits it — this skill only seeds `source\` and the caption.
+- Never run this before approval, and never as part of the same breath as `deliver-package.mjs`. Approval is a separate, explicit go-ahead from the user.
+- Large videos (100 MB+) copy instantly to the local mount but take a few minutes to finish uploading in the background; report that the copy is done and Drive is syncing, don't claim the upload is complete.
