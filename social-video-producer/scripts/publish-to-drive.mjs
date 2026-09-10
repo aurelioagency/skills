@@ -2,11 +2,14 @@
 // Publishes an APPROVED delivery folder to the Aurelio "Reels" shared drive.
 //
 // Run this only after the user has approved the video, cover and caption. It mirrors the
-// exact source/output split that deliver-package.mjs produced into a dated post folder:
+// exact source/output split that deliver-package.mjs produced into a folder named ONLY
+// after the descriptive slug:
 //
-//   <Reels>/<YYYY-MM-DD>_<slug>_post/source/   the media the skill produced
-//   <Reels>/<YYYY-MM-DD>_<slug>_post/output/   <slug>-caption.txt (the editor adds the
-//                                              finished cut here later)
+//   <Reels>/<slug>/source/   the media the skill produced
+//   <Reels>/<slug>/output/   <slug>-caption.txt (the editor adds the finished cut here later)
+//
+// A separate publishing skill renames <slug>/ to the dated <YYYY-MM-DD>_<slug>_post/ form
+// when the content actually goes out on social. This skill does NOT add the date or _post.
 //
 // The shared drive is mounted locally by Google Drive for desktop, so "upload" is a plain
 // folder copy — Drive syncs it. On Windows that mount is:
@@ -22,7 +25,6 @@ function usage() {
 
       --reels <dir>    Reels folder to publish into
                        (default on Windows: "G:\\Unidades compartidas\\Aurelio\\Reels")
-      --date <ymd>     post date, YYYY-MM-DD (default: today, local time)
       --slug <slug>    override the slug (default: from manifests/project.json or folder name)
       --delivery <dir> the <slug>/ folder deliver-package.mjs wrote; inferred from --project
       --overwrite      replace the dated post folder if it already exists
@@ -39,19 +41,12 @@ function parseArgs(argv) {
     else if (item === '--delivery') args.delivery = argv[++i];
     else if (item === '--slug') args.slug = argv[++i];
     else if (item === '--reels') args.reels = argv[++i];
-    else if (item === '--date') args.date = argv[++i];
     else if (item === '--overwrite') args.overwrite = true;
     else if (item === '--dry-run') args.dryRun = true;
     else if (item === '--help' || item === '-h') args.help = true;
     else throw new Error(`Unknown argument: ${item}`);
   }
   return args;
-}
-
-function todayLocal() {
-  const d = new Date();
-  const p = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
 function copyTree(srcDir, destDir, out) {
@@ -114,9 +109,9 @@ function main() {
     throw new Error(`Reels folder not found: ${reels}. Is Google Drive for desktop running / mounted?`);
   }
 
-  const date = args.date || todayLocal();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error(`--date must be YYYY-MM-DD, got "${date}"`);
-  const postFolder = path.join(reels, `${date}_${slug}_post`);
+  // Named after the descriptive slug ONLY. A separate publishing skill renames this to the
+  // dated <YYYY-MM-DD>_<slug>_post form when the content is actually posted to social.
+  const postFolder = path.join(reels, slug);
 
   const exists = fs.existsSync(postFolder);
   if (exists && !args.overwrite && !args.dryRun) {
