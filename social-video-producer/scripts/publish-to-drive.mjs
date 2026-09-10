@@ -28,9 +28,12 @@ function usage() {
       --slug <slug>    override the slug (default: from manifests/project.json or folder name)
       --delivery <dir> the <slug>/ folder deliver-package.mjs wrote; inferred from --project
       --overwrite      replace the <slug>/ folder in Reels if it already exists
+      --keep-work      do NOT delete .work/<slug>/ after publishing (it is deleted by default)
       --dry-run        print what would be copied, copy nothing
 
-Only run after the user approves the delivery. source/ and output/ are copied verbatim.`);
+Only run after the user approves the delivery. source/ and output/ are copied verbatim.
+On success the .work/<slug>/ build tree is deleted — the delivery folder and the Drive copy
+hold everything worth keeping. Pass --keep-work to keep the scratch tree.`);
 }
 
 function parseArgs(argv) {
@@ -42,6 +45,7 @@ function parseArgs(argv) {
     else if (item === '--slug') args.slug = argv[++i];
     else if (item === '--reels') args.reels = argv[++i];
     else if (item === '--overwrite') args.overwrite = true;
+    else if (item === '--keep-work') args.keepWork = true;
     else if (item === '--dry-run') args.dryRun = true;
     else if (item === '--help' || item === '-h') args.help = true;
     else throw new Error(`Unknown argument: ${item}`);
@@ -125,6 +129,7 @@ function main() {
       ok: true, dryRun: true, postFolder, exists,
       note: exists && !args.overwrite ? 'exists; a real run would need --overwrite' : undefined,
       wouldCopy: ['source/', 'output/'],
+      wouldDeleteWork: (!args.keepWork && args.project) ? path.resolve(args.project) : null,
     }, null, 2));
     return;
   }
@@ -132,12 +137,26 @@ function main() {
   copyTree(srcSub, path.join(postFolder, 'source'), files);
   copyTree(outSub, path.join(postFolder, 'output'), files);
 
+  // Publishing means approved, and the delivery folder + Drive copy now hold everything the
+  // user keeps. The .work tree is build scratch (extracted audio, transcripts, manifests,
+  // snapshots, cover frames, the raw copy) plus the final MP4 that is only a hardlink to the
+  // delivery copy — nothing there is worth its gigabyte. Delete it unless --keep-work.
+  let workRemoved = null;
+  if (!args.keepWork && args.project) {
+    const projectDir = path.resolve(args.project);
+    if (path.basename(path.dirname(projectDir)) === '.work' && fs.existsSync(projectDir)) {
+      fs.rmSync(projectDir, { recursive: true, force: true });
+      workRemoved = projectDir;
+    }
+  }
+
   console.log(JSON.stringify({
     ok: true,
     slug,
     postFolder,
     files: files.map(({ name, sizeBytes }) => ({ name, sizeBytes })),
-    note: 'Copied to the local Google Drive mount. Drive for desktop syncs it to the shared drive; large videos may take a few minutes to finish uploading.',
+    workRemoved,
+    note: `Copied to the local Google Drive mount. Drive for desktop syncs it to the shared drive; large videos may take a few minutes to finish uploading.${workRemoved ? ' The .work build tree was deleted (pass --keep-work to keep it).' : ''}`,
   }, null, 2));
 }
 
