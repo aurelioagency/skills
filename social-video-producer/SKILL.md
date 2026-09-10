@@ -38,7 +38,7 @@ Every video this skill produces lives under that one root, named after the skill
 
 **The project slug must be descriptive of the video's actual topic, in kebab-case** — the same rule `social-carousel-generator` uses for its `<tema-en-kebab-case>` delivery folder. Never name the project after the source filename, a date, or any other non-descriptive label (`0824`, `video1`, `final2`, `clip`). Derive the slug from what the video is actually about — the hook, the product, or the main topic — once enough of the script or transcript is known to name it (for script-driven projects, right after parsing the script; for burn-in-captions or contextual-overlays projects, right after the Transcript Approval Gate, since the slug is not knowable before the transcript is read). If a project must be created before the topic is known, use a short placeholder and rename the folder plus every file inside it that carries the slug as soon as the topic is confirmed — never ship a delivery folder or final filename still named after a placeholder.
 
-The root holds two things: one delivery folder per video, named **only** after the descriptive slug and split into `source\` (every media file this skill produced — final video, cover, transcript, `.ass`) and `output\` (the `<slug>-caption.txt` and nothing else, so the editor has one obvious place to drop the finished cut), and a single `.work\` folder where every project's working tree lives out of the way. The user's own untouched originals stay in `.work\<slug>\raws\`; they do **not** ship in `source\`. Once the user approves the delivery, `publish-to-drive.mjs` mirrors that same `source\` + `output\` split into the Aurelio **Reels** shared drive under a folder named only `<slug>\` and then **deletes the whole `.work\<slug>\` tree** — the delivery folder and the Drive copy are all that survive (see **Publish To Drive**). Adding the posting date and the `_post` suffix is a separate publishing skill's job, done when the content actually goes out on social — never here.
+The root holds two things: one delivery folder per video, named **only** after the descriptive slug and split into `source\` (every media file this skill produced — final video, cover, transcript) and `output\` (the `<slug>-caption.txt` and nothing else, so the editor has one obvious place to drop the finished cut), and a single `.work\` folder where every project's working tree lives out of the way. The user's own untouched originals stay in `.work\<slug>\raws\`; they do **not** ship in `source\`. Once the user approves the delivery, `publish-to-drive.mjs` mirrors that same `source\` + `output\` split into the Aurelio **Reels** shared drive under a folder named only `<slug>\` and then **deletes the whole `.work\<slug>\` tree** — the delivery folder and the Drive copy are all that survive (see **Publish To Drive**). Adding the posting date and the `_post` suffix is a separate publishing skill's job, done when the content actually goes out on social — never here.
 
 ```text
 social-video-producer\<script-slug>\           <- DELIVERY: only what the user consumes
@@ -46,7 +46,6 @@ social-video-producer\<script-slug>\           <- DELIVERY: only what the user c
     <slug>-subs.mp4
     <slug>-portada.png
     <slug>-transcript.txt
-    <slug>.ass                                 (when --extra passes it)
   output\                                      <- ONLY the post description
     <slug>-caption.txt
 
@@ -644,10 +643,10 @@ Then extract frames from the FINAL file at several timestamps — at minimum one
 10. Write the post description, then package the delivery. See **Post Description** and **Delivery Package**:
 
 ```powershell
-node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>" --extra "renders\<slug>.ass"
+node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 ```
 
-Give the user the folder link from `folderUrl` before anything else.
+Give the user the folder link from `folderUrl` before anything else. The `.ass` does **not** ship — once the video is approved the subtitles are never re-edited, so it is build scratch that goes with `.work\` at publish.
 
 11. Wait for the user's explicit approval, then publish to the Aurelio **Reels** shared drive. See **Publish To Drive**:
 
@@ -1093,7 +1092,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
   - `source\` — every final video from `renders\final\`, the cover `<slug>-portada.png`, `<slug>-transcript.txt` (the full transcript as readable wrapped prose), and any `--extra` file. Only what this skill produced — the user's own raw originals stay in `.work\<slug>\raws\` and never ship here.
   - `output\` — the post description `<slug>-caption.txt`, and nothing else. This is where the finished, edited reel gets dropped later, so it stays empty of media until then.
 - **The word-level transcript JSON does NOT ship.** It is a build input for the caption pipeline, not a deliverable. It stays in the project under `assets\voice\`. The same goes for every other intermediate: manifests, audits, snapshots, segment renders, the extracted WAV. A delivery folder is what the user consumes, not a copy of the workspace.
-- Add something else only when the user would actually use it, via `--extra` (the `.ass` when they may want to re-edit subtitles, the attribution text for licensed music).
+- Add something else only when the user would actually use it, via `--extra` (e.g. the attribution text for licensed music). The subtitle `.ass` does **not** ship: approved means the subtitles are final and never hand-edited again, so it stays in `.work\` and is deleted at publish.
 - **Hand over clickable links, and know exactly what is clickable.** Three rules learned the hard way:
   - A link works only when its href is a path **relative to the working directory and inside it**. A path that escapes the working directory fails with "outside the working directory", so `../Downloads/...` never works from `Documents`.
   - A `file:///` URL is never clickable here. Do not use one.
