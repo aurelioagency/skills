@@ -30,7 +30,13 @@ dentro del estilo, y si le falta una pieza se agrega — la entrada acá + el bl
 | `pasos` | cabeza estandar + secuencia numerada, un paso por renglon, linea de eje entre pasos | `pasos` = `[{ n, t }]` |
 | `cifras` | cabeza estandar + dos cifras independientes, cada una con rotulo y detalle. Va cuando las dos magnitudes NO se comparan entre si | `cifras` = `[{ n, u, lbl, t }]` |
 | `image` | cabeza estandar + una imagen publicada por la fuente, enmarcada | `img`, `imgTransparent` opcional |
+| `cita` | cabeza estandar + cita textual atribuida (marca de comillas, texto real, linea de eje, atribucion en mono). Rama 8 de `composicion.md`: cuando la fuente lo dice mejor de lo que lo diriamos nosotros. Distinta de `ficha`: esta lleva texto real, no lineas en blanco | `cita` = `{ texto, atr }` |
 | `cta` | titular condensado 116px · línea de cota · bajada · cartucho | `headline`, `ruleWidth`, `lede`, `cartucho` |
+
+**`cita` agregada el 2026-09-12.** `ficha` es una metafora especifica de "una respuesta
+que no se apoya en nada" (nacio para un carrusel sobre alucinaciones); usarla para citar
+texto real de la fuente invertiria su significado. `cita` es la pieza para eso: texto
+legible y atribuido, sin lineas en blanco.
 
 `tone`: `azul` · `naranja` · `normal` · `invert` · `densa`. Los `id` de figura y las
 tramas están en `figures.md`.

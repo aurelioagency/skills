@@ -329,6 +329,25 @@ h2 { font-size: 104px; }
 }
 .cifras .cifra .d { font-family: Barlow, sans-serif; font-size: 36px; line-height: 1.24; }
 
+/* ---------- Componente: cita textual atribuida ---------- */
+
+/* Rama 8 de composicion.md: la fuente lo dice mejor de lo que lo diriamos nosotros.
+   Texto real y atribuido, nunca la metafora en blanco de `.ficha` (esa es "una
+   respuesta sin fuente" — significa lo contrario de una cita textual). */
+.cita { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.cita-mark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600; font-size: 140px; line-height: 0.5; color: var(--azul);
+}
+.cita-texto {
+  font-family: Barlow, sans-serif; font-size: 50px; line-height: 1.32;
+  color: var(--ink); max-width: 900px; text-wrap: pretty;
+}
+.cita-attr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+}
+
 /* ---------- Componente: secciones del tema ---------- */
 
 .secciones { margin-top: auto; margin-bottom: auto; }

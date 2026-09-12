@@ -109,6 +109,17 @@ const ficha = s => `
     <div class="ficha-foot">${s.ficha.foot}</div>
   </div>`;
 
+// Cita textual atribuida. Va cuando la fuente dice algo mejor de lo que lo diriamos
+// nosotros (references/composicion.md, rama 8): texto real, nunca parafraseado.
+// Campos: `cita` = { texto, atr }.
+const cita = s => `
+  <div class="cita">
+    <div class="cita-mark">&ldquo;</div>
+    <div class="cita-texto">${s.cita.texto}</div>
+    <div class="eje" style="margin:20px 0"></div>
+    <div class="cita-attr">${s.cita.atr}</div>
+  </div>`;
+
 const corte = s => `
   <div class="corte diagram">
     <div class="frame">
@@ -221,6 +232,7 @@ function render(s, i, total) {
   if (s.type === 'bars')  inner = `${head(s, true)}${bars(s)}`;
   if (s.type === 'pasos') inner = `${head(s, true)}${pasos(s.pasos)}`;
   if (s.type === 'cifras') inner = `${head(s, true)}${cifras(s.cifras)}`;
+  if (s.type === 'cita') inner = `${head(s, true)}${cita(s)}`;
   // Imagen que publica la fuente: encabezado + la imagen enmarcada. El encuadre sale de
   // userImg(); la tarjeta se achica en vez de empujar el cartucho.
   if (s.type === 'image') inner = `${head(s, true)}${userImg(s)}`;
