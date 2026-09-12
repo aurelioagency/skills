@@ -92,7 +92,7 @@ h2 { font-size: 104px; }
   font-size: 46px;
   line-height: 1.4;
   color: var(--body);
-  max-width: 860px;
+  max-width: 920px;
   text-wrap: pretty;
 }
 .lede .soft { color: var(--muted); }
