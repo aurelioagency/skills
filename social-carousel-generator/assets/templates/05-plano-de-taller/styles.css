@@ -261,6 +261,12 @@ h2 { font-size: 104px; }
 
 .s-cta .body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 30px; }
 .s-cta h2 { font-size: 116px; line-height: 0.92; }
+/* El tab() fuerza el nombre de marca (Title Case, "La Casa de Aurelio") arriba a la
+   derecha en el cierre — pero el resto de la serie tiene sus rotulos en mayuscula
+   real (el string ya viene en caps), y ahi se notaba distinto. Se pasa a mayuscula
+   solo visualmente, sin tocar el string de marca (que se usa igual en la caption y
+   en otros lugares con su casing normal). (2026-09-13) */
+.s-cta .tab { text-transform: uppercase; }
 
 .spacer { flex: 1 1 auto; }
 
@@ -292,11 +298,16 @@ h2 { font-size: 104px; }
 
 /* Mismo ritmo que `nodos`: renglon, linea de eje, renglon. El numero va en mono, del
    ancho de dos digitos, para que los textos arranquen todos en la misma columna. */
+/* La columna del numero/rotulo era flex:0 0 62px — pensada para "1934"/"2000". Un
+   rotulo de dos palabras ("LA PREGUNTA", "SIGLO XIX") no entra ahi: el texto
+   desborda la caja hacia la derecha y el renglon 2 del texto vecino arranca mas
+   lejos que en las filas con numero corto — la serie se lee desalineada. Se
+   ensancho la columna en vez de acortar el rotulo. (2026-09-13) */
 .pasos { display: flex; flex-direction: column; margin-top: auto; margin-bottom: auto; }
 .pasos .paso { display: flex; gap: 34px; align-items: baseline; padding: 26px 0; }
 .pasos .paso .n {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 30px; color: var(--azul); flex: 0 0 62px;
+  font-size: 30px; color: var(--azul); flex: 0 0 150px;
 }
 .pasos .paso .t { font-family: Barlow, sans-serif; font-size: 42px; line-height: 1.28; }
 
@@ -315,14 +326,18 @@ h2 { font-size: 104px; }
 
 /* ---------- Componente: dos cifras independientes ---------- */
 
-.cifras { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.cifras .cifra { display: flex; align-items: center; gap: 30px; padding: 38px 0; }
-/* Aire a los dos lados de la linea de eje: pegada al texto, el bloque se lee apretado. */
-.cifras .eje { margin: 6px 0; }
+/* Grid en vez de flex por fila (entrega.md > "un bloque tipo tabla es un solo
+   grid"): con `flex:0 0 236px` fijo, una cifra de 8 caracteres a 96px ("≈130.000")
+   desborda esa columna y el renglon vecino queda visualmente mas cerca del numero
+   que la fila con "2,7" — las dos filas se leen desalineadas. `max-content` mide
+   la cifra mas ancha una sola vez para las dos filas. (2026-09-13) */
+.cifras { flex: 1; display: grid; grid-template-columns: max-content 1fr; column-gap: 30px; row-gap: 30px; align-items: center; align-content: center; }
+.cifras .cifra { display: contents; }
+.cifras .eje { grid-column: 1 / -1; margin: 6px 0; }
 .cifras .cifra .n {
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 600; font-size: 96px; line-height: 0.9;
-  color: var(--azul); flex: 0 0 236px;
+  color: var(--azul);
 }
 .cifras .cifra .n .u { font-size: 46px; margin-left: 6px; }
 .cifras .cifra .t { flex: 1; }
