@@ -149,6 +149,11 @@ h2 { font-size: 104px; }
    de diseno en la mitad superior — el arreglo es layout, no recortar palabras. */
 .s-cover.cover-title-only .head { flex: 1; justify-content: center; }
 .s-cover.cover-title-only h1 { min-height: 0; }
+/* "Todo el bloque va centrado" (estilo.md > La portada) vale tambien para el remate:
+   `.lede` es un hijo directo de `.head`, no de `.covertitle`, asi que hereda el
+   `text-align` por default (izquierda) salvo que se centre aca. Se noto en un
+   carrusel real: titular centrado, remate pegado al margen izquierdo. (2026-09-13) */
+.s-cover .lede { text-align: center; margin: 0 auto; }
 .rule i {
   width: 14px; height: 14px; flex: none;
   border-left: var(--fina) solid var(--azul);
