@@ -638,7 +638,7 @@ node "<skill-dir>\scripts\verify-render.mjs" --file "renders\final\<slug>-subs.m
 
 Then extract frames from the FINAL file at several timestamps — at minimum one talking-head frame, one graphic/screen-recording frame, and one wrapped two-line caption — and look at them.
 
-9. Build the cover. See **Cover (Portada)** — it ships with every subtitled video, unasked.
+9. Build the cover, then burn it into the video as frame 0. See **Cover (Portada)** and **The Cover Goes Into The Video, As Frame 0** — both ship with every subtitled video, unasked.
 
 10. Write the post description, then package the delivery. See **Post Description** and **Delivery Package**:
 
@@ -822,6 +822,44 @@ to separate, and half that niche already uses it. Cyan is complementary to those
 and is already that account's caption colour. But cyan only makes sense when the captions are
 the Inter/cyan style; when the video shipped plain white Neue Montreal captions, the cover is
 white too.
+
+### The Cover Goes Into The Video, As Frame 0 (mandatory, every branch)
+
+Building the `<slug>-portada.png` is not the last step. The cover must also be burned into
+the final video itself, as its literal **frame 0** — one single frame, exactly `1/fps` long
+(≈0.033s at 30fps), never a multi-second title card. Once that frame is in, the video is
+**absolutely finished** — no further human edit is expected — and it ships from `output\`,
+not `source\` (see **Delivery Package** below).
+
+Do it in two steps, both required:
+
+1. Build a one-frame clip from the finished `<slug>-portada.png`, matching the final video's
+   own codec, resolution, fps, and audio params exactly (check with `ffprobe` first — do not
+   assume 30fps/44100/stereo):
+
+   ```powershell
+   ffmpeg -y -loop 1 -i "<slug>-portada.png" -f lavfi -i "anullsrc=r=44100:cl=stereo" `
+     -frames:v 1 -r <fps> -vf "scale=<w>:<h>:flags=lanczos,setsar=1,format=yuv420p" `
+     -c:v libx264 -profile:v high -crf 14 -preset slow -c:a aac -b:a 192k -t <1/fps> `
+     "intro-card-1frame.mp4"
+   ```
+
+2. Concatenate it onto the finished captioned video with **one clean re-encode pass**, not
+   `-f concat -c copy`. Stream-copying two independently-encoded H.264 streams together
+   produces a corrupted, washed-out frame right at the splice (seen and confirmed on this
+   exact video) — it looks like a real defect, not a decode-cache artifact, and it ships to
+   the user like one. Re-encode the join instead:
+
+   ```powershell
+   ffmpeg -y -i "intro-card-1frame.mp4" -i "<slug>-subs.mp4" `
+     -filter_complex "[0:v:0][0:a:0][1:v:0][1:a:0]concat=n=2:v=1:a=1[outv][outa]" `
+     -map "[outv]" -map "[outa]" -c:v libx264 -crf 14 -preset slow -c:a aac -b:a 192k `
+     "<slug>-subs-final.mp4"
+   ```
+
+Verify with `verify-render.mjs` (duration should be the original plus one frame, not plus a
+full second) and pull the very first two frames to confirm frame 0 is the cover and frame 1
+is already the real video — not a held title card.
 
 ### Choosing The Frame
 
@@ -1056,7 +1094,7 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"   # only a
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
-- `deliver-package.mjs`: copy the final video(s), the cover PNG and a readable plain-text transcript into `<slug>\source\`, and the post description into `<slug>\output\`, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
+- `deliver-package.mjs`: copy the final video(s) — cover already burned in as frame 0, see **The Cover Goes Into The Video, As Frame 0** — and the post description into `<slug>\output\`, and the standalone cover PNG plus a readable plain-text transcript into `<slug>\source\`, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
 - `publish-to-drive.mjs`: after the user approves, mirror the `<slug>\source\` + `<slug>\output\` delivery folder into the Aurelio **Reels** shared drive (local Google Drive mount) under a folder named only `<slug>\`, then delete the `.work\<slug>\` build tree. The dated `<YYYY-MM-DD>_<slug>_post\` rename is a separate publishing skill's job. Never run before approval. `--reels`, `--overwrite`, `--keep-work`, `--dry-run`.
 
 If an existing project still has older local tools such as `render-local.cjs`, `snapshot-qa.cjs`, or `check-overflow.cjs`, those may be used for that project, but migrate repeated behavior back into the bundled scripts.
@@ -1089,8 +1127,8 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - It lives inside the project, which lives inside the working directory — that is what makes the links clickable. The script refuses to run under a placeholder slug (`tmp-0826`, `video1`, `final2`), because the whole point is that the user can tell which video is which from the folder name.
 - Large files are hardlinked rather than copied, so the tidy folder costs no extra disk. Editing a delivered file edits the one in `renders\final\` too — they are the same bytes. Re-run with `--overwrite` after a re-render.
 - The folder is split into exactly two subfolders:
-  - `source\` — every final video from `renders\final\`, the cover `<slug>-portada.png`, `<slug>-transcript.txt` (the full transcript as readable wrapped prose), and any `--extra` file. Only what this skill produced — the user's own raw originals stay in `.work\<slug>\raws\` and never ship here.
-  - `output\` — the post description `<slug>-caption.txt`, and nothing else. This is where the finished, edited reel gets dropped later, so it stays empty of media until then.
+  - `source\` — the cover `<slug>-portada.png` on its own, `<slug>-transcript.txt` (the full transcript as readable wrapped prose), and any `--extra` file. Raw material, not the deliverable. The user's own raw originals stay in `.work\<slug>\raws\` and never ship here.
+  - `output\` — the finished video with the cover burned in as frame 0 (see **The Cover Goes Into The Video, As Frame 0**) plus the post description `<slug>-caption.txt`. Once the cover is frame 0, the video needs no further human edit, so it ships as the finished, ready-to-post asset directly in `output\` — it does not wait there empty for someone else to drop a cut in.
 - **The word-level transcript JSON does NOT ship.** It is a build input for the caption pipeline, not a deliverable. It stays in the project under `assets\voice\`. The same goes for every other intermediate: manifests, audits, snapshots, segment renders, the extracted WAV. A delivery folder is what the user consumes, not a copy of the workspace.
 - Add something else only when the user would actually use it, via `--extra` (e.g. the attribution text for licensed music). The subtitle `.ass` does **not** ship: approved means the subtitles are final and never hand-edited again, so it stays in `.work\` and is deleted at publish.
 - **Hand over clickable links, and know exactly what is clickable.** Three rules learned the hard way:

@@ -3,10 +3,12 @@
 // output/, so the user gets what they actually consume without hunting through renders/,
 // manifests/ and assets/.
 //
-//   <slug>/source/   every media file the skill produced (final video(s), cover PNG,
-//                    readable transcript, the .ass, plus anything passed with --extra)
-//   <slug>/output/   the post description <slug>-caption.txt, and NOTHING else — this is
-//                    the folder the editor drops the finished cut into later
+//   <slug>/source/   raw material: the cover PNG on its own, readable transcript, the .ass,
+//                    plus anything passed with --extra
+//   <slug>/output/   the finished video(s) — cover already burned in as frame 0 — plus the
+//                    post description <slug>-caption.txt. Once frame 0 is the cover, the
+//                    video needs no further human edit, so it ships as the ready-to-post
+//                    asset directly in output/.
 //
 // It stays INSIDE the project tree on purpose: this harness only makes a path clickable
 // when it lives under the working directory, so a delivery folder written to Downloads can
@@ -194,8 +196,9 @@ function main() {
   const coverPath = args.cover ? path.resolve(projectDir, args.cover) : findCover(projectDir);
 
   const delivered = [];
-  // source/ holds every media file; output/ holds only the caption the user pastes.
-  for (const video of videos) delivered.push(placeInto(video, sourceDir));
+  // output/ holds the finished video (cover already burned in as frame 0) plus the caption;
+  // source/ holds raw material only — the standalone cover PNG and the readable transcript.
+  for (const video of videos) delivered.push(placeInto(video, outputDir));
   if (coverPath) delivered.push(placeInto(coverPath, sourceDir));
   delivered.push(placeInto(captionPath, outputDir));
 
