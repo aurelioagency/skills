@@ -31,9 +31,9 @@ Para cada cuenta referente, abrí `instagram.com/<cuenta>/reels/` en el browser 
 
 ## Paso 3 — Aprobación
 
-**Cada vez que se invoca la skill (o se retoma después de aprobar/rechazar uno), mostrale al usuario la lista completa de candidatos pendientes con su link y views — de nuevo, entera, no un aviso de "quedan N en la cola".** `cola.json` es solo para no perder el estado entre sesiones (qué está propuesto/aprobado/rechazado), nunca un lugar donde "guardar algo para después" y mostrar solo un resumen. El usuario tiene que poder ver y elegir de la lista real en cada momento, no confiar en que vos le vas administrando el goteo.
+**No existe una cola.** No hay ningún archivo tipo `cola.json` donde vayas guardando candidatos para administrarle el goteo al usuario. Lo único que se persiste es `aprobados.json` (decisiones ya tomadas) y `candidatos\<cuenta>.json` (lo último que se propuso de esa cuenta, como registro). Todo lo demás es conversación: buscás, proponés en el chat con link y views, y el usuario responde ahí mismo.
 
-Cuando el usuario aprueba un candidato, agregalo a `aprobados.json` con su link, cuenta y fecha, y marcalo como `"estado": "aprobado"` en `cola.json`. Si rechaza uno, marcalo como `"estado": "rechazado"` con el motivo si lo dio. No proceses al paso 4 ningún reel que el usuario no haya aprobado explícitamente, y no le vuelvas a mostrar como pendiente uno ya aprobado o rechazado (pero sí mostrale siempre el resto, completo).
+Cuando el usuario aprueba un candidato, agregalo a `aprobados.json` con su link, cuenta y fecha, y recién ahí pasás al paso 4. Si rechaza uno, no hace falta anotarlo en ningún lado — simplemente no vuelvas a proponer ese mismo link. No proceses al paso 4 ningún reel que el usuario no haya aprobado explícitamente.
 
 ## Paso 4 — Audio, diálogo, traducción y recurso
 
