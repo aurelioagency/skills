@@ -16,15 +16,16 @@ Todo el estado (cuentas, candidatos, aprobados) se guarda en `Documents\reels-re
 
 ## Paso 1 — Cuentas referentes
 
-Cuando el usuario pase una o más cuentas (@usuario o link de perfil), agregalas a `Documents\reels-referentes\cuentas.json` (crear el archivo si no existe). No pidas confirmación para este paso, es solo guardar la lista que el usuario ya dio.
+Cuando el usuario pase una o más cuentas (@usuario o link de perfil), agregalas a `Documents\reels-referentes\cuentas.json` (crear el archivo si no existe). No pidas confirmación para este paso, es solo guardar la lista que el usuario ya dio. La lista blanca inicial está en `references/cuentas-lista-blanca.md` — solo se busca en cuentas de esa lista; se van agregando más cuando el usuario las pase.
 
 ## Paso 2 — Buscar y proponer candidatos
 
 Para cada cuenta referente, abrí `instagram.com/<cuenta>/reels/` en el browser (cuentas públicas muestran el conteo de reproducciones en la grilla, sin necesidad de login). Usá `mcp__Claude_Browser__navigate` + `read_page`/`get_page_text` para leer los números de views de cada miniatura.
 
 - Andá cuenta por cuenta, nunca en loop agresivo sobre muchas cuentas seguidas — Instagram banea scraping automatizado si detecta patrón de bot.
-- Elegí los reels con más views (o los que se destaquen claramente sobre el promedio de la cuenta).
-- Para cada candidato devolvé: cuenta, link directo al reel, views (aproximado, el número que muestra Instagram), y una línea de por qué lo proponés.
+- Elegí los reels con más views (o los que se destaquen claramente sobre el promedio de la cuenta) **y que además caigan en alguno de los temas de `references/temas.md`**: divulgación de IA (novedades, conocimiento técnico, herramientas, configuraciones, modelos), o un recurso puntual para compartir (una skill, un repo de GitHub, una página/herramienta que le sirve a la gente). Un reel con muchas views pero de otro tema no se propone.
+- Para cada candidato devolvé: cuenta, link directo al reel, views (aproximado, el número que muestra Instagram), a qué tema pertenece, y una línea de por qué lo proponés.
+- Si el tema es "recurso para compartir" (skill, repo, página, herramienta), el link de ese recurso es el dato central del candidato — si se ve en la descripción o en pantalla, incluilo ya en la propuesta; si solo se sabe escuchando el audio, avisá que hace falta aprobarlo para poder extraerlo (paso 4).
 - Guardalos en `candidatos\<cuenta>.json`.
 - **No descargues ni transcribas nada en este paso.** Esto es solo para que el usuario entre a Instagram, mire el reel y decida.
 
@@ -53,5 +54,7 @@ Al terminar cada reel, mostrale al usuario: el diálogo (traducido si correspond
 ## Referencias
 
 - `references/estado.md` — formato de `cuentas.json`, `candidatos\*.json` y `aprobados.json`.
+- `references/cuentas-lista-blanca.md` — cuentas referentes iniciales.
+- `references/temas.md` — qué temas se buscan y por qué el link importa en cada uno.
 - `references/cobalt.md` — por qué se usa la web de cobalt.tools y no su API.
 - `scripts/transcribir.py` — transcripción local con faster-whisper (auto-detecta idioma).
