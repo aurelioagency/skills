@@ -1,6 +1,6 @@
 ---
 name: post-for-me
-description: Publish to social networks with Post for Me, and install, verify or repair its MCP server. Use for BOTH jobs. Publishing - use whenever someone asks to publish, post, upload, share or schedule content on Instagram, TikTok, LinkedIn, Facebook, X, YouTube, Pinterest, Threads or Bluesky through Post for Me or postforme, including carousels, reels, shorts and stories, whether the media is a local file or a URL, and including scheduling for later, checking whether a post went out, and marking the delivery folder with its publication date afterwards. Setup - use whenever someone mentions installing, configuring, connecting or repairing Post for Me, postforme or post-for-me-mcp, asks to "connect my social accounts to Claude", or reports that an MCP server will not start, does not show up, shows an error, or that their Claude config "deleted itself". Covers Windows, macOS and Linux, and applies regardless of the language the request is written in. Never publishes anything that was not explicitly asked for and confirmed.
+description: Publish to social networks with Post for Me, and install, verify or repair its MCP server. Use for BOTH jobs. Publishing - use whenever someone asks to publish, post, upload, share or schedule content on Instagram, TikTok, LinkedIn, Facebook, X, YouTube, Pinterest, Threads or Bluesky through Post for Me or postforme, including carousels, reels, shorts and stories, whether the media is a local file or a URL, and including scheduling for later, checking whether a post went out, and marking the delivery folder with its publication date afterwards. Spanish phrasings trigger it the same way, and a request to upload or publish media is enough on its own even when Post for Me is never named: "subi el reel que esta en Drive", "publica esto en Instagram", "manda el carrusel a todas las cuentas", "subilo a las redes", "programa esto para el viernes". Setup - use whenever someone mentions installing, configuring, connecting or repairing Post for Me, postforme or post-for-me-mcp, asks to "connect my social accounts to Claude", or reports that an MCP server will not start, does not show up, shows an error, or that their Claude config "deleted itself". Covers Windows, macOS and Linux, and applies regardless of the language the request is written in. Never publishes anything that was not explicitly asked for and confirmed.
 ---
 
 # Post for Me
@@ -15,6 +15,38 @@ Setup happens once. Publishing repeats forever. Read the section you are actuall
 | "publish this on Instagram", "post the carousel", "schedule this for Friday" | **Publishing**, right here |
 
 ## Publishing
+
+### Publishing goes through the REST API directly, not the `execute` tool
+
+`mcp__post_for_me_api__execute` runs the code it's given on a Stainless-hosted
+sandbox by default, and that hosted backend was shut down — every `execute` call
+fails with `410: Gone` (see `references/troubleshooting.md` §11). The fix
+(`--code-execution-mode=local` in the server's launch args) does not survive on
+this machine: Claude Desktop manages this connector's definition itself and
+rewrites `args`/`env` back to their original values on every relaunch, even
+after a verified, backed-up write. Confirmed with a controlled test — closed the
+app, wrote the flag, checked the file (present), reopened, checked again (gone).
+There is no field in Settings → Connectors to edit it either; that screen only
+exposes tool permissions, not the launch command.
+
+**So: publish with plain HTTPS calls (`curl` from Bash) against
+`https://api.postforme.dev/v1/...` directly, using the API key.** Everything
+below that used to read `client.socialPosts.create(...)` inside `execute` now
+means "call that endpoint with curl instead." `search_docs` still works fine
+(it's a separate tool, not `execute`) — use it to look up exact fields when
+unsure.
+
+Get the key without retyping it anywhere: it already lives in
+`claude_desktop_config.json`, at `mcpServers.post_for_me_api.env.POST_FOR_ME_API_KEY`.
+Read it from there each time rather than hardcoding it in a prompt or a file:
+
+```bash
+API_KEY=$(python -c "import json; print(json.load(open(r'C:\Users\<user>\AppData\Roaming\Claude\claude_desktop_config.json', encoding='utf-8-sig'))['mcpServers']['post_for_me_api']['env']['POST_FOR_ME_API_KEY'])")
+```
+
+(macOS/Linux: swap in `desktop_config_path()` from `scripts/verify_mcp.py` for
+the right path.) Never print `$API_KEY` itself in a summary or error message —
+mask it the way the scripts do.
 
 ### A post cannot be taken back
 
@@ -32,7 +64,7 @@ That rule is about *guessing*, and it expires the moment the person stops leavin
 
 Every lookup you need happens **before** the gate is shown. The gate is the one place the person is asked to read carefully, so it has to be complete and final when it appears. Discovering a detail afterwards and coming back with "one more thing" turns a single confirmation into an interrogation, and it is the fastest way to burn the trust that makes the gate work at all.
 
-Prior posts are the best available spec and they cost one call. `client.socialPosts.list()`, then `retrieve()` on the closest match, shows the exact account set, the `placement` per platform, the `title` overrides, and whether the video shipped as its own post. A folder that follows the same shape as a previous delivery should be published the same way. Match it instead of asking.
+Prior posts are the best available spec and they cost one call. `GET /v1/social-posts`, then `GET /v1/social-posts/{id}` on the closest match, shows the exact account set, the `placement` per platform, the `title` overrides, and whether the video shipped as its own post. A folder that follows the same shape as a previous delivery should be published the same way. Match it instead of asking.
 
 ### The delivery folder is finished work, not a draft to review
 
@@ -46,41 +78,134 @@ What you owe them is *routing*, not permission. Sorting the assets by what each 
 
 State the split in the gate as a decision — "YouTube gets the short because it cannot take the images" — and move on. It is a fact about the platform, not a choice the person needs to make.
 
+**"Already published" on a *different* post is not a reason to skip an account for *this* one.** A reel or short published in an earlier, separate job does not retroactively cover the carousel job for that same topic — each publish call is its own delivery, and every account capable of taking this folder's assets gets them in this job. Do not reason from "this topic already reached that account somehow" to "so this account can be skipped now" — that is guessing at what the person wants instead of routing what they asked for. If a video-capable folder is being published and the owner names or implies an account (including "todas" / "everywhere"), and that account only takes video, send it the video in this same job — never explain it away by pointing at a prior post.
+
+**Do not question or re-litigate an explicit publish instruction.** Once the owner has said what to publish and named or confirmed the accounts, execute it — do not raise "but this went out already" or "but this doesn't seem necessary" as a reason to hold back or narrow the request. The one thing worth surfacing before publishing is a genuine platform constraint (an account that structurally cannot take the asset, e.g. images to YouTube) — state it once, as a fact, and act on the rest. Never frame a platform's own limitation as your own judgment call, and never repeat an already-answered objection after the owner has overridden it.
+
+### The standing recipe for this machine
+
+Settled with the owner. Do not re-derive it from previous posts — a lookup here is verification, not discovery.
+
+#### The delivery folder
+
+**`output\` is the deliverable, `source\` is raw footage.** The MP4 to publish, the caption and the transcript live in `output\`. Never publish anything from `source\` — those are camera files and intermediate cuts. A folder with neither subfolder keeps its deliverable at the root.
+
+**Find the caption by reading, not by filename.** It has been `<slug>-caption.txt`, but it can just as well be `caption.txt`, `descripcion.txt` or `description.txt`. Take the `.txt` files in `output\`, skip the transcript (it is verbatim spoken text — no greeting, no links, no hashtags), and open what remains. One read settles it. Never hardcode the name, and never skip publishing because the file "was not found" under a name you assumed.
+
+**Use the caption verbatim.** Do not rewrite it, translate it, trim it, or add hashtags of your own.
+
+#### If there is no caption, stop and ask
+
+Do not publish with a caption you wrote on your own initiative. Ask, and offer the two options:
+
+1. **The standing template** below, filled in properly.
+2. **A minimal draft**, when the owner does not have the caption ready for that particular video and just wants something serviceable to correct.
+
+Either way the draft is shown in the gate for approval before anything goes out.
+
+**How to build the minimal draft.** The material already answers most of it — work down these sources in order and stop at the first that gives you the topic:
+
+1. **The transcript in `output\`.** This is what the video actually says, and it is the best source there is. The strongest idea is usually in the first two sentences (the hook) and the ask is in the last one.
+2. **The folder and file names.** `github-project-nomad`, `project-nomad-internet-offline` — these carry the topic and often the angle. Turn the slug back into words.
+3. **Nothing usable in either** → ask the owner what the video is about. Do not guess from the filename alone when the filename is opaque.
+
+Then fill the template:
+
+- **The 2-4 line paragraph** restates the single strongest idea — the hook, the figure, the surprising claim — not a summary of everything said. Voseo, direct, no filler, no AI throat-clearing ("En el mundo de hoy...", "¿Sabías que...?" as an opener).
+- **Describe only what the material confirms.** Never invent how a product works, what it includes or what it costs. If the transcript does not say it, it does not go in the caption.
+- **The DM line** goes in only if the outro actually asks for it — take the exact word from the transcript.
+- **The four dynamic hashtags** come from the literal words of the piece: tool names, the concept it treats. `#LaCasaDeAurelio` closes.
+- Fixed blocks and blank lines exactly as in the template.
+
+#### The caption template, La Casa de Aurelio
+
+Copied here on request so this skill stands alone. **It also lives in `social-video-producer\SKILL.md` (videos) and `social-carousel-generator\references\la-casa-preset.md` (carousels)** — if the owner changes the template, all three copies need the change.
+
+```text
+Bienvenidos a la Casa de Aurelio!
+
+<2-4 lineas que resumen el gancho o insight principal, tono directo, sin relleno>
+
+De la teoría a la práctica: Aurelio Agency →
+https://www.aurelioagency.com/es
+
+Unite a la comunidad:
+https://www.skool.com/la-casa-de-aurelio-2061
+
+<4 hashtags dinamicos segun el tema> #LaCasaDeAurelio
+```
+
+- The greeting, the services line and both URLs are **fixed**. Never reword, translate or shorten them. Fixed does not mean exempt from voseo: it is `Unite a la comunidad`, not `Únete`.
+- The only written block is the 2-4 line paragraph — the strongest idea of the piece, not a recap.
+- **The DM call to action is deduced from the material, never invented.** If the video's outro asks the viewer to comment a word to receive something, add `Comentá <PALABRA> y te la mando por DM.` right after the paragraph, and make sure that word also appears written in the paragraph. If the outro says nothing of the sort, leave the line out.
+- **Exactly 5 hashtags.** `#LaCasaDeAurelio` last, as signature; the other four picked by the actual topic. An off-topic hashtag subtracts more than it adds.
+- Blank lines between blocks exactly as shown.
+
+#### The accounts
+
+**Only Aurelio's connected accounts.** Call `GET /v1/social-accounts` and filter on `status == "connected"` at publish time — the table below is the expected shape, not a substitute for the check. **Never list, name or mention a disconnected account**, not in the gate, not in the summary, not as an aside. They are not of interest and raising them is noise.
+
+A reel goes to these five as a single post:
+
+| Account | Configuration |
+|---|---|
+| Instagram `lacasadeaurelio` | `placement: 'reels'` |
+| Facebook La Casa de Aurelio | `placement: 'reels'` |
+| TikTok La Casa de Aurelio | `title` |
+| YouTube La Casa de Aurelio | `title`, `privacy_status: 'public'` |
+| LinkedIn Aurelio Agency | — |
+
+Plus `localizations: {}` on every entry, always. `external_id` is the folder slug.
+
+**`ing.gustavopaz` is optional, and it is asked every single time.** It is the owner's second Instagram; some deliveries go there and some do not, and past posts do not settle it. Ask inside the gate — `placement: 'reels'` when it is in — and never assume either way from what previous reels did.
+
+#### What you write yourself
+
+**Only the `title` for TikTok and YouTube.** Take it from the piece's own hook; the caption is not a title.
+
+**A proposal is a proposal.** Nothing is built until the owner says yes — do not describe a pending gate as something you "reconstructed", "rebuilt" or "assembled". Say what you actually did: read the folder, applied the recipe, wrote the title.
+
 ### Before you build the call
 
 Four things, and none of them can be assumed:
 
-1. **Which accounts.** `client.socialAccounts.list()`. Show **every connected account**, `platform` and `username`, never the tokens. If a confirmation-question tool caps the number of choices (e.g. 4 options), do not silently drop accounts to fit — list all of them as plain text first (numbered or bulleted), then let the person pick from that full list. An account left off the list because of a tool limit is a silent omission, not a decision the person made. YouTube is not a special case here: it takes video only and title is required-ish (see below), but it still gets a `caption` like every other platform — list it and ask for it exactly like the rest.
+1. **Which accounts.** `GET /v1/social-accounts`. Show **every connected account**, `platform` and `username`, never the tokens (the response includes `access_token`/`refresh_token` per account — read `platform`/`username`/`status` and ignore the rest). If a confirmation-question tool caps the number of choices (e.g. 4 options), do not silently drop accounts to fit — list all of them as plain text first (numbered or bulleted), then let the person pick from that full list. An account left off the list because of a tool limit is a silent omission, not a decision the person made. YouTube is not a special case here: it takes video only and title is required-ish (see below), but it still gets a `caption` like every other platform — list it and ask for it exactly like the rest.
 2. **The caption.** Exactly as written. Do not improve it, do not translate it, do not append hashtags of your own.
 3. **The media.** A public URL Post for Me can fetch, or a local file — which has to be uploaded first, see below.
 4. **When.** Now, or `scheduled_at` as an ISO 8601 string. Confirm the timezone if they said something like "Friday at 9".
 
 ### Local files have to be uploaded first
 
-Post for Me fetches media by URL; it cannot see the person's disk. Neither can the `execute` tool — its code runs in a container with no filesystem access and no network beyond the SDK client. So the bytes cannot travel through `execute`. The upload is three stages, and only the middle one happens locally:
+Post for Me fetches media by URL; it cannot see the person's disk. The upload is three plain `curl` calls, all from Bash — no batching, no timeout ceiling, because none of this goes through `execute` anymore:
 
-**Stage 1 — mint the URLs, inside `execute`.** One call per file:
-
-```ts
-const { upload_url, media_url } = await client.media.createUploadURL();
-```
-
-The method is `createUploadURL`, with `URL` uppercase. `createUploadUrl` does not exist and fails typechecking.
-
-**`execute` times out at 25 seconds, and this is where it bites.** Each `createUploadURL` takes roughly 2 seconds, so a nine-slide carousel does not fit in one call — not sequentially, and not with `Promise.all` either, which times out just the same because the ceiling is wall-clock, not concurrency. Measured on a real nine-slide run: **batches of three complete in 7–8 seconds each**. Ask for three per call, repeat, and collect the pairs as you go. Return them from every call — variables do not persist between `execute` invocations, so a batch you do not return is a batch you have lost.
-
-**Stage 2 — PUT the bytes, from the local shell.** Bash with `curl`, one PUT per file, checking the status code rather than assuming:
+**Step 1 — mint an upload URL, one call per file:**
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}" -X PUT \
+curl -s -X POST "https://api.postforme.dev/v1/media/create-upload-url" \
+  -H "Authorization: Bearer $API_KEY" -H "Content-Type: application/json"
+```
+
+Returns `{ "upload_url": "...", "media_url": "..." }`. One call per file — for a
+multi-slide carousel just loop it; there is no 25-second wall to fit under, so
+there is nothing to batch.
+
+**Step 2 — PUT the bytes to `upload_url`:**
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" -X PUT \
   -H "Content-Type: image/png" \
   --data-binary "@slide.png" \
   "<upload_url>"
 ```
 
-`200` is success. Write the loop to print a line per file so a single silent failure in the middle cannot pass for a complete upload.
+`200` is success. Check the status code per file rather than assuming — a loop
+over several files should print one line each, so a single silent failure in
+the middle cannot pass for a complete upload.
 
-**Stage 3 — build the post with the `media_url`s**, in slide order. The public `media_url` is a plain URL with no token; the *signed* `upload_url` is the one that expires — its token carries about a two-hour window. `media_url` expires in 24 hours if it goes unused. Upload as part of the publish, not hours ahead.
+**Step 3 — use `media_url` when creating the post**, in slide order. The public
+`media_url` is a plain URL with no token; the *signed* `upload_url` is the one
+that expires — its token carries about a two-hour window. `media_url` expires
+in 24 hours if it goes unused. Upload as part of the publish, not hours ahead.
 
 ### The confirmation gate
 
@@ -95,39 +220,47 @@ Then ask, and wait for an explicit yes. Not "looks good?" — say that it will b
 
 ### If the publish call is denied by the permission layer
 
-`socialPosts.create` (and other `execute` calls) can come back with `Permission for
-this action was denied by the Claude Code auto mode classifier.` This is the harness,
-not Post for Me — see `references/troubleshooting.md` §10 for the full mechanism. It is
-intermittent: the same call can be denied, then succeed on a plain retry with no setting
-touched in between, so retrying once or twice when the person asks is normal and not a
-sign anything is broken.
+A `curl` call from Bash can still hit the harness's permission layer like any
+other shell command — the mechanism is the same one described in
+`references/troubleshooting.md` §10, just attached to `Bash` instead of
+`mcp__post_for_me_api__execute` now. It is intermittent: the same call can be
+denied, then succeed on a plain retry with no setting touched in between, so
+retrying once or twice when the person asks is normal and not a sign anything
+is broken.
 
-Do not hand the person a vague pointer like "check your permission settings" — give the
-exact line immediately, in the same turn as the denial:
-
-```json
-"permissions": {
-  "allow": ["mcp__post_for_me_api__execute"]
-}
-```
-
-Say where it goes (`~/.claude/settings.json`), that it takes effect in a new session
-(not the current one), and the cost: it covers the whole tool, reads and writes alike,
-so publishing loses this automatic brake — the confirmation gate above becomes the only
-check left. Claude cannot add this line itself; the same classifier denies self-editing
-permissions, correctly. Hand the exact line and let the person paste it.
+If it keeps getting denied, the equivalent allowlist line goes in
+`~/.claude/settings.json`, scoped to the specific curl command rather than to
+`Bash` as a whole where possible (e.g. `"Bash(curl * api.postforme.dev*)"`).
+Say the same cost out loud as before: it covers publishing without the
+harness's own brake, so the confirmation gate above becomes the only check
+left.
 
 ### Building the post
 
-```ts
-const post = await client.socialPosts.create({
-  caption,
-  social_accounts: [...],
-  media: [{ url }],
-  scheduled_at,        // omit or null to publish now
-  external_id,         // your own id — use the delivery folder slug
-});
+Write the JSON payload to a file first (heredoc in Bash), then POST it — this
+also solves the line-break problem below in one move:
+
+```bash
+cat > /tmp/post_payload.json << 'EOF'
+{
+  "caption": "First line\n\nSecond paragraph",
+  "social_accounts": ["spc_...", "spc_..."],
+  "media": [{ "url": "<media_url>" }],
+  "external_id": "delivery-folder-slug",
+  "account_configurations": [
+    { "social_account_id": "spc_...", "configuration": { "placement": "reels", "localizations": {} } },
+    { "social_account_id": "spc_...", "configuration": { "title": "Título", "localizations": {} } }
+  ]
+}
+EOF
+
+curl -s -X POST "https://api.postforme.dev/v1/social-posts" \
+  -H "Authorization: Bearer $API_KEY" -H "Content-Type: application/json" \
+  -d @/tmp/post_payload.json
 ```
+
+Omit `scheduled_at` (or set it to `null`) to publish now; pass an ISO 8601
+string to schedule.
 
 `external_id` is worth filling in every time. It is the only thing that ties the published post back to the folder the files came from, which is what makes the marking step below possible weeks later.
 
@@ -138,44 +271,32 @@ Per-account overrides go in `account_configurations`, and they matter more than 
 - `title` — required-ish for YouTube, TikTok and Pinterest; the `caption` is not a title.
 - `privacy_status`, `made_for_kids`, `board_ids`, `is_draft` — platform-specific, read them off the docs rather than from memory.
 
-**`localizations` is required on every account configuration, not just YouTube's.** The SDK types `account_configurations[].configuration` as one shared `Configuration`, so a plain Instagram override fails to compile:
+**Pass `localizations: {}` on every account configuration, not just YouTube's.** This was originally an SDK-typing quirk (the TS types shared one `Configuration` interface requiring it everywhere), but keep doing it now that calls are raw JSON too — YouTube's own API genuinely needs `localizations` as an empty **map**, never `[]`:
 
 ```
-TS2741: Property 'localizations' is missing in type '{ placement: "timeline" }'
-but required in type 'Configuration'.
+Invalid value at 'resource' (Map), Cannot bind a list to map for field 'localizations'.
 ```
 
-Pass `localizations: {}` on every entry, whatever the platform:
-
-```ts
-account_configurations: [
-  { social_account_id: 'spc_…', configuration: { placement: 'timeline', localizations: {} } },
-  { social_account_id: 'spc_…', configuration: { title: 'Título', localizations: {} } },
-]
-```
-
-An empty **map**, never `[]`. A typechecked call is not a valid call: `localizations: []` satisfies TypeScript, creates the post, and only then fails against Google with a 400. That class of failure is invisible until you read the results, which is the next step. The full case is in `references/troubleshooting.md`.
+That failure is invisible until you read the results, which is the next step. The full case is in `references/troubleshooting.md`.
 
 ### Captions keep their line breaks only if you build them right
 
-Writing the caption as a multi-line template literal inside the `execute` tool re-indents every line, and the post goes out with leading spaces on each paragraph. Build it from an array instead:
-
-```ts
-const caption = [
-  'First line',
-  '',
-  'Second paragraph',
-].join('\n');
-```
+Writing the caption inline in a shell command re-indents or mangles multi-line
+text fast. Build the JSON payload as a file (the heredoc above) with real `\n`
+escapes for line breaks, rather than embedding a raw multi-line string in a
+one-liner `-d '...'` argument. If you construct the caption from parts first,
+join them with `\n` before writing the file, don't concatenate literal
+newlines into a shell argument.
 
 Check the platform's own limits too — Instagram in particular reads badly past a handful of hashtags, and some accounts have a house rule stricter than the platform's.
 
 ### After it lands
 
-`socialPosts.create` returns before the networks have finished. `status` moves `processing` → `processed`; the real outcome is per account:
+`POST /v1/social-posts` returns before the networks have finished. `status` moves `processing` → `processed`; the real outcome is per account:
 
-```ts
-const results = await client.socialPostResults.list({ post_id: post.id });
+```bash
+curl -s "https://api.postforme.dev/v1/social-post-results?post_id=$POST_ID" \
+  -H "Authorization: Bearer $API_KEY"
 ```
 
 The `post_id` filter is honoured server-side, so **an empty `data` means the networks have not answered yet — not that the filter is wrong**. Do not go hunting for a bug in the query: a multi-image carousel across several accounts can sit in `processing` for a long time — an hour is normal, not a symptom. (`limit` on this endpoint is *not* reliably honoured — it can return more rows than asked for, so never infer "that's all of them" from a short list.)
@@ -194,8 +315,9 @@ A publish that errors is ambiguous in the one way that matters: a permission den
 
 `external_id` is the way out, and it is why the field is worth setting every time. Before any retry, ask whether the post already exists:
 
-```ts
-const existing = await client.socialPosts.list({ external_id: 'delivery-folder-slug' });
+```bash
+curl -s "https://api.postforme.dev/v1/social-posts?external_id=delivery-folder-slug" \
+  -H "Authorization: Bearer $API_KEY"
 ```
 
 A non-empty `data` means the post is already in flight — read its results, do not create it again. Only an empty result justifies re-sending.
