@@ -8,9 +8,11 @@ description: Buscar reels de Instagram de cuentas referentes que el usuario indi
 Flujo de 4 pasos. Cada paso depende del anterior — no te saltees ninguno.
 
 1. **Cuentas** → el usuario pasa cuentas de Instagram, se guardan como referentes.
-2. **Propuesta** → se buscan reels de esas cuentas, se proponen los de más views con su link para que el usuario los vea y decida.
-3. **Aprobación** → el usuario dice cuáles usar; se anotan en la lista de aprobados.
-4. **Extracción** → para cada aprobado: bajar el audio, transcribir el diálogo, traducir si no está en español, y decir qué recurso/link menciona.
+2. **Propuesta** → se buscan reels de esas cuentas **en el momento**, se proponen los de más views con su link para que el usuario los vea y decida.
+3. **Aprobación** → el usuario elige uno de la lista propuesta. Ahí termina esa ronda — no hay que seguir ofreciendo el resto ni guardarlos para después.
+4. **Extracción** → para el aprobado: bajar el audio, transcribir el diálogo, traducir si no está en español, y decir qué recurso/link menciona.
+
+**Cada ronda es autocontenida.** El usuario elige uno y listo, esa ronda se cierra. La próxima vez que se invoque la skill (al otro día, por ejemplo) se busca todo de nuevo desde cero — los candidatos de la vez anterior que no se aprobaron no se vuelven a ofrecer ni se guardan para completar la lista: las views y qué reels están arriba cambian todo el tiempo, así que lo único que vale es una búsqueda fresca en cada invocación.
 
 Todo el estado (cuentas, candidatos, aprobados) se guarda en `Documents\reels-referentes\` — ver `references/estado.md` para el formato exacto de cada archivo. Nunca inventes datos ahí: si un archivo no existe todavía, se crea vacío la primera vez.
 
@@ -26,14 +28,12 @@ Para cada cuenta referente, abrí `instagram.com/<cuenta>/reels/` en el browser 
 - Elegí los reels con más views (o los que se destaquen claramente sobre el promedio de la cuenta) **y que además caigan en alguno de los temas de `references/temas.md`**: divulgación de IA (novedades, conocimiento técnico, herramientas, configuraciones, modelos), o un recurso puntual para compartir (una skill, un repo de GitHub, una página/herramienta que le sirve a la gente). Un reel con muchas views pero de otro tema no se propone.
 - Para cada candidato devolvé: cuenta, link directo al reel, views (aproximado, el número que muestra Instagram), a qué tema pertenece, y una línea de por qué lo proponés.
 - Si el tema es "recurso para compartir" (skill, repo, página, herramienta), el link de ese recurso es el dato central del candidato — si se ve en la descripción o en pantalla, incluilo ya en la propuesta; si solo se sabe escuchando el audio, avisá que hace falta aprobarlo para poder extraerlo (paso 4).
-- Guardalos en `candidatos\<cuenta>.json`.
+- **No existe una cola ni un backlog.** No guardes los candidatos en ningún archivo para reusarlos en la próxima invocación — se proponen en el chat, en el momento, y ahí se quedan. `candidatos\<cuenta>.json` es opcional, solo como registro de qué se propuso esa vez (para no repetir el mismo link si el usuario ya lo rechazó antes en la misma sesión), nunca como fuente de la que sacar propuestas en el futuro: al otro día se busca de cero, porque las views y qué reels están arriba cambian todo el tiempo.
 - **No descargues ni transcribas nada en este paso.** Esto es solo para que el usuario entre a Instagram, mire el reel y decida.
 
 ## Paso 3 — Aprobación
 
-**No existe una cola.** No hay ningún archivo tipo `cola.json` donde vayas guardando candidatos para administrarle el goteo al usuario. Lo único que se persiste es `aprobados.json` (decisiones ya tomadas) y `candidatos\<cuenta>.json` (lo último que se propuso de esa cuenta, como registro). Todo lo demás es conversación: buscás, proponés en el chat con link y views, y el usuario responde ahí mismo.
-
-Cuando el usuario aprueba un candidato, agregalo a `aprobados.json` con su link, cuenta y fecha, y recién ahí pasás al paso 4. Si rechaza uno, no hace falta anotarlo en ningún lado — simplemente no vuelvas a proponer ese mismo link. No proceses al paso 4 ningún reel que el usuario no haya aprobado explícitamente.
+El usuario elige uno de la lista que le propusiste. En cuanto elige, esa ronda termina: no hace falta seguir mostrando el resto ni preguntar si quiere aprobar otro también. Agregalo a `aprobados.json` con su link, cuenta y fecha, y pasás al paso 4.
 
 ## Paso 4 — Audio, diálogo, traducción y recurso
 
