@@ -122,9 +122,14 @@ linea que salta 20px se ve mas que cualquier detalle de composicion.
 - **El arranque de la cabecera es uno solo** para portada y contenido.
 - **La cota va a la misma altura y con el mismo ancho en toda la serie.** El titular tiene
   altura fija de tres renglones, asi que con dos renglones el bloque igual ocupa tres y la
-  cota no se mueve; el ancho salio de `ruleWidth` por slide y paso a ser uno solo. Cuando el
-  tema lo permita, se escribe el titular a tres renglones: con dos queda aire entre el
-  titular y la cota.
+  cota no se mueve; el ancho salio de `ruleWidth` por slide y paso a ser uno solo.
+  **El titular va a tres renglones por default, no "cuando se pueda".** Con dos renglones
+  la caja de tres igual se reserva, y el hueco entre el titular y la cota se ve — el usuario
+  lo pidio corregido varias veces en la misma marca antes de que quedara escrito aca. Antes
+  de aceptar un titular de dos renglones, probá partir las mismas palabras en tres (nunca
+  agregar palabras nuevas solo para llenar el renglon): la mayoria de los titulares aprobados
+  entran en tres con un corte distinto. Dos renglones es la excepcion, no el punto de partida
+  — y solo cuando forzar el tercero produce un corte mas raro que el hueco que evita.
 
 Cuando toques el layout, medi: renderiza cada placa y compara la posicion de cabecera, cota
 y pie. Si un valor no se repite en toda la serie, es un defecto — no una variante.

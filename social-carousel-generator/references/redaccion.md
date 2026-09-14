@@ -230,6 +230,28 @@ sin saber qué se le dijo falla igual que una invención. Somos un profesional e
 a alguien que quiere entenderlo: la palabra precisa, adentro de una oración que cualquiera
 sigue.
 
+#### Repartir una bajada aprobada en los campos de una pieza no es licencia para resumirla
+
+Cuando la copy aprobada pasa a `nodos`, `pasos` o `cifras`, cada campo recibe **las palabras
+de esa bajada**, no una versión más corta que vos escribís al llegar al slide. La regla de
+*"la copia aprobada se vuelca a `slide-data.js` textual"* (`SKILL.md`) no se relaja porque el
+destino sea un campo de 40 caracteres en vez de un párrafo: si no entra, se corta la oración
+(regla de arriba: acortar es quitar, no reemplazar), nunca se reescribe más corta para que
+"quede prolijo" en el layout. Pasó en un carrusel real: una bajada aprobada de dos oraciones
+terminó repartida en tres nodos con descripciones inventadas por el agente, todas más cortas y
+ninguna con las palabras que el usuario había aprobado.
+
+#### Primera persona de la fuente, en un carrusel de otra marca: se convierte a tercera
+
+Cuando la fuente habla en primera persona (*"our system"*, *"nuestro sistema"*) y el carrusel
+es de una marca que **no es** la fuente, el "nuestro" queda mal: la marca no construyó nada,
+solo lo está contando. Se convierte a tercera persona con atribución explícita (*"el sistema
+de OpenAI"*, no *"nuestro sistema"*) antes de que la frase llegue a un slide — es la misma
+lógica que ya rige para nombres propios y números: la traducción tiene que decir quién hizo
+qué, no heredar el sujeto de quien habla en la fuente. Pasó en un carrusel real: una frase de
+OpenAI en primera persona se tradujo literal y terminó sonando como si La Casa de Aurelio
+hubiera construido el sistema.
+
 ### Los dos chequeos, antes de mostrar una sola placa
 
 Se hacen **sobre la tabla del gate** (*Copy Approval Gate* en `SKILL.md`), y los dos se ven —

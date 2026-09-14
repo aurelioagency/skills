@@ -110,6 +110,15 @@ account, no API key, no browser.
 chosen at random, 20 rows, filter those 20, pick one at random among the survivors. The next
 run lands on a different page, so the pool rotates.
 
+**Never run `fetch-music.mjs --dry` as a preview separate from the real `build-short.mjs`
+run.** Because the pool rotates every run, a `--dry` preview and the actual build are two
+independent random draws — the track you show the user from the preview is not the track
+that ends up in the video. This happened in a real carousel: the user approved a preview
+track, `build-short.mjs` picked a different one on its own run, and the video shipped with an
+unapproved track until the user caught it. **Run `build-short.mjs` once** (it fetches music
+internally and prints what it picked), and show the user *that* result — never pre-check with
+a separate `--dry` call.
+
 - The query carries **genre terms only**. Never add `background music` on its own: it drags
   in corporate, epic, Christmas, horror stock and 1950s department-store muzak, all of which
   pass any decency filter and none of which sets a mood.
