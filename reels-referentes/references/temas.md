@@ -18,3 +18,11 @@ En este tema el link del recurso es el dato central — sin el link, el candidat
 
 - Marcá el candidato como "requiere audio para sacar el link" cuando no se vea el link a simple vista.
 - En el paso 4 (una vez aprobado), el objetivo principal de la transcripción es sacar ese link/nombre del recurso — no solo el diálogo general.
+
+## Exclusión: recurso propio de un creador en español
+
+No proponer un reel de tema "recurso" cuando el recurso es algo que **el propio creador del reel armó/construyó él mismo y probablemente te lo está vendiendo** (su propio sistema, agente, guía, plantilla, comunidad de pago), **si ese creador habla español**. Son funnels de venta disfrazados de "te comparto un recurso" — la señal típica es "comentá X y te lo mando" apuntando a algo hecho por la misma cuenta, con bio que lleva a una comunidad o servicio pago.
+
+Si en cambio el creador habla otro idioma (inglés, francés, etc.), sí se puede usar aunque sea un recurso propio de esa persona — ahí no compite con lo que vendemos y sigue siendo un hallazgo genuino para la audiencia en español.
+
+Esto no aplica al tema "divulgación" (novedades, comparativas, rankings de herramientas conocidas) ni a cuentas que solo curan/muestran recursos de terceros (por ejemplo una cuenta que resume repos de GitHub ajenos) — ahí no hay funnel propio de por medio.

@@ -31,7 +31,9 @@ Para cada cuenta referente, abrí `instagram.com/<cuenta>/reels/` en el browser 
 
 ## Paso 3 — Aprobación
 
-Cuando el usuario diga cuáles reels aprueba, agregalos a `aprobados.json` con su link, cuenta y fecha. Esto es la confirmación explícita — recién acá se pasa al paso 4, y solo para los reels que el usuario nombró (no proceses el resto de los candidatos sin que los apruebe).
+Mostrale siempre la lista completa de candidatos pendientes (ya filtrados por tema y por la exclusión de recurso propio de `references/temas.md`), guardada en `cola.json`. El usuario elige de esa lista cuál aprueba — la decisión de aprobar de a uno por día es suya, no algo que vos le racionás ocultando el resto.
+
+Cuando el usuario aprueba un candidato, agregalo a `aprobados.json` con su link, cuenta y fecha, y marcalo como `"estado": "aprobado"` en `cola.json`. Si rechaza uno, marcalo como `"estado": "rechazado"` con el motivo si lo dio. No proceses al paso 4 ningún reel que el usuario no haya aprobado explícitamente, y no le vuelvas a mostrar como pendiente uno ya aprobado o rechazado.
 
 ## Paso 4 — Audio, diálogo, traducción y recurso
 
