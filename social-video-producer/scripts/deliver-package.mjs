@@ -6,9 +6,10 @@
 //   <slug>/source/   raw material: the cover PNG on its own, readable transcript, the .ass,
 //                    plus anything passed with --extra
 //   <slug>/output/   the finished video(s) — cover already burned in as frame 0 — plus the
-//                    post description <slug>-caption.txt. Once frame 0 is the cover, the
-//                    video needs no further human edit, so it ships as the ready-to-post
-//                    asset directly in output/.
+//                    post description <slug>-caption.txt, and <slug>-dm-reply.txt when the
+//                    caption carries a comment-for-DM CTA (optional, auto-detected). Once
+//                    frame 0 is the cover, the video needs no further human edit, so it
+//                    ships as the ready-to-post asset directly in output/.
 //
 // It stays INSIDE the project tree on purpose: this harness only makes a path clickable
 // when it lives under the working directory, so a delivery folder written to Downloads can
@@ -28,6 +29,7 @@ function usage() {
       [--video <path>]...        final MP4s; defaults to everything in renders/final
       [--cover <path>]           cover PNG; auto-detected as *-portada.png
       [--caption <path>]         post description txt; auto-detected as *-caption.txt
+      [--dm-reply <path>]        DM hand-off txt; auto-detected as *-dm-reply.txt (optional)
       [--transcript <path>]      word-level JSON; auto-detected (.approved.json wins)
       [--extra <path>]...        anything else worth handing over
       [--dest <dir>]             defaults to <project>/entrega
@@ -47,6 +49,7 @@ function parseArgs(argv) {
     else if (item === '--video') args.video.push(argv[++i]);
     else if (item === '--cover') args.cover = argv[++i];
     else if (item === '--caption') args.caption = argv[++i];
+    else if (item === '--dm-reply') args.dmReply = argv[++i];
     else if (item === '--transcript') args.transcript = argv[++i];
     else if (item === '--extra') args.extra.push(argv[++i]);
     else if (item === '--dest') args.dest = argv[++i];
@@ -80,6 +83,15 @@ function findCaption(projectDir) {
   const dir = path.join(projectDir, 'renders', 'final');
   if (!fs.existsSync(dir)) return null;
   const hit = fs.readdirSync(dir).find((name) => /-caption\.txt$/i.test(name));
+  return hit ? path.join(dir, hit) : null;
+}
+
+// Only present when the caption carries a comment-for-DM CTA; most videos have none, so
+// this is optional and never throws when missing.
+function findDmReply(projectDir) {
+  const dir = path.join(projectDir, 'renders', 'final');
+  if (!fs.existsSync(dir)) return null;
+  const hit = fs.readdirSync(dir).find((name) => /-dm-reply\.txt$/i.test(name));
   return hit ? path.join(dir, hit) : null;
 }
 
@@ -194,6 +206,7 @@ function main() {
   if (!transcriptPath) throw new Error('No transcript found under assets/voice/.');
 
   const coverPath = args.cover ? path.resolve(projectDir, args.cover) : findCover(projectDir);
+  const dmReplyPath = args.dmReply ? path.resolve(projectDir, args.dmReply) : findDmReply(projectDir);
 
   const delivered = [];
   // output/ holds the finished video (cover already burned in as frame 0) plus the caption;
@@ -201,6 +214,7 @@ function main() {
   for (const video of videos) delivered.push(placeInto(video, outputDir));
   if (coverPath) delivered.push(placeInto(coverPath, sourceDir));
   delivered.push(placeInto(captionPath, outputDir));
+  if (dmReplyPath) delivered.push(placeInto(dmReplyPath, outputDir));
 
   // The word-level JSON is a build input for the caption pipeline, not something the
   // user asked to receive. It stays in the project; only readable text ships.

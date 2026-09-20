@@ -1022,6 +1022,32 @@ Rules:
 - A hashtag off-topic subtracts more than it adds: don't reach for `#Claude`, `#IA`, `#Automatizacion` or `#AIWorkflows` as filler defaults when the video isn't actually about that — pick what the video is actually about.
 - Blank lines between blocks exactly as shown in the template.
 
+### DM Reply (Resource Hand-off)
+
+Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (see the rule above), also write `<slug>-dm-reply.txt` next to it in `renders\final\`. That line is a promise to send something by DM; a caption alone does not keep it, and the user otherwise retypes the same message by hand every time someone comments. `deliver-package.mjs` auto-detects and ships this file the same way it does the caption — optional, not required, so branches with no comment-CTA simply have none.
+
+Plain text, UTF-8, ready to paste into a DM. Fixed structure, confirmed with the user:
+
+```text
+Buenas, como estas? Aca te comparto <lo que el video prometio>:
+
+<link del recurso real>
+
+<explicacion o pasos, SOLO si el recurso los necesita para usarse>
+
+Te invito a sumarte a nuestra comunidad de Skool donde compartimos recursos y mucho mas:
+
+https://www.skool.com/la-casa-de-aurelio-2061/about
+
+Necesitas automatizar algo? -> https://www.aurelioagency.com
+```
+
+Rules:
+
+- The greeting, the Skool invite, and the Aurelio Agency close are **fixed** — same as the caption template, never reworded.
+- The resource block (link, and explanation/steps/commands if the resource needs them to be usable) is the only written part, and it is **never invented**. Pull it from what the video's own transcript actually shows or says (a repo name, an install command visible on screen, a URL spoken aloud). If the video's promise needs more than that to be usable — e.g. it says "te paso los prompts" but never shows them on screen — verify the real content at its source (the tool's own repo/README/site, fetched with `gh`/`WebFetch`, never guessed) before writing it, and only write what came back confirmed. If it still can't be confirmed, leave that part out and say so to the user rather than filling the gap with a plausible-sounding invention — this is the same rule as product copy accuracy, applied to a DM instead of a caption.
+- Match the register of the rest of the delivery (voseo, per the project's own transcript).
+
 ## Repair Rules
 
 - Bad TTS pronunciation or wrong wording: fix `ttsText`, regenerate only that audio segment, transcribe it, update timing/captions, then re-render only the affected segment and final assemblies.
@@ -1094,7 +1120,7 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"   # only a
 - `verify-render.mjs`: confirm duration, resolution, video stream, audio stream, and output path.
 - `capture-overlay-frames.mjs`: read `manifests/overlays.json`, render each item (`textcard`, `steplist`, `punch`) with `assets/overlay-template.html` via Playwright, and write transparent PNG frames plus `renders/overlay-frames/capture-manifest.json`. The template itself is reusable; the JSON content describing what each overlay says is not — write it fresh per video from that video's own transcript.
 - `composite-overlays.mjs`: read `overlays.json` + the capture manifest, refuse to proceed if two items share a screen zone at an overlapping time, and composite every item onto the source video in one ffmpeg `filter_complex` pass.
-- `deliver-package.mjs`: copy the final video(s) — cover already burned in as frame 0, see **The Cover Goes Into The Video, As Frame 0** — and the post description into `<slug>\output\`, and the standalone cover PNG plus a readable plain-text transcript into `<slug>\source\`, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
+- `deliver-package.mjs`: copy the final video(s) — cover already burned in as frame 0, see **The Cover Goes Into The Video, As Frame 0** — the post description, and the DM reply (if one exists — see **DM Reply (Resource Hand-off)**) into `<slug>\output\`, and the standalone cover PNG plus a readable plain-text transcript into `<slug>\source\`, then open that folder in the file manager. Ships no JSON or other intermediates. Refuses to deliver under a placeholder slug. Mandatory final step of every branch.
 - `publish-to-drive.mjs`: after the user approves, mirror the `<slug>\source\` + `<slug>\output\` delivery folder into the Aurelio **Reels** shared drive (local Google Drive mount) under a folder named only `<slug>\`, then delete the `.work\<slug>\` build tree. The dated `<YYYY-MM-DD>_<slug>_post\` rename is a separate publishing skill's job. Never run before approval. `--reels`, `--overwrite`, `--keep-work`, `--dry-run`.
 
 If an existing project still has older local tools such as `render-local.cjs`, `snapshot-qa.cjs`, or `check-overflow.cjs`, those may be used for that project, but migrate repeated behavior back into the bundled scripts.
@@ -1128,7 +1154,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - Large files are hardlinked rather than copied, so the tidy folder costs no extra disk. Editing a delivered file edits the one in `renders\final\` too — they are the same bytes. Re-run with `--overwrite` after a re-render.
 - The folder is split into exactly two subfolders:
   - `source\` — the cover `<slug>-portada.png` on its own, `<slug>-transcript.txt` (the full transcript as readable wrapped prose), and any `--extra` file. Raw material, not the deliverable. The user's own raw originals stay in `.work\<slug>\raws\` and never ship here.
-  - `output\` — the finished video with the cover burned in as frame 0 (see **The Cover Goes Into The Video, As Frame 0**) plus the post description `<slug>-caption.txt`. Once the cover is frame 0, the video needs no further human edit, so it ships as the finished, ready-to-post asset directly in `output\` — it does not wait there empty for someone else to drop a cut in.
+  - `output\` — the finished video with the cover burned in as frame 0 (see **The Cover Goes Into The Video, As Frame 0**) plus the post description `<slug>-caption.txt`, plus `<slug>-dm-reply.txt` when the caption carries a comment-for-DM CTA (see **DM Reply (Resource Hand-off)** — optional, auto-detected, not every video has one). Once the cover is frame 0, the video needs no further human edit, so it ships as the finished, ready-to-post asset directly in `output\` — it does not wait there empty for someone else to drop a cut in.
 - **The word-level transcript JSON does NOT ship.** It is a build input for the caption pipeline, not a deliverable. It stays in the project under `assets\voice\`. The same goes for every other intermediate: manifests, audits, snapshots, segment renders, the extracted WAV. A delivery folder is what the user consumes, not a copy of the workspace.
 - Add something else only when the user would actually use it, via `--extra` (e.g. the attribution text for licensed music). The subtitle `.ass` does **not** ship: approved means the subtitles are final and never hand-edited again, so it stays in `.work\` and is deleted at publish.
 - **Hand over clickable links, and know exactly what is clickable.** Three rules learned the hard way:
