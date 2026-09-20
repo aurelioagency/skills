@@ -6,7 +6,7 @@
 // after the descriptive slug:
 //
 //   <Reels>/<slug>/source/   the media the skill produced
-//   <Reels>/<slug>/output/   <slug>-caption.txt (the editor adds the finished cut here later)
+//   <Reels>/<slug>/output/   caption-<slug>.txt (the editor adds the finished cut here later)
 //
 // A separate publishing skill renames <slug>/ to the dated <YYYY-MM-DD>_<slug>_post/ form
 // when the content actually goes out on social. This skill does NOT add the date or _post.

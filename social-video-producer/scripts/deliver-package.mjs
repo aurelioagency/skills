@@ -6,7 +6,7 @@
 //   <slug>/source/   raw material: the cover PNG on its own, readable transcript, the .ass,
 //                    plus anything passed with --extra
 //   <slug>/output/   the finished video(s) — cover already burned in as frame 0 — plus the
-//                    post description <slug>-caption.txt, and <slug>-dm-reply.txt when the
+//                    post description caption-<slug>.txt, and dm-reply-<slug>.txt when the
 //                    caption carries a comment-for-DM CTA (optional, auto-detected). Once
 //                    frame 0 is the cover, the video needs no further human edit, so it
 //                    ships as the ready-to-post asset directly in output/.
@@ -28,15 +28,15 @@ function usage() {
   node deliver-package.mjs --project <project-root> [--slug <slug>]
       [--video <path>]...        final MP4s; defaults to everything in renders/final
       [--cover <path>]           cover PNG; auto-detected as *-portada.png
-      [--caption <path>]         post description txt; auto-detected as *-caption.txt
-      [--dm-reply <path>]        DM hand-off txt; auto-detected as *-dm-reply.txt (optional)
+      [--caption <path>]         post description txt; auto-detected as caption-*.txt
+      [--dm-reply <path>]        DM hand-off txt; auto-detected as dm-reply-*.txt (optional)
       [--transcript <path>]      word-level JSON; auto-detected (.approved.json wins)
       [--extra <path>]...        anything else worth handing over
       [--dest <dir>]             defaults to <project>/entrega
       [--overwrite]              replace an existing destination folder
       [--no-open]                do not open the folder in the file manager
 
-The transcript ships as readable plain text (<slug>-transcript.txt) only. The word-level
+The transcript ships as readable plain text (transcript-<slug>.txt) only. The word-level
 JSON stays in the project; it is a build input, not a deliverable.`);
 }
 
@@ -82,7 +82,7 @@ function findCover(projectDir) {
 function findCaption(projectDir) {
   const dir = path.join(projectDir, 'renders', 'final');
   if (!fs.existsSync(dir)) return null;
-  const hit = fs.readdirSync(dir).find((name) => /-caption\.txt$/i.test(name));
+  const hit = fs.readdirSync(dir).find((name) => /^caption-.+\.txt$/i.test(name));
   return hit ? path.join(dir, hit) : null;
 }
 
@@ -91,7 +91,7 @@ function findCaption(projectDir) {
 function findDmReply(projectDir) {
   const dir = path.join(projectDir, 'renders', 'final');
   if (!fs.existsSync(dir)) return null;
-  const hit = fs.readdirSync(dir).find((name) => /-dm-reply\.txt$/i.test(name));
+  const hit = fs.readdirSync(dir).find((name) => /^dm-reply-.+\.txt$/i.test(name));
   return hit ? path.join(dir, hit) : null;
 }
 
@@ -200,7 +200,7 @@ function main() {
   for (const video of videos) if (!fs.existsSync(video)) throw new Error(`Missing video: ${video}`);
 
   const captionPath = args.caption ? path.resolve(projectDir, args.caption) : findCaption(projectDir);
-  if (!captionPath) throw new Error('No post description found. Write renders/final/<slug>-caption.txt before delivering.');
+  if (!captionPath) throw new Error('No post description found. Write renders/final/caption-<slug>.txt before delivering.');
 
   const transcriptPath = args.transcript ? path.resolve(projectDir, args.transcript) : findTranscript(projectDir);
   if (!transcriptPath) throw new Error('No transcript found under assets/voice/.');
@@ -218,7 +218,7 @@ function main() {
 
   // The word-level JSON is a build input for the caption pipeline, not something the
   // user asked to receive. It stays in the project; only readable text ships.
-  const textPath = path.join(sourceDir, `${slug}-transcript.txt`);
+  const textPath = path.join(sourceDir, `transcript-${slug}.txt`);
   fs.writeFileSync(textPath, transcriptToText(readWords(transcriptPath)), 'utf8');
   delivered.push(textPath);
 

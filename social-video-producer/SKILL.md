@@ -38,16 +38,16 @@ Every video this skill produces lives under that one root, named after the skill
 
 **The project slug must be descriptive of the video's actual topic, in kebab-case** — the same rule `social-carousel-generator` uses for its `<tema-en-kebab-case>` delivery folder. Never name the project after the source filename, a date, or any other non-descriptive label (`0824`, `video1`, `final2`, `clip`). Derive the slug from what the video is actually about — the hook, the product, or the main topic — once enough of the script or transcript is known to name it (for script-driven projects, right after parsing the script; for burn-in-captions or contextual-overlays projects, right after the Transcript Approval Gate, since the slug is not knowable before the transcript is read). If a project must be created before the topic is known, use a short placeholder and rename the folder plus every file inside it that carries the slug as soon as the topic is confirmed — never ship a delivery folder or final filename still named after a placeholder.
 
-The root holds two things: one delivery folder per video, named **only** after the descriptive slug and split into `source\` (every media file this skill produced — final video, cover, transcript) and `output\` (the `<slug>-caption.txt` and nothing else, so the editor has one obvious place to drop the finished cut), and a single `.work\` folder where every project's working tree lives out of the way. The user's own untouched originals stay in `.work\<slug>\raws\`; they do **not** ship in `source\`. Once the user approves the delivery, `publish-to-drive.mjs` mirrors that same `source\` + `output\` split into the Aurelio **Reels** shared drive under a folder named only `<slug>\` and then **deletes the whole `.work\<slug>\` tree** — the delivery folder and the Drive copy are all that survive (see **Publish To Drive**). Adding the posting date and the `_post` suffix is a separate publishing skill's job, done when the content actually goes out on social — never here.
+The root holds two things: one delivery folder per video, named **only** after the descriptive slug and split into `source\` (every media file this skill produced — final video, cover, transcript) and `output\` (the `caption-<slug>.txt` and nothing else, so the editor has one obvious place to drop the finished cut), and a single `.work\` folder where every project's working tree lives out of the way. The user's own untouched originals stay in `.work\<slug>\raws\`; they do **not** ship in `source\`. Once the user approves the delivery, `publish-to-drive.mjs` mirrors that same `source\` + `output\` split into the Aurelio **Reels** shared drive under a folder named only `<slug>\` and then **deletes the whole `.work\<slug>\` tree** — the delivery folder and the Drive copy are all that survive (see **Publish To Drive**). Adding the posting date and the `_post` suffix is a separate publishing skill's job, done when the content actually goes out on social — never here.
 
 ```text
 social-video-producer\<script-slug>\           <- DELIVERY: only what the user consumes
   source\                                      <- every media file the skill produced
     <slug>-subs.mp4
     <slug>-portada.png
-    <slug>-transcript.txt
+    transcript-<slug>.txt
   output\                                      <- ONLY the post description
-    <slug>-caption.txt
+    caption-<slug>.txt
 
 social-video-producer\.work\<script-slug>\     <- the project; the user never has to open it
   source\
@@ -988,7 +988,7 @@ nudge the block with `--y-offset` (positive is down, in source pixels) and rebui
 
 ## Post Description (Social Caption)
 
-Every finished video ships with a ready-to-publish post description in `<slug>-caption.txt` next to the final MP4 in `renders\final\`, plus pasted in the chat. Plain text, UTF-8, no markdown, no headings, nothing but the caption itself, ready to select-all and paste.
+Every finished video ships with a ready-to-publish post description in `caption-<slug>.txt` next to the final MP4 in `renders\final\`, plus pasted in the chat. Plain text, UTF-8, no markdown, no headings, nothing but the caption itself, ready to select-all and paste.
 
 **Caption template (Instagram / TikTok), La Casa de Aurelio:**
 
@@ -1024,7 +1024,7 @@ Rules:
 
 ### DM Reply (Resource Hand-off)
 
-Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (see the rule above), also write `<slug>-dm-reply.txt` next to it in `renders\final\`. That line is a promise to send something by DM; a caption alone does not keep it, and the user otherwise retypes the same message by hand every time someone comments. `deliver-package.mjs` auto-detects and ships this file the same way it does the caption — optional, not required, so branches with no comment-CTA simply have none.
+Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (see the rule above), also write `dm-reply-<slug>.txt` next to it in `renders\final\`. That line is a promise to send something by DM; a caption alone does not keep it, and the user otherwise retypes the same message by hand every time someone comments. `deliver-package.mjs` auto-detects and ships this file the same way it does the caption — optional, not required, so branches with no comment-CTA simply have none.
 
 Plain text, UTF-8, ready to paste into a DM. Fixed structure, confirmed with the user:
 
@@ -1153,8 +1153,8 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 - It lives inside the project, which lives inside the working directory — that is what makes the links clickable. The script refuses to run under a placeholder slug (`tmp-0826`, `video1`, `final2`), because the whole point is that the user can tell which video is which from the folder name.
 - Large files are hardlinked rather than copied, so the tidy folder costs no extra disk. Editing a delivered file edits the one in `renders\final\` too — they are the same bytes. Re-run with `--overwrite` after a re-render.
 - The folder is split into exactly two subfolders:
-  - `source\` — the cover `<slug>-portada.png` on its own, `<slug>-transcript.txt` (the full transcript as readable wrapped prose), and any `--extra` file. Raw material, not the deliverable. The user's own raw originals stay in `.work\<slug>\raws\` and never ship here.
-  - `output\` — the finished video with the cover burned in as frame 0 (see **The Cover Goes Into The Video, As Frame 0**) plus the post description `<slug>-caption.txt`, plus `<slug>-dm-reply.txt` when the caption carries a comment-for-DM CTA (see **DM Reply (Resource Hand-off)** — optional, auto-detected, not every video has one). Once the cover is frame 0, the video needs no further human edit, so it ships as the finished, ready-to-post asset directly in `output\` — it does not wait there empty for someone else to drop a cut in.
+  - `source\` — the cover `<slug>-portada.png` on its own, `transcript-<slug>.txt` (the full transcript as readable wrapped prose), and any `--extra` file. Raw material, not the deliverable. The user's own raw originals stay in `.work\<slug>\raws\` and never ship here.
+  - `output\` — the finished video with the cover burned in as frame 0 (see **The Cover Goes Into The Video, As Frame 0**) plus the post description `caption-<slug>.txt`, plus `dm-reply-<slug>.txt` when the caption carries a comment-for-DM CTA (see **DM Reply (Resource Hand-off)** — optional, auto-detected, not every video has one). Once the cover is frame 0, the video needs no further human edit, so it ships as the finished, ready-to-post asset directly in `output\` — it does not wait there empty for someone else to drop a cut in.
 - **The word-level transcript JSON does NOT ship.** It is a build input for the caption pipeline, not a deliverable. It stays in the project under `assets\voice\`. The same goes for every other intermediate: manifests, audits, snapshots, segment renders, the extracted WAV. A delivery folder is what the user consumes, not a copy of the workspace.
 - Add something else only when the user would actually use it, via `--extra` (e.g. the attribution text for licensed music). The subtitle `.ass` does **not** ship: approved means the subtitles are final and never hand-edited again, so it stays in `.work\` and is deleted at publish.
 - **Hand over clickable links, and know exactly what is clickable.** Three rules learned the hard way:
@@ -1170,7 +1170,7 @@ node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
   ````
 
   (`open` on macOS, `xdg-open` on Linux.) When the user asks for "a clickable link to the folder", this is the answer — not an apology about what links cannot do. Reach for a Run block whenever the goal is an action rather than viewing a file.
-- Then, underneath: **one link per file**, relative to the working directory — `[<slug>-subs.mp4](social-video-producer/<slug>/source/<slug>-subs.mp4)`, `[<slug>-caption.txt](social-video-producer/<slug>/output/<slug>-caption.txt)` — and the absolute path as plain text to copy-paste. The script also opens the folder once on its own when it finishes.
+- Then, underneath: **one link per file**, relative to the working directory — `[<slug>-subs.mp4](social-video-producer/<slug>/source/<slug>-subs.mp4)`, `[caption-<slug>.txt](social-video-producer/<slug>/output/caption-<slug>.txt)` — and the absolute path as plain text to copy-paste. The script also opens the folder once on its own when it finishes.
 - The script also opens the folder in the file manager (`--no-open` to skip), which is the only way a folder actually opens for the user.
 - Still send the final video itself through the normal file-sending path so it previews in the conversation. If it is too large to upload, say so plainly and point at the folder.
 
