@@ -1,0 +1,144 @@
+{
+  "version": "0.2.0",
+  "date": "2026-09-21",
+  "validation_kind": "local structural checks; not official host or behavioral certification",
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "frontmatter_is_first_content",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "required_metadata",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "name_matches_package",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "metadata_length_limits",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no_unintended_tool_grants",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "core_under_500_lines",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "core_has_no_template_fields",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "five_discovery_done_conditions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "four_setup_done_conditions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "author_material_not_routed_from_core",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "single_run_template_exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:REVIEW.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:SKILL.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:README.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:assets/roadmap-template.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:assets/workflow-template.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:tests/acceptance.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:references/setup.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:references/sources.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "balanced_fences:references/interview-guide.md",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "internal_file_links_and_anchors",
+      "passed": true,
+      "detail": "18 references checked; []"
+    },
+    {
+      "name": "29_unique_behavior_scenarios",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "behavior_not_claimed_tested",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "original_archive_content_unchanged",
+      "passed": true,
+      "detail": "Archive members match the baseline extracted before editing"
+    }
+  ],
+  "metrics": {
+    "original_main": {
+      "words": 2637,
+      "lines": 220,
+      "bytes": 18251
+    },
+    "revised_main": {
+      "words": 1007,
+      "lines": 84,
+      "bytes": 7300
+    },
+    "main_word_reduction_percent": 61.81,
+    "original_operational_words": 6238,
+    "revised_operational_words": 3029
+  },
+  "live_codex_claude_tests": "NOT RUN"
+}
