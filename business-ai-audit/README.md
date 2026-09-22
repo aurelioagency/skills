@@ -129,6 +129,36 @@ To move a selected opportunity into a real (draft-only) test:
 
 The interview and every generated document follow your own language — write in Spanish and it interviews and writes the roadmap in Spanish.
 
+### Prompt de ejemplo para usar con la skill / Example prompt to use with the skill
+
+**Español:**
+
+```text
+Usá la skill business-ai-audit para ayudarme a descubrir cómo mejorar mi negocio con IA y automatizaciones.
+
+Guiame con preguntas de a una para entender a qué me dedico, cómo trabajo y dónde pierdo tiempo o tengo dificultades. También buscá oportunidades para aportar valor, no solo automatizar tareas repetitivas.
+
+Con lo que descubramos, creá un archivo .md con las tareas, los problemas, las soluciones completas o parciales y lo que seguiría haciendo yo.
+
+Cuando tengas información suficiente, recomendame por dónde empezar, qué aplicaciones conectar y qué tareas recurrentes configurar. Pedime aprobación antes de conectar aplicaciones o activar automatizaciones.
+
+Empezá con las primeras preguntas
+```
+
+**English:**
+
+```text
+Use the business-ai-audit skill to help me discover how to improve my business with AI and automation.
+
+Guide me with one question at a time to understand what I do, how I work, and where I lose time or run into difficulties. Also look for opportunities to add value, not just automate repetitive tasks.
+
+With what we discover, create a .md file with the tasks, the problems, the full or partial solutions, and what I would keep doing myself.
+
+When you have enough information, recommend where to start, which apps to connect, and which recurring tasks to set up. Ask for my approval before connecting apps or activating automations.
+
+Start with the first questions
+```
+
 ## License
 
 MIT — see [LICENSE](../LICENSE) at the repo root.
