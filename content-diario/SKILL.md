@@ -13,7 +13,7 @@ Tres fuentes independientes, cada una con su propio circuito de búsqueda:
 
 1. **Planilla de fuentes técnicas** — ver `references/fuentes.md` para el link y la clasificación por categoría. Mirá lo publicado en los últimos días en las fuentes de "novedades"; en las de "teoría" buscá explicaciones/artículos relevantes sin importar antigüedad.
 2. **Canales de YouTube** — lista en `references/canales-lista-blanca.md` (arranca vacía, se completa con lo que el usuario vaya pasando, igual que el paso 1 de `reels-referentes`). Revisá los videos recientes de esos canales.
-3. **Cuentas de Instagram referentes** — delegá directo a los **pasos 1 y 2** de la skill `reels-referentes` para traer candidatos de "reel-copia" (los de más views, con su link). No uses los pasos 3-4 de esa skill todavía — eso solo corre si el usuario aprueba ese candidato acá (ver paso 5).
+3. **Cuentas de Instagram referentes** — delegá directo a los **pasos 1 y 2** de la skill `reels-referentes` para traer candidatos de "reel-copia" (los de más views, con su link). No uses los pasos 3-4 de esa skill todavía — eso solo corre si el usuario aprueba ese candidato acá (ver paso 6).
 
 ## Paso 2 — Clasificación: novedad vs. teoría
 
@@ -31,15 +31,23 @@ Ver `references/verificacion.md` para el detalle. Regla corta:
   - Si hay duda real → proponela marcada "verificar antes de publicar".
 - **Contenido de las últimas semanas** → no hace falta este paso, se propone directo.
 
-## Paso 4 — Armar el menú y guardarlo
+## Paso 4 — Prioridad: novedad fuerte manda
 
-Generá ~5 ideas de carrusel + ~5 ideas de reel (mezclando novedad, teoría y reel-copia). Cada una con: título, fuente (link), tipo, y el porqué en una línea.
+Antes de armar el menú, evaluá si hoy hay una **novedad fuerte**: release de modelo o funcionalidad nueva de un lab grande (OpenAI, Anthropic, Google DeepMind, Meta), o algo con cobertura across varias fuentes de "Periodismo técnico"/"Newsletters" el mismo día.
+
+- Si la hay: esa novedad ocupa los primeros lugares del menú, y se propone **tanto en formato carrusel como en formato reel de actualidad** ese mismo día (no esperar a mañana). Reducí la cantidad de ideas de teoría ese día (2-3 en vez de 5) para no diluir la urgencia.
+- Si no hay ninguna novedad fuerte ese día: compensá con más teoría (podés subir a 5-6 ideas de teoría).
+- Las ideas de teoría que no entran por falta de lugar no se pierden — quedan `pendiente` en el backlog para un día sin novedades.
+
+## Paso 5 — Armar el menú y guardarlo
+
+Generá ~5 ideas de carrusel + ~5 ideas de reel en total (mezclando novedad, teoría y reel-copia, según la prioridad del paso anterior). Cada una con: título, fuente (link), tipo, y el porqué en una línea.
 
 Guardalas en `Documents\content-diario\backlog.json` — ver `references/estado.md` para el formato exacto. Nunca borres una idea del backlog, solo cambiale el estado (`propuesto` → `elegido` / sigue `pendiente`). Las `pendiente` se pueden volver a proponer en rondas futuras.
 
 Mostrá el menú numerado en el chat para que el usuario elija cualquier combinación (0 a N de cada tipo) — no hace falta que la pida, ya tiene que estar generada y guardada cuando el usuario abre la sesión de la mañana.
 
-## Paso 5 — Delegación al elegir
+## Paso 6 — Delegación al elegir
 
 **Carrusel elegido:** invocá `social-carousel-generator` con el tema y la fuente.
 
