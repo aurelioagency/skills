@@ -11,7 +11,7 @@ Skill padre: genera el menú del día, lo persiste, y al elegir una idea delega 
 
 Tres fuentes independientes, cada una con su propio circuito de búsqueda:
 
-1. **Planilla de fuentes técnicas** — ver `references/fuentes.md` para el link y la clasificación por categoría. Para las de "novedades" (Labs oficiales, Periodismo técnico, Newsletters): entrá a cada URL con el browser/WebFetch y mirá qué se publicó en las últimas ~48-72hs; complementá con una búsqueda web general del día (ej. "lanzamiento modelo IA [fecha de hoy]") para no depender solo de que el blog oficial ya esté actualizado. Guardá siempre el link directo al artículo/post puntual, nunca el link genérico del blog. Para las de "teoría" buscá explicaciones/artículos relevantes sin importar antigüedad.
+1. **Planilla de fuentes técnicas** — ver `references/fuentes.md` para el link y la clasificación por categoría. Para las de "novedades" (Labs oficiales, Periodismo técnico, Newsletters): entrá a cada URL de la planilla con el browser/WebFetch y mirá qué se publicó en las últimas ~48-72hs. Si querés confirmar que no te falta nada de ESE MISMO lab/medio porque su blog todavía no lo subió, podés buscar puntualmente (ej. `site:anthropic.com` o el nombre exacto del lab + la fecha de hoy) — pero el resultado tiene que seguir siendo ese lab/medio de la planilla, nunca uno nuevo. **Ningún lab, medio o cuenta que no esté en la planilla o en la lista blanca de Instagram/YouTube entra al menú, sin excepción, aunque la novedad parezca fuerte o de la misma categoría.** Guardá siempre el link directo al artículo/post puntual, nunca el link genérico del blog. Para las de "teoría" buscá explicaciones/artículos relevantes sin importar antigüedad, dentro de esas mismas fuentes.
 2. **Canales de YouTube** — lista en `references/canales-lista-blanca.md` (arranca vacía, se completa con lo que el usuario vaya pasando, igual que el paso 1 de `reels-referentes`). Revisá los videos recientes de esos canales.
 3. **Cuentas de Instagram referentes** — delegá directo a los **pasos 1 y 2** de la skill `reels-referentes` para traer candidatos de "reel-copia" (los de más views, con su link). No uses los pasos 3-4 de esa skill todavía — eso solo corre si el usuario aprueba ese candidato acá (ver paso 6).
 
@@ -64,6 +64,7 @@ Mostrá el menú numerado en el chat para que el usuario elija cualquier combina
 ## Reglas duras
 
 - Nunca inventes datos de una fuente — si una categoría no tiene nada nuevo relevante ese día, decilo, no rellenes con relleno.
+- Nunca propongas un lab, medio, canal de YouTube o cuenta de Instagram que no esté en la planilla de fuentes o en las listas blancas. Una "búsqueda web general" solo sirve para encontrar la novedad más reciente de un lab/medio YA listado, jamás para traer uno nuevo.
 - Nunca borres ideas del backlog, solo cambiá su estado.
 - No uses `hook-generator` ni `social-video-producer` en este flujo.
 - No publiques nada en ninguna red — esta skill solo genera ideas y borradores.
