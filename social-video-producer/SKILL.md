@@ -743,6 +743,8 @@ Caption positioning over video with people:
 - Before fixing the vertical caption position, inspect frames of the clip to locate the speaker's face. Sample **every distinct camera framing in the video**, not "2-3 timestamps" blindly — a talking-head clip cuts between a wide intro and a tight close-up, the speaker leans in, a background screen appears and the face drops. For each framing, find the LOWEST the chin gets.
 - Captions must NOT cover the face. If the face is in the upper/middle third, place captions in the visible lower third (but above the platform UI safe zone). If the face is centered, use the band between the chin and the safe zone.
 - **The caption band follows the face across shots; it is never one fixed Y for a video whose framing changes.** If the chin's vertical position moves materially between shots, a fixed band that clears the face in one shot lands across the mouth in another. For burned-in captions this is what `--zones` on `build-burn-in-captions.mjs` is for (see the Burn-In branch). "Below the face" also means *not* stranded at the very bottom of the frame in the shots where the face rides high — each shot gets a band just below its own chin.
+- **In a wide/full-body shot, "below the chin" is not a fixed gap — it means below the speaker's hand or held object (mic, prop, phone), which sits much closer to the face than the legs or feet.** A generic gap formula measured only from the chin, with nothing anchoring it to what is actually in frame, can technically clear the face by the numbers while still landing on the shoes — confirmed on this exact skill after a wide-shot caption ended up over the sneakers with a face-clearing chin gap that was mathematically fine and visually wrong. Before picking a wide-shot `marginBottom`, find the lowest point of the hand/mic/prop in that shot (not just the chin) and place the band just under THAT, the same distance rule used for the close framings. Re-derive it per project; do not reuse a marginBottom number from a previous video's wide shot, since the pose (hand raised at chest vs. resting on a knee) changes where "below the hand" actually is.
+- **A crossfade or dissolve between two framings is not an instant cut.** Measure the zone boundary at the point the OUTGOING framing's face position stops matching the shot, not the point the transition starts — a caption word that starts just before a 0.2–0.3s crossfade will be on screen mostly during/after it, so it should take the position of the shot it resolves into, not the one it started in. Sample frames in ~0.1s steps across the suspected cut to find where the dissolve actually lands, the same way `wide_precise`/`close_precise` grids are built in this doc.
 - Minimum horizontal padding: 120px per side at 1080px width.
 - `overflow: hidden` on every caption container.
 - House default is one word at a time (`--max-words 1`). If a project overrides to multi-word chunks, cap at 2 words; chunk-cut gap threshold: 0.35s (with 3-word chunks and a larger threshold, a chunk can hide before its last word appears).
@@ -919,6 +921,30 @@ para tu próximo video       y esta SKILL lo arregla
 - **House cyan, always**, the same as the captions inside the video. That is what makes the
   grid recognisable.
 
+**Do not mix the big and small size inside the first or third line by default.** The default
+shape is one line fully small, one line fully big, one line fully small — wrapping just one
+word of the small lines in `*asterisks*` (e.g. `--line "le di *ojos*"` next to a separate
+`*a mi agente*` big line) produces two lines that each carry two different sizes, which reads
+as inconsistent, not as emphasis. Only mix sizes within a small line when the copy genuinely
+needs a second emphasised word beyond the big line (the `skill` example above), and treat that
+as the exception, not the starting point.
+
+**Never add an outline, a colour, or any treatment that the current instructions did not ask
+for, even if older delivered covers in this project folder have it.** A past cover's style is
+a record of what an earlier session (and an earlier version of this guidance, or an explicit
+user request in that session) produced — it is not authority for this one. Follow `--style`
+and the fixed sizes exactly as given for the current run; if a past example looks different
+and that difference seems worth copying, ask the user in one concrete question ("¿querés
+contorno negro como en `<archivo>` o liso como pide la skill?") instead of pattern-matching
+silently. Confirmed the hard way: inferring a black outline from old deliveries without asking
+shipped a cover the user never approved and had to be redone twice.
+
+**Fixed size numbers (`--small-size` / `--big-size`) are literal once set for this account —
+never substitute `--fit` or a different pair of numbers "to make it look better."** `--fit`
+changes the rendered size per video based on word count, which is the exact inconsistency the
+fixed numbers exist to prevent. When asked to nudge the block, apply only the specific change
+requested (e.g. a given `--y-offset`) and leave the sizes untouched.
+
 The exact invocation behind the right-hand cover, worth copying verbatim as a starting
 point (the sizes and `--fit` are what make it fill the frame):
 
@@ -1019,6 +1045,7 @@ Rules:
   - Productividad / negocio → `#Productividad #FutureOfWork #PYMES #IA`
   - Desarrollo / código → `#DevTools #SoftwareEngineering #IA`
   - Ninguna categoría encaja → construí los cuatro con palabras literales del video (nombres de herramientas, conceptos técnicos, el tema puntual tratado).
+- **When the video names a specific tool or product, prefer literal tags built from that name over the generic category bucket, even when the bucket technically fits.** The buckets above are a fallback for when nothing in the video gives you a sharper tag, not the default reach for any video that's broadly "about agents" or "about código." A video about a named tool (e.g. Iris, an MCP screenshot tool) gets tags like `#Iris #MCP #CodingAgents #DevTools`, not the same `#AIAgents #Agentic #Automatizacion #AIWorkflows` set reused from an unrelated agents video — reusing one bucket across different videos is exactly the "always the same hashtags" failure to avoid. Confirmed: the user caught this after a video got the same Agentes bucket as prior unrelated videos despite covering a specifically named tool.
 - A hashtag off-topic subtracts more than it adds: don't reach for `#Claude`, `#IA`, `#Automatizacion` or `#AIWorkflows` as filler defaults when the video isn't actually about that — pick what the video is actually about.
 - Blank lines between blocks exactly as shown in the template.
 
@@ -1047,6 +1074,7 @@ Rules:
 - The resource block (link, and explanation/steps/commands if the resource needs them to be usable) is the only written part, and it is **never invented**. Pull it from what the video's own transcript actually shows or says (a repo name, an install command visible on screen, a URL spoken aloud). If the video's promise needs more than that to be usable — e.g. it says "te paso los prompts" but never shows them on screen — verify the real content at its source (the tool's own repo/README/site, fetched with `gh`/`WebFetch`, never guessed) before writing it, and only write what came back confirmed. If it still can't be confirmed, leave that part out and say so to the user rather than filling the gap with a plausible-sounding invention — this is the same rule as product copy accuracy, applied to a DM instead of a caption.
 - **Call each step what it actually is.** A slash command or a named skill activation (`/ecc:plan "..."`, `Usa el skill tdd-workflow para...`) is a command, not a "prompt" — a prompt is free text you write yourself. If the video's own script already used the word "prompts" for this block, that word can still open the section in a generic way ("Y para usar la herramienta:" reads fine), but don't manufacture a claim that the video "showed" or "displayed" prompts it never displayed, and don't label commands as prompts when asked directly.
 - Match the register of the rest of the delivery (voseo, per the project's own transcript).
+- **When asked to shorten or simplify the DM reply, trim only the resource block (the steps/explanation/commands line) — never the greeting, the Skool invite, or the Aurelio Agency close.** Those three are the fixed template, identical to the caption's fixed lines, and "make it shorter" or "just the link, nothing else" means cut the part you wrote (install steps, MCP config, etc.), not the parts the template always carries. Confirmed the hard way: an instruction to drop the install/MCP instructions was over-applied to also drop the Skool and Aurelio Agency links, which the user then had to ask to have restored.
 
 ## Repair Rules
 
@@ -1150,6 +1178,7 @@ A file buried in `renders\final\` next to manifests, audits and snapshots has no
 node "<skill-dir>\scripts\deliver-package.mjs" --project "<project>"
 ```
 
+- **Before running it, list `renders\final\` and confirm it contains exactly the video(s) meant to ship — no intermediate render left behind.** `deliver-package.mjs` picks up every `.mp4`/`.mov`/`.webm` in that folder by default, so a pre-cover or pre-fix intermediate that was rebuilt but not moved out (to `renders\segments\pre-cover\` or similar) gets delivered and published alongside the real final file. This happened for real: an older no-cover render sat in `renders\final\` after a caption re-burn and both files shipped to the user's local delivery folder AND the Drive publish before it was caught. Whenever a video in `renders\final\` is rebuilt, move the file it replaces out of that folder in the same step — do not leave two videos there "to compare later." If a stray file is only discovered after `deliver-package.mjs` or `publish-to-drive.mjs` already ran, delete it from both the local delivery folder and the Drive copy, not just from the project.
 - It lives inside the project, which lives inside the working directory — that is what makes the links clickable. The script refuses to run under a placeholder slug (`tmp-0826`, `video1`, `final2`), because the whole point is that the user can tell which video is which from the folder name.
 - Large files are hardlinked rather than copied, so the tidy folder costs no extra disk. Editing a delivered file edits the one in `renders\final\` too — they are the same bytes. Re-run with `--overwrite` after a re-render.
 - The folder is split into exactly two subfolders:
