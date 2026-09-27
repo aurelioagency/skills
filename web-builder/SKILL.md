@@ -61,11 +61,25 @@ Sumá datos estructurados (JSON-LD) y accesibilidad más allá del checklist bá
 
 Si el MCP oficial de Microsoft [Playwright](https://github.com/microsoft/playwright-mcp) está conectado, levantá el sitio en local (`npm run dev`), abrilo con Playwright, y revisá: contraste real en pantalla, que se vea bien en mobile (viewport angosto), y que no haya enlaces rotos (recorré los `<a href>` y verificá que respondan). Corregí lo que encuentres antes de entregar. Si no está conectado, corré igual `scripts/check-broken-links.mjs` contra el servidor local para al menos cubrir los enlaces rotos.
 
-## Paso 8 — Reporte final (módulo base)
+## Paso 8 — Chequeo de seguridad con el plugin claude-security
 
-Mostrale al usuario los 20 puntos con un check de qué quedó resuelto en código, y una lista corta de lo que le queda hacer a mano: deploy, comprar/conectar dominio, dar de alta el sitio en Google Search Console y enviar el sitemap. Si el pedido incluye venta/cursos/membresías, seguí con el Paso 9.
+Antes de entregar, corré una pasada de seguridad extra con el plugin oficial de Anthropic `claude-security` (marketplace `anthropics/claude-plugins-official`), sobre el código del sitio recién generado.
 
-## Paso 9 — Módulo de comercio (solo si el pedido lo necesita)
+1. **Verificar si ya está instalado** — correr `claude plugin list` (o probar si el comando `/claude-security` existe).
+2. **Si no está instalado**, avisale al usuario que se va a instalar un plugin oficial de Anthropic (no es código propio de esta skill) y esperá su OK antes de correr:
+   ```bash
+   claude plugin marketplace add anthropics/claude-plugins-official
+   claude plugin install claude-security@claude-plugins-official
+   ```
+3. **Una vez instalado** (o si ya lo estaba), corré `/claude-security` apuntando al código del sitio generado. Resolvé lo que el escaneo encuentre; si algo no se puede resolver solo, dejalo anotado para reportarlo en el Paso 9.
+
+Si el usuario pidió explícitamente no instalar nada nuevo, saltear este paso entero y avisar en el reporte final que el chequeo de seguridad extra no se corrió por ese motivo.
+
+## Paso 9 — Reporte final (módulo base)
+
+Mostrale al usuario los 20 puntos con un check de qué quedó resuelto en código, el resultado del chequeo de `claude-security` (o por qué no se corrió), y una lista corta de lo que le queda hacer a mano: deploy, comprar/conectar dominio, dar de alta el sitio en Google Search Console y enviar el sitemap. Si el pedido incluye venta/cursos/membresías, seguí con el Paso 10.
+
+## Paso 10 — Módulo de comercio (solo si el pedido lo necesita)
 
 Se activa cuando el usuario pide vender un curso o producto digital, cobrar por acceso a contenido, o que alguien pague y recién después pueda descargar un archivo. Si el pedido no menciona nada de esto, no lo ofrezcas ni lo actives — es una capa aparte con costos e infraestructura real, no algo para sumar por defecto.
 
@@ -91,6 +105,7 @@ Después:
 - Nunca hagas deploy, ni compres dominio, ni toques configuración de DNS o hosting — no es parte de esta skill.
 - La política de privacidad y los términos y condiciones que generás son **plantillas genéricas de partida**, no asesoría legal real. Decíselo siempre al usuario y sugerí que las revise un abogado antes de publicar, sobre todo si recolecta datos sensibles o vende algo.
 - No instales ninguna skill de terceros (Taste, Impeccable, Emil Kowalski, UI/UX Pro Max) sin avisar antes qué vas a correr — son paquetes de otra gente, no código propio.
+- Mismo criterio con el plugin `claude-security`: avisar antes de instalarlo (es un plugin, no código propio de esta skill), y no instalarlo si el usuario pidió explícitamente no sumar nada nuevo.
 
 **Módulo de comercio:**
 - No lo actives si el usuario no pidió vender/cobrar/login — no es parte por defecto de construir una web.
@@ -109,6 +124,7 @@ Después:
 - `scripts/check-broken-links.mjs` — recorre el sitio corriendo en local y reporta enlaces rotos.
 - `scripts/optimize-images.mjs` — comprime imágenes de `public/` con sharp antes de entregar.
 - `assets/` — plantillas base: política de privacidad, términos, banner de cookies, página 404, middleware de HTTPS, formulario con validación y anti-spam.
+- Plugin `claude-security` (marketplace `anthropics/claude-plugins-official`) — chequeo de seguridad extra sobre el código generado, ver Paso 8. No se instala solo, se avisa antes.
 
 **Módulo de comercio:**
 - `references/auth-setup.md` — configuración de Auth.js para App Router.
