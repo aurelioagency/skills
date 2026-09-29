@@ -314,7 +314,7 @@ Columnas, **en este orden exacto**:
 | H | `Link` | La página de archive.org **del tema**. |
 | I | `Tramo usado` | `<N>s desde <m:ss>`. |
 | J | `Duracion video` | Largo del `short.mp4`. |
-| K | `Estado` | `Listo para publicar` o `Ya publicado`. |
+| K | `Estado` | `Listo para publicar`, `Ya publicado`, o `Bloqueado por Content ID` si YouTube la rechazó después de subida (ver *Cuando YouTube bloquea la pista por Content ID* en `references/entrega.md`). `Ya publicado` significa que el post salió, **no** que la pista esté libre de reclamos futuros — no reusarla a ciegas asumiendo que ya está probada. |
 
 `Fuente` se agregó el 2026-08-14; las filas anteriores la tienen vacía y no se rellenan hacia
 atrás salvo pedido. Los decimales van con coma (`50,1s`), como el resto del log.

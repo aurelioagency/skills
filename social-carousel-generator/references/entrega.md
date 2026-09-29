@@ -156,7 +156,33 @@ El carrusel no se queda sin video por eso. La cadena, en orden:
    normalizado y con fades: no se le puede elegir otra ventana.
 
 **Repetir música entre carruseles no es problema** — decisión de La Casa.
-No hace falta buscar una pista nueva a toda costa; una ya aprobada sirve igual.
+No hace falta buscar una pista nueva a toda costa; una ya aprobada sirve igual. **Pero
+"ya aprobada" no es lo mismo que "libre de Content ID"** — ver más abajo.
+
+### Cuando YouTube bloquea la pista por Content ID
+
+Pasó en `jev-system-one-models`: dos pistas de archive.org/Jamendo distintas, subidas una
+después de la otra, quedaron bloqueadas por reclamo de derechos de autor — incluida una que
+el log de la marca tenía marcada `Ya publicado` de un carrusel anterior, como si estuviera
+probada. **El estado `Ya publicado` describe que el post salió, no que Content ID la dejó
+pasar para siempre**: el mismo audio puede matchear un reclamo nuevo en cualquier momento.
+
+No sirve acortar el video para esquivarlo (el umbral de bloqueo lo pone cada sello, no se
+conoce de antemano) ni seguir probando pistas de la misma fuente al azar. El movimiento que
+funcionó:
+
+1. **Bajar de la YouTube Audio Library del propio canal** (`studio.youtube.com/channel/<id>/music`),
+   no de archive.org. Filtrar por mood/género acorde, tocar el ícono de licencia para
+   confirmar el texto ("podés usar esta pista en cualquier video, incluidos los que
+   monetices, sin límite de duración") y descargarla con el botón `Descargar` de esa fila.
+2. Recortar con `ffmpeg` al largo exacto del video (mismo criterio de fade que
+   `fetch-music.mjs`) y remuxar solo el audio (`-c:v copy`) para no re-renderizar el video.
+3. Subir el reemplazo y esperar a que termine la verificación de derechos de autor antes de
+   marcar el video como público — Studio la corre después de cargar el archivo, antes de que
+   quede visible.
+4. **Actualizar el registro de esa fila en el log de la marca**: el `Estado` pasa a
+   `Bloqueado por Content ID`, y se agrega una fila nueva para la pista de reemplazo con su
+   propio `Estado`. No se pisa la fila vieja — queda como historial de qué no usar de nuevo.
 
 **Show the chosen track to the user and wait for a yes before publishing.** This gate is not
 optional and cannot be automated away: the filters read titles, so a track can be named well
