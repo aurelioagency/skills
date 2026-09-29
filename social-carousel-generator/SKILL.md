@@ -55,7 +55,7 @@ De ahi salen las cuatro consecuencias que hay que tener a mano:
 6. **QA. Los dos scripts, y despues las placas.**
    Listo cuando: `render-and-audit.mjs` y `audit-serie.mjs` corrieron y sus red issues estan arreglados **en el fuente**; y cada PNG se abrio a tamano real y se miro, uno por uno (`references/entrega.md`). **No se arma ni se manda contact sheet:** despues de cada tanda va el bloque que abre la carpeta, y el usuario revisa los PNG ahi. Una placa puntual, en una correccion, si va al chat a tamano completo.
 7. **Short vertical y musica aprobada.**
-   Listo cuando: `short.mp4` sale de las placas aprobadas, el usuario vio el track ya cortado al largo del video y lo aprobo, y quedo registrado en `manifest.json` y en el log de musica de la marca.
+   Listo cuando: `short.mp4` sale de las placas aprobadas, el usuario vio el track ya cortado al largo del video y lo aprobo, y quedo registrado en `manifest.json` y en el log de musica de la marca. **El short nunca dura 1 minuto o mas** (`build-short.mjs` lo topea en 55s solo): un short de 63.4s quedo bloqueado por Content ID en YouTube dos veces seguidas con dos musicas distintas, y el mismo recortado a 40s se subio sin problema.
 8. **Caption y entrega.**
    Listo cuando: la carpeta tiene los PNG, `caption.txt` y `short.mp4` y nada mas; se copio al Drive de la marca si el preset lo nombra y **solo despues del si del usuario**; el fuente editable quedo en su lugar; y el mensaje termina con el bloque `bash` que abre la carpeta.
 

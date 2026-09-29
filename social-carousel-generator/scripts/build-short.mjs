@@ -14,6 +14,10 @@
 //   --seconds-per <n> fuerza N segundos fijos por slide (apaga el reparto por texto)
 //   --no-music        deja el video mudo
 //
+// El total nunca pasa MAX_TOTAL (55s): YouTube bloquea por Content ID mucho mas
+// agresivo a los shorts de un minuto o mas. --seconds-per se saltea este tope
+// a proposito (uso explicito, no automatico).
+//
 // Los frames se renderizan con ?video=1, que omite el prompt de swipe: en un Short
 // no hay nada que deslizar. El carrusel no se toca.
 import fs from 'node:fs';
@@ -55,6 +59,10 @@ const W = data.width || 1080, H = data.height || 1440;
 // Esto no promete legibilidad: un slide con nota metodologica no se alcanza a
 // leer en 8s. El video invita a pausar, no reemplaza al carrusel.
 const MIN_SLIDE = 3.0, MAX_SLIDE = 8.0, CTA_SLIDE = 3.0;
+// YouTube bloquea por Content ID mucho mas agresivo pasado el minuto: un short de
+// 63.4s quedo bloqueado dos veces seguidas (con dos musicas de fondo distintas) y
+// el mismo video recortado a 40s se subio sin problema. Tope duro, no sugerencia.
+const MAX_TOTAL = 55.0;
 const SKIP = new Set(['type', 'accent', 'color', 'mascot', 'asset', 'side', 'cls', 'pct', 'n']);
 const textoDe = (v) => {
   if (v == null) return '';
@@ -77,7 +85,16 @@ const tiempos = slides.map((s, i) => {
   if (hi === lo) return (MIN_SLIDE + MAX_SLIDE) / 2;
   return Math.round((MIN_SLIDE + (pesos[i] - lo) / (hi - lo) * (MAX_SLIDE - MIN_SLIDE)) * 10) / 10;
 });
-const TOTAL = Math.round(tiempos.reduce((a, b) => a + b, 0) * 10) / 10;
+let TOTAL = Math.round(tiempos.reduce((a, b) => a + b, 0) * 10) / 10;
+
+// Tope duro de duracion total: si el reparto por texto se pasa de MAX_TOTAL, se
+// escala todo proporcionalmente (nunca por debajo de MIN_SLIDE/CTA_SLIDE quedan
+// slides ilegibles porque el escalado es el mismo factor para todos).
+if (!FIXED && TOTAL > MAX_TOTAL) {
+  const factor = MAX_TOTAL / TOTAL;
+  for (let i = 0; i < tiempos.length; i++) tiempos[i] = Math.round(tiempos[i] * factor * 10) / 10;
+  TOTAL = Math.round(tiempos.reduce((a, b) => a + b, 0) * 10) / 10;
+}
 
 console.log('slide  tipo         palabras  segundos');
 slides.forEach((s, i) => console.log(`  ${String(i + 1).padEnd(4)} ${s.type.padEnd(12)} ${String(pesos[i]).padStart(6)} ${String(tiempos[i]).padStart(9)}`));
