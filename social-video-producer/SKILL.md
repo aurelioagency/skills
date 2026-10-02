@@ -1055,25 +1055,26 @@ Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (s
 Plain text, UTF-8, ready to paste into a DM. Fixed structure, confirmed with the user:
 
 ```text
-Buenas, como estas? Aca te comparto <lo que el video prometio>:
+Hola! Acá te dejo <lo que el video prometió>:
 <link del recurso real>
 
-<pasos, comandos o explicacion, SOLO si el recurso los necesita para usarse>
+<pasos, comandos o explicación, SOLO si el recurso los necesita para usarse>
 
-Te invito a sumarte a nuestra comunidad de Skool donde compartimos recursos y mucho mas:
-https://www.skool.com/la-casa-de-aurelio-2061/about
+Compartimos más recursos como este en la comunidad: https://www.skool.com/la-casa-de-aurelio-2061/about
 
-Necesitas automatizar algo? -> https://www.aurelioagency.com
+¿Querés que automaticemos algo de tu negocio? → https://www.aurelioagency.com
 ```
+
+(Shortened and rewritten in voseo on 2026-10-02 at the user's request: the old long Skool paragraph, the "Buenas, como estas?" opener and the "Necesitas automatizar algo?" close were replaced by the three lines above.)
 
 Rules:
 
-- The greeting, the Skool invite, and the Aurelio Agency close are **fixed** — same as the caption template, never reworded.
-- **Line-break convention, confirmed with the user:** no blank line between a label/greeting line and the URL or content that directly continues it (e.g. `Aca te comparto...:` immediately followed by the link, `Te invito...:` immediately followed by the Skool URL); a blank line only between distinct blocks (repo block / steps block / Skool block / Aurelio Agency close). Follow the template's own spacing exactly — do not add a blank line after every line out of habit.
+- The greeting, the Skool line, and the Aurelio Agency close are **fixed** — never reworded.
+- **Line-break convention, confirmed with the user:** no blank line between a label/greeting line and the URL or content that directly continues it (e.g. `Acá te dejo...:` immediately followed by the link); the Skool line carries its URL on the same line; a blank line only between distinct blocks (repo block / steps block / Skool block / Aurelio Agency close). Follow the template's own spacing exactly — do not add a blank line after every line out of habit.
 - The resource block (link, and explanation/steps/commands if the resource needs them to be usable) is the only written part, and it is **never invented**. Pull it from what the video's own transcript actually shows or says (a repo name, an install command visible on screen, a URL spoken aloud). If the video's promise needs more than that to be usable — e.g. it says "te paso los prompts" but never shows them on screen — verify the real content at its source (the tool's own repo/README/site, fetched with `gh`/`WebFetch`, never guessed) before writing it, and only write what came back confirmed. If it still can't be confirmed, leave that part out and say so to the user rather than filling the gap with a plausible-sounding invention — this is the same rule as product copy accuracy, applied to a DM instead of a caption.
 - **Call each step what it actually is.** A slash command or a named skill activation (`/ecc:plan "..."`, `Usa el skill tdd-workflow para...`) is a command, not a "prompt" — a prompt is free text you write yourself. If the video's own script already used the word "prompts" for this block, that word can still open the section in a generic way ("Y para usar la herramienta:" reads fine), but don't manufacture a claim that the video "showed" or "displayed" prompts it never displayed, and don't label commands as prompts when asked directly.
 - Match the register of the rest of the delivery (voseo, per the project's own transcript).
-- **When asked to shorten or simplify the DM reply, trim only the resource block (the steps/explanation/commands line) — never the greeting, the Skool invite, or the Aurelio Agency close.** Those three are the fixed template, identical to the caption's fixed lines, and "make it shorter" or "just the link, nothing else" means cut the part you wrote (install steps, MCP config, etc.), not the parts the template always carries. Confirmed the hard way: an instruction to drop the install/MCP instructions was over-applied to also drop the Skool and Aurelio Agency links, which the user then had to ask to have restored.
+- **When asked to shorten or simplify the DM reply, trim only the resource block (the steps/explanation/commands line) — never the greeting, the Skool line, or the Aurelio Agency close.** Those three are the fixed template, and "make it shorter" or "just the link, nothing else" means cut the part you wrote (install steps, MCP config, etc.), not the parts the template always carries. Confirmed the hard way: an instruction to drop the install/MCP instructions was over-applied to also drop the Skool and Aurelio Agency links, which the user then had to ask to have restored.
 
 ## Repair Rules
 
