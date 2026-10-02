@@ -1019,8 +1019,6 @@ Every finished video ships with a ready-to-publish post description in `caption-
 **Caption template (Instagram / TikTok), La Casa de Aurelio:**
 
 ```text
-Bienvenidos a la Casa de Aurelio!
-
 <2-4 lineas que resumen el gancho o insight principal del video, tono directo, sin relleno>
 
 De la teoría a la práctica: Aurelio Agency →
@@ -1034,7 +1032,8 @@ https://www.skool.com/la-casa-de-aurelio-2061
 
 Rules:
 
-- The greeting, the services paragraph links, and both URLs are **fixed**. Never reword, translate, shorten, or adapt them.
+- The caption opens directly with the written paragraph. There is no "Bienvenidos a la Casa de Aurelio!" greeting any more (removed 2026-10-02 at the user's request — it had become redundant); never add it back.
+- The services paragraph links and both URLs are **fixed**. Never reword, translate, shorten, or adapt them.
 - The only written block is the 2-4 line paragraph: it restates the video's strongest idea, hook, or figure — not a recap of every line spoken. No filler, no generic AI phrasing, no inflated claims. Natural rhythm for the language actually spoken in the video.
 - **Deduce the variant from what the video's outro actually says — never ask when the material already answers it.** If the outro asks the viewer to comment a word to receive something by DM (a skill, a template, a resource), insert a `Comentá <PALABRA> y te la mando por DM.` line right after the written paragraph, and make sure that exact word also appears written out in the paragraph itself. Otherwise, skip that line entirely — do not invent a comment CTA the video never asked for. Only ask the user if the outro itself leaves the intent ambiguous.
 - **Exactly 5 hashtags, always.** One fixed: `#LaCasaDeAurelio`, always last, as signature. The other four are dynamic, picked by the video's actual topic:
