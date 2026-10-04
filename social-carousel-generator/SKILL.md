@@ -425,6 +425,10 @@ Los dos chequeos de *Los dos chequeos* (`references/redaccion.md`) se hacen **so
 tabla**: la columna `Extracto de la fuente` es la trazabilidad línea por línea, y la columna
 `Titular` leída de arriba a abajo es la lectura de titulares seguidos.
 
+Antes de mostrar la tabla, aplicá también *Pasada editorial: claridad y fluidez antes del
+render* de `references/redaccion.md` al conjunto título + bajada + rótulos del recurso.
+Se integra a estos chequeos: no agrega otro gate ni consulta al usuario.
+
 La copy de la tabla ya pasó el filtro de *Grounding Technical Terms* (`references/redaccion.md`):
 cada término del que depende el argumento se lee en su placa, y no se explica lo que no hacía
 falta.

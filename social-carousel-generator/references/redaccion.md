@@ -287,6 +287,50 @@ Recortada sin perder nada:
 Fijate que el recorte sigue siendo dos oraciones con sujeto y verbo. No se convirtió en
 `Seis días para hacer ciencia.`
 
+### Pasada editorial: claridad y fluidez antes del render
+
+Aplicala internamente a la propuesta, antes del gate de aprobación de copy, y a los
+textos modificados en cada corrección. Es parte de la revisión existente, no otro gate ni
+un pedido adicional al usuario. Incluye títulos, bajadas y rótulos previstos del recurso;
+en la caption, solo el párrafo variable. No cambia el CTA ni los bloques fijos del preset.
+
+El objetivo es que el lector entienda una idea precisa con una lectura natural. No es
+ocultar el uso de IA ni obtener una puntuación de un detector. Este criterio adapta la
+Guía Humanizar Textos con Claude de Laura Álvarez (pp. 3 y 9): quitar relleno y
+repeticiones, sin convertir señales de estilo en prohibiciones. No requiere volver a
+consultar Wikipedia ni un servicio externo en cada carrusel.
+
+Recorré estas preguntas sobre la copy completa y corregí solo donde haya un defecto:
+
+- **¿Se entiende quién hace qué?** Conservá sujeto, acción, objeto y las condiciones que
+  cambian el sentido. Si el tema necesita distinguir herramienta, modelo o intervención
+  humana, resolvelo con la fuente antes de redactar. No atribuyas al sistema una tarea
+  humana ni conviertas un resultado acotado en una capacidad universal.
+- **¿Cada parte de la placa aporta?** Leé juntos título, bajada y rótulos del gráfico.
+  El conjunto puede presentar, explicar y demostrar la misma idea, pero no decirla varias
+  veces sin agregar información. Una cifra necesita un rótulo que identifique qué mide;
+  la repetición necesaria para entenderla se conserva. No completes un espacio con una
+  frase genérica ni elimines contexto solo por compartir palabras con el título.
+- **¿La oración fluye y sigue diciendo lo mismo?** Quitá introducciones vacías, cierres
+  que solo repiten, adjetivos promocionales y conectores sin relación real. Conservá los
+  conectores que explican causa, condición o contraste y las estructuras gramaticales
+  paralelas que aclaran acciones relacionadas. No conviertas el párrafo en fragmentos ni
+  busques sinónimos para variar nombres técnicos. Si un recorte o una traducción literal
+  vuelve ambigua la fuente, rearmá la oración para aclararla, dentro del criterio de
+  reformulación ya definido arriba; mantené el extracto original como trazabilidad.
+- **¿El cambio mejora comprensión o solo apariencia?** No hay una lista de palabras
+  prohibidas: una palabra precisa se mantiene aunque figure entre señales de escritura
+  con IA. No alteres una lista de tres elementos si el contenido tiene tres, ni agregues
+  informalidad, experiencias, promesas, metáforas o datos para que parezca humano. Las
+  negritas y otros recursos siguen la jerarquía del template, no una regla de Wikipedia.
+
+Terminá comparando la versión revisada con la fuente: mismos participantes, acciones,
+cifras, alcance y condiciones. Si una mejora de estilo cambia alguno, descartala.
+Revisá los titulares seguidos para comprobar continuidad y tono, sin forzar la misma
+estructura de oración en todas las placas ni variar por obligación. Si el texto ya es
+claro y fluido, dejalo. Esta pasada no se aplica después de la aprobación para reescribir
+copy por iniciativa propia, ni guarda frases de un tema como molde para los siguientes.
+
 ### No lo conviertas en más reglas
 
 Cuando una placa sale mal, el arreglo es **reescribirla**, no producir un diagnóstico nuevo ni
