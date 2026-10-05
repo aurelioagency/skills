@@ -190,7 +190,7 @@ Hard QA rules:
   etiquetas de tarjeta entre piezas distintas.
 
   **`render-and-audit.mjs` no lo ve.** Chequea el piso tipográfico, no el sistema: dos
-  piezas a 44px y 52px pasan las dos. Se mira en el contact sheet, recorriendo la misma
+  piezas a 44px y 52px pasan las dos. Se mira en los PNG consecutivos a igual escala, recorriendo la misma
   fila lógica en las nueve placas — y se mira siempre, porque el síntoma es que el
   carrusel "se lee desprolijo" sin que ninguna placa esté mal por separado. Un remate a
   52px contra un cierre a 44px sobrevive nueve renders limpios.
@@ -298,6 +298,35 @@ esta seccion dice como se ve.
 - Avoid overlapping cards, labels, diagrams, icons, and text.
 - Avoid orphan arrows, accidental wraps, and empty gaps in process diagrams.
 - Keep footer and CTA controls inside safe zones.
+
+## Alineación entre placas de una misma secuencia
+
+Cuando dos o más placas usan una composición equivalente, diseñalas y revisalas como
+una secuencia. Al pasar de una a otra, los elementos que cumplen el mismo rol deben
+mantener su posición: inicio y ancho de cards, altura de filas, rótulos, cifras,
+descripciones internas, separadores y notas. También mantené los tamaños tipográficos
+por rol. No alcanza con que cada placa quede bien por separado.
+
+- Usá una grilla o componente compartido para esa secuencia. Si una bajada ocupa más
+  líneas, reservá una banda suficiente para la más alta o refluí la copy sin perder
+  significado; no dejes que cada párrafo empuje las cards a una altura distinta.
+- Si una placa no tiene cifra o nota, puede conservar la banda de ese rol sin inventar
+  contenido ni mostrar placeholders. Alineá lo que sí comparte con las demás; no fuerces
+  una estructura idéntica entre composiciones que cumplen funciones distintas.
+- Alineá el conjunto dentro de cada card: cuando una cifra y su explicación van lado a
+  lado, centrálas verticalmente como bloques. Cuando van apiladas, compartí las posiciones
+  de cada fila entre las cards y entre las placas de la secuencia.
+- Antes de entregar, compará las coordenadas y dimensiones renderizadas con
+  `getBoundingClientRect()` para esos elementos en todas las placas involucradas.
+  Si `audit-serie.mjs` no cubre un rol, completá la medición de ese rol en el paquete;
+  un audit general limpio no demuestra esta alineación. Corregí diferencias no
+  intencionales, salvo el redondeo del render, y revisá los PNG consecutivos a igual
+  escala para detectar saltos. Repetí esta revisión si cambia la copy o el layout.
+- Comprobá el borde inferior de cards, tablas y notas respecto del footer en toda la
+  secuencia. La alineación no justifica una colisión ni cruzar la zona del footer.
+  Una corrección de altura se resuelve en la grilla compartida, no moviendo cada placa
+  por separado. Conservá los separadores del template; al retirar uno puntual,
+  identificá su rol y su elemento antes de tocar otro.
 
 ## Documented Layout Exceptions
 

@@ -9,6 +9,15 @@ Turn source material into a readable social carousel package for TikTok or Insta
 
 Default to the static HTML screenshot workflow because it gives reliable text, layout, and export control. Use generated images, diagrams, charts, cards, and editorial visual systems as supporting imagery, but render final text in HTML/CSS.
 
+## Inicio: version y carpeta local
+
+En cada invocacion, antes de crear archivos:
+
+1. Ejecutar una sola vez `node <skill-dir>/scripts/check-github-update.mjs` desde la copia instalada. Consulta en GitHub el ultimo commit que afecta esta skill y lo compara con `.installed-from.json`; no confundir cambios de otras skills con una actualizacion. Si hay novedades, avisar brevemente y revisar los cambios pertinentes antes de usar instrucciones antiguas. **No reinstalar ni sobrescribir ajustes locales automaticamente.** Si no hay red, falta el marcador o GitHub limita la consulta, informar que no se pudo verificar y continuar con la copia local. No repetir la consulta durante las correcciones del mismo trabajo.
+2. Resolver la carpeta **Documentos del usuario** (respetar redireccion de Windows/OneDrive). El destino local habitual es `Documentos/social-carousels`, no una carpeta relativa al workspace ni `outputs` de la sesion. En el equipo de Guza la carpeta existente es `C:/Users/guza/Documents/social-carousels`; usar esa misma carpeta, sin crear otra llamada `Social Carousels`. **Si `social-carousels` no existe, crearla antes de iniciar el paquete; tambien crear las subcarpetas del carrusel que falten. Esta regla se aplica incluso al empezar desde cero en una sesion nueva.**
+3. Guardar el paquete editable en `<Documentos>/social-carousels/<slug>/` y la entrega en `<Documentos>/social-carousels/<slug>/<slug>/`. Los temporales pueden quedar en `work/`, pero antes de entregar deben estar el fuente editable y la entrega en la carpeta habitual. Un destino pedido expresamente por el usuario prevalece. La copia final al Drive de la marca es adicional y no reemplaza esta copia local.
+4. Antes de informar la entrega, comprobar la ruta y los archivos y decir donde quedaron. Al corregir un carrusel existente, reutilizar su carpeta; no crear otra copia por cada sesion ni sobrescribir un carrusel distinto con el mismo slug.
+
 ## Los cuatro controles
 
 Todo lo que sigue cuelga de estos cuatro. Cuando una placa sale mal, el defecto es de
@@ -54,6 +63,7 @@ De ahi salen las cuatro consecuencias que hay que tener a mano:
    Listo cuando: la carpeta de entrega (`<tema-en-kebab-case>`) tiene los PNG ordenados a `1080x1440`, con el CTA solo si el preset lo pide.
 6. **QA. Los dos scripts, y despues las placas.**
    Listo cuando: `render-and-audit.mjs` y `audit-serie.mjs` corrieron y sus red issues estan arreglados **en el fuente**; y cada PNG se abrio a tamano real y se miro, uno por uno (`references/entrega.md`). **No se arma ni se manda contact sheet:** despues de cada tanda va el bloque que abre la carpeta, y el usuario revisa los PNG ahi. Una placa puntual, en una correccion, si va al chat a tamano completo.
+   En secuencias con composiciones equivalentes, comprobar tambien las posiciones renderizadas de cards, cifras, textos y separadores entre placas (`references/proporcion.md`, *Alineación entre placas de una misma secuencia*); revisar cada placa aislada no alcanza.
 7. **Short vertical y musica aprobada.**
    Listo cuando: `short.mp4` sale de las placas aprobadas, el usuario vio el track ya cortado al largo del video y lo aprobo, y quedo registrado en `manifest.json` y en el log de musica de la marca. **El short nunca dura 1 minuto o mas** (`build-short.mjs` lo topea en 55s solo): un short de 63.4s quedo bloqueado por Content ID en YouTube dos veces seguidas con dos musicas distintas, y el mismo recortado a 40s se subio sin problema.
 8. **Caption y entrega.**
@@ -469,6 +479,11 @@ propuesta.
 The copy shown here has already passed the filter in *Grounding Technical Terms* (`references/redaccion.md`): every term the argument depends on is readable on its own slide, and nothing is explained that did not need to be.
 
 ## Visual Rules
+
+Antes del gate y de cada render, revisar la placa completa con los controles de
+`references/redaccion.md`: titular autónomo y sin información duplicada entre kicker,
+bajada y recurso. Los destacados numéricos respetan la jerarquía del template y no
+superan el titular; en el 05 su cuerpo es `--number-highlight-size: 64px`.
 
 Que recurso visual va en cada placa: **`references/composicion.md`**.
 Como se compone dentro de la grilla, el piso tipografico, el area segura, el balance y los

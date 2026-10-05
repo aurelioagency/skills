@@ -311,6 +311,32 @@ Recorré estas preguntas sobre la copy completa y corregí solo donde haya un de
   veces sin agregar información. Una cifra necesita un rótulo que identifique qué mide;
   la repetición necesaria para entenderla se conserva. No completes un espacio con una
   frase genérica ni elimines contexto solo por compartir palabras con el título.
+- **¿Hay información duplicada dentro de la placa?** Una cifra con su unidad aparece
+  una sola vez: si está en un gráfico, fórmula o recuadro, la bajada explica su alcance
+  o significado sin volver a enumerarla. No repitas una oración como remate destacado,
+  aunque cambies su color, tamaño o palabras. Kicker y bajada tampoco repiten la misma
+  identificación del tema. Los rótulos que identifican una cifra se conservan. Que la
+  fuente duplique información no autoriza a duplicarla en la composición nueva.
+- **¿El titular se entiende solo?** Tiene que nombrar la afirmación y su objeto sin
+  depender de la bajada para completar su sentido. En una comparación de precios,
+  “Fable cobra un cuarto” no dice qué se cobra: “Leer caché cuesta menos en Fable” sí.
+  La bajada desarrolla la afirmación; no termina una frase empezada por el titular.
+- **¿Qué puede interpretar el lector que no quisimos afirmar?** Leé cada explicación
+  sin completar mentalmente lo que sabés del tema. Una acción y su consecuencia deben
+  quedar conectadas: “reutilizar lo procesado” no explica por sí solo si se vuelve a cobrar.
+  Si esa distinción sostiene el argumento, explicitala en la misma placa. No dejes que
+  una condición importante aparezca recién en una nota o en la conversación.
+- **¿La comparación tiene una medida y un alcance claros?** Identificá qué mide cada
+  resultado, su unidad y las condiciones relevantes. Un término del proveedor o del
+  benchmark que cambia la interpretación debe quedar explicado brevemente; si es
+  prescindible, sacalo. No reemplaces una explicación por un rótulo opaco. Distinguí
+  tarifa por unidad, cantidad consumida y costo total: un descuento en una parte no
+  demuestra que toda la tarea resulte más barata.
+- **¿La secuencia cierra lo que plantea?** Leé todas las placas en orden y comprobá que
+  cada ejemplo conserve sus supuestos y que el cambio de métrica esté señalado. La
+  conclusión responde la pregunta inicial con el alcance que permiten los datos; si
+  depende del uso, dice de qué depende, sin inventar un ganador. Una bajada explica el
+  mecanismo o la consecuencia, en vez de limitarse a anunciar que hay una comparación.
 - **¿La oración fluye y sigue diciendo lo mismo?** Quitá introducciones vacías, cierres
   que solo repiten, adjetivos promocionales y conectores sin relación real. Conservá los
   conectores que explican causa, condición o contraste y las estructuras gramaticales

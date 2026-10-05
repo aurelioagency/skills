@@ -12,17 +12,19 @@ sheet — no le sirve al usuario y no se usa para juzgar nada.
 
 Use a project package with editable source and PNG exports.
 
+La raiz local es la carpeta Documentos del usuario, no el workspace de la sesion (ver `SKILL.md`, Inicio). En el equipo de Guza: `C:/Users/guza/Documents/social-carousels`.
+
 Recommended package structure:
 
 ```text
-social-carousels/<slug>/
+<Documentos>/social-carousels/<slug>/
   index.html
   styles.css
   slide-data.js
   carousel-brief.md
   manifest.json
   assets/
-  claude-piloto-automatico/                  # la carpeta de entrega
+  <slug>/                  # PNG, caption.txt y short.mp4: la carpeta de entrega
 ```
 
 ### The delivery folder

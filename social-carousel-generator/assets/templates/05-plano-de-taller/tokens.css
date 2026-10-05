@@ -73,4 +73,6 @@
   /* Dos grosores, proporcion 2:1. No hay un tercero. */
   --gruesa: 6px;
   --fina: 3px;
+  /* Jerarquía numérica decidida por el usuario el 2026-10-04: secundaria al titular. */
+  --number-highlight-size: 64px;
 }

@@ -108,6 +108,21 @@ eje son propios por diseno, y `audit-serie.mjs` la deja fuera de la comparacion.
 
 ## Consistencia de serie (2026-09-04)
 
+### Jerarquía de números (2026-10-04)
+
+Los importes, porcentajes destacados y resultados de fórmulas usan **64px**, definidos
+una sola vez por `--number-highlight-size` en `tokens.css`. Incluye `.factor .n`,
+`.cifras .cifra .n` y cualquier pieza nueva que muestre importes o cálculos. El signo
+monetario y el porcentaje usan como máximo ese mismo cuerpo. Son secundarios al
+titular de contenido de 104px: nunca lo igualan ni lo superan en altura visible.
+No se agrandan para llenar espacio después de quitar información duplicada.
+Esta jerarquía responde a la corrección explícita del usuario sobre números que
+tomaban demasiado protagonismo. La portada conserva su escala propia.
+
+En cada placa, las cifras van en el recurso y la bajada explica contexto, alcance
+o condiciones sin enumerarlas otra vez. Tampoco se repite una frase como remate
+destacado. El control de copy está en `references/redaccion.md`.
+
 Decidido por el usuario despues de armar el carrusel de Claude Fable 5.1. **Lo que se
 repite en todas las placas tiene que caer siempre en el mismo lugar**: al deslizar, una
 linea que salta 20px se ve mas que cualquier detalle de composicion.
