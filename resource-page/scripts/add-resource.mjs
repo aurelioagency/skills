@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 // Agrega una página de recurso a la web de Aurelio Agency (/blog/<slug>, sin listar),
-// hace commit + push a main, espera a que quede online y, si se pasa --dm-reply,
-// cambia en ese archivo el link del recurso por la URL de la página.
+// hace commit + push a main y espera a que quede online. NO modifica el dm-reply: solo
+// lo lee para sacar el link del recurso. La URL final se imprime en la última línea
+// ("ONLINE: <url>") y se la pasa a replykaro-automation con --link.
 //
 // Uso:
 //   node add-resource.mjs --slug scrapling --name "Scrapling" \
 //     --summary-es "..." --summary-en "..." --summary-br "..." \
-//     [--github <url>] [--reel <url>] [--dm-reply <ruta>] \
+//     [--github <url>] [--reel <url>] [--dm-reply <ruta, solo lectura>] \
 //     [--repo <ruta>] [--wait <segundos>] [--dry-run] [--no-git]
 //
 // Sin --github, se toma el primer link del --dm-reply que no sea Skool ni aurelioagency.com.
@@ -134,12 +135,6 @@ if (!noGit) {
   console.log(`Subido a main: ${slug}`);
 } else {
   console.log("--no-git: archivo editado, sin commit ni push.");
-}
-
-// Cambiar el link del recurso por la página en el dm-reply.
-if (dmText) {
-  writeFileSync(args["dm-reply"], dmText.replace(githubUrl, pageUrl), "utf8");
-  console.log(`dm-reply actualizado: ${githubUrl} -> ${pageUrl}`);
 }
 
 if (noGit) { console.log(`URL: ${pageUrl}`); process.exit(0); }

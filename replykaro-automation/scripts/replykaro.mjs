@@ -146,7 +146,9 @@ async function main() {
     let finalMessage = opt['final-message'], link = opt.link;
     if (opt['dm-reply']) {
       const p = parseDmReply(opt['dm-reply']);
-      finalMessage ||= p.message;
+      // Con --link explícito (la página del recurso), ese es el ÚNICO link que sale: reemplaza
+      // al del dm-reply también dentro del texto del mensaje.
+      if (!finalMessage) finalMessage = link && p.url ? p.message.split(p.url).join(link) : p.message;
       link ||= p.url;
     }
     if (!finalMessage) die('Falta el mensaje final (--final-message o --dm-reply).');

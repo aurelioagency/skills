@@ -44,6 +44,7 @@ node "<skill-dir>\scripts\replykaro.mjs" create --target next ^
 
 - `--target next` (**default**): el próximo reel que se suba (`NEXT_MEDIA`). Es el caso normal: el video sale al Drive aprobado, el usuario lo sube a mano después.
 - `--target latest`: el último reel ya publicado. `--target <media_id>`: uno puntual (ver `media`).
+- `--link`: **el link del recurso. Cuando el reel tiene página de la web (skill `resource-page`), pasar siempre su URL acá.** Con `--dm-reply` juntos, esa URL reemplaza también al link que trae el texto del mensaje, así es el único link que sale. El `dm-reply` en disco no se modifica.
 - `--dm-reply`: toma el archivo que genera social-video-producer. Saca las líneas fijas de Skool y Aurelio Agency (ahora son botones), usa el resto como **mensaje final** y la primera URL como **link del recurso**. Alternativa: `--final-message "..."` y `--link "..."`.
 - `--button`: texto del botón del recurso, **máximo 20 caracteres** (si no se pasa, "Abrir recurso"). Elegirlo según lo que es el recurso ("Abrir Scrapling", "Ver el repo", "Descargar guía").
 - `--keyword`: solo para pruebas. La palabra de producción es siempre **Aurelio**.

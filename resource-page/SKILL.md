@@ -1,6 +1,6 @@
 ---
 name: resource-page
-description: Crea la página web del recurso de un reel en aurelioagency.com (aurelioagency.com/blog/<slug>), una por reel, que no aparece en la lista de /blog ni en Google, y devuelve su URL para usarla en el DM. Usar cuando social-video-producer entrega un video con `dm-reply-<slug>.txt`, el usuario lo aprobó y se subió a Drive, o cuando el usuario pida "armá la página del recurso", "creá la URL del recurso" o sume un recurso nuevo a la web. Va ANTES de replykaro-automation, que usa esa URL en el DM. No publica nada en Instagram.
+description: Crea la página web del recurso de un reel en aurelioagency.com (aurelioagency.com/blog/<slug>), una por reel, que no aparece en la lista de /blog ni en Google, y devuelve su URL, que replykaro-automation manda como único link del DM. Usar cuando social-video-producer entrega un video con `dm-reply-<slug>.txt`, el usuario lo aprobó y se subió a Drive, o cuando el usuario pida "armá la página del recurso", "creá la URL del recurso" o sume un recurso nuevo a la web. Va ANTES de replykaro-automation, que usa esa URL en el DM. No publica nada en Instagram.
 ---
 
 # Página de recurso (aurelioagency.com/blog/<slug>)
@@ -12,8 +12,8 @@ La página no aparece en la lista de `/blog`, lleva `noindex` y no hay ningún l
 ## Lugar en el flujo
 
 1. El usuario aprueba el video en `social-video-producer` → se sube a Drive.
-2. **Esta skill** crea la página y deja la URL en el `dm-reply-<slug>.txt`.
-3. `replykaro-automation` crea la automatización leyendo ese mismo `dm-reply`, que ya trae la URL de la página.
+2. **Esta skill** crea la página y devuelve su URL. **No toca el `dm-reply-<slug>.txt`**: solo lo lee para sacar el link del recurso.
+3. `replykaro-automation` crea la automatización con `--link <esa URL>`. Esa URL es el único link que manda la automatización (los mensajes ya no los envía Aurelio a mano: los envía ReplyKaro).
 
 Todo es parte del mismo "aprobado". No pedir un segundo OK.
 
@@ -41,7 +41,7 @@ node "<skill-dir>\scripts\add-resource.mjs" --slug scrapling --name "Scrapling" 
   --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt"
 ```
 
-Qué hace, en orden: `git pull`, agrega el bloque a `src/lib/resource-drops.ts`, corre `tsc`, commit y push a `main` (sin `Co-Authored-By`), espera hasta 5 minutos a que `https://www.aurelioagency.com/blog/<slug>` responda 200, y cambia en el `dm-reply` el link del recurso por esa URL. La URL no lleva idioma: la web redirige sola al de cada persona (es, en o br).
+Qué hace, en orden: `git pull`, agrega el bloque a `src/lib/resource-drops.ts`, corre `tsc`, commit y push a `main` (sin `Co-Authored-By`), espera hasta 5 minutos a que `https://www.aurelioagency.com/blog/<slug>` responda 200, y la imprime en la última línea (`ONLINE: <url>`). La URL no lleva idioma: la web redirige sola al de cada persona (es, en o br).
 
 Flags: `--github <url>` (si no hay dm-reply), `--reel <url>`, `--repo <ruta>`, `--wait <seg>`, `--dry-run` (muestra el bloque sin escribir nada), `--no-git` (solo edita el archivo; para pruebas).
 
@@ -57,4 +57,5 @@ El script imprime el estado del deploy. **No seguir con replykaro-automation**: 
 - El slug no se reutiliza: si ya existe, el script falla. Para corregir un recurso ya cargado, editar su bloque en `resource-drops.ts` a mano.
 - Cada recurso nuevo es un commit chico a `main`. No tocar nada más del repo de la web.
 - El repo exige los tres idiomas (`es`, `en`, `br`): el script no deja cargar uno solo.
+- El `dm-reply` no se modifica nunca desde esta skill.
 - No publicar la página de un recurso que el usuario no aprobó.

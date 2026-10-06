@@ -1222,10 +1222,13 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
 
 ## ReplyKaro Automation (right after the same approval)
 
-When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. The moment the user approves the video, cover and caption and the delivery folder goes to Drive (**Publish To Drive**), invoke the **`replykaro-automation`** skill so the automation for that reel is ready before it is posted. This is part of the same go-ahead; do not ask a second time.
+When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. The moment the user approves the video, cover and caption and the delivery folder goes to Drive (**Publish To Drive**), run two skills **in this order**, as part of the same go-ahead (do not ask a second time):
+
+1. **`resource-page`** first. It creates the resource's page on the agency site (`aurelioagency.com/blog/<slug>`), reading the resource link from the `dm-reply` without modifying it, and prints the page URL. That URL is the only link the automation sends, so ReplyKaro cannot be set up before it. If the page does not come online (exit code 4), stop and tell the user; do not run the next step.
+2. **`replykaro-automation`** with that URL as `--link`, so the automation for that reel is ready before it is posted:
 
 ```powershell
-node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --button "<up to 20 chars, named after the resource>"
+node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --link "<page URL from resource-page>" --button "<up to 20 chars, named after the resource>"
 ```
 
 - **Both accounts at once.** Without `--account` it creates the automation in every account in `~\.replykaro\keys.json` (`personal` = @ing.gustavopaz and `aurelio` = @lacasadeaurelio), because the same reel is posted on both. One account failing does not stop the other; report each.
