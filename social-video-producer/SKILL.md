@@ -1225,7 +1225,7 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
 When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. The moment the user approves the video, cover and caption and the delivery folder goes to Drive (**Publish To Drive**), invoke the **`replykaro-automation`** skill so the automation for that reel is ready before it is posted. This is part of the same go-ahead; do not ask a second time.
 
 ```powershell
-node "<replykaro-automation-dir>\scriptseplykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --button "<up to 20 chars, named after the resource>"
+node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --button "<up to 20 chars, named after the resource>"
 ```
 
 - **Both accounts at once.** Without `--account` it creates the automation in every account in `~\.replykaro\keys.json` (`personal` = @ing.gustavopaz and `aurelio` = @lacasadeaurelio), because the same reel is posted on both. One account failing does not stop the other; report each.

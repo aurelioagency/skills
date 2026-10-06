@@ -25,7 +25,7 @@ Cuentas hoy: `personal` (@ing.gustavopaz) y `aurelio` (@lacasadeaurelio), las do
 
 ## Uso
 
-Script: `node "<skill-dir>\scripts\replykaro.mjs" <comando> --account <nombre> ...`
+Script: `node "<skill-dir>\scripts\replykaro.mjs" <comando> [--account <nombre|a,b|all>] ...`. Sin `--account`, `create`, `list` y `check` actúan sobre **todas** las cuentas de `keys.json` (personal y aurelio); si una falla, la otra sigue y el script termina con error.
 
 | Comando | Qué hace |
 |---|---|
@@ -38,7 +38,7 @@ Script: `node "<skill-dir>\scripts\replykaro.mjs" <comando> --account <nombre> .
 ### `create`
 
 ```
-node "<skill-dir>\scripts\replykaro.mjs" create --account personal --target next ^
+node "<skill-dir>\scripts\replykaro.mjs" create --target next ^
   --dm-reply "<ruta>\dm-reply-<slug>.txt" --button "Abrir Scrapling"
 ```
 
