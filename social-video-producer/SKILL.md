@@ -1222,13 +1222,14 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
 
 ## ReplyKaro Automation (right after the same approval)
 
-When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. After the user approves the video, cover and caption — the same go-ahead that triggers **Publish To Drive** — invoke the **`replykaro-automation`** skill to create it for the reel that has not been posted yet:
+When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. The moment the user approves the video, cover and caption and the delivery folder goes to Drive (**Publish To Drive**), invoke the **`replykaro-automation`** skill so the automation for that reel is ready before it is posted. This is part of the same go-ahead; do not ask a second time.
 
 ```powershell
-node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --account personal --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --button "<up to 20 chars, named after the resource>"
+node "<replykaro-automation-dir>\scriptseplykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --button "<up to 20 chars, named after the resource>"
 ```
 
-- Account: the Instagram account the reel will be posted on (`personal` today; `aurelio` once its key exists in `~\.replykaro\keys.json`). If the user hasn't said which, ask once.
-- Never run it without approval, and skip it when the delivery has no `dm-reply` file. The trigger word is always **Aurelio**.
-- `--target next` attaches it to the *next* post that account publishes, so tell the user the reel has to be the next thing they post. If the reel is already up, use `--target latest`.
-- Read the script's output back to the user in one line: what it attached to, whether the follow gate is on, and whether it deleted an older automation to stay under the free-plan limit of 3.
+- **Both accounts at once.** Without `--account` it creates the automation in every account in `~\.replykaro\keys.json` (`personal` = @ing.gustavopaz and `aurelio` = @lacasadeaurelio), because the same reel is posted on both. One account failing does not stop the other; report each.
+- **Slot check is built in.** Each account's free plan holds 3 active automations. Before creating, the script counts them and, if the quota is full, **deletes the oldest** to make room. Tell the user which one it deleted.
+- Skip it when the delivery has no `dm-reply` file. The trigger word is always **Aurelio**.
+- `--target next` attaches it to the *next* post each account publishes, so the reel has to be the next thing posted on both. If the reel is already up, use `--target latest`.
+- Read the output back in one line per account: attached to what, follow gate on, whether it deleted an old one.

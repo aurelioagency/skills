@@ -21,7 +21,7 @@ Viven **fuera del repo**, en `%USERPROFILE%\.replykaro\keys.json`:
 
 Cada cuenta de Instagram tiene su propio panel de ReplyKaro y su propia clave (Panel → Developer API → Nueva clave, permisos de lectura y de automatizaciones). Nunca pegar una clave en el chat ni commitearla. Si el usuario la muestra en una captura, decirle que la revoque.
 
-Cuentas hoy: `personal` (@ing.gustavopaz). `aurelio` (@lacasadeaurelio) todavía sin clave: pedirla antes de usarla.
+Cuentas hoy: `personal` (@ing.gustavopaz) y `aurelio` (@lacasadeaurelio), las dos con clave. El mismo reel se sube a las dos.
 
 ## Uso
 
@@ -52,13 +52,17 @@ No inventar el contenido del mensaje final: sale del `dm-reply` ya aprobado, que
 
 ## Límite del plan gratis: 3 activas
 
-Antes de crear, el script cuenta las activas; si ya hay 3 **borra la más vieja** para dejar lugar y lo informa en la salida. Esto lo pidió el usuario. La API no impone el límite al crear (se probó con 4 activas y ninguna quedó pausada), así que el borrado es para no depender de cómo lo controle ReplyKaro al llegar los comentarios.
+Antes de crear, el script cuenta las activas **de cada cuenta**; si ya hay 3 **borra la más vieja** para dejar lugar y lo informa en la salida. Esto lo pidió el usuario y se verifica siempre, en cada creación. La API no impone el límite al crear (se probó con 4 activas y ninguna quedó pausada), así que el borrado es para no depender de cómo lo controle ReplyKaro al llegar los comentarios.
 
 ## Errores conocidos
 
 - `duplicate key ... idx_unique_specific_post_primary_active`: ese reel ya tiene automatización. No crear otra: usar la existente o borrarla.
 - `NEXT_MEDIA` solo se aplica al próximo post que publique esa cuenta. Si el usuario sube otro post antes, se lo lleva ese. Avisarle que el próximo post sea el reel.
 - Sin acceso a Internet o clave revocada: el script termina con `ERROR:` y el motivo. Fallback manual: pegar los textos en el asistente de ReplyKaro (paso 1 "Próximo post / reel").
+
+## Mensajes que caen en "Solicitudes ocultas"
+
+Instagram puede mandar el DM de una cuenta que la persona no sigue a "Solicitudes" o "Solicitudes ocultas" (pasó en la prueba del 2026-10-06, con el estado SENT en ReplyKaro). Por eso las 3 respuestas públicas de `plantilla-base.json` avisan que lo busquen ahí. No quitar ese aviso.
 
 ## Verificación
 

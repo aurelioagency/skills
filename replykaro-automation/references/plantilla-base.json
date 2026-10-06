@@ -2,9 +2,9 @@
   "trigger_type": "keyword",
   "trigger_keyword": "Aurelio",
   "comment_reply_templates": [
-    "Te lo mandé por mensaje directo 📩",
-    "Listo, revisá tus mensajes 🙌",
-    "Ya te lo envié por DM 👀"
+    "Te lo mandé por DM 📩 Si no lo ves, fijate en Solicitudes de mensajes",
+    "Listo, revisá tus mensajes 🙌 (y las solicitudes, por las dudas)",
+    "Ya te lo envié 👀 Mirá también en Solicitudes ocultas"
   ],
   "reply_message": "Gracias por comentar 🙌 Tocá el botón de abajo y te lo mando enseguida.",
   "button_text": "Quiero el recurso",
