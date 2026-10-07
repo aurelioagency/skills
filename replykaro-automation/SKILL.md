@@ -49,6 +49,7 @@ node "<skill-dir>\scripts\replykaro.mjs" create --target next ^
 - `--dm-reply`: solo se lee para sacar la URL. No aporta texto al mensaje.
 - **Mensaje final** (junto al botón): se genera solo, creativo y sin links: `Acá tenés <name> 🚀` + salto de línea + `Tocá el botón de abajo y entrá.` Cambiarlo solo con `--final-message`. `--name` es el nombre del recurso (si falta usa el texto del botón).
 - `--button`: texto del botón del recurso, **máximo 20 caracteres** (si no se pasa, "Abrir recurso"). Elegirlo según lo que es el recurso ("Abrir Scrapling", "Ver el repo", "Descargar guía").
+- `--dry-run`: arma y muestra exactamente lo que enviaría `create_automation`, sin crear ni borrar nada. Usarlo para revisar el resultado antes de crear.
 - `--keyword`: solo para pruebas. La palabra de producción es siempre **Aurelio**.
 
 El mensaje final no lleva links ni datos del recurso: solo la frase corta junto al botón (voseo, palabras simples).

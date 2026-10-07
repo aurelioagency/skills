@@ -22,7 +22,6 @@ const BASE = JSON.parse(fs.readFileSync(path.join(HERE, '..', 'references', 'pla
 const MCP = 'https://www.replykaro.com/api/mcp';
 const REST = 'https://www.replykaro.com/api/v1';
 const MAX_ACTIVE = 3; // free plan
-const FIXED_LINES = [/skool\.com/i, /aurelioagency\.com/i, /^compartimos m[aá]s recursos/i, /^¿?quer[eé]s que automaticemos/i];
 
 const [cmd, ...argv] = process.argv.slice(2);
 const opt = {};
@@ -71,14 +70,14 @@ async function mcp(k, name, args = {}) {
   try { return JSON.parse(text); } catch { return text; }
 }
 
-// Splits a dm-reply-<slug>.txt into final message + first resource URL, dropping the fixed
-// Skool / Aurelio Agency lines (those are buttons now, not text).
+// Lee la URL del dm-reply-<slug>.txt. Hoy el archivo trae SOLO la URL de la página del recurso
+// (https://www.aurelioagency.com/blog/<slug>); si es un archivo viejo con más texto, se ignoran
+// Skool y la home de Aurelio Agency y se toma la primera URL restante.
 function parseDmReply(file) {
-  const lines = fs.readFileSync(file, 'utf8').replace(/\r/g, '').split('\n');
-  const kept = lines.filter((l) => !FIXED_LINES.some((re) => re.test(l.trim())));
-  const message = kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
-  const url = (message.match(/https?:\/\/[^\s)]+/) || [])[0];
-  return { message, url };
+  const text = fs.readFileSync(file, 'utf8');
+  const urls = text.match(/https?:\/\/[^\s)]+/g) || [];
+  const isFixed = (u) => /skool\.com/i.test(u) || /^https?:\/\/(www\.)?aurelioagency\.com\/?(es)?\/?$/i.test(u);
+  return { url: urls.find((u) => !isFixed(u)) };
 }
 
 async function activeSorted(k) {
@@ -101,7 +100,7 @@ async function createOne({ name, key: k }, { finalMessage, link, button }) {
   // Plan limit: keep at most MAX_ACTIVE active; make room by deleting the OLDEST ones first.
   const active = await activeSorted(k);
   const overflow = active.length - (MAX_ACTIVE - 1);
-  for (const old of active.slice(0, Math.max(0, overflow))) {
+  for (const old of opt['dry-run'] ? [] : active.slice(0, Math.max(0, overflow))) {
     await rest(k, 'DELETE', '/automations/' + old.id);
     console.log(`[${name}] Borré la más vieja para hacer lugar: ${old.id} (${old.trigger_keyword}, ${old.created_at})`);
   }
@@ -114,13 +113,16 @@ async function createOne({ name, key: k }, { finalMessage, link, button }) {
     final_button_text: button,
     link_url: link,
   };
+  if (opt['dry-run']) { console.log(`[${name}] DRY-RUN create_automation:
+` + JSON.stringify(args, null, 2)); return; }
   const res = await mcp(k, 'create_automation', args);
   if (!res?.automation_id) die('Respuesta inesperada de create_automation: ' + JSON.stringify(res));
 
   // Read back what was really stored — never assume.
   const saved = (await rest(k, 'GET', '/automations/' + res.automation_id)).data;
-  const checks = { require_follow: true, reply_message: BASE.reply_message, custom_greeting: BASE.custom_greeting, follow_button_text: BASE.follow_button_text, final_button_text: button, link_url: link };
+  const checks = { require_follow: true, button_text: BASE.button_text, reply_message: BASE.reply_message, custom_greeting: BASE.custom_greeting, follow_button_text: BASE.follow_button_text, final_button_text: button, link_url: link };
   const bad = Object.entries(checks).filter(([f, v]) => saved[f] !== v);
+  if ((saved.additional_buttons || []).length !== BASE.additional_buttons.length) bad.push(['additional_buttons']);
   console.log(`[${name}] OK media=${saved.media_id} palabra=${saved.trigger_keyword} follow_gate=${saved.require_follow} botones_extra=${(saved.additional_buttons || []).length} respuestas_publicas=${(saved.comment_reply_templates || []).length} id=${res.automation_id}`);
   if (bad.length) die(`[${name}] Campos que NO se guardaron como se pidió: ` + bad.map(([f]) => f).join(', '));
 }
