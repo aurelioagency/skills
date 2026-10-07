@@ -33,6 +33,7 @@ Script: `node "<skill-dir>\scripts\replykaro.mjs" <comando> [--account <nombre|a
 | `create` | Crea la automatización (ver abajo) |
 | `list` | Lista las activas, de la más vieja a la más nueva |
 | `media` | Lista los posts/reels de la cuenta con su id |
+| `update --account <n> --id <id> --link ... --button ... --name ...` | Edita en el lugar saludo, mensaje final, link y botón. **Usar esto, no borrar y recrear** |
 | `delete --id <id>` | Borra una automatización |
 
 ### `create`
@@ -44,12 +45,17 @@ node "<skill-dir>\scripts\replykaro.mjs" create --target next ^
 
 - `--target next` (**default**): el próximo reel que se suba (`NEXT_MEDIA`). Es el caso normal: el video sale al Drive aprobado, el usuario lo sube a mano después.
 - `--target latest`: el último reel ya publicado. `--target <media_id>`: uno puntual (ver `media`).
-- `--link`: **el link del recurso. Cuando el reel tiene página de la web (skill `resource-page`), pasar siempre su URL acá.** Con `--dm-reply` juntos, esa URL reemplaza también al link que trae el texto del mensaje, así es el único link que sale. El `dm-reply` en disco no se modifica.
-- `--dm-reply`: toma el archivo que genera social-video-producer. Saca las líneas fijas de Skool y Aurelio Agency (ahora son botones), usa el resto como **mensaje final** y la primera URL como **link del recurso**. Alternativa: `--final-message "..."` y `--link "..."`.
+- `--link`: la URL de la página del recurso (skill `resource-page`). Si falta, se toma la primera URL del `--dm-reply`, que hoy trae **solo** esa URL. Es el único link que sale: va en el botón, no en el texto.
+- `--dm-reply`: solo se lee para sacar la URL. No aporta texto al mensaje.
+- **Mensaje final** (junto al botón): se genera solo, creativo y sin links: `Acá tenés <name> 🚀` + salto de línea + `Tocá el botón de abajo y entrá.` Cambiarlo solo con `--final-message`. `--name` es el nombre del recurso (si falta usa el texto del botón).
 - `--button`: texto del botón del recurso, **máximo 20 caracteres** (si no se pasa, "Abrir recurso"). Elegirlo según lo que es el recurso ("Abrir Scrapling", "Ver el repo", "Descargar guía").
 - `--keyword`: solo para pruebas. La palabra de producción es siempre **Aurelio**.
 
-No inventar el contenido del mensaje final: sale del `dm-reply` ya aprobado, que sigue las reglas de esa skill (recurso real, voseo, palabras simples).
+El mensaje final no lleva links ni datos del recurso: solo la frase corta junto al botón (voseo, palabras simples).
+
+## Saludo
+
+`reply_message` de la plantilla lleva un salto de línea: `Gracias por comentar 🙌🏻` / `Tocá el botón de abajo y te lo mando enseguida.` No juntarlo en una línea.
 
 ## Límite del plan gratis: 3 activas
 

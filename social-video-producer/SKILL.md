@@ -544,7 +544,7 @@ Copy the user's file into `<project>\raws\` and work from that copy. Record the 
 2. Transcribe the real audio.
 
 ```powershell
-node "<skill-dir>\scriptsreeze-caption-font.mjs" --project "<project>"
+node "<skill-dir>\scripts\freeze-caption-font.mjs" --project "<project>"
 node "<skill-dir>\scripts\transcribe-media.mjs" --input "raws\<video>.mp4" --out-audio "assets\voice\<slug>.wav" --out-transcript "assets\voice\<slug>.transcript.json" --language es
 ```
 
@@ -1050,31 +1050,11 @@ Rules:
 
 ### DM Reply (Resource Hand-off)
 
-Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (see the rule above), also write `dm-reply-<slug>.txt` next to it in `renders\final\`. That line is a promise to send something by DM; a caption alone does not keep it, and the user otherwise retypes the same message by hand every time someone comments. `deliver-package.mjs` auto-detects and ships this file the same way it does the caption — optional, not required, so branches with no comment-CTA simply have none.
+Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (see the rule above), also write `dm-reply-<slug>.txt` next to it in `renders\final\`. It is the manual fallback: the text to paste if the resource ever has to be sent by hand instead of by the ReplyKaro automation. `deliver-package.mjs` auto-detects and ships this file the same way it does the caption — optional, so branches with no comment-CTA simply have none.
 
-Plain text, UTF-8, ready to paste into a DM. Fixed structure, confirmed with the user:
+**The file holds only the resource page URL and nothing else** (confirmed with the user 2026-10-07): `https://www.aurelioagency.com/blog/<slug>`, where `<slug>` is the delivery folder name, one line. No greeting, no repo link, no install steps, no Skool line, no Aurelio Agency close — the page itself carries the resource, the community and the agency. The URL is deterministic from the slug, so it can be written before the page exists; `resource-page` then creates the page that answers at that address.
 
-```text
-Hola! Acá te dejo <lo que el video prometió>:
-<link del recurso real>
-
-<pasos, comandos o explicación, SOLO si el recurso los necesita para usarse>
-
-Compartimos más recursos como este en la comunidad: https://www.skool.com/la-casa-de-aurelio-2061/about
-
-¿Querés que automaticemos algo de tu negocio? → https://www.aurelioagency.com
-```
-
-(Shortened and rewritten in voseo on 2026-10-02 at the user's request: the old long Skool paragraph, the "Buenas, como estas?" opener and the "Necesitas automatizar algo?" close were replaced by the three lines above.)
-
-Rules:
-
-- The greeting, the Skool line, and the Aurelio Agency close are **fixed** — never reworded.
-- **Line-break convention, confirmed with the user:** no blank line between a label/greeting line and the URL or content that directly continues it (e.g. `Acá te dejo...:` immediately followed by the link); the Skool line carries its URL on the same line; a blank line only between distinct blocks (repo block / steps block / Skool block / Aurelio Agency close). Follow the template's own spacing exactly — do not add a blank line after every line out of habit.
-- The resource block (link, and explanation/steps/commands if the resource needs them to be usable) is the only written part, and it is **never invented**. Pull it from what the video's own transcript actually shows or says (a repo name, an install command visible on screen, a URL spoken aloud). If the video's promise needs more than that to be usable — e.g. it says "te paso los prompts" but never shows them on screen — verify the real content at its source (the tool's own repo/README/site, fetched with `gh`/`WebFetch`, never guessed) before writing it, and only write what came back confirmed. If it still can't be confirmed, leave that part out and say so to the user rather than filling the gap with a plausible-sounding invention — this is the same rule as product copy accuracy, applied to a DM instead of a caption.
-- **Call each step what it actually is.** A slash command or a named skill activation (`/ecc:plan "..."`, `Usa el skill tdd-workflow para...`) is a command, not a "prompt" — a prompt is free text you write yourself. If the video's own script already used the word "prompts" for this block, that word can still open the section in a generic way ("Y para usar la herramienta:" reads fine), but don't manufacture a claim that the video "showed" or "displayed" prompts it never displayed, and don't label commands as prompts when asked directly.
-- Match the register of the rest of the delivery (voseo, per the project's own transcript).
-- **When asked to shorten or simplify the DM reply, trim only the resource block (the steps/explanation/commands line) — never the greeting, the Skool line, or the Aurelio Agency close.** Those three are the fixed template, and "make it shorter" or "just the link, nothing else" means cut the part you wrote (install steps, MCP config, etc.), not the parts the template always carries. Confirmed the hard way: an instruction to drop the install/MCP instructions was over-applied to also drop the Skool and Aurelio Agency links, which the user then had to ask to have restored.
+- The real source link of the resource (repo, tool site) is never written into the dm-reply. It goes to `resource-page` with `--github <url>` and comes from what the video's own transcript shows or says (a repo name, a URL spoken or visible on screen); if it cannot be confirmed, verify at the source with `gh`/`WebFetch`, never guess.
 
 ## Repair Rules
 
@@ -1224,11 +1204,11 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
 
 When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. The moment the user approves the video, cover and caption and the delivery folder goes to Drive (**Publish To Drive**), run two skills **in this order**, as part of the same go-ahead (do not ask a second time):
 
-1. **`resource-page`** first. It creates the resource's page on the agency site (`aurelioagency.com/blog/<slug>`), reading the resource link from the `dm-reply` without modifying it, and prints the page URL. That URL is the only link the automation sends, so ReplyKaro cannot be set up before it. If the page does not come online (exit code 4), stop and tell the user; do not run the next step.
-2. **`replykaro-automation`** with that URL as `--link`, so the automation for that reel is ready before it is posted:
+1. **`resource-page`** first. It creates the resource's page on the agency site (`aurelioagency.com/blog/<slug>`), passing the resource's source link with `--github <url>` (the `dm-reply` only holds the page URL), and prints the page URL. That URL is the only link the automation sends, so ReplyKaro cannot be set up before it. If the page does not come online (exit code 4), stop and tell the user; do not run the next step.
+2. **`replykaro-automation`**; the `dm-reply` file already holds that URL, so it is the only link the automation sends. The message next to the button is generated (no links in its text) and the greeting carries a line break after `Gracias por comentar 🙌🏻`:
 
 ```powershell
-node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --link "<page URL from resource-page>" --button "<up to 20 chars, named after the resource>"
+node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --button "<up to 20 chars, named after the resource>" --name "<resource name>"
 ```
 
 - **Both accounts at once.** Without `--account` it creates the automation in every account in `~\.replykaro\keys.json` (`personal` = @ing.gustavopaz and `aurelio` = @lacasadeaurelio), because the same reel is posted on both. One account failing does not stop the other; report each.
@@ -1236,3 +1216,5 @@ node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --d
 - Skip it when the delivery has no `dm-reply` file. The trigger word is always **Aurelio**.
 - `--target next` attaches it to the *next* post each account publishes, so the reel has to be the next thing posted on both. If the reel is already up, use `--target latest`.
 - Read the output back in one line per account: attached to what, follow gate on, whether it deleted an old one.
+- If the reel is already published, the automation tied to `NEXT_MEDIA` may need changes: **edit it in place with `replykaro.mjs update --account <name> --id <id> --link <url> --button ... --name ...`; never delete and recreate** (confirmed with the user 2026-10-07).
+- **Always return the page URL to the user in the final reply** so they can look at it.

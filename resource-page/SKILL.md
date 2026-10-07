@@ -12,7 +12,7 @@ La página no aparece en la lista de `/blog`, lleva `noindex` y no hay ningún l
 ## Lugar en el flujo
 
 1. El usuario aprueba el video en `social-video-producer` → se sube a Drive.
-2. **Esta skill** crea la página y devuelve su URL. **No toca el `dm-reply-<slug>.txt`**: solo lo lee para sacar el link del recurso.
+2. **Esta skill** crea la página y devuelve su URL. **No toca el `dm-reply-<slug>.txt`**: ese archivo trae solo la URL de esta página (el link del recurso se pasa con `--github`).
 3. `replykaro-automation` crea la automatización con `--link <esa URL>`. Esa URL es el único link que manda la automatización (los mensajes ya no los envía Aurelio a mano: los envía ReplyKaro).
 
 Todo es parte del mismo "aprobado". No pedir un segundo OK.
@@ -23,7 +23,7 @@ Todo es parte del mismo "aprobado". No pedir un segundo OK.
 |---|---|
 | `slug` | El slug del video (`<slug>` de la carpeta de entrega), en minúsculas y con guiones |
 | `name` | El nombre del recurso, como lo dice el video |
-| link del recurso | Se saca solo del `dm-reply` (el primer link que no es Skool ni aurelioagency.com) |
+| link del recurso | Se pasa con `--github <url>`, sacado de lo que muestra o dice el video (el `dm-reply` ya no lo trae) |
 | resumen `es` / `en` / `br` | Se escribe acá, de 1 a 2 frases |
 | `reel` (opcional) | No cargarlo: el reel todavía no está subido cuando se crea la página |
 
@@ -38,12 +38,12 @@ node "<skill-dir>\scripts\add-resource.mjs" --slug scrapling --name "Scrapling" 
   --summary-es "Scrapling es un framework de web scraping gratuito y de código abierto. Sirve desde una sola solicitud hasta un rastreo completo de un sitio." ^
   --summary-en "Scrapling is a free, open-source web scraping framework. It handles everything from a single request to a full-scale crawl." ^
   --summary-br "Scrapling é um framework de web scraping gratuito e de código aberto. Serve desde uma única requisição até um rastreamento completo de um site." ^
-  --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt"
+  --github "<url del repo o recurso>"
 ```
 
 Qué hace, en orden: `git pull`, agrega el bloque a `src/lib/resource-drops.ts`, corre `tsc`, commit y push a `main` (sin `Co-Authored-By`), espera hasta 5 minutos a que `https://www.aurelioagency.com/blog/<slug>` responda 200, y la imprime en la última línea (`ONLINE: <url>`). La URL no lleva idioma: la web redirige sola al de cada persona (es, en o br).
 
-Flags: `--github <url>` (si no hay dm-reply), `--reel <url>`, `--repo <ruta>`, `--wait <seg>`, `--dry-run` (muestra el bloque sin escribir nada), `--no-git` (solo edita el archivo; para pruebas).
+Flags: `--github <url>` (obligatorio hoy), `--reel <url>`, `--repo <ruta>`, `--wait <seg>`, `--dry-run` (muestra el bloque sin escribir nada), `--no-git` (solo edita el archivo; para pruebas).
 
 Códigos de salida: `0` la página está online · `4` quedó subida pero todavía no responde · `1` error (slug repetido, tsc falló, repo sucio, etc.).
 
@@ -58,4 +58,5 @@ El script imprime el estado del deploy. **No seguir con replykaro-automation**: 
 - Cada recurso nuevo es un commit chico a `main`. No tocar nada más del repo de la web.
 - El repo exige los tres idiomas (`es`, `en`, `br`): el script no deja cargar uno solo.
 - El `dm-reply` no se modifica nunca desde esta skill.
+- Al terminar, devolver siempre la URL de la página al usuario.
 - No publicar la página de un recurso que el usuario no aprobó.

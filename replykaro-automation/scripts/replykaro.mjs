@@ -7,7 +7,7 @@
 //
 // Commands (--account takes a name, a comma list, or "all"; default for create = all):
 //   create  [--account all] [--target next|latest|<media_id>] [--dm-reply <file>]
-//           [--final-message "<text>"] [--link <url>] [--button "<<=20 chars>"] [--keyword <word>]
+//           [--final-message "<text>"] [--link <url>] [--button "<<=20 chars>"] [--name "<recurso>"] [--keyword <word>]
 //   list    [--account all]
 //   media   --account <name>
 //   delete  --account <name> --id <automation_id>
@@ -119,7 +119,7 @@ async function createOne({ name, key: k }, { finalMessage, link, button }) {
 
   // Read back what was really stored — never assume.
   const saved = (await rest(k, 'GET', '/automations/' + res.automation_id)).data;
-  const checks = { require_follow: true, custom_greeting: BASE.custom_greeting, follow_button_text: BASE.follow_button_text, final_button_text: button, link_url: link };
+  const checks = { require_follow: true, reply_message: BASE.reply_message, custom_greeting: BASE.custom_greeting, follow_button_text: BASE.follow_button_text, final_button_text: button, link_url: link };
   const bad = Object.entries(checks).filter(([f, v]) => saved[f] !== v);
   console.log(`[${name}] OK media=${saved.media_id} palabra=${saved.trigger_keyword} follow_gate=${saved.require_follow} botones_extra=${(saved.additional_buttons || []).length} respuestas_publicas=${(saved.comment_reply_templates || []).length} id=${res.automation_id}`);
   if (bad.length) die(`[${name}] Campos que NO se guardaron como se pidió: ` + bad.map(([f]) => f).join(', '));
@@ -137,6 +137,23 @@ async function main() {
     console.log(typeof m === 'string' ? m : JSON.stringify(m, null, 2));
   } else if (cmd === 'list') {
     for (const a of accounts(true)) for (const x of await activeSorted(a.key)) console.log(`[${a.name}] ${x.id} | ${x.trigger_keyword} | media=${x.media_id} | ${x.created_at}`);
+  } else if (cmd === 'update') {
+    // Edita en el lugar (sin borrar): saludo desde la plantilla, mensaje final, link y botón.
+    if (!opt.id) die('Falta --id.');
+    const [a] = accounts(false);
+    const button = opt.button && opt.button !== true ? opt.button : undefined;
+    const nombre = opt.name && opt.name !== true ? opt.name : button;
+    const args = { automation_id: opt.id, reply_message: BASE.reply_message };
+    if (opt.link && opt.link !== true) args.link_url = opt.link;
+    if (button) args.final_button_text = button;
+    if (opt['final-message'] && opt['final-message'] !== true) args.final_message = opt['final-message'];
+    else if (nombre) args.final_message = `Acá tenés ${nombre} 🚀
+Tocá el botón de abajo y entrá.`;
+    await mcp(a.key, 'update_automation', args);
+    const saved = (await rest(a.key, 'GET', '/automations/' + opt.id)).data;
+    const bad = Object.entries(args).filter(([f, v]) => f !== 'automation_id' && saved[f] !== v);
+    console.log(`[${a.name}] update ${opt.id}: reply_message=${JSON.stringify(saved.reply_message)} final_message=${JSON.stringify(saved.final_message)} link=${saved.link_url} boton=${saved.final_button_text} media=${saved.media_id}`);
+    if (bad.length) die('No se guardaron: ' + bad.map(([f]) => f).join(', '));
   } else if (cmd === 'delete') {
     if (!opt.id) die('Falta --id.');
     const [a] = accounts(false);
@@ -144,17 +161,18 @@ async function main() {
     console.log(`[${a.name}] Borrada ${opt.id}`);
   } else if (cmd === 'create') {
     let finalMessage = opt['final-message'], link = opt.link;
-    if (opt['dm-reply']) {
-      const p = parseDmReply(opt['dm-reply']);
-      // Con --link explícito (la página del recurso), ese es el ÚNICO link que sale: reemplaza
-      // al del dm-reply también dentro del texto del mensaje.
-      if (!finalMessage) finalMessage = link && p.url ? p.message.split(p.url).join(link) : p.message;
-      link ||= p.url;
-    }
-    if (!finalMessage) die('Falta el mensaje final (--final-message o --dm-reply).');
+    // El dm-reply solo aporta la URL (es lo único que trae hoy: la página del recurso). El link
+    // que sale en la automatización es siempre uno solo; --link explícito gana sobre el del archivo.
+    if (opt['dm-reply']) link ||= parseDmReply(opt['dm-reply']).url;
     if (!link) die('Falta el link del recurso (--link o una URL dentro del dm-reply).');
     const button = opt.button && opt.button !== true ? opt.button : 'Abrir recurso';
     if (button.length > 20) die(`El texto del botón "${button}" tiene ${button.length} caracteres; máximo 20.`);
+    // Mensaje que acompaña al botón: sin links en el texto (el link vive en el botón).
+    if (!finalMessage) {
+      const nombre = opt.name && opt.name !== true ? opt.name : button;
+      finalMessage = `Acá tenés ${nombre} 🚀
+Tocá el botón de abajo y entrá.`;
+    }
     const list = accounts(true);
     if (opt.target && !['next', 'latest'].includes(opt.target) && list.length > 1) die('Un media_id puntual es de una sola cuenta: pasá --account <nombre>.');
     // One account failing must not block the other: run all, report each, exit 1 if any failed.
@@ -165,7 +183,7 @@ async function main() {
     }
     if (failed) process.exit(1);
   } else {
-    die('Comando desconocido. Usá: create | list | media | delete | check');
+    die('Comando desconocido. Usá: create | update | list | media | delete | check');
   }
 }
 
