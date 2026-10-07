@@ -143,7 +143,7 @@ async function main() {
     const [a] = accounts(false);
     const button = opt.button && opt.button !== true ? opt.button : undefined;
     const nombre = opt.name && opt.name !== true ? opt.name : button;
-    const args = { automation_id: opt.id, reply_message: BASE.reply_message };
+    const args = { automation_id: opt.id, reply_message: BASE.reply_message, button_text: BASE.button_text, additional_buttons: BASE.additional_buttons };
     if (opt.link && opt.link !== true) args.link_url = opt.link;
     if (button) args.final_button_text = button;
     if (opt['final-message'] && opt['final-message'] !== true) args.final_message = opt['final-message'];
@@ -151,8 +151,8 @@ async function main() {
 Tocá el botón de abajo y entrá.`;
     await mcp(a.key, 'update_automation', args);
     const saved = (await rest(a.key, 'GET', '/automations/' + opt.id)).data;
-    const bad = Object.entries(args).filter(([f, v]) => f !== 'automation_id' && saved[f] !== v);
-    console.log(`[${a.name}] update ${opt.id}: reply_message=${JSON.stringify(saved.reply_message)} final_message=${JSON.stringify(saved.final_message)} link=${saved.link_url} boton=${saved.final_button_text} media=${saved.media_id}`);
+    const bad = Object.entries(args).filter(([f, v]) => f !== 'automation_id' && JSON.stringify(saved[f] ?? (Array.isArray(v) ? [] : v)) !== JSON.stringify(v));
+    console.log(`[${a.name}] update ${opt.id}: reply_message=${JSON.stringify(saved.reply_message)} final_message=${JSON.stringify(saved.final_message)} link=${saved.link_url} boton=${saved.final_button_text} extra=${(saved.additional_buttons || []).length} media=${saved.media_id}`);
     if (bad.length) die('No se guardaron: ' + bad.map(([f]) => f).join(', '));
   } else if (cmd === 'delete') {
     if (!opt.id) die('Falta --id.');

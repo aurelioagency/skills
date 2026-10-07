@@ -7,16 +7,13 @@
     "Ya te lo envié 👀 Mirá también en Solicitudes ocultas"
   ],
   "reply_message": "Gracias por comentar 🙌🏻\nTocá el botón de abajo y te lo mando enseguida.",
-  "button_text": "Quiero el recurso",
+  "button_text": "Quiero el recurso!",
   "custom_greeting": "Aurelio a su servicio!",
   "require_follow": true,
   "follow_gate_message": "Para desbloquearlo, seguime primero 👋",
   "follow_button_text": "Seguime y desbloqueá",
   "verify_button_text": "Ya te sigo 👍",
   "follow_gate_retry_message": "Todavía no te veo en mis seguidores 🤔 Seguime y tocá 'Ya te sigo' de nuevo.",
-  "additional_buttons": [
-    { "button_text": "Comunidad Skool", "link_url": "https://www.skool.com/la-casa-de-aurelio-2061/about" },
-    { "button_text": "Aurelio Agency", "link_url": "https://www.aurelioagency.com" }
-  ],
+  "additional_buttons": [],
   "followup_enabled": false
 }
