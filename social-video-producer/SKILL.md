@@ -1199,6 +1199,9 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
 - **On success it deletes the whole `.work\<slug>\` build tree.** Publishing means approved, and by then the delivery folder and the Drive copy hold everything the user keeps; `.work` is only extracted audio, transcripts, manifests, snapshots, cover frames, the raw copy, and a final MP4 that is just a hardlink to the delivery copy — none of it worth its gigabyte. Pass `--keep-work` to keep it (e.g. a repair is likely). `--dry-run` reports what it would copy and delete.
 - Never run this before approval, and never as part of the same breath as `deliver-package.mjs`. Approval is a separate, explicit go-ahead from the user.
 - Large videos (100 MB+) copy instantly to the local mount but take a few minutes to finish uploading in the background; report that the copy is done and Drive is syncing, don't claim the upload is complete.
+- **Disco lleno:** si falla con `ENOSPC`, el disco C no tiene lugar para la caché de Drive (la unidad G: usa C). Con menos de ~0,5 GB libres no sube. No se borra nada sin el OK del usuario: proponerle liberar espacio o borrar los intermedios del proyecto (`renders\segments`, snapshots, copia en `raws\`) y reintentar con `--overwrite`.
+- **`EPERM` al borrar `.work\<slug>`:** la sesión de Claude tiene ese proyecto como carpeta de trabajo, o un ffmpeg viejo lo tiene abierto. La copia a Drive ya quedó hecha; mover la sesión a otra carpeta antes de publicar y borrar `.work\<slug>` después. Antes de empezar, que no quede un ffmpeg colgado de una prueba (`ssim` con `-loop 1` sin `-t` no termina nunca).
+- Si después de publicar se cambia algo en la carpeta de entrega (por ejemplo el `dm-reply`), copiar el archivo también a Drive y comparar con `md5sum`.
 
 ## ReplyKaro Automation (right after the same approval)
 

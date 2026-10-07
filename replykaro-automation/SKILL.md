@@ -71,6 +71,27 @@ Antes de crear, el script cuenta las activas **de cada cuenta**; si ya hay 3 **b
 - `NEXT_MEDIA` solo se aplica al próximo post que publique esa cuenta. Si el usuario sube otro post antes, se lo lleva ese. Avisarle que el próximo post sea el reel.
 - Sin acceso a Internet o clave revocada: el script termina con `ERROR:` y el motivo. Fallback manual: pegar los textos en el asistente de ReplyKaro (paso 1 "Próximo post / reel").
 
+## Estado final correcto (verificado en producción, 2026-10-07)
+
+Las dos cuentas (personal y aurelio) llevan **exactamente lo mismo**; solo cambia el `media_id`:
+
+- Saludo `Aurelio a su servicio!`, y `reply_message` con salto de línea: `Gracias por comentar 🙌🏻` / `Tocá el botón de abajo y te lo mando enseguida.`
+- Botón del saludo `Quiero el recurso!`; follow gate prendido; palabra `Aurelio`.
+- Mensaje final sin links (`Acá tenés <nombre> 🚀` / `Tocá el botón de abajo y entrá.`) y **un solo botón** de link: el del recurso, con la URL de la página. Sin Skool ni Aurelio Agency (`additional_buttons` vacío).
+- Comentario público sin paréntesis y con el emoji al final (`Listo, revisá tus mensajes y las solicitudes, por las dudas 🙌`).
+
+Para comparar las dos cuentas: `list_automations`/`get_automation` por MCP o `GET /automations/<id>` por REST, y diff de los campos (todo igual salvo `media_id`).
+
+## Reel ya subido o ajustes después de crear
+
+- **No borrar y recrear: editar con `update`** (`update_automation` por MCP). El comando `update` del script reaplica saludo, botones, mensaje y link y relee lo guardado. `update_automation` **no** acepta cambiar `media_id`.
+- `NEXT_MEDIA` se convierte en el id del reel cuando Instagram avisa del post; puede tardar un rato en una de las cuentas. Si ya lo subieron, mirar `media` y `get_automation` antes de tocar nada.
+- Antes de crear, comprobar si el reel ya tiene automatización (el error `duplicate key` lo avisa) y usar `update`.
+
+## Cómo probar
+
+**ReplyKaro responde una sola vez por persona y por automatización.** Si una cuenta ya comentó la palabra, volver a comentar (aunque borre el comentario) no genera nada, ni siquiera un log de error (`get_dm_logs` muestra un solo envío). Para probar un cambio hay que comentar desde **otra cuenta que siga a la del reel**. No hay ajuste en la API para repetir el envío a la misma cuenta.
+
 ## Mensajes que caen en "Solicitudes ocultas"
 
 Instagram puede mandar el DM de una cuenta que la persona no sigue a "Solicitudes" o "Solicitudes ocultas" (pasó en la prueba del 2026-10-06, con el estado SENT en ReplyKaro). Por eso las 3 respuestas públicas de `plantilla-base.json` avisan que lo busquen ahí. No quitar ese aviso.

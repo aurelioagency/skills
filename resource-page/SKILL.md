@@ -51,6 +51,12 @@ Códigos de salida: `0` la página está online · `4` quedó subida pero todav�
 
 El script imprime el estado del deploy. **No seguir con replykaro-automation**: el DM saldría con un link que da 404. Decirle al usuario el estado exacto y esperar. El caso conocido (2026-10-06) es `Deployment was blocked`: el hosting bloquea los commits de una cuenta que no está aceptada en el equipo; lo resuelve quien administra el hosting.
 
+## Problemas conocidos al publicar
+
+- `tsc falló ... Cannot find module '@opennextjs/cloudflare'`: al hacer pull llegó una dependencia nueva que no está instalada. Correr `npm install` en el repo de la web y **revertir `package-lock.json`** (`git checkout package-lock.json`), porque el script se niega a trabajar con el repo sucio. Después repetir el comando.
+- Instalar puede tardar varios minutos: avisarle al usuario que es eso lo que demora.
+- Siempre devolverle al usuario la URL de la página, como link, en la respuesta final.
+
 ## Reglas
 
 - El link del recurso es siempre https.
