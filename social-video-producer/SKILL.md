@@ -1230,3 +1230,15 @@ node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --l
 - Read the output back in one line per account: attached to what, follow gate on, whether it deleted an old one.
 - If the reel is already published, the automation tied to `NEXT_MEDIA` may need changes: **edit it in place with `replykaro.mjs update --account <name> --id <id> --link <url> --button ... --name ...`; never delete and recreate** (confirmed with the user 2026-10-07).
 - **Always return the page URL to the user in the final reply** so they can look at it.
+
+## Post For Me — LinkedIn, YouTube Shorts and TikTok (last step of the cascade)
+
+After ReplyKaro, call the **`post-for-me`** skill to publish the reel on the three networks the user does not upload by hand. The skill keeps its own rules and its own confirmation gate (accounts, full caption, media, when) — show that gate once and wait for the yes before anything goes out, because a post cannot be retracted.
+
+- **Never Instagram, from this skill.** The user uploads to Instagram by hand from the Instagram **Edits** app, for both accounts (@ing.gustavopaz and @lacasadeaurelio), because that is where Instagram gives the extra push. Do not pass either Instagram account to Post for Me. Facebook was not requested either: leave it out.
+- **Accounts (explicit list, only Aurelio's connected ones):** TikTok *La Casa de Aurelio* (`title`), YouTube *La Casa de Aurelio* (`title`, `privacy_status: 'public'`) and LinkedIn *Aurelio Agency* (no extras). Confirm with `GET /v1/social-accounts` (`status == "connected"`); never the personal LinkedIn profile.
+- **Media:** the finished video in `<slug>\output\` (the `-subs.mp4`, cover already frame 0). It is the same file that went to Drive.
+- **Caption:** `caption-<slug>.txt`, verbatim. **`title`** for TikTok and YouTube: written from the piece's own hook (the caption is not a title).
+- `external_id` = the delivery folder slug; `localizations: {}` on every account configuration. Publish now unless the user gave a time.
+- **Report each result link** (`platform_data.url`) in the final reply, next to the resource page URL; if one network failed, say which and why.
+- **Do not mark or rename the delivery folder** with the publication date here: Instagram is still pending by hand. Only when the user asks.
