@@ -120,6 +120,31 @@ Do **not** add an `if: "Read(**/*.pdf)"` filter to narrow it. That filter stops 
 
 To disable: delete the `hooks` block.
 
+## Updating
+
+Improvements land in the repo; your installed copy never updates itself. To update, re-run the installer from an up-to-date clone — it replaces the installed skill cleanly, keeps its `node_modules`, and records the installed commit in `.installed-from.json`:
+
+```powershell
+git pull
+node install-skills.mjs pdf-markitdown
+```
+
+To find out whether you are behind without installing anything:
+
+```powershell
+node install-skills.mjs pdf-markitdown --check
+```
+
+## Uninstalling
+
+The installed skill lives in `~/.claude/skills/pdf-markitdown/`. Removing it touches nothing else. From a clone:
+
+```powershell
+node install-skills.mjs pdf-markitdown --remove
+```
+
+Or simply delete that folder yourself.
+
 ## Requirements
 
 - Python 3.10+ (MarkItDown's own minimum)

@@ -62,6 +62,31 @@ node install-skills.mjs mercadolibre-publisher          # Claude Code
 node install-skills.mjs mercadolibre-publisher --codex  # Codex
 ```
 
+## Updating
+
+Improvements land in the repo; your installed copy never updates itself. To update, re-run the installer from an up-to-date clone — it replaces the installed skill cleanly, keeps its `node_modules`, and records the installed commit in `.installed-from.json`:
+
+```powershell
+git pull
+node install-skills.mjs mercadolibre-publisher
+```
+
+To find out whether you are behind without installing anything:
+
+```powershell
+node install-skills.mjs mercadolibre-publisher --check
+```
+
+## Uninstalling
+
+The installed skill lives in `~/.claude/skills/mercadolibre-publisher/`. Removing it touches nothing else. From a clone:
+
+```powershell
+node install-skills.mjs mercadolibre-publisher --remove
+```
+
+Or simply delete that folder yourself.
+
 ## Requirements
 
 - **Node.js 18+** on `PATH` — the scripts use native `fetch`, no dependencies to install.
