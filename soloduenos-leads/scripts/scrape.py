@@ -10,7 +10,7 @@ El Excel se actualiza por link: lo nuevo se agrega, lo existente no se pisa
 (las columnas de gestion quedan intactas). Los campos de contacto se completan
 solo si estan vacios.
 """
-import argparse, re, sys, time, unicodedata, datetime
+import argparse, json, re, sys, time, unicodedata, datetime, urllib.request
 from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
@@ -36,6 +36,105 @@ def norm(s):
     return "".join(c for c in s if unicodedata.category(c) != "Mn").lower()
 
 
+
+# ---------- contacto en descripcion y fotos ----------
+_OCR = None
+RE_TEL = re.compile(r"(?<![\d$])(?:\+?54[\s\-\.]*)?(?:9[\s\-\.]*)?(?:\(?0?\d{2,4}\)?[\s\-\.]*)?(?:15[\s\-\.]*)?\d{3,4}[\s\-\.]*\d{4}(?!\d)")
+RE_MAIL = re.compile(r"[\w\.\-+]+@[\w\-]+(?:\.[\w\-]+)+")
+RE_IG = re.compile(r"(?:instagram\.com/|insta(?:gram)?\s*[:\-]?\s*@?|ig\s*[:\-]\s*@?|(?<![\w.])@)([A-Za-z0-9_.]{3,30})", re.I)
+
+
+def _motor():
+    global _OCR
+    if _OCR is None:
+        from rapidocr_onnxruntime import RapidOCR
+        _OCR = RapidOCR()
+    return _OCR
+
+
+def _bajar(url, ancho=None):
+    """Descarga una foto; con `ancho` pide la miniatura que sirve el propio storage (mucho más liviana)."""
+    if ancho:
+        url = url.replace("/object/public/", "/render/image/public/") + f"?width={ancho}"
+    try:
+        return urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()
+    except Exception:
+        return None
+
+
+def puntaje_texto(data):
+    """Detección de texto SIN leerlo (rápido): fracción de la foto cubierta por cajas de texto."""
+    import numpy as np, cv2
+    img = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+    if img is None:
+        return 0.0, 0
+    res, _ = _motor()(img, use_det=True, use_cls=False, use_rec=False)
+    if not res:
+        return 0.0, 0
+    area = 0.0
+    for box in res:
+        box = box[0] if isinstance(box[0][0], (list, tuple)) else box
+        xs, ys = [p[0] for p in box], [p[1] for p in box]
+        area += (max(xs) - min(xs)) * (max(ys) - min(ys))
+    return area / (img.shape[0] * img.shape[1]), len(res)
+
+
+def ocr_texto(data):
+    res, _ = _motor()(data)
+    return " ".join(r[1] for r in res) if res else ""
+
+
+def extraer_contactos(texto):
+    """Teléfonos, mails e Instagram dentro de un texto libre."""
+    tels = []
+    for m in RE_TEL.finditer(texto):
+        dig = re.sub(r"\D", "", m.group(0))
+        if 10 <= len(dig) <= 13 and not dig.startswith(("0000", "1111")):
+            tels.append(m.group(0).strip())
+    mails = [m for m in RE_MAIL.findall(texto) if not m.lower().endswith(("png", "jpg", "webp"))]
+    igs = [i for i in RE_IG.findall(texto) if not i.lower().endswith((".com", ".ar")) and i.lower() not in ("gmail", "hotmail", "yahoo")]
+    uniq = lambda l: list(dict.fromkeys(l))
+    return uniq(tels), uniq(mails), uniq(igs)
+
+
+def contactos_aviso(descripcion, imagenes, max_fotos, min_texto=0.01, min_cajas=2):
+    """Contactos de la descripción y, si no alcanza, de las fotos que tienen texto.
+
+    1) Descripción (gratis). 2) Miniaturas en paralelo + detección de texto sin leer.
+    3) OCR completo solo en las fotos con texto, de más a menos texto, cortando al primer contacto.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+    r = {"tel": [], "mail": [], "ig": [], "origen": [], "fotos": 0, "con_texto": 0, "leidas": 0}
+
+    def sumar(texto, origen):
+        t, m, i = extraer_contactos(texto)
+        for k, v in (("tel", t), ("mail", m), ("ig", i)):
+            for x in v:
+                if x not in r[k]:
+                    r[k].append(x)
+                    r["origen"].append(f"{k} en {origen}")
+        return bool(t or m or i)
+
+    if sumar(descripcion or "", "descripción") or not imagenes or max_fotos == 0:
+        return r
+    fotos = imagenes[:max_fotos]
+    r["fotos"] = len(fotos)
+    with ThreadPoolExecutor(6) as ex:
+        minis = list(ex.map(lambda u: _bajar(u, 400), fotos))
+    cand = []
+    for n, (u, mini) in enumerate(zip(fotos, minis), 1):
+        if mini:
+            frac, cajas = puntaje_texto(mini)
+            if frac >= min_texto and cajas >= min_cajas:
+                cand.append((frac, n, u))
+    r["con_texto"] = len(cand)
+    for frac, n, u in sorted(cand, reverse=True):
+        data = _bajar(u, 1000)
+        r["leidas"] += 1
+        if data and sumar(ocr_texto(data), f"foto {n} (OCR, verificar)"):
+            break
+    return r
+
 # ---------- Excel ----------
 def abrir_excel(path):
     path = Path(path)
@@ -47,7 +146,7 @@ def abrir_excel(path):
         ws = wb.active
         ws.title = "Leads"
         ws.append(COLUMNAS)
-        wb.create_sheet("Corridas").append(["Fecha", "Operaciones", "Zona", "Avisos vistos", "Nuevos", "Con teléfono"])
+        wb.create_sheet("Corridas").append(["Fecha", "Operaciones", "Zona", "Avisos vistos", "Nuevos", "Con contacto"])
         ws.freeze_panes = "A2"
         for col, w in zip("ABCDEFGHIJKLMNOPQR", [10, 15, 50, 16, 22, 20, 24, 20, 14, 12, 28, 18, 36, 60, 10, 18, 16, 30]):
             ws.column_dimensions[col].width = w
@@ -193,46 +292,66 @@ def cmd_run(a):
         tmp = PROFILE / "init.js"
         tmp.write_text(ses["init_script_text"], encoding="utf8")
         kw["init_script"] = str(tmp)
-    with DynamicSession(headless=a.headless, network_idle=True, **kw) as s:
+    with DynamicSession(headless=a.headless, network_idle=True, capture_xhr=r"rest/v1/properties", **kw) as s:
         for op in a.ops:
             for url in listar_links(s, op, a.max_pages):
                 vistos += 1
-                if url in idx and ws.cell(idx[url], hdr.index("Teléfono / WhatsApp") + 1).value:
+                if url in idx and any(ws.cell(idx[url], hdr.index(k) + 1).value for k in ("Teléfono / WhatsApp", "Email", "Otro contacto")):
                     continue
                 out = {"contacto": "", "login": False}
                 resp = s.fetch(url, wait_selector="button:has-text('Contactar')", page_action=accion_detalle(not a.sin_contacto, out))
                 datos = parsear(url, resp.get_all_text(separator="\n"))
                 datos["contacto"] = out["contacto"]
+                prop = {}
+                for c in resp.captured_xhr or []:
+                    if "rest/v1/properties" in c.url:
+                        try:
+                            j = json.loads(c.body)
+                        except Exception:
+                            continue
+                        for cand_ in (j if isinstance(j, list) else [j]):
+                            if isinstance(cand_, dict) and cand_.get("id") == url[-36:]:
+                                prop = cand_
+                datos["descripcion"] = prop.get("description") or datos["descripcion"]
+                datos["imagenes"] = [i if isinstance(i, str) else i.get("url", "") for i in (prop.get("images") or [])]
                 if zona_f and zona_f not in norm(datos["zona"]) and not (zona_f == "capital federal" and "ciudad autonoma" in norm(datos["zona"])):
                     continue
+                datos["extra"] = contactos_aviso(datos["descripcion"], datos.get("imagenes", []), 0 if a.sin_ocr else a.max_fotos)
+                ex_ = datos["extra"]
+                print(f"  {datos['id']} {datos['zona'].split(',')[0]}: fotos {ex_['fotos']}, con texto {ex_['con_texto']}, leídas {ex_['leidas']}, contacto {bool(ex_['tel'] or ex_['mail'] or ex_['ig'])} {ex_['tel'][:1]}", flush=True)
                 resultados[url] = datos
                 time.sleep(1)
 
     for url, d in resultados.items():
         tel, mail = parsear_contacto(d.get("contacto", ""), "")
+        ex = d["extra"]
+        tel = tel or "; ".join(ex["tel"])
+        mail = mail or "; ".join(ex["mail"])
+        ig = "; ".join("@" + i for i in ex["ig"])
+        origen = "; ".join(ex["origen"])
         fila = {
             "ID": d["id"], "Fuente": FUENTE, "Link publicación": url, "Fecha de captura": hoy,
-            "Nombre del dueño": d["nombre"], "Teléfono / WhatsApp": tel, "Email": mail, "Otro contacto": "",
+            "Nombre del dueño": d["nombre"], "Teléfono / WhatsApp": tel, "Email": mail, "Otro contacto": ig,
             "Tipo": d["tipo"], "Operación": d["operacion"], "Zona": d["zona"], "Precio y moneda": d["precio"],
             "Características": d["caracteristicas"], "Detalle breve": detalle_breve(d), "Días publicado": "",
-            "Estado de contacto": "nuevo", "Fecha de contacto": "", "Notas": "",
+            "Estado de contacto": "nuevo" if (tel or mail or ig) else "sin contacto", "Fecha de contacto": "", "Notas": origen,
         }
         if url in idx:
             r = idx[url]
-            for k in ("Nombre del dueño", "Teléfono / WhatsApp", "Email"):
+            for k in ("Nombre del dueño", "Teléfono / WhatsApp", "Email", "Otro contacto"):
                 c = hdr.index(k) + 1
                 if not ws.cell(r, c).value and fila[k]:
                     ws.cell(r, c).value = fila[k]
         else:
             ws.append([fila[c] for c in COLUMNAS])
             nuevos += 1
-        con_tel += 1 if tel else 0
+        con_tel += 1 if (tel or mail or ig) else 0
 
     wb["Corridas"].append([hoy, ",".join(a.ops), a.zona, vistos, nuevos, con_tel])
     wb.save(a.excel)
-    print(f"Avisos vistos: {vistos} | en zona: {len(resultados)} | nuevos: {nuevos} | con teléfono: {con_tel}")
-    if con_tel == 0 and not a.sin_contacto:
-        print("AVISO: ningún teléfono. Si el sitio pide cuenta, corré 'login' primero.")
+    print(f"Avisos vistos: {vistos} | en zona: {len(resultados)} | nuevos: {nuevos} | con algún contacto: {con_tel}")
+    if con_tel == 0:
+        print("AVISO: ningún contacto. Probá 'login' (el sitio entrega el número con cuenta).")
 
 
 if __name__ == "__main__":
@@ -245,6 +364,8 @@ if __name__ == "__main__":
     r.add_argument("--ops", nargs="+", default=["venta", "alquiler"])
     r.add_argument("--zona", default="capital federal")
     r.add_argument("--sin-contacto", action="store_true")
+    r.add_argument("--sin-ocr", action="store_true")
+    r.add_argument("--max-fotos", type=int, default=60)
     r.add_argument("--headless", action="store_true")
     r.set_defaults(fn=cmd_run)
     args = ap.parse_args()
