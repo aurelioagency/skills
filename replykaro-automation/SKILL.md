@@ -53,6 +53,10 @@ node "<skill-dir>\scripts\replykaro.mjs" create --target next ^
 
 El mensaje final no lleva links ni datos del recurso: solo la frase corta junto al botón (voseo, palabras simples).
 
+## Botones
+
+**Un solo botón de link por automatización: el del recurso (la URL de la página).** Sin botones de Skool ni de Aurelio Agency (`additional_buttons` vacío). El botón del saludo dice `Quiero el recurso!` (con signo de exclamación). Confirmado con el usuario el 2026-10-07.
+
 ## Saludo
 
 `reply_message` de la plantilla lleva un salto de línea: `Gracias por comentar 🙌🏻` / `Tocá el botón de abajo y te lo mando enseguida.` No juntarlo en una línea.
