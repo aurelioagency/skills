@@ -40,13 +40,12 @@ Script: `node "<skill-dir>\scripts\replykaro.mjs" <comando> [--account <nombre|a
 
 ```
 node "<skill-dir>\scripts\replykaro.mjs" create --target next ^
-  --dm-reply "<ruta>\dm-reply-<slug>.txt" --button "Abrir Scrapling"
+  --link "<URL que devolvió resource-page>" --button "Abrir Scrapling" --name "Scrapling"
 ```
 
 - `--target next` (**default**): el próximo reel que se suba (`NEXT_MEDIA`). Es el caso normal: el video sale al Drive aprobado, el usuario lo sube a mano después.
 - `--target latest`: el último reel ya publicado. `--target <media_id>`: uno puntual (ver `media`).
-- `--link`: la URL de la página del recurso (skill `resource-page`). Si falta, se toma del `--dm-reply`. Es el único link que sale: va en el botón, no en el texto.
-- `--dm-reply`: alternativa a `--link`; toma la URL de ese archivo. No aporta texto al mensaje de la automatización.
+- `--link`: la URL que devuelve `resource-page` (es la entrada de esta skill). Es el único link que sale: va en el botón, no en el texto.
 - **Mensaje final** (junto al botón): se genera solo, creativo y sin links: `Acá tenés <name> 🚀` + salto de línea + `Tocá el botón de abajo y entrá.` Cambiarlo solo con `--final-message`. `--name` es el nombre del recurso (si falta usa el texto del botón).
 - `--button`: texto del botón del recurso, **máximo 20 caracteres** (si no se pasa, "Abrir recurso"). Elegirlo según lo que es el recurso ("Abrir Scrapling", "Ver el repo", "Descargar guía").
 - `--dry-run`: arma y muestra exactamente lo que enviaría `create_automation`, sin crear ni borrar nada. Usarlo para revisar el resultado antes de crear.

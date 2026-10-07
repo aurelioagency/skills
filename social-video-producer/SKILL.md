@@ -1216,11 +1216,11 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
 
 When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. The moment the user approves the video, cover and caption and the delivery folder goes to Drive (**Publish To Drive**), run two skills **in this order**, as part of the same go-ahead (do not ask a second time):
 
-1. **`resource-page`** first. It creates the resource's page on the agency site (`aurelioagency.com/blog/<slug>`), passing the resource's source link with `--github <url>` (the `dm-reply` carries only the page URL as resource link), and prints the page URL. That URL is the only link the automation sends, so ReplyKaro cannot be set up before it. If the page does not come online (exit code 4), stop and tell the user; do not run the next step.
-2. **`replykaro-automation`**; the `dm-reply` file already holds that URL, so it is the only link the automation sends. The message next to the button is generated (no links in its text) and the greeting carries a line break after `Gracias por comentar 🙌🏻`:
+1. **`resource-page`** first. It creates the resource's page on the agency site (`aurelioagency.com/blog/<slug>`), passing the resource's source link with `--github <url>` (the dm-reply carries that page URL as its only link), and prints the page URL. That URL is the only link the automation sends, so ReplyKaro cannot be set up before it. If the page does not come online (exit code 4), stop and tell the user; do not run the next step.
+2. **`replykaro-automation`**; that URL is the only link the automation sends. The message next to the button is generated (no links in its text) and the greeting carries a line break after `Gracias por comentar 🙌🏻`:
 
 ```powershell
-node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --dm-reply "<delivery>\<slug>\output\dm-reply-<slug>.txt" --button "<up to 20 chars, named after the resource>" --name "<resource name>"
+node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --link "<page URL printed by resource-page>" --button "<up to 20 chars, named after the resource>" --name "<resource name>"
 ```
 
 - **Both accounts at once.** Without `--account` it creates the automation in every account in `~\.replykaro\keys.json` (`personal` = @ing.gustavopaz and `aurelio` = @lacasadeaurelio), because the same reel is posted on both. One account failing does not stop the other; report each.
