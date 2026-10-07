@@ -1052,9 +1052,22 @@ Rules:
 
 Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (see the rule above), also write `dm-reply-<slug>.txt` next to it in `renders\final\`. It is the manual fallback: the text to paste if the resource ever has to be sent by hand instead of by the ReplyKaro automation. `deliver-package.mjs` auto-detects and ships this file the same way it does the caption — optional, so branches with no comment-CTA simply have none.
 
-**The file holds only the resource page URL and nothing else** (confirmed with the user 2026-10-07): `https://www.aurelioagency.com/blog/<slug>`, where `<slug>` is the delivery folder name, one line. No greeting, no repo link, no install steps, no Skool line, no Aurelio Agency close — the page itself carries the resource, the community and the agency. The URL is deterministic from the slug, so it can be written before the page exists; `resource-page` then creates the page that answers at that address.
+Plain text, UTF-8, ready to paste into a DM. **The only resource link in it is the resource page URL** (`https://www.aurelioagency.com/blog/<slug>`, `<slug>` = the delivery folder name) — never the repo or tool link, never install steps (the page carries those). Fixed structure, confirmed with the user 2026-10-07:
 
-- The real source link of the resource (repo, tool site) is never written into the dm-reply. It goes to `resource-page` with `--github <url>` and comes from what the video's own transcript shows or says (a repo name, a URL spoken or visible on screen); if it cannot be confirmed, verify at the source with `gh`/`WebFetch`, never guess.
+```text
+Hola! Acá te dejo <nombre del recurso>:
+https://www.aurelioagency.com/blog/<slug>
+
+Compartimos más recursos como este en la comunidad: https://www.skool.com/la-casa-de-aurelio-2061/about
+
+¿Querés que automaticemos algo de tu negocio? → https://www.aurelioagency.com
+```
+
+- It is the **manual fallback**: the message to paste if the resource has to be sent by hand. The ReplyKaro automation does not use its text, only the page URL in it.
+- The greeting, the Skool line and the Aurelio Agency close are fixed — never reworded. No blank line between the greeting line and the URL; a blank line between blocks.
+- The page URL is deterministic from the slug, so the file can be written before the page exists; `resource-page` then creates the page at that address.
+- The real source link of the resource (repo, tool site) never goes in the dm-reply. It goes to `resource-page` with `--github <url>`, taken from what the video's transcript shows or says (a repo name, a URL spoken or visible on screen); if it cannot be confirmed, verify at the source with `gh`/`WebFetch`, never guess.
+- Voseo, simple words. When asked to shorten it, trim only the resource line, never the fixed Skool and Aurelio Agency lines.
 
 ## Repair Rules
 
@@ -1207,7 +1220,7 @@ node "<skill-dir>\scripts\publish-to-drive.mjs" --project "<project>"
 
 When the delivery has a `dm-reply-<slug>.txt` (the caption promises a resource by DM), the user would otherwise open ReplyKaro and set up the comment-to-DM automation by hand for every reel. The moment the user approves the video, cover and caption and the delivery folder goes to Drive (**Publish To Drive**), run two skills **in this order**, as part of the same go-ahead (do not ask a second time):
 
-1. **`resource-page`** first. It creates the resource's page on the agency site (`aurelioagency.com/blog/<slug>`), passing the resource's source link with `--github <url>` (the `dm-reply` only holds the page URL), and prints the page URL. That URL is the only link the automation sends, so ReplyKaro cannot be set up before it. If the page does not come online (exit code 4), stop and tell the user; do not run the next step.
+1. **`resource-page`** first. It creates the resource's page on the agency site (`aurelioagency.com/blog/<slug>`), passing the resource's source link with `--github <url>` (the `dm-reply` carries only the page URL as resource link), and prints the page URL. That URL is the only link the automation sends, so ReplyKaro cannot be set up before it. If the page does not come online (exit code 4), stop and tell the user; do not run the next step.
 2. **`replykaro-automation`**; the `dm-reply` file already holds that URL, so it is the only link the automation sends. The message next to the button is generated (no links in its text) and the greeting carries a line break after `Gracias por comentar 🙌🏻`:
 
 ```powershell
