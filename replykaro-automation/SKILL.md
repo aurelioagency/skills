@@ -45,7 +45,7 @@ node "<skill-dir>\scripts\replykaro.mjs" create --target next ^
 
 - `--target next` (**default**): el próximo reel que se suba (`NEXT_MEDIA`). Es el caso normal: el video sale al Drive aprobado, el usuario lo sube a mano después.
 - `--target latest`: el último reel ya publicado. `--target <media_id>`: uno puntual (ver `media`).
-- `--link`: la URL de la página del recurso (skill `resource-page`). Si falta, se toma del `--dm-reply` la primera URL que no sea Skool ni la home de Aurelio Agency: la de la página del recurso. Es el único link que sale: va en el botón, no en el texto.
+- `--link`: la URL de la página del recurso (skill `resource-page`). Si falta, se toma del `--dm-reply` su URL (la de la página del recurso). Es el único link que sale: va en el botón, no en el texto.
 - `--dm-reply`: es el mensaje de respaldo para mandar a mano; acá solo se lee para sacar la URL de la página. No aporta texto al mensaje de la automatización.
 - **Mensaje final** (junto al botón): se genera solo, creativo y sin links: `Acá tenés <name> 🚀` + salto de línea + `Tocá el botón de abajo y entrá.` Cambiarlo solo con `--final-message`. `--name` es el nombre del recurso (si falta usa el texto del botón).
 - `--button`: texto del botón del recurso, **máximo 20 caracteres** (si no se pasa, "Abrir recurso"). Elegirlo según lo que es el recurso ("Abrir Scrapling", "Ver el repo", "Descargar guía").

@@ -1052,22 +1052,18 @@ Rules:
 
 Whenever the caption gets the `Comentá <PALABRA> y te la mando por DM.` line (see the rule above), also write `dm-reply-<slug>.txt` next to it in `renders\final\`. It is the manual fallback: the text to paste if the resource ever has to be sent by hand instead of by the ReplyKaro automation. `deliver-package.mjs` auto-detects and ships this file the same way it does the caption — optional, so branches with no comment-CTA simply have none.
 
-Plain text, UTF-8, ready to paste into a DM. **The only resource link in it is the resource page URL** (`https://www.aurelioagency.com/blog/<slug>`, `<slug>` = the delivery folder name) — never the repo or tool link, never install steps (the page carries those). Fixed structure, confirmed with the user 2026-10-07:
+Plain text, UTF-8, ready to paste into a DM. **One link only: the resource page URL** (`https://www.aurelioagency.com/blog/<slug>`, `<slug>` = the delivery folder name). That page already unifies everything (the resource, the Skool community, Aurelio Agency), so nothing else goes in the message. Exact structure, confirmed with the user 2026-10-07:
 
 ```text
 Hola! Acá te dejo <nombre del recurso>:
 https://www.aurelioagency.com/blog/<slug>
-
-Compartimos más recursos como este en la comunidad: https://www.skool.com/la-casa-de-aurelio-2061/about
-
-¿Querés que automaticemos algo de tu negocio? → https://www.aurelioagency.com
 ```
 
 - It is the **manual fallback**: the message to paste if the resource has to be sent by hand. The ReplyKaro automation does not use its text, only the page URL in it.
-- The greeting, the Skool line and the Aurelio Agency close are fixed — never reworded. No blank line between the greeting line and the URL; a blank line between blocks.
+- **No** Skool line, **no** Aurelio Agency close, **no** repo or tool link, **no** install steps — never add them back (the user had to correct this twice).
 - The page URL is deterministic from the slug, so the file can be written before the page exists; `resource-page` then creates the page at that address.
-- The real source link of the resource (repo, tool site) never goes in the dm-reply. It goes to `resource-page` with `--github <url>`, taken from what the video's transcript shows or says (a repo name, a URL spoken or visible on screen); if it cannot be confirmed, verify at the source with `gh`/`WebFetch`, never guess.
-- Voseo, simple words. When asked to shorten it, trim only the resource line, never the fixed Skool and Aurelio Agency lines.
+- The real source link of the resource (repo, tool site) goes only to `resource-page` with `--github <url>`, taken from what the video's transcript shows or says; if it cannot be confirmed, verify at the source with `gh`/`WebFetch`, never guess.
+- Voseo, simple words.
 
 ## Repair Rules
 

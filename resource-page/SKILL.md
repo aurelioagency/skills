@@ -12,7 +12,7 @@ La página no aparece en la lista de `/blog`, lleva `noindex` y no hay ningún l
 ## Lugar en el flujo
 
 1. El usuario aprueba el video en `social-video-producer` → se sube a Drive.
-2. **Esta skill** crea la página y devuelve su URL. **No toca el `dm-reply-<slug>.txt`**: ese archivo es el mensaje de respaldo para mandar a mano y trae la URL de esta página como único link del recurso (el link real del recurso se pasa con `--github`).
+2. **Esta skill** crea la página y devuelve su URL. **No toca el `dm-reply-<slug>.txt`**: ese archivo es el mensaje de respaldo para mandar a mano y trae solo el saludo y la URL de esta página, como único link (el link real del recurso se pasa con `--github`).
 3. `replykaro-automation` crea la automatización con `--link <esa URL>`. Esa URL es el único link que manda la automatización (los mensajes ya no los envía Aurelio a mano: los envía ReplyKaro).
 
 Todo es parte del mismo "aprobado". No pedir un segundo OK.
