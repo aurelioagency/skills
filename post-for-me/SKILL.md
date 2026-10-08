@@ -58,11 +58,11 @@ Two rules follow, and neither is negotiable:
 
 **Never guess the target accounts.** "Post it everywhere" and "all platforms" are not instructions to fan out to every connected account — those lists routinely mix a brand's accounts with someone's personal ones, and a brand post on a personal profile is the exact mistake that cannot be undone. List the accounts, show which ones you intend to use, and get a yes on that list.
 
-That rule is about *guessing*, and it expires the moment the person stops leaving it to you. **Once they name the set — "all of them", "including the personal one", "todas las cuentas es a todas las cuentas" — that is the answer, and it overrides any standing exclusion you are carrying.** Flag the conflict once, inside the gate, on one line: *"X was never used before and your saved rule excluded it — going in because you asked."* Then publish it. Do not spend a turn on it, do not offer to leave it out, do not raise it again after they answer. Someone repeating an instruction is not someone who misunderstood it.
+That rule is about *guessing*, and it expires the moment the person stops leaving it to you. **Once they name the set — "all of them", "including the personal one", "todas las cuentas es a todas las cuentas" — that is the answer, and it overrides any standing exclusion you are carrying.** Flag the conflict once, in the report, on one line: *"X was never used before and your saved rule excluded it — going in because you asked."* Then publish it. Do not spend a turn on it, do not offer to leave it out, do not raise it again after they answer. Someone repeating an instruction is not someone who misunderstood it.
 
-### Do the homework before the gate, not across three turns
+### Do the homework before publishing, not across three turns
 
-Every lookup you need happens **before** the gate is shown. The gate is the one place the person is asked to read carefully, so it has to be complete and final when it appears. Discovering a detail afterwards and coming back with "one more thing" turns a single confirmation into an interrogation, and it is the fastest way to burn the trust that makes the gate work at all.
+Every lookup you need happens **before** the post goes out. Discovering a detail afterwards and coming back with "one more thing" turns a single instruction into an interrogation.
 
 Prior posts are the best available spec and they cost one call. `GET /v1/social-posts`, then `GET /v1/social-posts/{id}` on the closest match, shows the exact account set, the `placement` per platform, the `title` overrides, and whether the video shipped as its own post. A folder that follows the same shape as a previous delivery should be published the same way. Match it instead of asking.
 
@@ -76,7 +76,7 @@ What you owe them is *routing*, not permission. Sorting the assets by what each 
 - **YouTube takes video only.** There is no image-post type; PNGs sent there fail after `processing`. The short is what goes to YouTube, as its own post, with its own `title`.
 - **One asset per account, never both.** If the carousel already reached Instagram, the video cut of that same carousel does not also go there as a reel. The split exists so every account gets the content once.
 
-State the split in the gate as a decision — "YouTube gets the short because it cannot take the images" — and move on. It is a fact about the platform, not a choice the person needs to make.
+State the split in the report as a decision — "YouTube gets the short because it cannot take the images" — and move on. It is a fact about the platform, not a choice the person needs to make.
 
 **"Already published" on a *different* post is not a reason to skip an account for *this* one.** A reel or short published in an earlier, separate job does not retroactively cover the carousel job for that same topic — each publish call is its own delivery, and every account capable of taking this folder's assets gets them in this job. Do not reason from "this topic already reached that account somehow" to "so this account can be skipped now" — that is guessing at what the person wants instead of routing what they asked for. If a video-capable folder is being published and the owner names or implies an account (including "todas" / "everywhere"), and that account only takes video, send it the video in this same job — never explain it away by pointing at a prior post.
 
@@ -101,7 +101,7 @@ Do not publish with a caption you wrote on your own initiative. Ask, and offer t
 1. **The standing template** below, filled in properly.
 2. **A minimal draft**, when the owner does not have the caption ready for that particular video and just wants something serviceable to correct.
 
-Either way the draft is shown in the gate for approval before anything goes out.
+Either way the draft is shown for approval before anything goes out.
 
 **How to build the minimal draft.** The material already answers most of it — work down these sources in order and stop at the first that gives you the topic:
 
@@ -143,7 +143,7 @@ https://www.skool.com/la-casa-de-aurelio-2061
 
 #### The accounts
 
-**Only Aurelio's connected accounts.** Call `GET /v1/social-accounts` and filter on `status == "connected"` at publish time — the table below is the expected shape, not a substitute for the check. **Never list, name or mention a disconnected account**, not in the gate, not in the summary, not as an aside. They are not of interest and raising them is noise.
+**Only Aurelio's connected accounts.** Call `GET /v1/social-accounts` and filter on `status == "connected"` at publish time — the table below is the expected shape, not a substitute for the check. **Never list, name or mention a disconnected account**, not in the report, not in the summary, not as an aside. They are not of interest and raising them is noise.
 
 A reel goes to these five as a single post:
 
@@ -157,13 +157,13 @@ A reel goes to these five as a single post:
 
 Plus `localizations: {}` on every entry, always. `external_id` is the folder slug.
 
-**`ing.gustavopaz` is optional, and it is asked every single time.** It is the owner's second Instagram; some deliveries go there and some do not, and past posts do not settle it. Ask inside the gate — `placement: 'reels'` when it is in — and never assume either way from what previous reels did.
+**`ing.gustavopaz` is optional, and it is asked every single time.** It is the owner's second Instagram; some deliveries go there and some do not, and past posts do not settle it. Ask before publishing — `placement: 'reels'` when it is in — and never assume either way from what previous reels did.
 
 #### What you write yourself
 
 **Only the `title` for TikTok and YouTube.** Take it from the piece's own hook; the caption is not a title.
 
-**A proposal is a proposal.** Nothing is built until the owner says yes — do not describe a pending gate as something you "reconstructed", "rebuilt" or "assembled". Say what you actually did: read the folder, applied the recipe, wrote the title.
+**Describe what you actually did, not a reconstruction of it.** Do not say you "reconstructed", "rebuilt" or "assembled" something. Say what you actually did: read the folder, applied the recipe, wrote the title.
 
 ### Before you build the call
 
@@ -207,16 +207,13 @@ the middle cannot pass for a complete upload.
 that expires — its token carries about a two-hour window. `media_url` expires
 in 24 hours if it goes unused. Upload as part of the publish, not hours ahead.
 
-### The confirmation gate
+### No second confirmation
 
-Before the call that publishes, show four lines and stop:
+The owner's instruction to publish is the confirmation. By the time a delivery reaches this step it has already been reviewed and approved, so **do not stop to show a gate and ask for a second yes** — publish right away. Asking twice is the failure, not the safeguard.
 
-- The accounts, by platform and username
-- The caption, in full — not a summary
-- The media, by filename or URL, in order
-- When it goes out: now, or the scheduled time
+Before publishing, do the homework (accounts, caption, media, title). Then publish, and state what went out in the report afterwards: accounts by platform and username, caption, media and when.
 
-Then ask, and wait for an explicit yes. Not "looks good?" — say that it will be public and cannot be retracted. If any part came from your own inference rather than from what they said, flag that line specifically.
+The only reasons to stop and ask are the ones that need an answer you cannot get from the material: no caption in the folder (see above), an account choice the owner has not made (`ing.gustavopaz`, or a "post everywhere" with no named set), or a genuine platform constraint that changes what goes where. If any part came from your own inference (the `title` for TikTok and YouTube), name it in the report as inferred.
 
 ### If the publish call is denied by the permission layer
 
@@ -232,8 +229,7 @@ If it keeps getting denied, the equivalent allowlist line goes in
 `~/.claude/settings.json`, scoped to the specific curl command rather than to
 `Bash` as a whole where possible (e.g. `"Bash(curl * api.postforme.dev*)"`).
 Say the same cost out loud as before: it covers publishing without the
-harness's own brake, so the confirmation gate above becomes the only check
-left.
+harness's own brake.
 
 ### Building the post
 
@@ -468,7 +464,7 @@ If something is unfinished — for example, the person has not restarted the app
 Two different things can be removed, and it is worth asking which before deleting anything:
 
 - **The MCP** — the `post_for_me_api` entry inside Claude's configuration. Removing it is what actually disconnects Claude from the networks, and it is what stops publishing from working.
-- **The skill** — the folder `~/.claude/skills/post-for-me/`. Removing it means Claude loses the publishing protocol and the diagnostics: the raw MCP tools keep working, so posts still go out, but without the confirmation gate or the folder marking.
+- **The skill** — the folder `~/.claude/skills/post-for-me/`. Removing it means Claude loses the publishing protocol and the diagnostics: the raw MCP tools keep working, so posts still go out, but without the folder marking.
 
 To remove the MCP:
 

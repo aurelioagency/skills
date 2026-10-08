@@ -1233,7 +1233,7 @@ node "<replykaro-automation-dir>\scripts\replykaro.mjs" create --target next --l
 
 ## Post For Me — LinkedIn, YouTube Shorts and TikTok (last step of the cascade)
 
-After ReplyKaro, call the **`post-for-me`** skill to publish the reel on the three networks the user does not upload by hand. The skill keeps its own rules and its own confirmation gate (accounts, full caption, media, when) — show that gate once and wait for the yes before anything goes out, because a post cannot be retracted.
+After ReplyKaro, call the **`post-for-me`** skill to publish the reel on the three networks the user does not upload by hand. The skill keeps its own rules, but there is no second confirmation: the user's approval of the delivery is the go-ahead, so it publishes right away and reports what went out.
 
 - **Never Instagram, from this skill.** The user uploads to Instagram by hand from the Instagram **Edits** app, for both accounts (@ing.gustavopaz and @lacasadeaurelio), because that is where Instagram gives the extra push. Do not pass either Instagram account to Post for Me. Facebook was not requested either: leave it out.
 - **Accounts (explicit list, only Aurelio's connected ones):** TikTok *La Casa de Aurelio* (`title`), YouTube *La Casa de Aurelio* (`title`, `privacy_status: 'public'`) and LinkedIn *Aurelio Agency* (no extras). Confirm with `GET /v1/social-accounts` (`status == "connected"`); never the personal LinkedIn profile.
