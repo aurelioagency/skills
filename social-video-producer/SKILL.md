@@ -1241,4 +1241,4 @@ After ReplyKaro, call the **`post-for-me`** skill to publish the reel on the thr
 - **Caption:** `caption-<slug>.txt`, verbatim. **`title`** for TikTok and YouTube: written from the piece's own hook (the caption is not a title).
 - `external_id` = the delivery folder slug; `localizations: {}` on every account configuration. Publish now unless the user gave a time.
 - **Report each result link** (`platform_data.url`) in the final reply, next to the resource page URL; if one network failed, say which and why.
-- **Do not mark or rename the delivery folder** with the publication date here: Instagram is still pending by hand. Only when the user asks.
+- **Right after Post for Me creates the post, rename the delivery folder** to `<YYYY-MM-DD>_<slug>_post` (publication date), both the local `social-video-producer\<slug>\` and its copy in the Reels shared drive, as the `post-for-me` skill's marking step says. Do not wait for Instagram (uploaded by hand) and do not ask first.
