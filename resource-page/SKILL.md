@@ -17,6 +17,12 @@ La página no aparece en la lista de `/blog`, lleva `noindex` y no hay ningún l
 
 Todo es parte del mismo "aprobado". No pedir un segundo OK.
 
+### Cuándo NO usar esta skill
+
+Esta skill existe para un recurso que **no es de Aurelio** (un repo de GitHub, la herramienta de otro, un sitio externo) — ahí hace falta una página propia que lo presente, con la comunidad de Skool y la consultoría al lado, en vez de mandar a la gente directo afuera.
+
+Si el recurso que promete el reel **ya es una página propia de aurelioagency.com** (porque el reel promociona contenido/herramienta que la agencia ya publicó en su web), no hay nada que crear: ese link ya existe y es el que va directo a `replykaro-automation --link <esa URL>`. Confirmar con el usuario cuál es el link exacto si no es un repo (el video puede mostrar la página de fondo sin que se lea completa la URL en la barra de direcciones) — nunca adivinarlo ni crear una página nueva "por si acaso" cuando ya existe una.
+
 ## Qué se necesita por recurso
 
 | Dato | De dónde sale |
