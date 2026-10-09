@@ -777,9 +777,23 @@ about.** A request for subtitles is a request for a publishable post, and the co
 decides whether anyone opens it. Produce it in the same run.
 
 The agent writes the headline. The frame: **if the user supplied a cover image or pointed at
-a specific frame, use exactly that — never swap it for another.** If they did not, the agent
-picks the frame (that silence means "you choose it"). Either way, do not hand the decision
-back as a question — bring the result and let them veto it.
+a specific frame, use exactly that as the BASE PHOTO — never swap it for another.** If they
+did not, the agent picks the frame (that silence means "you choose it"). Either way, do not
+hand the decision back as a question — bring the result and let them veto it.
+
+**"Use exactly that" answers a different question than "does it need a headline."** It says
+which photo is the base — not whether to add the title. A user-supplied cover image is raw
+material for `build-cover.mjs --input`, the same as any frame the agent would have picked
+itself; it still gets the headline burned onto it before it ships. Do not read "use exactly
+that image" as "ship it untouched" and do not read the general don't-ask-for-a-better-version
+rule (passing a file is instruction enough about which asset to use) as license to skip the
+headline — that rule is about the SOURCE, this one is about the TEXT, and they are not in
+tension. Confirmed the hard way: a user-provided cover PNG shipped with no headline at all
+because "the user gave me the file, so I shouldn't touch it" was applied to the wrong
+question; the user had to point out the missing title twice before it was fixed. If the
+image is already a finished graphic with a headline already composed on it (not a plain
+photo/frame), that is the one case "use exactly that" does mean ship as-is — ask if it is
+genuinely unclear which of the two the user handed over.
 
 ### House Style (decided; not a menu)
 
