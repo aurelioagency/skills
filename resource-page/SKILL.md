@@ -29,9 +29,18 @@ Si el recurso que promete el reel **ya es una página propia de aurelioagency.co
 |---|---|
 | `slug` | El slug del video (`<slug>` de la carpeta de entrega), en minúsculas y con guiones |
 | `name` | El nombre del recurso, como lo dice el video |
-| link del recurso | El del recurso que promete el video (repo o sitio de la herramienta), sacado de lo que muestra o dice el video. Se pasa con `--github <url>` |
+| link del recurso | El del recurso que promete el video (repo, sitio de la herramienta, etc.), sacado de lo que muestra o dice el video. Se pasa con `--github <url>` (el nombre del flag es histórico: **no significa que sea un GitHub**) |
+| texto del botón | Depende de qué es el recurso, ver abajo. Se razona en cada recurso, nunca se deja el de la plantilla por costumbre |
 | descripción `es` / `en` / `br` | Se escribe leyendo el recurso (ver abajo), 2 a 3 frases |
 | `reel` (opcional) | No cargarlo: el reel todavía no está subido cuando se crea la página |
+
+## El botón principal (nunca "GitHub" si no es GitHub)
+
+La plantilla de la web trae un botón con el texto "Abrir GitHub". Ese texto **solo es correcto cuando el recurso es un repo de github.com**. Antes de crear la página, mirar qué es el recurso realmente y decidir el botón:
+
+- **Repo de github.com**: no pasar `--cta-*`; sale "Abrir GitHub".
+- **Cualquier otra cosa** (sitio de una herramienta, app, documentación, descarga): el script pone solo "Abrir <nombre>" / "Open <nombre>" / "Abrir <nombre>" y rechaza cualquier texto que diga GitHub. Si otro texto queda mejor ("Ir a Treg", "Probar Notion", "Descargar la guía"), pasarlo con `--cta-es`, `--cta-en` y `--cta-br`. El texto es corto, con voseo y dice qué hace el botón.
+- Revisar con `--dry-run` que el botón y la descripción coincidan con el recurso. La descripción también se adapta: no hablar de "repo" ni de "código abierto" si el recurso no es eso, ni copiar la forma de un recurso anterior (confirmado 2026-10-10: la página de Treg salió con "Abrir GitHub" sin ser un GitHub).
 
 ## Cómo armar la descripción
 
@@ -57,7 +66,7 @@ node "<skill-dir>\scripts\add-resource.mjs" --slug scrapling --name "Scrapling" 
 
 Qué hace, en orden: `git pull`, agrega el bloque a `src/lib/resource-drops.ts`, corre `tsc`, commit y push a `main` (sin `Co-Authored-By`), espera hasta 5 minutos a que `https://www.aurelioagency.com/blog/<slug>` responda 200, y la imprime en la última línea (`ONLINE: <url>`). La URL no lleva idioma: la web redirige sola al de cada persona (es, en o br).
 
-Flags: `--github <url>` (obligatorio), `--reel <url>`, `--repo <ruta>`, `--wait <seg>`, `--dry-run` (muestra el bloque sin escribir nada), `--no-git` (solo edita el archivo; para pruebas).
+Flags: `--github <url>` (obligatorio; link del recurso, sea o no de GitHub), `--cta-es/--cta-en/--cta-br "<texto>"` (texto del botón, los tres juntos), `--reel <url>`, `--repo <ruta>`, `--wait <seg>`, `--dry-run` (muestra el bloque sin escribir nada), `--no-git` (solo edita el archivo; para pruebas).
 
 Códigos de salida: `0` la página está online · `4` quedó subida pero todavía no responde · `1` error (slug repetido, tsc falló, repo sucio, etc.).
 

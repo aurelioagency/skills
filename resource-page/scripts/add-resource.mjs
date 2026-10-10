@@ -7,9 +7,12 @@
 // Uso:
 //   node add-resource.mjs --slug scrapling --name "Scrapling" \
 //     --summary-es "..." --summary-en "..." --summary-br "..." \
-//     [--github <url>] [--reel <url>] [--dm-reply <ruta, solo lectura>] \
+//     [--github <url>] [--cta-es "..." --cta-en "..." --cta-br "..."] [--reel <url>] [--dm-reply <ruta, solo lectura>] \
 //     [--repo <ruta>] [--wait <segundos>] [--dry-run] [--no-git]
 //
+// Botón principal: si el link es de github.com el botón dice "Abrir GitHub" (el de la plantilla).
+// Si NO es de github.com, el botón nunca puede decir GitHub: por defecto dice "Abrir <name>"
+// ("Open <name>" en inglés). Con --cta-es/--cta-en/--cta-br se elige el texto exacto.
 // Sin --github, se toma el primer link del --dm-reply que no sea Skool ni aurelioagency.com.
 // Códigos de salida: 0 online · 4 subido pero todavía no online · 1 error.
 
@@ -83,11 +86,27 @@ let source = readFileSync(file, "utf8");
 if (source.includes(`slug: ${JSON.stringify(slug)}`)) fail(`El slug "${slug}" ya existe en resource-drops.ts. Elegir otro o editar el existente a mano.`);
 
 const q = (s) => JSON.stringify(s);
+
+// Texto del botón: solo un repo de GitHub puede decir "GitHub".
+const isGithub = /^https:\/\/(www\.)?github\.com\//i.test(githubUrl);
+const ctaArg = (k) => (args[k] && args[k] !== true ? args[k] : null);
+let ctaLabel = null;
+if (ctaArg("cta-es") || ctaArg("cta-en") || ctaArg("cta-br")) {
+  if (!(ctaArg("cta-es") && ctaArg("cta-en") && ctaArg("cta-br"))) fail("Si pasás el texto del botón, pasá las tres lenguas: --cta-es, --cta-en y --cta-br.");
+  ctaLabel = { es: ctaArg("cta-es"), en: ctaArg("cta-en"), br: ctaArg("cta-br") };
+} else if (!isGithub) {
+  ctaLabel = { es: `Abrir ${name}`, en: `Open ${name}`, br: `Abrir ${name}` };
+}
+if (!isGithub && ctaLabel && Object.values(ctaLabel).some((t) => /github/i.test(t))) {
+  fail(`El link no es de github.com (${githubUrl}) y el texto del botón dice GitHub. Elegí un texto que nombre el recurso.`);
+}
+
 const block = [
   "  {",
   `    slug: ${q(slug)},`,
   `    name: ${q(name)},`,
   `    githubUrl: ${q(githubUrl)},`,
+  ...(ctaLabel ? ["    ctaLabel: {", `      es: ${q(ctaLabel.es)},`, `      en: ${q(ctaLabel.en)},`, `      br: ${q(ctaLabel.br)},`, "    },"] : []),
   ...(args.reel && args.reel !== true ? [`    reelUrl: ${q(args.reel)},`] : []),
   "    summary: {",
   `      es: ${q(args["summary-es"])},`,
