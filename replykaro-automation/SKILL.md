@@ -88,6 +88,12 @@ Para comparar las dos cuentas: `list_automations`/`get_automation` por MCP o `GE
 - `NEXT_MEDIA` se convierte en el id del reel cuando Instagram avisa del post; puede tardar un rato en una de las cuentas. Si ya lo subieron, mirar `media` y `get_automation` antes de tocar nada.
 - Antes de crear, comprobar si el reel ya tiene automatización (el error `duplicate key` lo avisa) y usar `update`.
 
+## Reglas fijas (el usuario las repitió, no volver a plantearlas)
+
+- **Todas las automatizaciones llevan la palabra `Aurelio`.** Que ya exista otra con esa palabra en la cuenta NUNCA es un problema ni una pregunta: no se lo plantees al usuario ni pidas permiso para borrar otra por eso.
+- **Si el reel ya está subido, se crea con `--target latest` y listo**, sin preguntar. `--target next` solo vale mientras el reel todavía no se publicó. Si `create --target next` falla con `idx_unique_global_keyword_primary_active` (ya hay otra atada a `NEXT_MEDIA`), no es motivo para frenar: crear con `--target latest` si el reel está arriba, o con el id puntual (`media`).
+- **Si una cuenta agotó la cuota mensual de la API REST (error `429 QUOTA_EXCEEDED`, 100 llamadas), no esperar ni pedir que compren packs**: hacerlo desde el panel de ReplyKaro con la extensión de Claude in Chrome, usando el navegador conectado que tenga abierta la sesión de esa cuenta (probar uno por uno con `select_browser`, mirar quién está logueado abajo a la izquierda; nunca preguntarle al usuario cuál es). En el panel: tarjeta verde "Next Post / Reel" → asistente de 4 pasos, cargando los textos de `references/plantilla-base.json`.
+
 ## Cómo probar
 
 **ReplyKaro responde una sola vez por persona y por automatización.** Si una cuenta ya comentó la palabra, volver a comentar (aunque borre el comentario) no genera nada, ni siquiera un log de error (`get_dm_logs` muestra un solo envío). Para probar un cambio hay que comentar desde **otra cuenta que siga a la del reel**. No hay ajuste en la API para repetir el envío a la misma cuenta.
