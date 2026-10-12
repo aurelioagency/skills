@@ -66,10 +66,9 @@ valen para todos los templates. Lo que este estilo resuelve distinto:
   que la linea mas larga llena los 918px utiles. En el carrusel de Fable 5.1 dio 220
   (`MYTHOS 5.1` mide 916); en otro con un titular mas largo va a dar menos. Si un titular
   no entra, se acorta el titular — no se baja el cuerpo.
-- **La cota cae en y=720**, la mitad exacta del lienzo. La caja del titular es de 517px
-  (del arranque de la cabecera a esa altura, menos los 48 que la separan de la cota), y el
-  titular queda centrado adentro con `display: grid` + `align-content: center`, que aguanta
-  cualquier cantidad de renglones.
+- **La cota cae en y=720**, la mitad exacta del lienzo. La caja del titular es de 545px
+  (del arranque de la cabecera a esa altura, menos los 20px que la separan de la cota).
+  `align-content: end` apoya la última línea cerca de la cota aun con un titular corto.
 - **La cota mide el titular**, en vez del 62% que usa el resto de la serie, y lo hace sola:
   titular y cota van envueltos en `.covertitle` con `width: fit-content`, asi que la caja se
   achica al renglon mas largo y la cota toma el 100% de esa caja. No hay un ancho clavado ni
@@ -78,6 +77,9 @@ valen para todos los templates. Lo que este estilo resuelve distinto:
   portada dejo de necesitar la excepcion `cover-hook-centered`, que este template
   declaraba de fabrica y se saco.
 - **El remate es opcional** y por default no va (`s.lede` esta guardado en `index.html`).
+- **En contenido, tres renglones cuando el texto los necesita y aporta información.**
+  Un titular más corto ocupa su alto real: nunca se reserva una tercera línea vacía
+  entre el texto y la cota. No agregues palabras ni repitas el kicker para llenar esa línea.
 - **Las `secciones` van a 34px, en negrita y en tinta plena.** A 26px y en gris se leian
   como un pie de pagina, y son el grafico de la portada.
 
@@ -135,16 +137,12 @@ linea que salta 20px se ve mas que cualquier detalle de composicion.
   del pie anclado — es un chequeo que antes no existia, porque con el pie fuera del flujo
   el desbalance vertical ya no se dispara.
 - **El arranque de la cabecera es uno solo** para portada y contenido.
-- **La cota va a la misma altura y con el mismo ancho en toda la serie.** El titular tiene
-  altura fija de tres renglones, asi que con dos renglones el bloque igual ocupa tres y la
-  cota no se mueve; el ancho salio de `ruleWidth` por slide y paso a ser uno solo.
-  **El titular va a tres renglones por default, no "cuando se pueda".** Con dos renglones
-  la caja de tres igual se reserva, y el hueco entre el titular y la cota se ve — el usuario
-  lo pidio corregido varias veces en la misma marca antes de que quedara escrito aca. Antes
-  de aceptar un titular de dos renglones, probá partir las mismas palabras en tres (nunca
-  agregar palabras nuevas solo para llenar el renglon): la mayoria de los titulares aprobados
-  entran en tres con un corte distinto. Dos renglones es la excepcion, no el punto de partida
-  — y solo cuando forzar el tercero produce un corte mas raro que el hueco que evita.
+- **La cota conserva el ancho de la serie y sigue de cerca al titular.** Probá primero
+  partir las palabras aprobadas en tres renglones, sin agregar ni repetir contenido.
+  Si el titular necesita dos, la cota sube con él: preservar su altura fija dejando
+  una tercera línea vacía fue el defecto que se corrigió. En portada, la cota sigue
+  en la mitad del lienzo y el titular se apoya justo encima.
 
-Cuando toques el layout, medi: renderiza cada placa y compara la posicion de cabecera, cota
-y pie. Si un valor no se repite en toda la serie, es un defecto — no una variante.
+Cuando toques el layout, medí: renderizá cada placa y compará la posición de cabecera,
+cota y pie. Cabecera y pie conservan su eje; la cota puede subir en una placa de dos
+renglones, pero su distancia al titular y su ancho deben seguir el sistema.

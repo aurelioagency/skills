@@ -262,7 +262,7 @@ Estas reglas valen para **cualquier template**. Como las cumple cada uno esta en
   | `02-editorial-oscuro-v2` | Archivo 104px, mayúsculas, **~22 caracteres en 2 renglones** | techo 132px |
   | `03-cuaderno-de-taller` | manuscrita, 2–3 renglones | — |
   | `04-plano-en-negativo` | Space Grotesk por peso | — |
-  | `05-plano-de-taller` | Barlow Condensed 104px, mayúsculas, 3 renglones (`min-height` fijo) | techo 220px, `hsize` medido; titular largo → `cover-title-only` (lienzo entero) |
+  | `05-plano-de-taller` | Barlow Condensed 104px, mayúsculas, hasta 3 renglones sin altura vacía | techo 220px, `hsize` medido; titular largo → `cover-title-only` (lienzo entero) |
   | `06-handmade` | dos manuscritas | — |
 
   Las celdas con `—` todavia no estan medidas: medilas la primera vez que un carrusel use
@@ -316,6 +316,10 @@ por rol. No alcanza con que cada placa quede bien por separado.
 - Alineá el conjunto dentro de cada card: cuando una cifra y su explicación van lado a
   lado, centrálas verticalmente como bloques. Cuando van apiladas, compartí las posiciones
   de cada fila entre las cards y entre las placas de la secuencia.
+- En una comparación «antes / después» de dos columnas, cada pareja de ideas comparte
+  una fila de la misma grilla. Medí la altura necesaria para ambas celdas y colocá los
+  separadores en el mismo `y`. Dos listas o cards con alturas independientes producen
+  líneas desfasadas aunque cada columna se vea correcta por separado.
 - Antes de entregar, compará las coordenadas y dimensiones renderizadas con
   `getBoundingClientRect()` para esos elementos en todas las placas involucradas.
   Si `audit-serie.mjs` no cubre un rol, completá la medición de ese rol en el paquete;

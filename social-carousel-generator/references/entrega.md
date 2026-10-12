@@ -77,7 +77,7 @@ Read `references/html-rendering.md` when implementing the static HTML screenshot
 
 ## The vertical Short (MP4)
 
-Every carousel also ships a `1080x1920` video built from the same approved slides, so the
+Every carousel also ships a `1080x1440` video built from the approved PNGs, so the
 same work covers YouTube Shorts. Build it with `scripts/build-short.mjs` after the visual QA
 passes — never from unapproved slides.
 
@@ -86,17 +86,15 @@ finished. Any slide that changes afterwards invalidates the frames, and rebuildi
 different track, so the approval round starts over. It happened twice in one session.
 
 ```bash
-node <skill-dir>/scripts/build-short.mjs --port 8765 --out <carpeta-de-entrega>/short.mp4
+node <skill-dir>/scripts/build-short.mjs --out <carpeta-de-entrega>/short.mp4
 ```
 
-- **Frames are re-rendered with `?video=1`**, which drops the swipe prompt. In a Short there
-  is nothing to swipe, and the line reads as leftover carousel chrome. The PNGs the user
-  publishes as a carousel are not touched.
+- **Frames use the approved PNGs directly.** Keep the same image and composition in the
+  video; do not re-render a variant or add space around the slide.
 - **Slide duration is shared out by how much text each slide carries**, mapped onto `3-8s`
   against that carousel's own lightest and heaviest slide. The CTA gets `3s`. The music is
   then cut to exactly that total — there is no fixed video length.
-- The slides sit centered on the taller canvas and the bands are filled with the brand's
-  field colour, not black, so the seam does not show.
+- The video canvas has the same size as each slide, with no bands above or below.
 
 **The video does not promise legibility.** A slide carrying a methodological note cannot be
 read in 8 seconds. The Short invites the viewer to pause; it does not replace the carousel.

@@ -215,6 +215,19 @@ for (let i = 1; i <= count; i++) {
       h1: !!document.querySelector('h1, h2') || bigType
     };
 
+    // Template 05: medir desde la tinta de la última línea, no desde la caja del h2.
+    // Una min-height de tres renglones dejaba un hueco invisible para los audits
+    // generales cuando el titular tenía solo dos.
+    let headlineRuleGap = null;
+    if (window.CAROUSEL?.template === '05-plano-de-taller') {
+      const title = document.querySelector('.s-cover .covertitle h1, .head > h2');
+      const rule = title?.parentElement?.querySelector(':scope > .rule');
+      const lines = title ? lineBoxes(title) : [];
+      if (rule && lines.length) {
+        headlineRuleGap = Math.round(rule.getBoundingClientRect().top - lines.at(-1).bottom);
+      }
+    }
+
     // 7) hook de portada centrado
     let hook = null;
     const h1 = document.querySelector('h1');
@@ -305,7 +318,7 @@ for (let i = 1; i <= count; i++) {
       });
     });
 
-    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
+    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, headlineRuleGap, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
   }, { W, H });
 
   // El PNG se saca siempre: el chequeo optico se hace sobre pixeles reales.
@@ -538,6 +551,10 @@ for (const r of report) {
          `kicker + titular + cuerpo + componente; sin el titular el slide queda vacio y ` +
          `la salida facil es agrandar el texto, que no es la salida.`);
     }
+  }
+
+  if (r.headlineRuleGap !== null && r.headlineRuleGap > 70 * H / 1440) {
+    at(red, `hueco de ${r.headlineRuleGap}px entre la última línea del titular y la cota del template 05; la cota debe seguir al texto sin reservar un renglón vacío.`);
   }
 
   // hook de portada

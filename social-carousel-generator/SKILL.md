@@ -54,16 +54,17 @@ De ahi salen las cuatro consecuencias que hay que tener a mano:
 1. **Preset, idioma y CTA.** El tamano no se pregunta nunca (ver *Format, length and density*).
    Listo cuando: el preset activo, el idioma, el footer y el CTA estan explicitos, y el preset no tiene ningun placeholder sin llenar en las secciones que este carrusel usa.
 2. **Entender la fuente y escribir la `Lectura`.**
-   Listo cuando: todo el material sale de la fuente que paso el usuario y de ninguna otra (`references/fidelidad.md`), y la `Lectura` — la fuente recontada en lenguaje comun, en prosa — esta escrita **antes** de cualquier gancho o copy (`references/redaccion.md`).
+   Listo cuando: todo el material sale de la fuente que paso el usuario y de ninguna otra (`references/fidelidad.md`), el texto en otro idioma tiene transcripción y traducción contrastadas con el original, y la `Lectura` — la fuente recontada en lenguaje comun, en prosa — esta escrita **antes** de cualquier gancho o copy (`references/redaccion.md`).
 3. **Preparacion — NO va al chat.** Correr el metodo de `references/content-archetypes.md` sobre la `Lectura`: derivar la estructura (una pregunta por placa), la cantidad de placas y el arquetipo. Resolver el template (si la marca tiene varios y el pedido no lo nombra, esa es la unica pregunta suelta, en una linea).
-   Listo cuando: la estructura, la cantidad de placas y el arquetipo estan en `carousel-brief.md`, y el template esta resuelto. Nada de esto se pega en el chat como prosa.
+   Listo cuando: la estructura, la cantidad de placas y el arquetipo estan en `carousel-brief.md`, con el recuento explícito de imágenes fuente, placas de contenido y CTA, y el template esta resuelto. No equipares esas cantidades automáticamente ni agregues placas para llenar un diseño. Nada de esto se pega en el chat como prosa.
 4. **La propuesta: un solo mensaje, una sola tabla.**
-   Listo cuando: el mensaje de propuesta es **la tabla y como mucho tres lineas de encabezado**, nada mas suelto (*La propuesta*). Encabezado: `Preset · Template · N carrusel(es) · M placas + CTA`, la pregunta de template si corresponde, y un gancho alternativo si lo hay — una linea cada cosa. Tabla: columnas `# · Kicker · Titular · Bajada · Recurso · Extracto de la fuente`, una fila por imagen exportada, la portada como fila 1 (su titular es el gancho, remate debajo en la misma celda), el CTA como ultima fila. Cada titular corto, en dos renglones; cada fila trazada a su oracion de la fuente en la columna de extracto, con la cita de cada cifra; cada fila con su recurso (corrido desde `references/composicion.md`) y su asset (o `sin asset`). **Nada de `Lectura` en prosa, nada de bloque `Estructura / Por que / Se parece a`, nada de lista de titulares aparte, nada de bloque de assets aparte.** El usuario aprueba o edita la tabla; si cambia el template o la cantidad de placas, se rehace la tabla en el mismo formato — es editar filas, no abrir otro paso.
+   Listo cuando: el mensaje de propuesta es **la tabla y como mucho tres lineas de encabezado**, nada mas suelto (*La propuesta*). Encabezado: `Preset · Template · N carrusel(es) · M placas + CTA`; si la fuente son imágenes numeradas, esa misma línea aclara `S imágenes fuente → M placas de contenido + CTA = T exportadas`. La pregunta de template y un gancho alternativo, si corresponden, ocupan el resto de esas tres líneas. Tabla: columnas `# · Kicker · Titular · Bajada · Recurso · Extracto de la fuente`, una fila por imagen exportada, la portada como fila 1 (su titular es el gancho, remate debajo en la misma celda), el CTA como ultima fila. Cada titular corto: dos renglones como pauta general; en el template 05, tres cuando la idea entra sin añadir ni repetir información. Cada fila se traza a su oracion de la fuente en la columna de extracto, con la cita de cada cifra; lleva el recurso elegido desde `references/composicion.md` y su asset (o `sin asset`). **Nada de `Lectura` en prosa, nada de bloque `Estructura / Por que / Se parece a`, nada de lista de titulares aparte, nada de bloque de assets aparte.** El usuario aprueba o edita la tabla; si cambia el template o la cantidad de placas, se rehace la tabla en el mismo formato — es editar filas, no abrir otro paso.
 5. **Armar el paquete y renderizar.**
    Listo cuando: la carpeta de entrega (`<tema-en-kebab-case>`) tiene los PNG ordenados a `1080x1440`, con el CTA solo si el preset lo pide.
 6. **QA. Los dos scripts, y despues las placas.**
    Listo cuando: `render-and-audit.mjs` y `audit-serie.mjs` corrieron y sus red issues estan arreglados **en el fuente**; y cada PNG se abrio a tamano real y se miro, uno por uno (`references/entrega.md`). **No se arma ni se manda contact sheet:** despues de cada tanda va el bloque que abre la carpeta, y el usuario revisa los PNG ahi. Una placa puntual, en una correccion, si va al chat a tamano completo.
    En secuencias con composiciones equivalentes, comprobar tambien las posiciones renderizadas de cards, cifras, textos y separadores entre placas (`references/proporcion.md`, *Alineación entre placas de una misma secuencia*); revisar cada placa aislada no alcanza.
+   Si el usuario objeta una diagramación y pide ver la solución antes de otro render, describí la distribución concreta de esa placa y esperá su elección. No produzcas otra tanda mientras la propuesta siga sin resolver.
 7. **Short vertical y musica aprobada.**
    Listo cuando: `short.mp4` sale de las placas aprobadas, el usuario vio el track ya cortado al largo del video y lo aprobo, y quedo registrado en `manifest.json` y en el log de musica de la marca. **El short nunca dura 1 minuto o mas** (`build-short.mjs` lo topea en 55s solo): un short de 63.4s quedo bloqueado por Content ID en YouTube dos veces seguidas con dos musicas distintas, y el mismo recortado a 40s se subio sin problema.
 8. **Caption y entrega.**
@@ -239,7 +240,7 @@ La propuesta de un carrusel es **un mensaje con una sola tabla**. No hay un mens
 El mensaje lleva, en este orden y nada mas:
 
 1. **Hasta tres lineas de encabezado:**
-   - `Preset: <marca> · Template: <NN> · <N> carrusel(es) · <M> placas + CTA`
+   - `Preset: <marca> · Template: <NN> · <N> carrusel(es) · <M> placas + CTA`. Con imágenes de origen numeradas, agregá en esa misma línea `S imágenes fuente → M contenido + CTA = T exportadas`; la cuenta no se infiere del template.
    - Si la marca tiene varios templates vigentes y el pedido no nombra uno, la linea de template es una **pregunta** con la lista corta (una linea por template). Es lo unico que se pregunta suelto.
    - Un gancho alternativo, **solo si** el patron por default no alcanzo y hay una segunda opcion real. Una linea.
 2. **La tabla**, con las columnas y reglas de *Copy Approval Gate*: `# · Kicker · Titular · Bajada · Recurso · Extracto de la fuente`, todas las filas, portada incluida como fila 1 (titular = gancho, remate debajo en la misma celda), CTA como ultima fila.
@@ -262,7 +263,7 @@ These three are skill-wide quality rules, not brand taste. They apply to every c
 
 Every carousel is **`1080x1440` (3:4)**. There is no platform question, no TikTok variant and no `1080x1920` carousel: the same export is published to Instagram and to TikTok, which displays it fine. The delivery folder carries no size or platform suffix at all — see *La carpeta de entrega* en `references/entrega.md`.
 
-The only `1080x1920` left in the pipeline is `short.mp4`, the vertical video, which centers the slides on the taller canvas. That is not a carousel.
+The `short.mp4` keeps the approved slides at `1080x1440` without extending the canvas.
 
 ### Up to 10 exported images
 

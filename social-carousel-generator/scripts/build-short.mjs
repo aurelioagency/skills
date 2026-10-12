@@ -2,12 +2,11 @@
 // Arma el MP4 vertical (YouTube Short) a partir de las slides ya aprobadas del
 // carrusel, con musica de fondo instrumental.
 //
-// Uso (desde la carpeta del paquete, con el server local levantado):
-//   node <skill-dir>/scripts/build-short.mjs --port 8765 --out <carpeta-de-entrega>/short.mp4
+// Uso (después de renderizar las placas aprobadas):
+//   node <skill-dir>/scripts/build-short.mjs --out <carpeta-de-entrega>/short.mp4
 //
 // Flags:
 //   --package <dir>   carpeta del paquete (default: cwd)
-//   --port <n>        puerto del server local (default: 8765)
 //   --out <archivo>   MP4 de salida (default: <package>/short.mp4)
 //   --music <archivo> usa esta pista en vez de buscar una
 //   --item <id>       toma la pista de ese item de archive.org, sin usar el buscador
@@ -18,19 +17,14 @@
 // agresivo a los shorts de un minuto o mas. --seconds-per se saltea este tope
 // a proposito (uso explicito, no automatico).
 //
-// Los frames se renderizan con ?video=1, que omite el prompt de swipe: en un Short
-// no hay nada que deslizar. El carrusel no se toca.
+// Cada frame usa el PNG aprobado, sin otra composición ni relleno.
 import fs from 'node:fs';
-import path from 'node:path';
 import os from 'node:os';
+import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { prepararMusica } from './fetch-music.mjs';
-
-
-import { loadChromium } from './lib/load-chromium.mjs';
 const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i === -1 ? d : process.argv[i + 1]; };
 const pkg = path.resolve(arg('package', process.cwd()));
-const port = Number(arg('port', 8765));
 const OUT = path.resolve(arg('out', path.join(pkg, 'short.mp4')));
 const MUSIC = arg('music', null);
 // --item <id> saltea el buscador de archive.org y toma la pista de un item conocido.
@@ -100,18 +94,14 @@ console.log('slide  tipo         palabras  segundos');
 slides.forEach((s, i) => console.log(`  ${String(i + 1).padEnd(4)} ${s.type.padEnd(12)} ${String(pesos[i]).padStart(6)} ${String(tiempos[i]).padStart(9)}`));
 console.log(`\nvideo: ${TOTAL}s\n`);
 
-// ---------- frames sin el prompt de swipe ----------
-const chromium = await loadChromium();
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'short-'));
-const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
-for (let i = 1; i <= slides.length; i++) {
-  await page.goto(`http://127.0.0.1:${port}/index.html?slide=${i}&video=1`, { waitUntil: 'networkidle' });
-  await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({ path: path.join(tmp, String(i).padStart(2, '0') + '.png') });
+// ---------- placas aprobadas, sin cambios de composición ----------
+// El Short usa exactamente los PNG de la entrega. No re-renderiza una variante
+// ni amplía el lienzo: esa transformación alteraba las placas aprobadas.
+const frames = slides.map((_, i) => path.join(path.dirname(OUT), `${String(i + 1).padStart(2, '0')}.png`));
+for (const frame of frames) {
+  if (!fs.existsSync(frame)) throw new Error(`Falta la placa aprobada: ${frame}`);
 }
-await browser.close();
-console.log(`frames renderizados (?video=1, sin prompt de swipe)`);
+console.log(`frames: ${frames.length} PNG aprobados (${W}x${H})`);
 
 // ---------- musica ----------
 let music = MUSIC, info = null;
@@ -129,31 +119,31 @@ if (!NOMUSIC && !music) {
 // archivo se repite sin `duration`: sin esa linea, concat descarta el ultimo frame.
 const lista = [];
 for (let i = 0; i < slides.length; i++) {
-  lista.push(`file '${path.join(tmp, String(i + 1).padStart(2, '0') + '.png').replace(/\\/g, '/')}'`);
+  lista.push(`file '${frames[i].replace(/\\/g, '/')}'`);
   lista.push(`duration ${tiempos[i]}`);
 }
-lista.push(`file '${path.join(tmp, String(slides.length).padStart(2, '0') + '.png').replace(/\\/g, '/')}'`);
-const concat = path.join(tmp, 'concat.txt');
+lista.push(`file '${frames.at(-1).replace(/\\/g, '/')}'`);
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'short-concat-'));
+const concat = path.join(tmp, 'frames.txt');
 fs.writeFileSync(concat, lista.join('\n'));
 
-// El lienzo del Short es 1080x1920: la slide (1080x1440) va centrada y las bandas
-// se rellenan con el color de campo de la marca, no con negro puro, para que no
-// se vea el corte contra el fondo de la slide.
-// Con un paquete de TikTok (1080x1920) la slide ya llena el lienzo y el relleno es 0.
-const field = data.fieldColor || '0x050505';
-const padY = Math.max(0, Math.round((1920 - H) / 2));
-const vf = `scale=${W}:${H},pad=1080:1920:0:${padY}:${field},format=yuv420p,fps=30`;
+const vf = 'format=yuv420p,fps=30';
 
 const args = ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', concat];
 if (music && !NOMUSIC) args.push('-i', music);
-args.push('-vf', vf, '-c:v', 'libx264', '-preset', 'medium', '-crf', '20');
+args.push('-vf', vf, '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-t', String(TOTAL));
 if (music && !NOMUSIC) args.push('-c:a', 'aac', '-b:a', '192k', '-shortest');
 args.push(OUT);
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
-spawnSync('ffmpeg', args, { stdio: 'inherit' });
-fs.rmSync(tmp, { recursive: true, force: true });
+try {
+  const run = spawnSync('ffmpeg', args, { stdio: 'inherit' });
+  if (run.error) throw run.error;
+  if (run.status !== 0) throw new Error(`ffmpeg termino con codigo ${run.status}`);
+} finally {
+  fs.rmSync(tmp, { recursive: true, force: true });
+}
 
-console.log(`\nlisto: ${OUT}  (${TOTAL}s, 1080x1920)`);
+console.log(`\nlisto: ${OUT}  (${TOTAL}s, ${W}x${H})`);
 if (info) {
   console.log('\nMOSTRALE LA PISTA AL USUARIO Y ESPERA SU OK ANTES DE PUBLICAR.');
   console.log('El filtro trabaja sobre titulos: puede pasar un tema que se llame bien y suene mal.');

@@ -16,6 +16,23 @@ unico chequeo que agarra la invencion sin que nadie tenga que juzgar si la linea
 buena, y por eso vive en los datos y no en una tabla de `carousel-brief.md` que nadie
 relee. El brief los repite para que el usuario los vea en el gate.
 
+### Fuente en otro idioma
+
+Si las imágenes o capturas de origen están en otro idioma, **transcribí y traducí antes
+de escribir titulares**. En `carousel-brief.md`, guardá por cada afirmación usada:
+imagen y ubicación, texto original, traducción fiel al español y texto propuesto para
+la placa. `srcFrase` conserva la frase original; la columna de extracto de la propuesta
+puede mostrar la traducción, pero debe poder volver a esa frase sin adivinar.
+
+Comprobá sujeto, verbo, negación, intensidad, causa y límite entre las tres versiones.
+Reescribir está permitido; cambiar la afirmación no. Por ejemplo, «la IA te miente»
+no equivale a «la IA te da la razón»: que ambas puedan involucrar complacencia no
+autoriza a sustituir una por la otra. Si una palabra de la imagen no se lee con
+certeza, marcá esa duda y pedí el texto; no rellenes el hueco con una hipótesis.
+
+Si el usuario aporta después una traducción completa o corrige la lectura, esa versión
+manda: rehacé la comparación de todas las placas afectadas antes de seguir renderizando.
+
 Como se vuelcan los datos en un grafico esta en `data-encoding.md`.
 
 ## Source Intake
@@ -63,7 +80,12 @@ For YouTube video links:
 2. Treat the transcript as the source text. Capture key claims, numbers, and examples with enough context to quote them accurately.
 3. If the video has no transcript and no captions, ask the user for an alternative: key screenshots with on-screen text, their own notes, or a summary. Never reconstruct video content from memory or general knowledge of the topic or channel.
 
-**An image the user passes in — pasted into the chat or given as a path — is a slide asset, not just reference material.** Take it at face value: save it into the package's `assets/` and put it on a slide. A chart, a screenshot, a diagram, a photo, a logo, whatever it is. If it arrived in the chat and is not on disk, look for it (the downloads folder is the usual place) or ask for the path — never substitute something else for it. How it gets framed is in *Images the user supplies* under Visual Rules.
+**Distinguí fuente de asset.** Si el usuario pasa capturas de un carrusel ajeno para
+crear uno nuevo, son material de lectura y trazabilidad: no se copian a las placas ni
+se tratan como diseños aprobados. Si pasa una imagen para que aparezca en una placa,
+guardala en `assets/` y usala allí. Si la intención no está clara y cambia el
+resultado, preguntá. Cómo se encuadra un asset está en *Images the user supplies*
+bajo Visual Rules.
 
 For source material, extract one to three shareable angles. Do not summarize the whole document unless the user asks. The carousel should feel useful, not like a dictionary entry.
 

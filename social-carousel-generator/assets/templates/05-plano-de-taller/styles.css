@@ -102,12 +102,9 @@ h2 { font-size: 104px; }
    solo hacia que la linea saltara de largo al pasar de una a otra. */
 .rule { display: flex; align-items: center; gap: 14px; width: 62%; }
 
-/* Altura fija del titular = tres renglones. Con dos renglones el bloque igual ocupa
-   tres, asi la cota arranca a la misma altura en toda la serie y no salta al deslizar. */
-/* El titular arranca ARRIBA de su caja de tres renglones (probado apoyarlo abajo el
-   2026-09-04; el usuario prefirio asi). Con dos renglones queda aire entre el titular y
-   la cota: cuando el tema lo permita, se escribe el titular a tres renglones. */
-.head h2 { min-height: 293px; }
+/* El titular ocupa sus renglones reales. Reservar siempre tres dejaba un hueco entre
+   un titular de dos líneas y la cota. La separación la controla .head gap. */
+.head h2 { min-height: 0; }
 
 /* ---------- PORTADA ----------
    La portada no es una placa mas de la serie: es la unica que tiene que parar el scroll,
@@ -118,8 +115,8 @@ h2 { font-size: 104px; }
      el cuerpo de cada carrusel se mide con `hsize` y crece hasta llenar los 918px utiles.
      Un titular que no entra no se achica: se acorta.
    - La mitad de arriba del lienzo es del titular y la cota cae en la mitad exacta
-     (y=720 de 1440). La caja de 517px es lo que va del arranque de la cabecera a esa
-     altura; el titular se centra adentro con grid, no con un padding calculado a mano.
+     (y=720 de 1440). La caja de 545px llega hasta 20px antes de la cota; el titular
+     se apoya al fondo de esa caja para no dejar un hueco bajo la última línea.
    - La cota mide el titular, no un 62% arbitrario: cierra el bloque en vez de cortarlo,
      y lo hace sola (ver `fit-content` abajo).
    - Todo el bloque va centrado. Es la unica placa centrada del template; las otras nueve
@@ -131,18 +128,16 @@ h2 { font-size: 104px; }
 .s-cover .covertitle { width: fit-content; margin: 0 auto; }
 .s-cover h1 {
   font-size: 220px;
-  min-height: 517px;   /* del arranque de la cabecera (155) a la mitad del lienzo (720),
-                          menos los 48px que separan el titular de la cota */
+  min-height: 545px;   /* del arranque de la cabecera (155) a la mitad (720),
+                          menos los 20px entre titular y cota */
   text-align: center;
-  /* `grid` + `align-content: center` centra el titular dentro de su caja sea cual sea la
-     cantidad de renglones: todo el contenido en linea, `<br>` incluido, forma un solo
-     item anonimo. Con `padding-top` fijo esto solo funcionaba para dos renglones. */
+  /* Apoyar el texto al fondo de la caja mantiene cerca la cota aun con un título corto. */
   display: grid;
-  align-content: center;
+  align-content: end;
 }
 .s-cover .covertitle .rule {
   width: 100%;
-  margin-top: 48px; margin-bottom: 10px;
+  margin-top: 20px; margin-bottom: 10px;
 }
 /* Portada SOLO titular (sin grafico): el titular usa el lienzo entero, centrado, en vez
    de quedar clavado en la mitad de arriba. Para un titular largo que no entra al cuerpo

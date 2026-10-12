@@ -141,7 +141,7 @@ const contenido = slides.map((s, i) => ({ ...s, n: i + 1 })).filter(s => !s.isCT
 // chequeos de consistencia corren sobre las placas de contenido, sin ella.
 const cuerpo = contenido.filter(s => !s.isCover);
 
-// 0. Trazabilidad: cada titular tiene la frase de la Lectura de la que se recorto.
+// 0. Trazabilidad: cada titular tiene la frase de la fuente de la que se extrajo.
 //    Es el unico chequeo que agarra la invencion sin que nadie tenga que juzgar si la
 //    linea esta buena: una celda vacia significa que ese titular se escribio de nuevo
 //    al llegar al slide en vez de recortarse.
@@ -149,7 +149,7 @@ const cuerpo = contenido.filter(s => !s.isCover);
   const sin = contenido.filter(s => !s.srcFrase).map(s => s.n);
   if (sin.length) {
     push('trazabilidad', 'red',
-      `las placas ${sin.join(', ')} no declaran \`srcFrase\`: no hay frase de la Lectura detras de ese titular. ` +
+      `las placas ${sin.join(', ')} no declaran \`srcFrase\`: no hay frase de la fuente detras de ese titular. ` +
       'Un titular sin frase de origen es una formulacion nueva escrita al llegar al slide, que es el defecto que produce placas que suenan a portada y no dicen nada.');
   }
 }

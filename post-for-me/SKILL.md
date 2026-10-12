@@ -1,6 +1,10 @@
 ---
 name: post-for-me
-description: Publish to social networks with Post for Me, and install, verify or repair its MCP server. Use for BOTH jobs. Publishing - use whenever someone asks to publish, post, upload, share or schedule content on Instagram, TikTok, LinkedIn, Facebook, X, YouTube, Pinterest, Threads or Bluesky through Post for Me or postforme, including carousels, reels, shorts and stories, whether the media is a local file or a URL, and including scheduling for later, checking whether a post went out, and marking the delivery folder with its publication date afterwards. Spanish phrasings trigger it the same way, and a request to upload or publish media is enough on its own even when Post for Me is never named: "subi el reel que esta en Drive", "publica esto en Instagram", "manda el carrusel a todas las cuentas", "subilo a las redes", "programa esto para el viernes". Setup - use whenever someone mentions installing, configuring, connecting or repairing Post for Me, postforme or post-for-me-mcp, asks to "connect my social accounts to Claude", or reports that an MCP server will not start, does not show up, shows an error, or that their Claude config "deleted itself". Covers Windows, macOS and Linux, and applies regardless of the language the request is written in. Never publishes anything that was not explicitly asked for and confirmed.
+description: >-
+  Publish, schedule, and verify social posts through Post for Me from local media or URLs,
+  including carousels, reels, shorts, and stories. Also install, verify, or repair its MCP
+  connection. Use for social publishing requests in any language, even when Post for Me
+  is not named, and for Post for Me setup or troubleshooting.
 ---
 
 # Post for Me
@@ -47,6 +51,33 @@ API_KEY=$(python -c "import json; print(json.load(open(r'C:\Users\<user>\AppData
 (macOS/Linux: swap in `desktop_config_path()` from `scripts/verify_mcp.py` for
 the right path.) Never print `$API_KEY` itself in a summary or error message —
 mask it the way the scripts do.
+
+### Safe API output
+
+**The API returns account credentials inside post objects.** A successful
+`GET /v1/social-posts/{id}` can include `access_token` and `refresh_token` under
+`social_accounts`; a raw `ConvertTo-Json`, `curl` response, or tool output exposes
+them even when the request is read-only. Never print, log, or save an unfiltered
+account or post response. Selecting only the top-level fields is insufficient if
+one selected field contains nested account objects.
+
+Use the local allowlist reader for discovery and verification:
+
+```bash
+python scripts/safe_api_read.py --accounts
+python scripts/safe_api_read.py --recent
+python scripts/safe_api_read.py --external-id delivery-folder-slug
+python scripts/safe_api_read.py --post sp_...
+python scripts/safe_api_read.py --results sp_...
+```
+
+It reads the configured key without displaying it and prints only account identity,
+post status/configuration, and bounded result summaries. For a create/update call,
+parse the JSON **inside the process** and print only `id`, `status`, and
+`scheduled_at`; if using `curl` in Bash, pipe its stdout through
+`python scripts/safe_api_read.py --response` with `set -o pipefail` enabled.
+Never echo a raw response first. Keep signed upload URLs and the API key out of
+command output and saved payload files. Errors need the same allowlist treatment.
 
 ### A post cannot be taken back
 
@@ -181,13 +212,15 @@ Post for Me fetches media by URL; it cannot see the person's disk. The upload is
 **Step 1 — mint an upload URL, one call per file:**
 
 ```bash
-curl -s -X POST "https://api.postforme.dev/v1/media/create-upload-url" \
-  -H "Authorization: Bearer $API_KEY" -H "Content-Type: application/json"
+UPLOAD_RESPONSE=$(curl -sS --fail-with-body -X POST "https://api.postforme.dev/v1/media/create-upload-url" \
+  -H "Authorization: Bearer $API_KEY" -H "Content-Type: application/json")
 ```
 
 Returns `{ "upload_url": "...", "media_url": "..." }`. One call per file — for a
 multi-slide carousel just loop it; there is no 25-second wall to fit under, so
 there is nothing to batch.
+Parse `UPLOAD_RESPONSE` in the process without printing or saving the signed
+`upload_url`.
 
 **Step 2 — PUT the bytes to `upload_url`:**
 
@@ -250,9 +283,10 @@ cat > /tmp/post_payload.json << 'EOF'
 }
 EOF
 
-curl -s -X POST "https://api.postforme.dev/v1/social-posts" \
+set -o pipefail
+curl -sS --fail-with-body -X POST "https://api.postforme.dev/v1/social-posts" \
   -H "Authorization: Bearer $API_KEY" -H "Content-Type: application/json" \
-  -d @/tmp/post_payload.json
+  -d @/tmp/post_payload.json | python scripts/safe_api_read.py --response
 ```
 
 Omit `scheduled_at` (or set it to `null`) to publish now; pass an ISO 8601
@@ -291,8 +325,7 @@ Check the platform's own limits too — Instagram in particular reads badly past
 `POST /v1/social-posts` returns before the networks have finished. `status` moves `processing` → `processed`; the real outcome is per account:
 
 ```bash
-curl -s "https://api.postforme.dev/v1/social-post-results?post_id=$POST_ID" \
-  -H "Authorization: Bearer $API_KEY"
+python scripts/safe_api_read.py --results "$POST_ID"
 ```
 
 The `post_id` filter is honoured server-side, so **an empty `data` means the networks have not answered yet — not that the filter is wrong**. Do not go hunting for a bug in the query: a multi-image carousel across several accounts can sit in `processing` for a long time — an hour is normal, not a symptom. (`limit` on this endpoint is *not* reliably honoured — it can return more rows than asked for, so never infer "that's all of them" from a short list.)
@@ -312,11 +345,10 @@ A publish that errors is ambiguous in the one way that matters: a permission den
 `external_id` is the way out, and it is why the field is worth setting every time. Before any retry, ask whether the post already exists:
 
 ```bash
-curl -s "https://api.postforme.dev/v1/social-posts?external_id=delivery-folder-slug" \
-  -H "Authorization: Bearer $API_KEY"
+python scripts/safe_api_read.py --external-id delivery-folder-slug
 ```
 
-A non-empty `data` means the post is already in flight — read its results, do not create it again. Only an empty result justifies re-sending.
+A non-empty list means the post is already in flight — read its results, do not create it again. Only an empty list justifies re-sending.
 
 One distinction worth keeping straight: a result row with `success: false` is a **platform rejection**, and there retrying is safe, because nothing was published on that account. The failed attempt stays in the dashboard as an error row — mention it, so it is not misread as a double post.
 
