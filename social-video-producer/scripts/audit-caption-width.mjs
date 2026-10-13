@@ -95,6 +95,9 @@ function main() {
   }
 
   const usableWidth = videoWidth - 2 * marginLr;
+  // A single word (a domain, a URL) is never split or shrunk: it may use the frame width minus
+  // a thin padding (64 px at 1080 wide) instead of the wrap margin, which only exists to wrap phrases.
+  const singleWordUsable = videoWidth - 2 * Math.round(64 * videoWidth / 1080);
   const python = args.python || process.env.PYTHON_PATH || 'python';
   const proc = spawnSync(python, [path.join(HERE, 'lib', 'measure_text.py'), fontFile, String(size)], {
     input: JSON.stringify(parsed.lines.map((line) => line.text)),
@@ -109,7 +112,8 @@ function main() {
   parsed.lines.forEach((line, index) => {
     const width = widths[index];
     if (width > widest) widest = width;
-    if (width > usableWidth) {
+    const limit = /\s/.test(line.text.trim()) ? usableWidth : singleWordUsable;
+    if (width > limit) {
       overflow.push({ start: line.start, text: line.text, widthPx: Math.round(width) });
     }
   });
@@ -120,6 +124,7 @@ function main() {
     fontFile,
     sizePx: size,
     usableWidthPx: usableWidth,
+    singleWordUsableWidthPx: singleWordUsable,
     widestLinePx: Math.round(widest),
     linesChecked: parsed.lines.length,
     overflow,

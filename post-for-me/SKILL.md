@@ -338,6 +338,12 @@ Each result carries `success`, `error`, and `platform_data.url` — the direct l
 
 **Never report a publish as successful off the create call alone.** `socialPosts.create` returning an id proves the post was *accepted*, nothing more. Until the results come back per account, the honest status is "sent, confirmation pending" — say exactly that if the session ends before they land.
 
+### YouTube: cuota diaria agotada (error 429)
+
+Si YouTube falla con `429 ... Video Uploads per day`, no se reintenta en el momento: la cuota es del proyecto de Post for Me y se renueva sola. **Se reprograma el envío para primera hora del día siguiente**: un post nuevo solo para la cuenta de YouTube, con `scheduled_at` a las 06:00 de Argentina (`T06:00:00-03:00` del día siguiente), el mismo `title` y `privacy_status: 'public'`, y `external_id` con el sufijo `-youtube`. Hay que volver a subir el video (el `media_url` anterior ya se usó). Antes de crearlo, confirmar que el post original de YouTube figura con `success: false` (así no se duplica). Informar al usuario la hora programada.
+
+TikTok devuelve en `platform_data.url` solo el link del perfil, no el del video: decirlo así en el reporte.
+
 ### Retrying a publish without double-posting
 
 A publish that errors is ambiguous in the one way that matters: a permission denial, a timeout or a dropped connection can happen *before* the post was created or *after*. Retrying blind is how the same carousel goes out twice, and Post for Me cannot retract either copy.

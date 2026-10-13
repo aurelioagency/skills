@@ -94,6 +94,34 @@ Para comparar las dos cuentas: `list_automations`/`get_automation` por MCP o `GE
 - **Si el reel ya está subido, se crea con `--target latest` y listo**, sin preguntar. `--target next` solo vale mientras el reel todavía no se publicó. Si `create --target next` falla con `idx_unique_global_keyword_primary_active` (ya hay otra atada a `NEXT_MEDIA`), no es motivo para frenar ni para preguntar: crear con `--target latest` si el reel está arriba, o con el id puntual (`media`). **Si el reel todavía no está subido, la que está atada a `NEXT_MEDIA` es una sobrante: editarla en el lugar con `update --id <esa> --link ... --button ... --name ...` y listo** (confirmado 2026-10-13; el error no depende de cuántas haya, la base solo admite una `NEXT_MEDIA` por palabra).
 - **Si una cuenta agotó la cuota mensual de la API REST (error `429 QUOTA_EXCEEDED`, 100 llamadas), no esperar ni pedir que compren packs**: hacerlo desde el panel de ReplyKaro con la extensión de Claude in Chrome, usando el navegador conectado que tenga abierta la sesión de esa cuenta (probar uno por uno con `select_browser`, mirar quién está logueado abajo a la izquierda; nunca preguntarle al usuario cuál es). **No se pregunta ni se avisa antes: se entra, se carga todo y se informa el resultado.** Solo si ningún navegador conectado tiene la sesión de esa cuenta, decirlo (no iniciar sesión por el usuario). En el panel: tarjeta verde "Next Post / Reel" → asistente de 4 pasos, cargando los textos de `references/plantilla-base.json`.
 
+## Perfiles de Chrome: qué cuenta vive en cuál
+
+Si el usuario dice "entrá a tal cuenta", esa cuenta ya tiene la sesión iniciada en algún perfil de Chrome. Si abro un navegador que no la tiene, es el equivocado: nunca pregunto cuál es, pruebo otro. Mapa de esta máquina:
+
+- **@ing.gustavopaz**: perfil "Gustavo" (`Profile 28`, ingap.tech@gmail.com).
+- **@lacasadeaurelio**: perfil "lacasadeaurelio@gmail.com" (`Profile 33`).
+
+Si el perfil no está entre los navegadores conectados, lo abro yo: `chrome.exe --profile-directory="Profile 28" https://www.replykaro.com/dashboard`, y después `list_connected_browsers` y `select_browser` con el nuevo (la extensión se conecta sola, no hace falta que el usuario haga nada). Cerrar las pestañas que se abrieron al terminar.
+
+## La cuota de la API es del usuario: no gastarla
+
+Cada cuenta tiene 100 llamadas por mes y otras sesiones también las usan (así se agotó la de @ing.gustavopaz). Reglas:
+
+- Nada de llamadas exploratorias: no hacer `list`, `get` ni `media` "para mirar". Si hace falta ver el estado de una cuenta, mirar el panel en el navegador, que no gasta cuota.
+- `create` ya cuenta las activas, crea y relee: no agregar llamadas antes ni después.
+- **La extensión de Claude en Chrome se usa solo cuando la cuota ya se agotó** (error `429 QUOTA_EXCEEDED`). Mientras haya cuota, se usa el script.
+
+## Cargar una automatización por el panel (cuando no hay cuota)
+
+Receta probada con @ing.gustavopaz (2026-10-13). Entrar con el perfil correcto y abrir `replykaro.com/dashboard`:
+
+1. Si la cuenta tiene 3 de 3 activas, borrar la más vieja: en "Mis automatizaciones", tacho de esa tarjeta y CONFIRM. Está autorizado por usar la skill; si el sistema de permisos lo rechaza, reintentar una vez.
+2. En el dashboard, bajar hasta la tarjeta verde "Next Post / Reel" y hacer clic en su "+ Create Reply" (el clic en la etiqueta de abajo no abre nada).
+3. Paso 1: Next. Paso 2: escribir `Aurelio` en el campo de palabra y prender "Public reply to comments". La lista trae plantillas por defecto en inglés y las viejas: borrarlas todas (tacho a la derecha de cada fila) y agregar con Enter las tres de `references/plantilla-base.json`.
+4. Paso 3: con `read_page`/`find` sacar los campos y cargarlos con `form_input`: saludo (`custom_greeting`), mensaje, texto del botón; bajando con scroll aparecen los cuatro textos del follow gate (ya viene prendido).
+5. Paso 4: mensaje final, URL, texto del botón (`form_input`) y "Launch Automation".
+6. Verificar en "Mis automatizaciones": aparece como "Next Post", activa, palabra Aurelio.
+
 ## Cómo probar
 
 **ReplyKaro responde una sola vez por persona y por automatización.** Si una cuenta ya comentó la palabra, volver a comentar (aunque borre el comentario) no genera nada, ni siquiera un log de error (`get_dm_logs` muestra un solo envío). Para probar un cambio hay que comentar desde **otra cuenta que siga a la del reel**. No hay ajuste en la API para repetir el envío a la misma cuenta.

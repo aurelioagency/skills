@@ -100,6 +100,8 @@ Keep this output contract:
 - `snapshots\` contains QA screenshots and overflow/layout reports.
 - `raws\` (optional, user-supplied-media jobs) contains the user's original source files for this video, copied verbatim during User Asset Intake. Create it with a plain mkdir when needed; never modify, rename, or delete anything inside it.
 
+**Never `cd` into the project folder** (the shell's working directory persists between commands): use absolute paths. A session whose working directory is inside `.work\<slug>\` cannot rename that folder (`Device or resource busy`) and `publish-to-drive.mjs` cannot delete it (`EPERM`). Choose the descriptive slug right after the transcript is approved and rename the project from outside it.
+
 Do not create a project-local `tools\` folder for normal runs. Reuse this skill's bundled `scripts\`. If a one-off local tool is unavoidable for a legacy repair, keep it temporary and promote repeated behavior back into the skill.
 
 ## User Asset Intake
@@ -580,6 +582,14 @@ An accent colour is opt-in, not the default: pass `--accent "<hex>"` to turn the
 
 For a keyword-only highlight (only hand-picked terms ever get the accent), add `--accent "<hex>" --accent-mode keyword --accent-terms "..."`.
 
+4b. **Detect which text belongs to which shot (automatic).** Right after the transcript is approved, run:
+
+```powershell
+python "<skill-dir>\scripts\detect-shots.py" --video "raws\<video>.mp4" --transcript "assets\voice\<slug>.approved.json" --out-shots "manifests\shots.json" --out-zones "manifests\caption-zones.json"
+```
+
+It finds the framing changes from where the speaker's face sits (never from pixel scene-detect, which fires on every scrolling screen recording) and prints the dialogue split by shot: `Plano 1 (0.00s a 4.75s): <text>`, `Plano 2 ...`, `Plano 3 ...`. Normally plano 1 is the hook and the last plano is the CTA. Show that list to the user as plain text. It also measures the lowest chin per shot and writes `manifests\caption-zones.json`, which goes straight into `--zones` in step 6. A word that starts up to 0.25 s before a cut takes the height of the new shot. **No preview frames are generated for this**: skip the frame checks of step 5 when the zones came from this script, and only look at frames if the user reports a word that sits wrong.
+
 5. **Check placement across every camera framing in the video, not one frame.** Burn the default `.ass` onto real frames and look — but the frames that matter are one per *distinct framing* the video uses. A talking-head video is almost never one static shot: the speaker leans in, a background screen-recording appears and the face drops, a wide "full body" intro cuts to a tight close-up. The caption band is fixed in the `.ass`; the face is not. A band that clears the chin in the intro lands across the mouth the moment the framing tightens.
 
    So: scan the whole clip (a 1 fps contact sheet of the lower half is enough), identify each shot/framing and roughly where the chin sits in it — **the LOWEST the chin gets inside that shot**, not an average — then burn a preview frame at the worst moment of each. Show the user those frames. Then proceed to the full burn.
@@ -618,6 +628,8 @@ Two failure modes this example encodes, both found the hard way:
 
 - **A "wide intro" is not one zone.** In the example above the first shot is a wide framing where the face rides high (`marginBottom 1480`, caption near mid-frame just under the chin); at 3.4s it cuts to a tighter shot and the face drops, so the caption must drop with it (`marginBottom 830`). One zone for "the intro" left the caption stranded far below a high face — which is its own defect: *below the face* also means *not marooned at the bottom of the frame*. Put a zone boundary on every shot change where the chin moves, and land it exactly on the cut so the reposition is invisible.
 - **A 2-line chunk grows upward from the baseline**, so in a low-face shot it can touch the chin even when the 1-line captions clear it, and the width gate cannot see this. Give that chunk's moment its own lower micro-zone (the 38.0–39.6 window), or size the type down so nothing wraps.
+
+**A single word is never split and never shrunk, even a domain or a URL** (`aurelioagency.com,`). `audit-caption-width.mjs` lets a one-word line use the frame width minus a thin padding (64 px at 1080 wide), because the wrap margin only exists to wrap phrases. Splitting a domain in two captions, or shrinking one word, is the wrong fix: if the gate still fails, ask the user.
 
 Use `--corrections "source\corrections.json"` for plain one-word substitutions. When a fix merges or splits tokens (`ultra` + `liviano` → `ultraliviano`), the corrections format cannot express it: write the corrected `<slug>.approved.json` directly, keep the raw `.transcript.json` untouched, and build from the approved copy.
 
@@ -876,6 +888,8 @@ Do it in two steps, both required:
 Verify with `verify-render.mjs` (duration should be the original plus one frame, not plus a
 full second) and pull the very first two frames to confirm frame 0 is the cover and frame 1
 is already the real video — not a held title card.
+
+**A cover made from a still image (`.png`/`.jpg` the user supplies):** `build-cover.mjs` still wants `--frame`; pass `--frame 0`. The geometry scales from the image width, so it works at 1080x1920. Measure where the chin sits in that image and push the block below it with `--y-offset` before building.
 
 ### Choosing The Frame
 
