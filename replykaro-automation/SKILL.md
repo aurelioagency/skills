@@ -98,8 +98,8 @@ Para comparar las dos cuentas: `list_automations`/`get_automation` por MCP o `GE
 
 Si el usuario dice "entrá a tal cuenta", esa cuenta ya tiene la sesión iniciada en algún perfil de Chrome. Si abro un navegador que no la tiene, es el equivocado: nunca pregunto cuál es, pruebo otro. Mapa de esta máquina:
 
-- **@ing.gustavopaz**: perfil "Gustavo" (`Profile 28`, ingap.tech@gmail.com).
-- **@lacasadeaurelio**: perfil "lacasadeaurelio@gmail.com" (`Profile 33`).
+- **@ing.gustavopaz**: el perfil de Chrome de **ingap.tech@gmail.com** (`Profile 28`). Ojo: hay otro perfil también llamado "Gustavo" (`Default`, pazgustavoadrian@gmail.com) que es el personal y principal del usuario: **ahí no están las cuentas de trabajo**, nunca usarlo para esto. Identificar siempre el perfil por el mail, no por el nombre.
+- **@lacasadeaurelio**: el perfil de **lacasadeaurelio@gmail.com** (`Profile 33`).
 
 Si el perfil no está entre los navegadores conectados, lo abro yo: `chrome.exe --profile-directory="Profile 28" https://www.replykaro.com/dashboard`, y después `list_connected_browsers` y `select_browser` con el nuevo (la extensión se conecta sola, no hace falta que el usuario haga nada). Cerrar las pestañas que se abrieron al terminar.
 
@@ -107,7 +107,7 @@ Si el perfil no está entre los navegadores conectados, lo abro yo: `chrome.exe 
 
 Cada cuenta tiene 100 llamadas por mes y otras sesiones también las usan (así se agotó la de @ing.gustavopaz). Reglas:
 
-- Nada de llamadas exploratorias: no hacer `list`, `get` ni `media` "para mirar". Si hace falta ver el estado de una cuenta, mirar el panel en el navegador, que no gasta cuota.
+- Nada de llamadas exploratorias: no hacer `list`, `get` ni `media` "para mirar". Mientras haya cuota, tampoco se abre el panel con la extensión de Chrome para mirar: el resultado se confirma con la relectura que ya hace `create`/`update`. Mirar el panel (abrir ReplyKaro en Chrome con la extensión) solo corresponde cuando la cuota ya se agotó, o si el usuario lo pide.
 - `create` ya cuenta las activas, crea y relee: no agregar llamadas antes ni después.
 - **La extensión de Claude en Chrome se usa solo cuando la cuota ya se agotó** (error `429 QUOTA_EXCEEDED`). Mientras haya cuota, se usa el script.
 
