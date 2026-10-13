@@ -1075,7 +1075,7 @@ https://www.aurelioagency.com/blog/<slug>
 
 - It is the **manual fallback**: the message to paste if the resource has to be sent by hand. The ReplyKaro automation does not use its text, only the page URL in it.
 - **No** Skool line, **no** Aurelio Agency close, **no** repo or tool link, **no** install steps — never add them back (the user had to correct this twice).
-- The page URL is deterministic from the slug, so the file can be written before the page exists; `resource-page` then creates the page at that address.
+- The page URL is deterministic from the slug, so the file can be written before the page exists; `resource-page` then creates the page at that address. **That only holds when the resource is external (a repo, someone else's tool) and `resource-page` will create the page.** If the resource is already a page of aurelioagency.com (the reel promotes something the agency published on its own site), or the link of the resource is not known for sure, **never deduce or invent the URL: ask the user for the exact link before writing `dm-reply-<slug>.txt`** (confirmed 2026-10-13: a `blog/<slug>` link made up from the folder name shipped in the dm-reply and to Drive, pointing to a page that does not exist).
 - The real source link of the resource (repo, tool site) goes only to `resource-page` with `--github <url>`, taken from what the video's transcript shows or says; if it cannot be confirmed, verify at the source with `gh`/`WebFetch`, never guess.
 - Voseo, simple words.
 
