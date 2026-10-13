@@ -107,9 +107,9 @@ Si el perfil no está entre los navegadores conectados, lo abro yo: `chrome.exe 
 
 Cada cuenta tiene 100 llamadas por mes y otras sesiones también las usan (así se agotó la de @ing.gustavopaz). Reglas:
 
-- Nada de llamadas exploratorias: no hacer `list`, `get` ni `media` "para mirar". Mientras haya cuota, tampoco se abre el panel con la extensión de Chrome para mirar: el resultado se confirma con la relectura que ya hace `create`/`update`. Mirar el panel (abrir ReplyKaro en Chrome con la extensión) solo corresponde cuando la cuota ya se agotó, o si el usuario lo pide.
+- **El primer paso es siempre la API** (el script `replykaro.mjs`), pero sin usarla indiscriminadamente: solo las llamadas que la tarea necesita, ninguna "para mirar" ni "por las dudas".
 - `create` ya cuenta las activas, crea y relee: no agregar llamadas antes ni después.
-- **La extensión de Claude en Chrome se usa solo cuando la cuota ya se agotó** (error `429 QUOTA_EXCEEDED`). Mientras haya cuota, se usa el script.
+- **La extensión de Claude en Chrome nunca se usa para mirar o verificar mientras haya cuota.** Se usa únicamente cuando la API ya se agotó (error `429 QUOTA_EXCEEDED`): ahí se entra al panel y se carga todo por ahí.
 
 ## Cargar una automatización por el panel (cuando no hay cuota)
 
