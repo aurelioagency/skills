@@ -359,18 +359,21 @@ Dos reglas que salen de ahí:
   contenido real o preguntale al usuario. No la estires. Inflar una tarjeta hasta que
   quede hueca por dentro es la misma trampa un nivel más abajo.
 
-### El titular tiene que entrar en dos renglones
+### El titular tiene que entrar en el número de renglones elegido para la serie
 
 La regla de *Cómo se escribe una placa* pide que el titular sea una oración con verbo
-conjugado. Falta la otra mitad: **tiene que entrar en dos renglones del template activo.**
+conjugado. Elegí dos o tres renglones según la mayoría de los titulares de la serie,
+como indica `SKILL.md`, y aplicá ese mismo número a portada y contenido. El CTA de
+una línea tiene la excepción indicada allí. **Cada titular tiene que entrar en el
+número elegido al tamaño del template activo, sin un renglón extra automático.**
 
 Sin ese límite salen oraciones de 45 caracteres que en el `02` se componen a 104px en
 mayúsculas y ocupan **cinco renglones y un tercio de la placa**:
 `ENSEÑARLE LO QUE NO SABÍA LE ENSEÑA A INVENTAR` es exactamente eso.
 
-Contá los caracteres contra el template:
+Contá los caracteres contra el template y la cantidad elegida:
 
-| Template | Titular de contenido | Caracteres que entran en 2 renglones |
+| Template | Titular de contenido | Referencia para 2 renglones |
 |---|---|---|
 | `02-editorial-oscuro-v2` | Archivo 104px, mayúsculas | **~22** |
 
@@ -378,7 +381,7 @@ Las del set del propio template: `La máscara causal.` (18) · `Más capas, más
 · `El orden no es neutro.` (22). Ese es el largo, no 45.
 
 **Un `<br>` no achica nada.** Si la línea no entra a lo ancho, envuelve igual y el `<br>`
-sólo agrega un renglón más. La cuenta es de caracteres, no de dónde ponés el corte.
+sólo agrega un renglón más. La cuenta se comprueba en el render, no sólo en el texto.
 
 Cuando la oración completa no entra, **el titular se acorta y la bajada completa la idea**
 — para eso está. Lo que no se hace es bajarle el cuerpo al titular.
