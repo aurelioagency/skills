@@ -25,7 +25,7 @@ window.CAROUSEL = {
   height: 1440,
   // Elegir 2 o 3 según la mayoría de titulares de portada y contenido.
   // La QA comprueba todas esas placas; el CTA puede tener titular de una línea
-  // si la bajada iguala o supera su ancho visual.
+  // si la cota gráfica bajo el titular iguala su ancho visual.
   headlineLines: null,
   brand: 'La Casa de Aurelio',
   // Firma del cartucho. Sale de aca, no del HTML.

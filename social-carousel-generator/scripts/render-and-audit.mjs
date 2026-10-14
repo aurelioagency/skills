@@ -126,14 +126,13 @@ for (let i = 1; i <= count; i++) {
     let ctaLineWidths = null;
     if (isCTA) {
       const title = document.querySelector('.s-cta .body h2, .s-cta h2, .s-cta h1');
-      const lower = document.querySelector('.s-cta .body .lede, .s-cta .lede');
-      if (title && lower) {
+      const rule = document.querySelector('.s-cta .body .rule, .s-cta .rule');
+      if (title && rule) {
         const titleLines = lineBoxes(title);
-        const lowerLines = lineBoxes(lower);
         if (titleLines.length === 1) {
           ctaLineWidths = {
             title: Math.round(titleLines[0].width),
-            lower: lowerLines.length === 1 ? Math.round(lowerLines[0].width) : null
+            rule: Math.round(rule.getBoundingClientRect().width)
           };
         }
       }
@@ -545,7 +544,7 @@ const exceptions = report[0]?.exceptions || [];
 const excepted = (id) => exceptions.includes(id);
 
 // En el template 05, portada y contenido comparten el mismo patrón de titulares.
-// El CTA puede usar una línea si la bajada iguala su ancho. La QA mide las líneas
+// El CTA puede usar una línea si la cota gráfica iguala su ancho. La QA mide las líneas
 // reales, no los <br>.
 if (report.some(r => r.headlineLineCount !== null)) {
   const target = report[0]?.headlineTarget;
@@ -564,8 +563,8 @@ if (report.some(r => r.headlineLineCount !== null)) {
 for (const r of report) {
   const at = (list, m) => list.push(`slide ${r.slide}: ${m}`);
 
-  if (r.ctaLineWidths && (r.ctaLineWidths.lower === null || r.ctaLineWidths.lower < r.ctaLineWidths.title)) {
-    at(red, `CTA de una línea: el texto inferior mide ${r.ctaLineWidths.lower ?? 'varias líneas'}px y el titular ${r.ctaLineWidths.title}px; igualá o superá el ancho del titular`);
+  if (r.ctaLineWidths && Math.abs(r.ctaLineWidths.rule - r.ctaLineWidths.title) > 8) {
+    at(red, `CTA de una línea: la cota mide ${r.ctaLineWidths.rule}px y el titular ${r.ctaLineWidths.title}px; igualá sus anchos`);
   }
 
   for (const f of r.fontsMissing) at(red, `la fuente "${f}" no cargo (fallback silencioso a fuente de sistema)`);

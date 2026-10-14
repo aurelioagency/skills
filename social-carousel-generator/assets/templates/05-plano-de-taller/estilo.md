@@ -79,8 +79,8 @@ valen para todos los templates. Lo que este estilo resuelve distinto:
 - **El remate es opcional** y por default no va (`s.lede` esta guardado en `index.html`).
 - **Una cantidad de renglones por carrusel.** La portada y las placas de contenido
   usan los mismos dos o tres renglones, elegidos por mayoría según `SKILL.md`. El
-  CTA sigue ese patrón o lleva el titular en una línea con la bajada de al menos
-  el mismo ancho visual. Registrá la cantidad en `slide-data.js` como
+  CTA sigue ese patrón o lleva el titular en una línea con la cota gráfica de
+  igual ancho. Registrá la cantidad en `slide-data.js` como
   `headlineLines`. Nunca reserves un renglón vacío ni agregues palabras o repitas
   el kicker para completar el patrón.
 - **Las `secciones` van a 34px, en negrita y en tinta plena.** A 26px y en gris se leian
