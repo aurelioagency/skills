@@ -544,15 +544,17 @@ const notes = [];
 const exceptions = report[0]?.exceptions || [];
 const excepted = (id) => exceptions.includes(id);
 
-// En el template 05, portada y contenido comparten el mismo patrón de titulares.
-// El CTA puede usar una línea si la cota gráfica iguala su ancho. La QA mide las líneas
+// En el template 05, las placas de contenido comparten el patrón de titulares.
+// La portada tiene escala y cantidad de líneas propias. El CTA puede usar una línea
+// si la cota gráfica iguala su ancho. La QA mide las líneas
 // reales, no los <br>.
 if (report.some(r => r.headlineLineCount !== null)) {
   const target = report[0]?.headlineTarget;
   if (target !== 2 && target !== 3) {
-    red.push('template 05: elegí headlineLines: 2 o 3 en slide-data.js según la mayoría de titulares de portada y contenido');
+    red.push('template 05: elegí headlineLines: 2 o 3 en slide-data.js según la mayoría de titulares de contenido');
   } else {
     for (const r of report) {
+      if (r.isCover) continue;
       if (r.isCTA && r.headlineLineCount === 1) continue;
       if (r.headlineLineCount !== target) {
         red.push(`slide ${r.slide}: titular de ${r.headlineLineCount ?? 0} renglón(es); el carrusel eligió ${target}`);

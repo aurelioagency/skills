@@ -77,9 +77,10 @@ valen para todos los templates. Lo que este estilo resuelve distinto:
   portada dejo de necesitar la excepcion `cover-hook-centered`, que este template
   declaraba de fabrica y se saco.
 - **El remate es opcional** y por default no va (`s.lede` esta guardado en `index.html`).
-- **Una cantidad de renglones por carrusel.** La portada y las placas de contenido
-  usan los mismos dos o tres renglones, elegidos por mayoría según `SKILL.md`. El
-  CTA sigue ese patrón o lleva el titular en una línea con la cota gráfica de
+- **Una cantidad de renglones para las placas de contenido.** Usan los mismos dos
+  o tres renglones, elegidos por mayoría según `SKILL.md`. La portada se compone
+  aparte, con su propia escala y cantidad de renglones. El CTA sigue el patrón de
+  contenido o lleva el titular en una línea con la cota gráfica de
   igual ancho. Registrá la cantidad en `slide-data.js` como
   `headlineLines`. Nunca reserves un renglón vacío ni agregues palabras o repitas
   el kicker para completar el patrón.

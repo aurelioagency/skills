@@ -362,10 +362,11 @@ Dos reglas que salen de ahí:
 ### El titular tiene que entrar en el número de renglones elegido para la serie
 
 La regla de *Cómo se escribe una placa* pide que el titular sea una oración con verbo
-conjugado. Elegí dos o tres renglones según la mayoría de los titulares de la serie,
-como indica `SKILL.md`, y aplicá ese mismo número a portada y contenido. El CTA de
-una línea tiene la excepción indicada allí. **Cada titular tiene que entrar en el
-número elegido al tamaño del template activo, sin un renglón extra automático.**
+conjugado. Elegí dos o tres renglones según la mayoría de los titulares de contenido,
+como indica `SKILL.md`, y aplicá ese mismo número a esas placas. La portada tiene
+escala y cantidad de renglones propias. El CTA de una línea tiene la excepción
+indicada allí. **Cada titular de contenido tiene que entrar en el número elegido al
+tamaño del template activo, sin un renglón extra automático.**
 
 Sin ese límite salen oraciones de 45 caracteres que en el `02` se componen a 104px en
 mayúsculas y ocupan **cinco renglones y un tercio de la placa**:
