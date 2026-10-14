@@ -123,6 +123,7 @@ for (let i = 1; i <= count; i++) {
     const slideCls = (slideEl && typeof slideEl.className === 'string') ? slideEl.className : '';
     const isCTA = /\bs-cta\b/.test(slideCls);
     const isCover = /\bs-cover\b/.test(slideCls);
+    const isTitleOnlyCover = isCover && /\bcover-title-only\b/.test(slideCls);
     let ctaLineWidths = null;
     if (isCTA) {
       const title = document.querySelector('.s-cta .body h2, .s-cta h2, .s-cta h1');
@@ -335,7 +336,7 @@ for (let i = 1; i <= count; i++) {
       });
     });
 
-    return { exceptions, densityBudget, isCTA, isCover, ctaLineWidths, fixedAsset, grammar, headlineRuleGap, headlineLineCount, headlineTarget, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
+    return { exceptions, densityBudget, isCTA, isCover, isTitleOnlyCover, ctaLineWidths, fixedAsset, grammar, headlineRuleGap, headlineLineCount, headlineTarget, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
   }, { W, H });
 
   // El PNG se saca siempre: el chequeo optico se hace sobre pixeles reales.
@@ -627,7 +628,9 @@ for (const r of report) {
   // EL ARREGLO ES MAS CONTENIDO O MENOS SEPARACION, NUNCA AGRANDAR LO QUE YA ESTA.
   // Escalar tipografia o graficos para tapar el hueco da un slide mas grande que dice
   // lo mismo, y saca al carrusel de la marca.
-  if (r.density && r.density.gap != null && !r.isCTA) {
+  // La portada de solo titular centra un único bloque en el lienzo. El aire
+  // simétrico alrededor es parte de esa composición, no un hueco entre bloques.
+  if (r.density && r.density.gap != null && !r.isCTA && !r.isTitleOnlyCover) {
     const k = H / 1440;
     const warn = 260 * k, stop = 280 * k;
     if (r.density.gap > warn) {
