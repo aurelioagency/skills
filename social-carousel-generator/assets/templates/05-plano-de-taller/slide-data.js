@@ -23,8 +23,9 @@ window.CAROUSEL = {
   template: '05-plano-de-taller',
   width: 1080,
   height: 1440,
-  // Elegir 2 o 3 según la mayoría de titulares del carrusel, incluidos portada y CTA.
-  // La QA comprueba que todas las placas rendericen exactamente esa cantidad.
+  // Elegir 2 o 3 según la mayoría de titulares de portada y contenido.
+  // La QA comprueba todas esas placas; el CTA puede tener titular de una línea
+  // si la bajada iguala o supera su ancho visual.
   headlineLines: null,
   brand: 'La Casa de Aurelio',
   // Firma del cartucho. Sale de aca, no del HTML.

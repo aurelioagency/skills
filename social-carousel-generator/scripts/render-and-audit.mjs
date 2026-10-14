@@ -123,6 +123,21 @@ for (let i = 1; i <= count; i++) {
     const slideCls = (slideEl && typeof slideEl.className === 'string') ? slideEl.className : '';
     const isCTA = /\bs-cta\b/.test(slideCls);
     const isCover = /\bs-cover\b/.test(slideCls);
+    let ctaLineWidths = null;
+    if (isCTA) {
+      const title = document.querySelector('.s-cta .body h2, .s-cta h2, .s-cta h1');
+      const lower = document.querySelector('.s-cta .body .lede, .s-cta .lede');
+      if (title && lower) {
+        const titleLines = lineBoxes(title);
+        const lowerLines = lineBoxes(lower);
+        if (titleLines.length === 1) {
+          ctaLineWidths = {
+            title: Math.round(titleLines[0].width),
+            lower: lowerLines.length === 1 ? Math.round(lowerLines[0].width) : null
+          };
+        }
+      }
+    }
 
     // 1) fuentes realmente cargadas (solo las que usa algun texto de la slide)
     const used = new Set();
@@ -321,7 +336,7 @@ for (let i = 1; i <= count; i++) {
       });
     });
 
-    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, headlineRuleGap, headlineLineCount, headlineTarget, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
+    return { exceptions, densityBudget, isCTA, isCover, ctaLineWidths, fixedAsset, grammar, headlineRuleGap, headlineLineCount, headlineTarget, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
   }, { W, H });
 
   // El PNG se saca siempre: el chequeo optico se hace sobre pixeles reales.
@@ -529,14 +544,16 @@ const notes = [];
 const exceptions = report[0]?.exceptions || [];
 const excepted = (id) => exceptions.includes(id);
 
-// En el template 05, la portada y el CTA participan del mismo patrón de titulares.
-// El campo se elige en la propuesta; la QA mide las líneas reales, no los <br>.
+// En el template 05, portada y contenido comparten el mismo patrón de titulares.
+// El CTA puede usar una línea si la bajada iguala su ancho. La QA mide las líneas
+// reales, no los <br>.
 if (report.some(r => r.headlineLineCount !== null)) {
   const target = report[0]?.headlineTarget;
   if (target !== 2 && target !== 3) {
-    red.push('template 05: elegí headlineLines: 2 o 3 en slide-data.js según la mayoría de titulares, incluidos portada y CTA');
+    red.push('template 05: elegí headlineLines: 2 o 3 en slide-data.js según la mayoría de titulares de portada y contenido');
   } else {
     for (const r of report) {
+      if (r.isCTA && r.headlineLineCount === 1) continue;
       if (r.headlineLineCount !== target) {
         red.push(`slide ${r.slide}: titular de ${r.headlineLineCount ?? 0} renglón(es); el carrusel eligió ${target}`);
       }
@@ -546,6 +563,10 @@ if (report.some(r => r.headlineLineCount !== null)) {
 
 for (const r of report) {
   const at = (list, m) => list.push(`slide ${r.slide}: ${m}`);
+
+  if (r.ctaLineWidths && (r.ctaLineWidths.lower === null || r.ctaLineWidths.lower < r.ctaLineWidths.title)) {
+    at(red, `CTA de una línea: el texto inferior mide ${r.ctaLineWidths.lower ?? 'varias líneas'}px y el titular ${r.ctaLineWidths.title}px; igualá o superá el ancho del titular`);
+  }
 
   for (const f of r.fontsMissing) at(red, `la fuente "${f}" no cargo (fallback silencioso a fuente de sistema)`);
   for (const s of r.small) at(excepted('typography-floor') ? notes : red, `"${s.txt}" a ${s.size}px, piso ${s.floor}px`);
