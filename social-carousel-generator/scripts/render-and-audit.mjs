@@ -219,10 +219,13 @@ for (let i = 1; i <= count; i++) {
     // Una min-height de tres renglones dejaba un hueco invisible para los audits
     // generales cuando el titular tenía solo dos.
     let headlineRuleGap = null;
+    let headlineLineCount = null;
+    const headlineTarget = window.CAROUSEL?.headlineLines ?? null;
     if (window.CAROUSEL?.template === '05-plano-de-taller') {
-      const title = document.querySelector('.s-cover .covertitle h1, .head > h2');
+      const title = document.querySelector('.s-cover .covertitle h1, .head > h2, .s-cta .body h2');
       const rule = title?.parentElement?.querySelector(':scope > .rule');
       const lines = title ? lineBoxes(title) : [];
+      headlineLineCount = lines.length || null;
       if (rule && lines.length) {
         headlineRuleGap = Math.round(rule.getBoundingClientRect().top - lines.at(-1).bottom);
       }
@@ -318,7 +321,7 @@ for (let i = 1; i <= count; i++) {
       });
     });
 
-    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, headlineRuleGap, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
+    return { exceptions, densityBudget, isCTA, isCover, fixedAsset, grammar, headlineRuleGap, headlineLineCount, headlineTarget, fontsMissing, small, outside, orphans, overFoot, overflow, brokenImages, hook, balance, counter, chrome };
   }, { W, H });
 
   // El PNG se saca siempre: el chequeo optico se hace sobre pixeles reales.
@@ -525,6 +528,21 @@ const warn = [];
 const notes = [];
 const exceptions = report[0]?.exceptions || [];
 const excepted = (id) => exceptions.includes(id);
+
+// En el template 05, la portada y el CTA participan del mismo patrón de titulares.
+// El campo se elige en la propuesta; la QA mide las líneas reales, no los <br>.
+if (report.some(r => r.headlineLineCount !== null)) {
+  const target = report[0]?.headlineTarget;
+  if (target !== 2 && target !== 3) {
+    red.push('template 05: elegí headlineLines: 2 o 3 en slide-data.js según la mayoría de titulares, incluidos portada y CTA');
+  } else {
+    for (const r of report) {
+      if (r.headlineLineCount !== target) {
+        red.push(`slide ${r.slide}: titular de ${r.headlineLineCount ?? 0} renglón(es); el carrusel eligió ${target}`);
+      }
+    }
+  }
+}
 
 for (const r of report) {
   const at = (list, m) => list.push(`slide ${r.slide}: ${m}`);

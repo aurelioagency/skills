@@ -77,9 +77,10 @@ valen para todos los templates. Lo que este estilo resuelve distinto:
   portada dejo de necesitar la excepcion `cover-hook-centered`, que este template
   declaraba de fabrica y se saco.
 - **El remate es opcional** y por default no va (`s.lede` esta guardado en `index.html`).
-- **En contenido, tres renglones cuando el texto los necesita y aporta información.**
-  Un titular más corto ocupa su alto real: nunca se reserva una tercera línea vacía
-  entre el texto y la cota. No agregues palabras ni repitas el kicker para llenar esa línea.
+- **Una cantidad de renglones por carrusel.** La portada, las placas de contenido y el
+  CTA usan los mismos dos o tres renglones, elegidos por mayoría según `SKILL.md`.
+  Registrá esa cantidad en `slide-data.js` como `headlineLines`. Nunca reserves un
+  renglón vacío ni agregues palabras o repitas el kicker para completar el patrón.
 - **Las `secciones` van a 34px, en negrita y en tinta plena.** A 26px y en gris se leian
   como un pie de pagina, y son el grafico de la portada.
 
@@ -137,11 +138,10 @@ linea que salta 20px se ve mas que cualquier detalle de composicion.
   del pie anclado — es un chequeo que antes no existia, porque con el pie fuera del flujo
   el desbalance vertical ya no se dispara.
 - **El arranque de la cabecera es uno solo** para portada y contenido.
-- **La cota conserva el ancho de la serie y sigue de cerca al titular.** Probá primero
-  partir las palabras aprobadas en tres renglones, sin agregar ni repetir contenido.
-  Si el titular necesita dos, la cota sube con él: preservar su altura fija dejando
-  una tercera línea vacía fue el defecto que se corrigió. En portada, la cota sigue
-  en la mitad del lienzo y el titular se apoya justo encima.
+- **La cota conserva el ancho de la serie y sigue de cerca al titular.** Todos los
+  titulares usan la cantidad de renglones elegida para el carrusel. La cota sigue a
+  la última línea real, sin reservar líneas vacías. En portada, la cota sigue en la
+  mitad del lienzo y el titular se apoya justo encima.
 
 Cuando toques el layout, medí: renderizá cada placa y compará la posición de cabecera,
 cota y pie. Cabecera y pie conservan su eje; la cota puede subir en una placa de dos

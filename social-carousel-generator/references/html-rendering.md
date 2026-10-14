@@ -112,6 +112,8 @@ It renders every slide at the platform viewport and fails (exit code 3) on any o
 - A cover hook that is not horizontally centered.
 - In template 05, a gap over `70px` between the last headline line and its rule. It measures
   the text ink, so an empty reserved headline line cannot pass as normal spacing.
+- In template 05, a cover, content or CTA headline whose rendered line count differs from
+  `headlineLines` in `slide-data.js`. The package must choose `2` or `3` for the whole series.
 - Vertical imbalance: the gap above the first content pixel versus below the last differs by more than `4%` of canvas height. Catches dead space left behind when an element is removed but its layout offset survives.
 - A page counter not centered on the canvas.
 - Optical imbalance inside compact chrome (pills, chips, buttons): it feeds the rendered PNG back into the browser and measures the real background margin around the ink. In the footer this is a red issue; elsewhere it prints as a warning.
