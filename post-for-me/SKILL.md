@@ -338,9 +338,13 @@ Each result carries `success`, `error`, and `platform_data.url` — the direct l
 
 **Never report a publish as successful off the create call alone.** `socialPosts.create` returning an id proves the post was *accepted*, nothing more. Until the results come back per account, the honest status is "sent, confirmation pending" — say exactly that if the session ends before they land.
 
-### YouTube: cuota diaria agotada (error 429)
+### Video rechazado: recuperación a primera hora
 
-Si YouTube falla con `429 ... Video Uploads per day`, no se reintenta en el momento: la cuota es del proyecto de Post for Me y se renueva sola. **Se reprograma el envío para primera hora del día siguiente**: un post nuevo solo para la cuenta de YouTube, con `scheduled_at` a las 06:00 de Argentina (`T06:00:00-03:00` del día siguiente), el mismo `title` y `privacy_status: 'public'`, y `external_id` con el sufijo `-youtube`. Hay que volver a subir el video (el `media_url` anterior ya se usó). Antes de crearlo, confirmar que el post original de YouTube figura con `success: false` (así no se duplica). Informar al usuario la hora programada.
+Si un video falla por cuota (`429`, incluidos los límites diarios de YouTube) o por otro error temporal, leer **el resultado de esa cuenta**. Solo si figura `success: false`, comprobar que no haya otra publicación del mismo video ya publicada, en proceso o programada para esa cuenta. Si existe, seguirla en vez de crear otra. No deducir un fallo de la ausencia de resultados.
+
+Cuando el rechazo está confirmado, volver a subir el archivo si el `media_url` anterior ya se usó y crear **una sola publicación nueva para la cuenta afectada**, con el mismo texto, título y configuración, `external_id` único y `scheduled_at` para las 06:00 de Argentina del día siguiente (`T06:00:00-03:00`). Si el usuario pide expresamente otro horario o publicarlo ahora, prevalece su pedido. No reintentar de inmediato por iniciativa propia ante una cuota diaria agotada. Informar el ID, la cuenta y la hora del reintento.
+
+La programación en Post for Me ejecuta el envío sin que Codex esté abierto. **La skill por sí sola no se ejecuta al día siguiente:** al programar el reintento, crear también un seguimiento de Codex para las 07:00 de Argentina del día siguiente que consulte `--post` y `--results`. Si hay URL y `success: true`, comunicarla. Si figura `success: false`, comprobar de nuevo que no haya publicación exitosa o pendiente antes de reintentar una vez; si la cuota o el error persisten, avisar al usuario con el motivo. Si sigue `processing` o sin resultado, continuar la verificación más tarde; nunca crear un duplicado por incertidumbre. Guardar el ID del post programado en el seguimiento para que la comprobación sea inequívoca.
 
 TikTok devuelve en `platform_data.url` solo el link del perfil, no el del video: decirlo así en el reporte.
 
