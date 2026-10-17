@@ -582,13 +582,17 @@ An accent colour is opt-in, not the default: pass `--accent "<hex>"` to turn the
 
 For a keyword-only highlight (only hand-picked terms ever get the accent), add `--accent "<hex>" --accent-mode keyword --accent-terms "..."`.
 
-4b. **Detect which text belongs to which shot (automatic).** Right after the transcript is approved, run:
+4b. **Detect the hook, the CTA and which text belongs to which shot (automatic).** Right after the transcript is approved, run:
 
 ```powershell
-python "<skill-dir>\scripts\detect-shots.py" --video "raws\<video>.mp4" --transcript "assets\voice\<slug>.approved.json" --out-shots "manifests\shots.json" --out-zones "manifests\caption-zones.json"
+python "<skill-dir>\scripts\detect-shots.py" --video "raws\<video>.mp4" --transcript "assets\voice\<slug>.approved.json" --out-shots "manifests\shots.json" --out-zones "manifests\caption-zones.json" --out-check "snapshots\shots-check.png"
 ```
 
-It finds the framing changes from where the speaker's face sits (never from pixel scene-detect, which fires on every scrolling screen recording) and prints the dialogue split by shot: `Plano 1 (0.00s a 4.75s): <text>`, `Plano 2 ...`, `Plano 3 ...`. Normally plano 1 is the hook and the last plano is the CTA. Show that list to the user as plain text. It also measures the lowest chin per shot and writes `manifests\caption-zones.json`, which goes straight into `--zones` in step 6. A word that starts up to 0.25 s before a cut takes the height of the new shot. **No preview frames are generated for this**: skip the frame checks of step 5 when the zones came from this script, and only look at frames if the user reports a word that sits wrong.
+The script first finds the **hook** (the first full sentence of the transcript), the **CTA** (the last full sentence, extended backwards over the sentences right before it that also ask the viewer to do something: comment, follow, save, share) and the **body** (everything between the two), then the framing changes from where the speaker's face sits (never from pixel scene-detect, which fires on every scrolling screen recording). **The hook is always inside one shot and the CTA is always inside one shot: the user never changes shot in the middle of either.** A cut that lands inside the hook is moved to the end of the hook; a cut that lands inside the CTA is moved to the start of the CTA. Every other cut is moved onto the start of a word (a word starting up to 0.25 s before a cut takes the new shot), so no word is ever split between two zones. Zones never overlap: each ends exactly where the next starts (an overlap makes the first zone win and the word lands in the wrong shot).
+
+It prints `Plano 1 (...): <text>`, `Plano 2 ...`, plus `GANCHO (...)` and `CTA (...)` with the full sentence and the shot each one sits in (it prints `ATENCION` if either is split). Show that to the user as plain text, in the final message of the step. It also measures the lowest chin per shot and writes `manifests\caption-zones.json`, which goes straight into `--zones` in step 6.
+
+`--out-check` writes ONE image with a labelled frame at the start and end of the hook, the start and end of the CTA, and just before and after every cut. **Look at it** before burning: the check is the first word and last word of the hook and the CTA, and the words around each cut, sitting in the right zone for their shot. A caption on the wrong side of a cut costs a full 4K re-burn.
 
 5. **Check placement across every camera framing in the video, not one frame.** Burn the default `.ass` onto real frames and look — but the frames that matter are one per *distinct framing* the video uses. A talking-head video is almost never one static shot: the speaker leans in, a background screen-recording appears and the face drops, a wide "full body" intro cuts to a tight close-up. The caption band is fixed in the `.ass`; the face is not. A band that clears the chin in the intro lands across the mouth the moment the framing tightens.
 
@@ -1273,3 +1277,16 @@ After ReplyKaro, call the **`post-for-me`** skill to publish the reel on the thr
 ## Autorización y permisos
 
 Invocar esta skill ya es la autorización del usuario para todo lo que ella hace (subir, borrar lo que la propia skill indica borrar, publicar, escribir en los servicios que usa): el usuario la armó para ahorrar tiempo, así que no se vuelve a pedir permiso paso por paso. Si el sistema de permisos de Claude Code rechaza una acción que la skill pide, se reintenta una vez antes de decirle nada al usuario.
+
+## El flujo no se corta nunca
+
+Cuando el usuario aprueba, el trabajo no termina hasta que el video esté publicado (y las automatizaciones creadas). **No se frena ni se le hace una pregunta cuya respuesta ya está escrita en las skills** (por ejemplo "¿borro la automatización más vieja?": sí, siempre). Si un paso falla (un deploy, una cuota, un permiso bloqueado), se reintenta o se usa la alternativa que la skill describe, y se sigue con el resto. Solo se frena ante algo que no se puede resolver con lo que ya está escrito, y en ese caso se dice qué falta y se deja hecho todo lo demás. El usuario no está mirando la pantalla: tiene que poder volver horas después y encontrar el reel publicado.
+
+## Mostrar todo, siempre, en el mensaje final
+
+El usuario no puede aprobar lo que no ve. **Todo lo que se produce se muestra, sin que lo pida**, en el cuerpo del mensaje (nunca solo dentro de un cuadro de preguntas ni de un mensaje intermedio, porque se tapan):
+
+- la transcripción completa y las dudas, al pedir la aprobación;
+- la lista de planos con el gancho y el CTA, y la tira de cuadros de `--out-check`;
+- al entregar: el bloque Run para abrir la carpeta, un link por archivo (video, portada, caption, dm-reply), la portada enviada como imagen, el caption y el dm-reply pegados completos;
+- al terminar: la URL de la página del recurso, el resultado de cada automatización y el link de cada red publicada.

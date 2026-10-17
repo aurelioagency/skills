@@ -72,7 +72,11 @@ Códigos de salida: `0` la página está online · `4` quedó subida pero todav�
 
 ## Si no queda online (código 4)
 
-El script imprime el estado del deploy. **No seguir con replykaro-automation**: el DM saldría con un link que da 404. Decirle al usuario el estado exacto y esperar. El caso conocido (2026-10-06) es `Deployment was blocked`: el hosting bloquea los commits de una cuenta que no está aceptada en el equipo; lo resuelve quien administra el hosting.
+El script imprime el estado del deploy. **No seguir con replykaro-automation hasta que la página responda 200**: el DM saldría con un link que da 404. Pero tampoco se frena ni se le pregunta al usuario: **se reintenta el deploy hasta que quede online** (la página del recurso tiene que estar subida sí o sí).
+
+1. Mirar el check del commit: `gh api repos/aurelioagency/Aurelio-Agency-Website/commits/<sha>/check-runs`. Si el build falló (`conclusion: failure`) sin que el bloque de `resource-drops.ts` tenga nada raro (el `tsc` ya pasó), es un fallo del deploy y no del contenido.
+2. Reintentar con un commit vacío en el repo de la web: `git commit --allow-empty -m "Retry deploy: <slug>"` y `git push`. Esperar hasta que `https://www.aurelioagency.com/blog/<slug>` (o `/es/blog/<slug>`) responda 200 y el check del commit termine en `success`. Repetir el reintento las veces que haga falta.
+3. Solo si el motivo es `Deployment was blocked` (el hosting bloquea los commits de una cuenta que no está aceptada en el equipo; lo resuelve quien administra el hosting) no sirve reintentar: decirle al usuario ese estado exacto, y avisarle que el resto del flujo queda esperando esa página.
 
 ## Problemas conocidos al publicar
 
