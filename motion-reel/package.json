@@ -1,0 +1,9 @@
+{
+  "name": "motion-reel-skill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Engine and pipeline scripts for the /motion-reel skill.",
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}
