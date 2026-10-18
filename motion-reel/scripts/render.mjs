@@ -46,12 +46,24 @@ if (has('mux')) {
 }
 
 // ------------------------------------------------------------------ static server (film fetches nothing; data.js is generated)
+// Range support (206 Partial Content) matters only for Branch B's <video> background: Chromium needs it to
+// seek a video element at all — without it, currentTime silently stops advancing past frame 0.
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf', '.wav': 'audio/wav', '.mp4': 'video/mp4' };
 const server = http.createServer((req, res) => {
   const f = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
   if (!f.startsWith(ROOT) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end(); }
-  res.writeHead(200, { 'Content-Type': MIME[path.extname(f).toLowerCase()] || 'application/octet-stream' });
-  fs.createReadStream(f).pipe(res);
+  const type = MIME[path.extname(f).toLowerCase()] || 'application/octet-stream';
+  const size = fs.statSync(f).size;
+  const range = req.headers.range;
+  if (range) {
+    const m = /bytes=(\d*)-(\d*)/.exec(range);
+    const start = m[1] ? +m[1] : 0, end = m[2] ? +m[2] : size - 1;
+    res.writeHead(206, { 'Content-Type': type, 'Content-Range': `bytes ${start}-${end}/${size}`, 'Accept-Ranges': 'bytes', 'Content-Length': end - start + 1 });
+    fs.createReadStream(f, { start, end }).pipe(res);
+  } else {
+    res.writeHead(200, { 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Content-Length': size });
+    fs.createReadStream(f).pipe(res);
+  }
 });
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const browser = await chromium.launch({ args: ['--force-color-profile=srgb', '--disable-lcd-text', '--font-render-hinting=none', '--disable-gpu-vsync'] });

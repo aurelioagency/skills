@@ -1,8 +1,13 @@
 # Motion Reel — Beat-Synced Motion Graphics Made in Code
 
-Produces a beat-synced product launch reel / showreel / promo video entirely in code. `window.seek(t)` paints frame `t` in headless Chromium, ffmpeg encodes it, and picture + sound share one `timeline.json` measured in beats. The pipeline captures a product URL's real brand assets with Playwright, writes a style guide and shotlist and **stops for your OK** before building anything, then animates with closed-form springs, scores the render against 8 criteria with a fresh critic subagent, fixes the worst problems, and repeats until everything is 8+ — only then does it deliver the final MP4 in every requested format (16:9, 1:1, 4:5, 9:16).
+Produces motion graphics entirely in code, in one of two branches. `window.seek(t)` paints frame `t` in headless Chromium, ffmpeg encodes it, and picture + sound share one `timeline.json`.
 
-This is the kit the creator of "How to Make Insane Motion Graphics With Opus 5.5" gives away for free — brought into this repo as-is (engine, pipeline scripts, reference docs, presets, chapter prompts), not a reconstruction from the video's transcript.
+- **Branch A — from scratch.** A product launch reel / showreel / promo. The pipeline captures a product URL's real brand assets with Playwright, writes a style guide and shotlist and **stops for your OK**, then animates with closed-form springs on a measured music beat grid.
+- **Branch B — overlays on your own footage.** You hand over a video of yourself talking; the skill transcribes it (Whisper, word-level), writes an overlay plan (kinetic text cards, stat callouts, step chips — generated from what you actually say, never invented) and **stops for your OK**, then composites those overlays over your own footage with the same springs engine, timed to your speech instead of a music beat.
+
+Both branches run the same critique loop — a fresh critic subagent scores the render against 8 criteria, fixes the worst problems, and repeats until everything is 8+ — before delivering the final MP4 in every requested format (16:9, 1:1, 4:5, 9:16).
+
+Branch A is the kit the creator of "How to Make Insane Motion Graphics With Opus 5.5" gives away for free — brought into this repo as-is (engine, pipeline scripts, reference docs, presets, chapter prompts), not a reconstruction from the video's transcript. Branch B is built on top of that same engine (`engine/video.js`), added in this repo to cover the "I have my own talking video" case the original kit doesn't.
 
 ## What's in this folder
 
@@ -54,6 +59,7 @@ python -m pip install -r requirements.txt
 
 - Node 22+, ffmpeg, Playwright (con Chromium)
 - Python 3.9+ con numpy, scipy, soundfile, librosa y pillow (`requirements.txt`)
+- Solo Rama B: `whisper` (`pip install openai-whisper`), para la transcripción con timestamps por palabra
 - Claude Code
 
 ## Actualizar

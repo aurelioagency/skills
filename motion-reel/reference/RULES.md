@@ -65,6 +65,7 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 - Every hit sits on the measured beat grid (`beats.json`), and every SFX event is declared in `timeline.json` `sfx`.
 - The mix sits at -14 LUFS integrated with true peak ≤ -1 dBTP (`mix.py`).
 - Voiceover is cut into phrases and each phrase is placed on a beat. Never speed up a whole take.
+- **Branch B (overlays on the user's own footage):** every overlay's on-screen text is either a verbatim quote of what's actually said or a deliberately shorter version of it — never an invented claim, number, or feature. `timeline.json` uses `bpm: 60` with no measured grid, so marks are literal transcript timestamps, not beats on a music grid.
 
 ## Process
 - Loop before showing anything: contact sheet → score → fix the 3 worst → repeat until every score is ≥ 8, with at least 3 rounds.
