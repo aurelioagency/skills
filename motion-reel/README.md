@@ -59,7 +59,7 @@ python -m pip install -r requirements.txt
 
 - Node 22+, ffmpeg, Playwright (con Chromium)
 - Python 3.9+ con numpy, scipy, soundfile, librosa y pillow (`requirements.txt`)
-- Solo Rama B: `whisper` (`pip install openai-whisper`), para la transcripción con timestamps por palabra
+- Solo Rama B: `faster-whisper` (incluido en `requirements.txt`), para la transcripción con timestamps por palabra (`scripts/transcribe.py`)
 - Claude Code
 
 ## Actualizar

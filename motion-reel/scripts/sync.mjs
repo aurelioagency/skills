@@ -40,7 +40,8 @@ const cues = events.map((ev) => {
   for (const h of G.hits || []) { const d = Math.abs(h.t - target); if (d <= 0.04 && (!best || d < Math.abs(best.t - target))) best = h; }
   const t = best ? best.t : target;
   return {
-    t: +t.toFixed(5), type: ev.type, gain: ev.gain ?? 0.8,
+    t: +t.toFixed(5), type: ev.type || (ev.file ? 'file' : undefined), gain: ev.gain ?? 0.8,
+    ...(ev.file ? { file: ev.file, align: ev.align ?? 'start' } : {}),
     pitch: ev.pitch ?? +(0.94 + rnd() * 0.12).toFixed(3), pan: ev.pan ?? +((rnd() - 0.5) * 0.5).toFixed(3),
     beat, mark: ev.mark, snapped_to_hit: !!best, snap_ms: +((t - target) * 1000).toFixed(2), what: ev.what || '',
   };

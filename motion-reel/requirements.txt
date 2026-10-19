@@ -4,3 +4,5 @@ scipy
 soundfile
 librosa
 pillow
+# Branch B only: word-level transcription (scripts/transcribe.py)
+faster-whisper

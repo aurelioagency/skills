@@ -27,7 +27,14 @@ node scripts/sfx.mjs                                        → audio/sfx.wav
 | `riser` | build into a drop | builds 2 s, PEAKS on the cue (put the cue on the drop) |
 | `thump` | logo, impact | on the cue |
 | `shutter` | hard cut, wipe | on the cue |
-Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't stack more than two sounds on one frame.
+Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't stack more than two sounds on one frame. **Branch B (under a voice): halve those and keep `mix.sfx` at -14 dB** — primary ≤ 0.5, texture ≤ 0.25, thump ≤ 0.1.
+
+**Supplied sounds** (e.g. taken from a reference reel or a library): put the file in `assets/sfx/` and declare it with `"file"` instead of `"type"`:
+```jsonc
+{ "at": "w_22", "file": "assets/sfx/pop_soft.wav", "gain": 0.4, "what": "counter lands" },
+{ "at": "cut_in", "file": "assets/sfx/swoosh.wav", "align": "peak", "gain": 0.35, "what": "cutaway whip" }
+```
+`align: "start"` (default) starts the file on the cue (pops, clicks, hits); `"peak"` puts the file's loudest moment on the cue (whooshes, risers).
 
 ## 3. Voiceover (Fish Audio MCP, when the brief asks for it)
 Tools: `search_voices`, `get_voice`, `text_to_speech` (returns a permanent audio URL), `get_credit_balance`.

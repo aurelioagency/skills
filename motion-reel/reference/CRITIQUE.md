@@ -32,6 +32,12 @@ You are a senior motion designer reviewing a product reel before it goes to the 
 | **Composition (every format)** | Each format is re-blocked, not cropped. No dead zones. Type never centred on an empty field. Depth from perspective and shadow. | 9:16 with a third of the frame empty for > 1 s → max 7 |
 | **Polish** | No blank frames (`near_blank_frames`), no double exposures at swaps, no stray carets, no glyph slivers at masks, no orphaned captions. Clean loop seam. | Any blank frame mid-film, or a double-exposed caption → max 7 |
 
+## Branch B (motion graphics on the user's footage): read these criteria this way
+- **Brand accuracy → accuracy to the source:** on-screen text is verbatim or shortened from what's said; the resource is shown with its real UI; nothing invented.
+- **Redundancy with the subtitles (hard cap):** any graphic that restates a non-key phrase the subtitle is showing → Variety and Polish max 6. The same in the first 2 s → Hook max 5. Key numbers/names/keywords are fine.
+- **Animation-first (Variety):** count the shot types used (footage move, resource demo, visual element, full-screen cutaway). A film that is only text cards on top of the footage → Variety max 6.
+- **SFX level (Sound sync):** every SFX clearly under the voice; a hit that masks a spoken word → max 7.
+
 ## Known failure modes: check each one explicitly
 1. Frame 0 is empty or black. The first word only reads at frame 3 or later.
 2. Audio hits early: the visual needs 3–6 frames to become readable after the sound.

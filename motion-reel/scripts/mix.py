@@ -53,3 +53,7 @@ print(f"audio/mix.wav  inputs: {', '.join(k for k, v in have.items() if v)}  lev
       f"{'  (music ducked under VO)' if have['vo'] and LV['duck'] else ''}")
 print(f'integrated {I:.1f} LUFS (target -14)   true peak {TP:.1f} dBTP (limit -1)   gain {gain:+.1f} dB into the limiter')
 if abs(I + 14) > 0.5 or TP > -1: print('WARNING: off target — the limiter is working too hard; lower the loudest stem (usually sfx) and rerun')
+# Branch B: the narration is the user's own, already-finished audio (they pass it through CapCut first). A big lift
+# means a raw phone recording slipped through: say so to the user, don't silently pump it.
+if (TL.get('music') or {}).get('source') == 'narration' and gain > 8:
+    print(f'WARNING: the source narration is quiet (needed {gain:+.1f} dB). It may be the raw phone take — ask the user whether it skipped the CapCut pass before rendering finals.')

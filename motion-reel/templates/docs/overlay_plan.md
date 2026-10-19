@@ -1,35 +1,28 @@
-# Overlay plan: <source video> · <duration> s · formats <…>
+# Animation plan: <source video> · <duration> s · formats 9x16
 
 STATUS: DRAFT — waiting for the user's OK. Nothing gets built until this says APPROVED.
 
-Branch B (motion graphics over the user's own footage). Marks are literal timestamps on the source
-video (bpm is 60 in `timeline.json`, so 1 beat = 1 second — no music, no measured grid). One row per
-overlay; every row lists what is NEW on screen. The original narration is never paraphrased: the overlay's
-exact words either match what's said, word for word, or are a deliberately shorter version of it — never
-a claim that wasn't actually said.
+Branch B. Marks are literal seconds on the source (bpm 60). Subtitles are always on — so every row must show something
+the subtitle doesn't say. Rules: reference/RULES.md "Branch B".
 
-| # | Time (s) | What's said (verbatim, the trigger) | Overlay type | On-screen text (exact) | Motion (preset) | SFX |
-|---|---|---|---|---|---|---|
-| 1 | | | | | | |
-| 2 | | | | | | |
-| … | | | | | | |
+| # | Time (s) | Trigger (what's said) | Shot type | What the viewer SEES that the subtitle doesn't say | On-screen text (key data only, or —) | Motion | SFX (type/file · gain) |
+|---|---|---|---|---|---|---|---|
+| 1 | | | | | | | |
+| 2 | | | | | | | |
 
-Overlay types (pick per moment, don't force every type into one video):
-- **Kinetic text card** — the exact phrase just spoken, in big type, for emphasis on a key sentence.
-- **Stat / number callout** — a number or claim just spoken, pulled out as its own card.
-- **Step / checklist chip** — appears and stays while a numbered or sequential list is being spoken, checking items off as each is said.
-- **Definition / term chip** — a technical term just spoken, with a one-line gloss.
-- **Comparison** — two things just contrasted, shown side by side.
+Shot types: footage move (punch-in / drift / shake) · resource demo (scroll, cursor, zoom, highlight on the real UI) ·
+visual element (logos, icons, counter, price tag, arrows, comparison) · full-screen cutaway (voice continues) ·
+behind the subject (only once a person matte exists).
 
-Rules this plan must satisfy:
-- Every overlay's `at` mark sits on (or ~0.1–0.3 s after) the word that triggers it — never ahead of it, and never so late it reads as unrelated to what's being said by then.
-- Nothing overlaps the speaker's face/mouth in a close-up shot; check this per format (9:16 crops tighter than 16:9 — see [reference/RULES.md](../reference/RULES.md) UI-zone rule).
-- No overlay invents a number, feature, or claim that wasn't actually said in the video.
-- The same "something new every 2–4 s" and "no dead time" rules from the house rules still apply — but here they apply to the **overlays**, not to the base footage, which keeps playing regardless.
+Checks before sending:
+- The hook (0–2 s) is the strongest visual, and it does not repeat the opening words.
+- No row restates a non-key phrase that the subtitle shows at that moment. A row that adds nothing is cut.
+- Something new every 2–4 s, and at least 3 different shot types across the film.
+- Faces stay clear; key content stays out of the 9:16 UI zones (top 14 %, bottom 20 %, right 12 %).
 
-## Source video
-- File: `assets/source/<file>`, duration `<n>` s, format `<WxH>` (overlay formats re-block per output format; a 9:16 export crops a 16:9 source — flag to the user if the speaker leaves the safe crop in any format).
-- Transcript: `transcript/transcript.json` (word-level timestamps from Whisper).
+## Source
+- `assets/source/clip.mp4` (transcoded 1080x1920, short GOP), transcript `transcript/transcript.json`, subtitles `film/captions.js`.
+- Resource: <url / screenshots> · References: `references/*.mp4` → `docs/style_guide.md`.
 
 ## Open questions for the user
 -

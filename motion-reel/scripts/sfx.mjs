@@ -8,7 +8,11 @@
 //   riser    build into a drop: 2 s filtered noise + rising tone, PEAKING at the cue time (set the cue on the drop)
 //   shutter  hard cut / wipe: two band-passed noise clacks
 // Cue fields: t (s), type, gain (0.8), pitch (1 = nominal; sync.mjs jitters ±6 %), pan (-1..1)
+// Supplied sounds: an sfx event with "file": "assets/sfx/<name>.wav|mp3" plays that file instead of a synth (decoded by
+// ffmpeg, mono → centre/pan). "align": "start" (default: the file starts on the cue — pops, clicks, hits) or "peak"
+// (the file's loudest moment lands on the cue — whooshes, risers, swells). pitch is ignored for files.
 import fs from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
 const { sr: SR, duration, cues } = JSON.parse(fs.readFileSync('cues.json', 'utf8'));
 const N = Math.round(SR * duration);
@@ -70,9 +74,24 @@ function shutter(p, seed) {
 }
 const SYN = { click, tick, pop, thump, whoosh, riser, shutter };
 
+const FILES = {};
+function fileSfx(path, align) {
+  if (!FILES[path]) {
+    if (!fs.existsSync(path)) throw new Error(`sfx file not found: ${path}`);
+    const r = spawnSync('ffmpeg', ['-v', 'error', '-i', path, '-ac', '1', '-ar', String(SR), '-f', 'f32le', '-'], { maxBuffer: 1 << 28 });
+    if (r.status) throw new Error(`ffmpeg could not decode ${path}: ${r.stderr}`);
+    const b = r.stdout, x = new Float32Array(b.length / 4);
+    for (let i = 0; i < x.length; i++) x[i] = b.readFloatLE(i * 4);
+    let pk = 0, at = 0; for (let i = 0; i < x.length; i++) if (Math.abs(x[i]) > pk) { pk = Math.abs(x[i]); at = i; }
+    FILES[path] = { x, peakAt: at / SR };
+  }
+  const f = FILES[path];
+  return { x: f.x, lead: align === 'peak' ? f.peakAt : 0 };
+}
+
 cues.forEach((c, k) => {
-  if (!SYN[c.type]) throw new Error(`unknown sfx type "${c.type}" (have: ${Object.keys(SYN).join(', ')})`);
-  const { x, lead, stereo } = SYN[c.type](c.pitch ?? 1, 9001 + k * 131);
+  if (!c.file && !SYN[c.type]) throw new Error(`unknown sfx type "${c.type}" (have: ${Object.keys(SYN).join(', ')}, or give a "file")`);
+  const { x, lead, stereo } = c.file ? fileSfx(c.file, c.align) : SYN[c.type](c.pitch ?? 1, 9001 + k * 131);
   const start = Math.round((c.t - lead) * SR), g = c.gain ?? 0.8;
   for (let i = 0; i < x.length; i++) {
     const j = start + i; if (j < 0 || j >= N) continue;
