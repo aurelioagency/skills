@@ -1,9 +1,8 @@
-﻿# Python side of the pipeline: music.py, beats.py, mix.py, vo.py, review.py
+# Python side of the pipeline: music.py, beats.py, mix.py, vo.py, review.py
 numpy
 scipy
 soundfile
 librosa
 pillow
-# Branch B only: word-level transcription (transcribe-media.mjs) and subtitles (detect-shots.py, measure_text.py)
+# Branch B only: word-level transcription (scripts/transcribe.py)
 faster-whisper
-opencv-python

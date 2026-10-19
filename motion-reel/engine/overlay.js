@@ -24,6 +24,7 @@
 //   OV.settleOn(cue, preset)        release beat so a spring is SETTLED (95 %) on a spoken cue
 //   OV.slide(t, inAt, outAt, h)     soft card rise out of its own edge (not the house look — use slam/cutIn/pop first)
 //   OV.putSlide(el, slide, extra)   put() a slide's y / clip / visibility
+//   OV.subtitles(...)               TEMPORARY subtitle placeholder (the real subtitles come from the user's subtitles skill)
 //   OV.bg                           the background <video> element once C.videoBG ran
 (() => {
   const C = window.C;
@@ -257,9 +258,33 @@
   }
   const putSlide = (e, sl, extra = {}) => C.put(e, { o: sl.hide ? 0 : 1, y: sl.y, clip: sl.clip, ...extra });
 
-  // Subtitles are not drawn here: they are burned onto the rendered film with libass (reference/SUBTITLES.md).
+  // ------------------------------------------------------------------ TEMPORARY subtitle placeholder
+  // The real subtitles will come from the user's subtitles skill; this only keeps drafts readable until then.
+  function subtitles({ top = 1290, lead = 0.06, dim = 0.68, hideDuring = [] } = {}) {
+    C.scene({
+      name: 'subs', from: 0, to: C.DUR, cut: false,
+      build(root, S) {
+        S.chunks = (window.CAPS || []).map((c) => {
+          const d = C.el('div', { class: 'cap', style: `top:${top}px` }, root);
+          const words = c.w.map(([w]) => C.reg(C.el('span', { class: 'word' }, d, w)));
+          return { c, d: C.reg(d, { o: 0 }), words };
+        });
+      },
+      run(t, b, S) {
+        const hidden = hideDuring.some(([a, z]) => t >= a && t < z);
+        S.chunks.forEach(({ c, d, words }, i) => {
+          const next = S.chunks[i + 1];
+          const live = !hidden && t >= c.t0 - lead && t < Math.min(c.t1, next ? next.c.t0 - lead : Infinity);
+          if (!live) return C.put(d, { o: 0 });
+          const p = C.spHit(t, c.t0 - lead, 'snappy');
+          C.put(d, { o: C.clamp(p * 4), s: 0.9 + 0.1 * p, y: 16 * (1 - p) });
+          words.forEach((w, k) => C.put(w, { o: t >= c.w[k][1] - 0.04 ? 1 : dim }));
+        });
+      },
+    });
+  }
 
-  window.OV = { specs: SPECS, settleOn, slide, putSlide, slam, cutIn, pop, typeOn, draw, odometer, cursor, browser, layout, layoutAt, punch, impact, cue, T95, bg: null };
+  window.OV = { specs: SPECS, settleOn, slide, putSlide, subtitles, slam, cutIn, pop, typeOn, draw, odometer, cursor, browser, layout, layoutAt, punch, impact, cue, T95, bg: null };
   // keep a handle on the background video so the kit (layout, punch) and films can animate it
   const orig = C.videoBG;
   if (orig) C.videoBG = (src, o) => { const r = orig(src, o); C.reg(r.el); window.OV.bg = r.el; return r; };

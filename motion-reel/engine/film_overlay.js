@@ -4,7 +4,7 @@
 // registers each entrance's sound (node scripts/autosfx.mjs → timeline.sfx).
 (() => {
   const { W, H, el, scene } = C;
-  const { slam, cutIn, pop, layout, punch } = OV;
+  const { slam, cutIn, pop, layout, punch, subtitles } = OV;
   C.fonts = [];
 
   layout([[0, 'full'], [2.0, 'gone'], [3.5, 'full']], { face: 0.45 });   // speaker full → cutaway (voice continues) → back
@@ -28,7 +28,7 @@
     },
   });
 
-  // no subtitles in the film: they are burned onto the final render (reference/SUBTITLES.md)
+  subtitles();   // TEMPORARY placeholder — real subtitles come from the user's subtitles skill (pending)
   C.start();
   C.videoBG('../assets/source/clip.mp4');   // point at the source file as it came (assets/source/<file>)
 })();

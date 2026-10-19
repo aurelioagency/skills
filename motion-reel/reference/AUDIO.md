@@ -40,7 +40,7 @@ Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't st
 |---|---|---|
 | a word / key text slams in, a screen or screenshot appears | `{ "file": "lib:loucash/clic_palabra_loucash.wav" }` — the user's chosen click (the original loucash click, denoised, cut at 60 ms) | 0.35–0.5 |
 | an icon pops in (several in a row: pitch 1, 1.12, 1.26, 1.41) | `{ "type": "bubble" }` | 0.3–0.45 |
-`lib:` paths resolve to the user's local library (`$MOTION_REEL_SFX_LIB`, default `~/Documents/sfx-library`), which is NOT in the repo: the click was extracted from another creator's reel, for the user's own use. If the file is missing, `sfx.mjs` warns and falls back to the synth `wordclick`, which is only a stand-in — tell the user.
+`lib:` paths resolve to the skill's own sound library: `skill/sfx/`, copied into every project as `sfx-lib/` by `init.sh` (override with `$MOTION_REEL_SFX_LIB`). It installs with the skill — nothing to copy by hand. If a file is missing, `sfx.mjs` warns and falls back to the synth `wordclick`.
 
 ## 3. Voiceover (Fish Audio MCP, when the brief asks for it)
 Tools: `search_voices`, `get_voice`, `text_to_speech` (returns a permanent audio URL), `get_credit_balance`.

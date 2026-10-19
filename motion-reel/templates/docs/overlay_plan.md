@@ -2,7 +2,7 @@
 
 STATUS: DRAFT — waiting for the user's OK. Nothing gets built until this says APPROVED.
 
-Branch B. Marks are literal seconds on the source (bpm 60). The video carries subtitles (reference/SUBTITLES.md),
+Branch B. Marks are literal seconds on the source (bpm 60). The video carries subtitles (from the user's subtitles skill),
 so every row must show something the subtitles don't say. Rules: reference/RULES.md "Branch B".
 
 **Layout proposal (the user chooses):** over the footage / split / full-screen cutaways / mix — and why: …
@@ -23,7 +23,7 @@ Checks before sending:
 - Faces stay clear; key content stays out of the 9:16 UI zones (top 14 %, bottom 20 %, right 12 %).
 
 ## Source
-- `assets/source/<file>` as it came (deliverable at its resolution: `timeline.scale`), approved transcript `transcript/approved.json`. Keep the subtitle band (just under the chin) free of graphics.
+- `assets/source/<file>` as it came (deliverable at its resolution: `timeline.scale`), transcript `transcript/transcript.json`.
 - Resource: <url / screenshots> · References: `references/*.mp4` → `docs/style_guide.md`.
 
 ## Open questions for the user

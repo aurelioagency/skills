@@ -86,15 +86,18 @@ function bubble(p, seed) {
 }
 const SYN = { click, tick, pop, thump, whoosh, shutter, wordclick, bubble };
 
-// "lib:<path>" files live in the user's LOCAL sound library (not in the repo: some come from other creators' reels).
-// Location: $MOTION_REEL_SFX_LIB, else ~/Documents/sfx-library. A missing lib file falls back to its synth stand-in.
+// "lib:<path>" files come from the skill's own sound library (skill/sfx/, copied into every project as sfx-lib/ by
+// init.sh), so a fresh install has every house sound. Lookup order: $MOTION_REEL_SFX_LIB, ./sfx-lib, ~/Documents/sfx-library.
+// A lib file missing everywhere falls back to its synth stand-in (with a warning).
 import os from 'node:os';
 import pathMod from 'node:path';
-const LIB = process.env.MOTION_REEL_SFX_LIB || pathMod.join(os.homedir(), 'Documents', 'sfx-library');
+const LIBS = [process.env.MOTION_REEL_SFX_LIB, 'sfx-lib', pathMod.join(os.homedir(), 'Documents', 'sfx-library')].filter(Boolean);
+const libPath = (rel) => LIBS.map((d) => pathMod.join(d, rel)).find((p) => fs.existsSync(p)) || null;
+const LIB = LIBS.join(' | ');
 const FALLBACK = { 'lib:loucash/clic_palabra_loucash.wav': 'wordclick' };
 const FILES = {};
 function fileSfx(path, align) {
-  if (path.startsWith('lib:')) path = pathMod.join(LIB, path.slice(4));
+  if (path.startsWith('lib:')) path = libPath(path.slice(4)) || path;
   if (!FILES[path]) {
     if (!fs.existsSync(path)) throw new Error(`sfx file not found: ${path}`);
     const r = spawnSync('ffmpeg', ['-v', 'error', '-i', path, '-ac', '1', '-ar', String(SR), '-f', 'f32le', '-'], { maxBuffer: 1 << 28 });
@@ -112,7 +115,7 @@ cues.forEach((c0, k) => {
   let c = c0;
   if (!c.file && !SYN[c.type]) throw new Error(`unknown sfx type "${c.type}" (have: ${Object.keys(SYN).join(', ')}, or give a "file")`);
   let src = c.file;
-  if (src && src.startsWith('lib:') && !fs.existsSync(pathMod.join(LIB, src.slice(4))) && FALLBACK[src]) {
+  if (src && src.startsWith('lib:') && !libPath(src.slice(4)) && FALLBACK[src]) {
     console.warn(`WARN: ${src} not found in ${LIB} — using the synth stand-in "${FALLBACK[src]}"`); c = { ...c, type: FALLBACK[src] }; src = null;
   }
   const { x, lead, stereo } = src ? fileSfx(src, c.align) : SYN[c.type](c.pitch ?? 1, 9001 + k * 131);
