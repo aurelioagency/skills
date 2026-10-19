@@ -1,33 +1,34 @@
-// BRANCH B STARTER — copied to film/film.js by `init.sh --overlay`. Replace the example with the approved overlay plan.
+// BRANCH B STARTER — copied to film/film.js by `init.sh --overlay`. Replace the example with the approved animation plan.
 // bpm 60, no grid: every beat/mark is a literal second of the source. Pure function of time: no timers, no Math.random.
-//
-// What a Branch B film is made of (reference/RULES.md "Branch B"): ANIMATION first. The subtitles already carry the words,
-// so overlays show what the caption can't: the real resource in motion, logos, icons, counters, diagrams, arrows,
-// punch-ins on the speaker, full-screen cutaways while the voice keeps talking. Text only for a key number or keyword.
+// Language: reference/ANIMATION.md. Kit: header of film/overlay.js. Declare in build(); the kit animates every frame and
+// registers each entrance's sound (node scripts/autosfx.mjs → timeline.sfx).
 (() => {
-  const { W, H, put, reg, el, scene, sp, spHit, seg, clamp, lerp, ease, bt } = C;
-  const { settleOn, slide, putSlide, subtitles } = OV;
-  C.fonts = ['600 40px UI', '700 40px UI'];
+  const { W, H, el, scene } = C;
+  const { slam, cutIn, pop, layout, punch, subtitles } = OV;
+  C.fonts = [];
 
-  // ---------------------------------------------------------------- example: a key number on a card, rising out of its own edge
+  layout([[0, 'full'], [2.0, 'gone'], [3.5, 'full']], { face: 0.45 });   // speaker full → cutaway (voice continues) → back
+  punch([[0.4, 1.1], [1.9, 1.0]]);                                         // snap zoom on a strong line
+
+  // example: a key number slams in over the free zone above the head
   scene({
-    name: 'example', from: 0.5, to: 3.5, cut: false,
-    build(root, S) {
-      S.card = el('div', { class: 'card', style: 'left:80px;top:300px;width:420px;height:260px;overflow:hidden' }, root);
-      reg(S.card, { o: 0 });
-      el('div', { class: 'abs display', style: 'left:36px;top:10px;font-size:220px;line-height:1' }, S.card, '22');
+    name: 'example-number', from: 0, to: 2.0, cut: false,
+    build(root) {
+      slam(el('div', { class: 'abs', style: `left:0;top:320px;width:${W}px;text-align:center;font:700 280px Georgia,serif;color:#fff;text-shadow:0 8px 40px rgba(0,0,0,.45)` }, root, '22'), { at: 0.5, out: 1.95, what: '22' });
     },
-    run(t, b, S) { putSlide(S.card, slide(t, settleOn(1.0, 'default'), 3.0, 260)); },
   });
 
-  // ---------------------------------------------------------------- example: punch-in on the speaker (the footage itself moves)
-  C.hooks.before.push((t) => {
-    if (!OV.bg) return;
-    const k = spHit(t, 1.0, 'heavy') - sp(t, 3.0, 'default');   // 1.00 → 1.12 on the hit, back out at 3.0
-    put(OV.bg, { s: 1 + 0.12 * k });
+  // example: a full-screen cutaway — the real resource cuts in on a plain background, an icon pops next to it
+  scene({
+    name: 'example-cutaway', from: 2.0, to: 3.5, cut: false,
+    build(root) {
+      el('div', { class: 'abs', style: `left:0;top:0;width:${W}px;height:${H}px;background:#f6f6f4` }, root);
+      cutIn(el('div', { class: 'abs', style: 'left:90px;top:620px;width:900px;height:500px;border-radius:18px;background:#ddd' }, root), { at: 2.05, sfx: 'screen', what: 'resource screenshot' });
+      pop(el('div', { class: 'abs', style: 'left:820px;top:560px;width:160px;height:160px;border-radius:40px;background:#3b82f6' }, root), { at: 2.5, what: 'icon' });
+    },
   });
 
-  subtitles();   // always on
+  subtitles();   // TEMPORARY placeholder — real subtitles come from the user's subtitles skill (pending)
   C.start();
-  C.videoBG('../assets/source/clip.mp4');
+  C.videoBG('../assets/source/clip.mp4');   // point at the source file as it came (assets/source/<file>)
 })();

@@ -40,7 +40,7 @@ if [ -n "$OVERLAY" ]; then
   mkdir -p "$DEST"/transcript
   cp "$SKILL"/engine/video.js "$SKILL"/engine/overlay.js "$DEST"/film/
   cp "$SKILL"/engine/film_overlay.js "$DEST"/film/film.js   # Branch B starter replaces the Branch A one
-  cp "$SKILL"/scripts/transcribe.py "$SKILL"/scripts/captions.py "$DEST"/scripts/
+  cp "$SKILL"/scripts/transcribe.py "$SKILL"/scripts/captions.py "$SKILL"/scripts/autosfx.mjs "$DEST"/scripts/
   cp "$SKILL"/templates/docs/overlay_plan.md "$DEST"/docs/ 2>/dev/null || true
   # load captions.js (generated), video.js and overlay.js just before film.js, and add the subtitle style
   awk '{ if ($0 ~ /<script src="film\.js">/) { print "<script src=\"captions.js\"></script>"; print "<script src=\"video.js\"></script>"; print "<script src=\"overlay.js\"></script>" }
@@ -54,7 +54,7 @@ if [ -n "$OVERLAY" ]; then
   echo 'window.CAPS = [];' > "$DEST"/film/captions.js
   # Branch B timeline defaults: seconds as beats, vertical, narration as the base track, SFX well under the voice
   node -e "const f='$DEST/timeline.json',fs=require('fs'),t=JSON.parse(fs.readFileSync(f,'utf8'));Object.assign(t,{bpm:60,formats:['9x16'],music:{source:'narration'},voiceover:null,marks:{},sfx:[],mix:{music:0,sfx:-14,vo:0,duck:false}});fs.writeFileSync(f,JSON.stringify(t,null,2))"
-  echo "overlay mode: film/video.js + overlay.js wired in, timeline set to Branch B defaults. Next: transcode the source into assets/source/ (SKILL.md B2), python3 scripts/transcribe.py, python3 scripts/captions.py."
+  echo "overlay mode: film/video.js + overlay.js wired in, timeline set to Branch B defaults. Next: copy the source AS IT COMES into assets/source/, set timeline.scale = source width / 1080, python3 scripts/transcribe.py (SKILL.md B1)."
 fi
 
 [ -n "$PRESET" ] && node "$SKILL"/scripts/preset.mjs "$PRESET" "$DEST"

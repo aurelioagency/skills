@@ -48,7 +48,7 @@ if (has('mux')) {
 // ------------------------------------------------------------------ static server (film fetches nothing; data.js is generated)
 // Range support (206 Partial Content) matters only for Branch B's <video> background: Chromium needs it to
 // seek a video element at all — without it, currentTime silently stops advancing past frame 0.
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf', '.wav': 'audio/wav', '.mp4': 'video/mp4' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf', '.wav': 'audio/wav', '.mp4': 'video/mp4', '.mov': 'video/mp4', '.m4v': 'video/mp4' };
 const server = http.createServer((req, res) => {
   const f = path.join(ROOT, decodeURIComponent(req.url.split('?')[0]));
   if (!f.startsWith(ROOT) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end(); }
@@ -94,9 +94,12 @@ function decodePNG(buf) {
   return out;
 }
 
+// Finals render at timeline.scale × the layout size (e.g. scale 2 → a 1080x1920 layout delivered at 2160x3840, the
+// source's own resolution in Branch B). Drafts, sheets, stills and verify stay at layout size so review rounds are fast.
+const SCALE = (has('draft') || has('sheet') || has('at') || has('verify') || has('range')) ? 1 : (TL.scale || 1);
 async function openFilm(fmt) {
-  const [W, H] = SIZES[fmt];
-  const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
+  const [W0, H0] = SIZES[fmt], W = Math.round(W0 * SCALE), H = Math.round(H0 * SCALE);
+  const page = await browser.newPage({ viewport: { width: W0, height: H0 }, deviceScaleFactor: SCALE });
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
   page.on('pageerror', (e) => { console.error('[pageerror]', e.message); process.exitCode = 1; });
   await page.goto(`http://127.0.0.1:${server.address().port}/film/index.html?fmt=${fmt}`);

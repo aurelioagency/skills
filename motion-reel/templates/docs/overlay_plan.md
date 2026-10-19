@@ -2,8 +2,10 @@
 
 STATUS: DRAFT — waiting for the user's OK. Nothing gets built until this says APPROVED.
 
-Branch B. Marks are literal seconds on the source (bpm 60). Subtitles are always on — so every row must show something
-the subtitle doesn't say. Rules: reference/RULES.md "Branch B".
+Branch B. Marks are literal seconds on the source (bpm 60). The video carries subtitles (from the user's subtitles skill),
+so every row must show something the subtitles don't say. Rules: reference/RULES.md "Branch B".
+
+**Layout proposal (the user chooses):** over the footage / split / full-screen cutaways / mix — and why: …
 
 | # | Time (s) | Trigger (what's said) | Shot type | What the viewer SEES that the subtitle doesn't say | On-screen text (key data only, or —) | Motion | SFX (type/file · gain) |
 |---|---|---|---|---|---|---|---|
@@ -21,7 +23,7 @@ Checks before sending:
 - Faces stay clear; key content stays out of the 9:16 UI zones (top 14 %, bottom 20 %, right 12 %).
 
 ## Source
-- `assets/source/clip.mp4` (transcoded 1080x1920, short GOP), transcript `transcript/transcript.json`, subtitles `film/captions.js`.
+- `assets/source/<file>` as it came (deliverable at its resolution: `timeline.scale`), transcript `transcript/transcript.json`.
 - Resource: <url / screenshots> · References: `references/*.mp4` → `docs/style_guide.md`.
 
 ## Open questions for the user

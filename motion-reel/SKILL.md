@@ -1,6 +1,6 @@
 ---
 name: motion-reel
-description: Produce beat-synced motion graphics made entirely in code, in one of two branches. Branch A builds a product launch reel / showreel / promo from scratch: captures a product URL's real brand assets, writes a style guide, measures a beat grid, gets a shotlist approved, then builds with springs. Branch B takes a video the user filmed of themselves talking and animates it: the resource they mention shown in motion, logos, counters, diagrams, punch-ins on the speaker and full-screen cutaways under their voice, with always-on subtitles and nothing that merely repeats the caption, timed to their speech. Both branches run 3+ scored critique rounds to 8+ before delivering H.264 in 16:9, 1:1, 4:5 and 9:16. Use when the user asks for a launch video, product reel, motion reel, showreel, promo, sizzle, social ad, or wants motion-graphics overlays added to a video of themselves talking, or says "motion-reel".
+description: Produce beat-synced motion graphics made entirely in code, in one of two branches. Branch A builds a product launch reel / showreel / promo from scratch: captures a product URL's real brand assets, writes a style guide, measures a beat grid, gets a shotlist approved, then builds with springs. Branch B takes a video the user filmed of themselves talking and animates it: the resource they mention shown in motion, logos, counters, diagrams, punch-ins on the speaker and full-screen cutaways under their voice, with subtitles and nothing that merely repeats them, timed to their speech. Both branches run 3+ scored critique rounds to 8+ before delivering H.264 in 16:9, 1:1, 4:5 and 9:16. Use when the user asks for a launch video, product reel, motion reel, showreel, promo, sizzle, social ad, or wants motion-graphics overlays added to a video of themselves talking, or says "motion-reel".
 ---
 
 # Motion reel
@@ -8,13 +8,13 @@ description: Produce beat-synced motion graphics made entirely in code, in one o
 A film is a pure function of time. `window.seek(t)` paints frame t in headless Chromium, and ffmpeg encodes it. Picture and sound share one `timeline.json` in beats on a measured grid.
 
 **Read before building:** [reference/RULES.md](reference/RULES.md) (contract, look, rhythm, motion, sound).
-**Also here:** [reference/ENGINE.md](reference/ENGINE.md) (engine API, patterns, commands), [reference/AUDIO.md](reference/AUDIO.md) (music, grid, SFX, VO, mix), [reference/CRITIQUE.md](reference/CRITIQUE.md) (critic prompt).
+**Also here:** [reference/ANIMATION.md](reference/ANIMATION.md) (Branch B motion language), [reference/ENGINE.md](reference/ENGINE.md) (engine API, patterns, commands), [reference/AUDIO.md](reference/AUDIO.md) (music, grid, SFX, VO, mix), [reference/CRITIQUE.md](reference/CRITIQUE.md) (critic prompt).
 **Toolchain:** node + playwright (chromium), ffmpeg, python3 with numpy, scipy, soundfile, librosa and pillow, and (Branch B only) `faster-whisper` for word-level transcription (`scripts/transcribe.py`). `init.sh` checks the first set.
 
 ## Choose the branch
 
 - **Branch A — from scratch.** The user wants a launch reel/showreel/promo for a product or brand, and there is no existing footage of them to build on. The film is built entirely as code: brand assets captured from a URL, synthesized or supplied music, springs-driven scenes.
-- **Branch B — motion graphics on your own footage.** The user hands over a video of themselves talking and wants it animated: the resource they mention shown in motion, logos, counters, diagrams, punch-ins, full-screen cutaways under their voice — plus always-on subtitles. The footage and its audio stay the base; timing comes from the transcript, no beat grid.
+- **Branch B — motion graphics on your own footage.** The user hands over a video of themselves talking and wants it animated: the resource they mention shown in motion, logos, counters, diagrams, punch-ins, full-screen cutaways under their voice — plus subtitles (from the user's subtitles skill). The footage and its audio stay the base; timing comes from the transcript, no beat grid.
 
 Both branches share the same engine, springs, type system, critique loop and render pipeline. Only the intake, asset source, and timing source differ.
 
@@ -96,30 +96,31 @@ Shared with Branch B — see **Critique loop**, **Final render** and **Deliver**
 
 The user's own talking-head video (and its own audio) is the base. Timing comes from what is said: `timeline.json` uses `bpm: 60` with no measured grid, so every beat/mark is a literal second of the source, and every spring/type/indicator helper works unchanged.
 
-**What this branch is for: ANIMATION.** Subtitles are always on and already carry the words, so the motion graphics exist to show what the caption can't. Read the Branch B rules in [reference/RULES.md](reference/RULES.md) before planning — the two that matter most:
-- **Never echo a non-key phrase the subtitle is showing.** A key number, name or keyword in an animation is fine; a restated sentence is not — and never as the hook ("Alguien en internet" on a card in second 0, duplicating the caption, is the canonical failure).
+**What this branch is for: ANIMATION.** The user hands over the raw video and Claude does everything else. Read [reference/ANIMATION.md](reference/ANIMATION.md) (the motion language from the user's reference reels) and the Branch B rules in [reference/RULES.md](reference/RULES.md) before planning — the ones that matter most:
+- **Never echo a non-key phrase the subtitles show.** A key number, name or keyword in an animation is fine; a restated sentence is not — and never as the hook ("Alguien en internet" on a card in second 0 is the canonical failure).
 - **Animate the footage too**, not only on top of it: punch-ins, moves, full-screen cutaways while the voice keeps talking.
+- **Never lower the quality of the deliverable**: the source is used as it comes (no conversion), and the final renders at the source's own resolution.
+
+**Subtitles: pending.** They will come 100 % from the user's own subtitles skill (style, chunking, position), integrated at the end of this work. Until then, any subtitle rendering in this skill (`OV.subtitles`, `captions.py`) is a temporary placeholder, not the final spec — don't add subtitle rules here.
 
 ### B0. Intake
-Ask (one round) only for what's missing:
-- the source video (it normally arrives already finished in CapCut: loud, cleaned) and its language
-- the **resource** the video talks about — usually something someone else made (a site, a tool, a repo, a doc): its URL or screenshots. It is the main asset source.
-- **reference reels** (.mp4) for the motion and sound language, if the user has new ones (`references/` in the project)
-- formats (default **9:16 only**, the source's own duration)
+The user sends the raw video (always vertical 9:16, at its own resolution; normally already through CapCut, so the audio arrives finished). Ask only for what's missing and can't be found:
+- the **resource** the video talks about, if the video names something without a findable link — usually something someone else made (a site, a tool, a repo, a doc). It is the main asset source.
+- new **reference reels** (.mp4), only if the user offers them (`references/` in the project).
 
-Don't ask for a brand kit, colours or logo: the look comes from the resource being shown and the reference reels, not from the user's brand, unless the user asks for it.
+Don't ask for formats (always 9:16), duration (the source's), a brand kit, colours or a logo: the look comes from the resource and the reference reels, not from the user's brand, unless the user asks for it.
 
-### B1. Scaffold, transcode, transcribe, subtitles
+### B1. Scaffold, source, transcript
 ```
 sh <skill>/scripts/init.sh videos/<distinctive-slug> --overlay
-ffmpeg -i <source> -map 0:v:0 -map 0:a:0 -vf "scale=1080:1920:flags=lanczos,format=yuv420p" -c:v libx264 -preset slow -crf 16 -g 6 -bf 0 -movflags +faststart -c:a aac -b:a 192k assets/source/clip.mp4
-python3 scripts/transcribe.py assets/source/clip.mp4 --lang es
-python3 scripts/captions.py
+cp <source> assets/source/                     # as it comes — never re-encoded, never downscaled
+ffprobe -v error -show_entries stream=width,height:stream_side_data=rotation -of csv=p=0 assets/source/<file>
+python3 scripts/transcribe.py assets/source/<file> --lang es
 ```
-- `--overlay` sets Branch B defaults in `timeline.json` (bpm 60, 9x16, narration base, **SFX at -14 dB**), copies `engine/video.js` + `engine/overlay.js` (the `OV` kit: `settleOn`, `slide`, `putSlide`, `subtitles`, `OV.bg`), the Branch B starter `film.js`, `transcribe.py` and `captions.py`.
-- Transcode first, always: a phone's 4K source makes every frame seek ~4× slower; `-g 6 -bf 0` keeps seeks frame-accurate.
-- Subtitles are not optional. Fix misheard words in `captions.fix.json`; hand-cut phrase chunks in `captions.phrases.txt` when the automatic cut breaks a phrase.
-- Copy the narration as the base track: `ffmpeg -i assets/source/clip.mp4 -vn -ar 48000 -ac 2 -c:a pcm_s24le audio/music.wav`. If `mix.py` later warns that it is quiet (> +8 dB), tell the user — it is probably the raw phone take that skipped CapCut.
+- `--overlay` sets Branch B defaults in `timeline.json` (bpm 60, 9x16, narration base, **SFX at -14 dB**), copies `engine/video.js` + `engine/overlay.js` (the `OV` kit: `settleOn`, `slide`, `putSlide`, `OV.bg`), the Branch B starter `film.js` and `transcribe.py`.
+- **Deliverable resolution = the source's.** The film is laid out at 1080x1920; set `timeline.scale` to the source's width / 1080 (2 for a 2160x3840 phone 4K) and the final render captures at that size. Drafts, sheets and stills stay at 1080 for speed — they are never delivered.
+- Point `C.videoBG` at the source file itself. Only if headless Chromium cannot decode it (e.g. HEVC) make an internal visually-lossless H.264 copy **at the same resolution** for rendering — tell the user, and never deliver anything below the source's resolution.
+- The narration is the base track: `ffmpeg -i assets/source/<file> -vn -ar 48000 -ac 2 -c:a pcm_s24le audio/music.wav`. `mix.py` keeps it at its own level; if it warns that the source is quiet, tell the user — probably the raw phone take that skipped CapCut.
 
 ### B2. Assets and references
 - Resource: `node scripts/capture.mjs <url>` (screenshots incl. the full page for scroll-throughs, logos, fonts, colours). Logos of tools the user names: from their own sites.
@@ -131,21 +132,21 @@ ffmpeg -i references/ref.mp4 -vf "select='gt(scene,0.3)',showinfo" -f null - 2>&
 - SFX the user wants from a reference: cut moments where the sound is isolated into `assets/sfx/`, or identify the library it comes from; use them via `"file"` in `timeline.sfx` (AUDIO.md §2).
 
 ### B3. Animation plan, then STOP for the OK
-Write `docs/overlay_plan.md` from the template: one row per moment with the trigger words, the **shot type** (RULES.md Branch B), **what the viewer SEES that the subtitle doesn't say**, any on-screen text (key data only), motion and SFX. A row whose answer to "what does it add" is nothing gets cut. Check face-safe zones and the 9:16 UI zones.
+Write `docs/overlay_plan.md` from the template. **First propose the layout(s)** — over the footage (e.g. a floating browser window), split, full-screen cutaways, or a mix — with a one-line why, and let the user choose (ANIMATION.md §2). Then one row per moment with the trigger words, the **shot type** (RULES.md Branch B), **what the viewer SEES that the subtitle doesn't say**, any on-screen text (key data only), motion and SFX. A row whose answer to "what does it add" is nothing gets cut. Check face-safe zones and the 9:16 UI zones.
 
 Send the user the plan as a short table. **Wait for an explicit OK.** Build nothing until then.
 
 ### B4. Build
-Start from the starter `film/film.js`: scenes per plan row, `OV.subtitles()` once, `C.start()`, then `C.videoBG('../assets/source/clip.mp4')`. Patterns:
-- cards rise out of their own edge: `OV.putSlide(el, OV.slide(t, OV.settleOn(cue, 'default'), outAt, height))`
-- anything with a sound settles ON its cue: `OV.settleOn(cue, preset)`
-- footage moves (punch-in, drift, shake): `C.hooks.before.push((t) => C.put(OV.bg, { s, x, y }))`
-- full-screen cutaway: a scene with an opaque full-frame background over the video; the voice keeps playing and subtitles stay on
+Start from the starter `film/film.js`: scenes per plan row, the subtitles placeholder, `C.start()`, then `C.videoBG('../assets/source/<file>')`. Build with the `OV` kit (ANIMATION.md §3, header of `engine/overlay.js`) — declare in each scene's `build()`:
+- entrances: `OV.slam`, `OV.cutIn`, `OV.pop`, `OV.draw`, `OV.typeOn`, `OV.odometer`, `OV.cursor` (each lands ON its cue and registers its sound)
+- the frame: `OV.layout([[t,'full'|'split'|'gone'], …], { face })`, snap zooms `OV.punch([[t, scale], …])`
+- full-screen cutaway: `'gone'` + a scene with an opaque full-frame background; the voice keeps playing
+- exits: `out:` (hard cut) or `outKind: 'drop'`
 - type over bright footage sits on a panel, never bare
 Render checks as in A7 (`--sheet`, `--at`, `--range`, `--verify`).
 
 ### B5. Audio
-SFX are declared in `timeline.sfx` (synth types or supplied `"file"`s), `node scripts/sfx.mjs`, `python3 scripts/mix.py`. SFX sit well under the voice (`mix.sfx` -14 dB default; primary hits gain ≤ 0.5). Thumps/low hits on a spoken word mask it: keep them ≤ 0.1 or skip them. The voice is never re-processed beyond loudness.
+`node scripts/autosfx.mjs` writes the kit's cues into `timeline.sfx` (house sounds: words/screens → `clic_palabra_loucash`, icons → `bubble`, cursor → `click`, typing/counters → `tick`); hand-written entries are kept. Then `node scripts/sync.mjs && node scripts/sfx.mjs && python3 scripts/mix.py`. SFX sit well under the voice (`mix.sfx` -14 dB default; primary hits gain ≤ 0.5). Thumps/low hits on a spoken word mask it: keep them ≤ 0.1 or skip them. The voice is never re-processed or re-levelled. House sounds: AUDIO.md §2.
 
 ### B6–B8. Critique loop, final render, deliver
 Shared with Branch A — see below, with the Branch B criteria in `reference/CRITIQUE.md` (redundancy with the subtitles, animation-first, accuracy to the source).

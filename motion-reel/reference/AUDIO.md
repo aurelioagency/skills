@@ -24,7 +24,6 @@ node scripts/sfx.mjs                                        → audio/sfx.wav
 | `click` | cursor press, button, send | on the cue |
 | `tick` | typing (use `every: 0.25` over the typing window) | on the cue |
 | `whoosh` | whip, morph, push-through | builds 0.3 s, PEAKS on the cue (put the cue on the landing) |
-| `riser` | build into a drop | builds 2 s, PEAKS on the cue (put the cue on the drop) |
 | `thump` | logo, impact | on the cue |
 | `shutter` | hard cut, wipe | on the cue |
 Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't stack more than two sounds on one frame. **Branch B (under a voice): halve those and keep `mix.sfx` at -14 dB** — primary ≤ 0.5, texture ≤ 0.25, thump ≤ 0.1.
@@ -35,6 +34,13 @@ Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't st
 { "at": "cut_in", "file": "assets/sfx/swoosh.wav", "align": "peak", "gain": 0.35, "what": "cutaway whip" }
 ```
 `align: "start"` (default) starts the file on the cue (pops, clicks, hits); `"peak"` puts the file's loudest moment on the cue (whooshes, risers).
+
+**House sounds (Branch B)** — use these unless the user asks otherwise:
+| Moment | SFX | Gain under the voice |
+|---|---|---|
+| a word / key text slams in, a screen or screenshot appears | `{ "file": "lib:loucash/clic_palabra_loucash.wav" }` — the user's chosen click (the original loucash click, denoised, cut at 60 ms) | 0.35–0.5 |
+| an icon pops in (several in a row: pitch 1, 1.12, 1.26, 1.41) | `{ "type": "bubble" }` | 0.3–0.45 |
+`lib:` paths resolve to the user's local library (`$MOTION_REEL_SFX_LIB`, default `~/Documents/sfx-library`), which is NOT in the repo: the click was extracted from another creator's reel, for the user's own use. If the file is missing, `sfx.mjs` warns and falls back to the synth `wordclick`, which is only a stand-in — tell the user.
 
 ## 3. Voiceover (Fish Audio MCP, when the brief asks for it)
 Tools: `search_voices`, `get_voice`, `text_to_speech` (returns a permanent audio URL), `get_credit_balance`.
@@ -61,4 +67,4 @@ python3 scripts/mix.py            → audio/mix.wav  (-14 LUFS integrated, true 
 - **Target:** hits (pop, click, thump, shutter) within ±45 ms.
 - **Picture late (positive):** lead the visual with `C.spHit`, or move the cue.
 - **Picture early (negative, beyond -45 ms):** reduce the lead.
-- **Whoosh/riser:** these build into their cue by design. Judge them by ear and eye.
+- **Whoosh:** it builds into its cue by design. Judge them by ear and eye.

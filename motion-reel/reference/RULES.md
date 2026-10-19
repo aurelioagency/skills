@@ -11,6 +11,7 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 - No `will-change`, no `translate3d`, no `translateZ(0)`. A composited GPU layer caches its raster, so the same t paints differently depending on the previous frame (measured: 9/12 probes differed, up to 211/255 per pixel). Use 2D transforms (`C.put` does). If a shot truly needs CSS 3D (`perspective` / `rotateX`), run `--verify` on it. If it fails, fake the depth in 2D (skew + scale + shadow) or draw it on a canvas.
 
 ## Look
+- **NUNCA rojo y blanco.** Never use red and white together — not in a palette, a stamp, a card, a tag, an icon or a frame (they are River's colours; the user is a Boca fan). No red element on white or white element on red, ever. If a resource's own UI is red and white, show it as the real screenshot it is, but never build our own graphics in those colours.
 - **Banned defaults:**
   - a centred title on a gradient
   - everything fading in
@@ -68,14 +69,18 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 - **Branch B:** SFX sit well under the voice — `mix.sfx` -14 dB, primary hits gain ≤ 0.5, texture ≤ 0.25. A low thump on a spoken word masks it: ≤ 0.1 or none. The narration is the user's finished audio; only loudness is touched, and a quiet source (> +8 dB needed) is reported to the user, not silently pumped.
 
 ## Branch B (motion graphics on the user's own footage)
-**The point is the animation.** Subtitles are always on (`OV.subtitles()`), so every graphic must show something the caption doesn't.
+**The point is the animation.** The video always carries subtitles (they will come from the user's subtitles skill — integration pending; no subtitle rules live here), so every graphic must show something the subtitles don't.
 - **No echo.** Never put a phrase on screen that the subtitle is showing, unless it is the key datum of that moment (a number, a name, a price, one keyword). Non-key phrases never — least of all in the hook: the first second is for the strongest visual, not for the opening words.
 - **On-screen text is key data only:** short (1–3 words or a number), verbatim or shortened from what's said, never an invented claim, number or feature.
+- **Reference ≠ template:** take the references' technique, never their elements; every visual is created for this video, no signature motif repeated across videos, money in $ / USD (ANIMATION.md §0).
+- **Reference techniques are a vocabulary, not a checklist.** Pick per video and per moment what serves it; a move seen once in one reference is an option, never a rule.
+- **Fade to white** (thomas: the frame whitens over ~4 frames into a full-screen white cutaway): optional and rare — at most once or twice per video, never in a run, never as the default way into a cutaway. What matters is the animation inside the cutaway, not the transition into it.
+- **Deliverable:** the source as it comes, the final at its own resolution (`timeline.scale`); never downscale or degrade it.
 - **Shot types** — vary them; something new every 2–4 s:
   - *Footage move*: punch-in / zoom on the speaker on a strong line (1.00 → 1.10–1.20 on a heavy spring), slow drift, a small shake on an impact. Animate `OV.bg`.
   - *Resource demo*: the real resource in motion — scroll through its page, a cursor clicking, a zoom to the part that matters, a highlight drawn on the screenshot. Real UI only, never redrawn.
   - *Visual element*: logo grids, icons, counters, price tags, arrows / hand-drawn strokes, progress bars, split comparisons, stickers or emoji when the tone allows.
-  - *Full-screen cutaway*: the speaker leaves the frame, a complete animation fills it while the voice keeps talking (subtitles stay on), then back to the speaker. Use it where the speech explains something visual.
+  - *Full-screen cutaway*: the speaker leaves the frame, a complete animation fills it while the voice keeps talking, then back to the speaker. Use it where the speech explains something visual.
   - *Behind the subject*: graphics passing behind the speaker (needs a person matte — not built yet; plan it only once `scripts/matte.py` exists).
 - **Look:** taken from the resource being shown and from the user's reference reels, not from the user's brand unless asked. Type over bright footage sits on a panel.
 - **Motion:** cards rise out of / lift into their own edge (`OV.slide`), never a fixed mask line floating in the frame; anything with a sound settles on its cue (`OV.settleOn`); no element pops in or vanishes in one frame; a scene's `from` must precede its first spring (`spHit` lead) or the root un-hides mid-rise.

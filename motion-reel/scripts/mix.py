@@ -1,4 +1,5 @@
 # Mix music + sfx + voiceover → audio/mix.wav at -14 LUFS integrated, ≤ -1 dBTP, 48 kHz 24-bit. Run from the project root.
+# Branch B (music.source = narration): the user's narration keeps its own level; only the SFX are added under it.
 #   python3 scripts/mix.py
 # Inputs (any may be missing except music): audio/music.wav, audio/sfx.wav, audio/vo.wav
 # Levels in dB from timeline.json "mix": { "music": 0, "sfx": -3, "vo": 0, "duck": true }
@@ -44,16 +45,24 @@ def measure(path):
     get = lambda k: float(next(l.split()[1] for l in summ.splitlines() if l.strip().startswith(k)))
     return get('I:'), get('Peak:')
 I0, _ = measure('audio/mix_raw.wav'); gain = -14 - I0
-for _ in range(3):
+# Branch B: the narration is the user's finished audio (CapCut) and is NOT re-levelled: the SFX are added under it and
+# only a safety limiter runs. A quiet source is reported (below), never silently pumped up.
+NARRATION = (TL.get('music') or {}).get('source') == 'narration'
+if NARRATION:
+    narr_gain = 0.0
+for _ in range(1 if NARRATION else 3):
+    if NARRATION: need = gain; gain = 0.0
     ff(['-i', 'audio/mix_raw.wav', '-af', f'volume={gain:.2f}dB,aresample=192000,alimiter=limit=0.841:attack=1:release=40:level=false,aresample=48000', '-ar', '48000', '-c:a', 'pcm_s24le', 'audio/mix.wav'])
     I, TP = measure('audio/mix.wav')
-    if abs(I + 14) <= 0.15: break
+    if NARRATION or abs(I + 14) <= 0.15: break
     gain += -14 - I
 print(f"audio/mix.wav  inputs: {', '.join(k for k, v in have.items() if v)}  levels music {LV['music']} / sfx {LV['sfx']} / vo {LV['vo']} dB"
       f"{'  (music ducked under VO)' if have['vo'] and LV['duck'] else ''}")
 print(f'integrated {I:.1f} LUFS (target -14)   true peak {TP:.1f} dBTP (limit -1)   gain {gain:+.1f} dB into the limiter')
-if abs(I + 14) > 0.5 or TP > -1: print('WARNING: off target — the limiter is working too hard; lower the loudest stem (usually sfx) and rerun')
+if not NARRATION and (abs(I + 14) > 0.5 or TP > -1): print('WARNING: off target — the limiter is working too hard; lower the loudest stem (usually sfx) and rerun')
 # Branch B: the narration is the user's own, already-finished audio (they pass it through CapCut first). A big lift
 # means a raw phone recording slipped through: say so to the user, don't silently pump it.
-if (TL.get('music') or {}).get('source') == 'narration' and gain > 8:
-    print(f'WARNING: the source narration is quiet (needed {gain:+.1f} dB). It may be the raw phone take — ask the user whether it skipped the CapCut pass before rendering finals.')
+if NARRATION:
+    print(f'narration kept at its own level (not re-levelled): mix {I:.1f} LUFS')
+    if need > 6:
+        print(f'WARNING: the source narration is quiet ({I0:.1f} LUFS, {need:+.1f} dB under -14). It may be the raw phone take — ask the user whether it skipped the CapCut pass before rendering finals.')

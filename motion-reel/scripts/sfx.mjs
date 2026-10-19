@@ -5,8 +5,9 @@
 //   pop      something appears: sine glide 820 → 1720 Hz + soft tick
 //   thump    logo / impact: 95 → 42 Hz sine drop + felt transient, ~0.5 s
 //   whoosh   morph / whip / push-through: band-passed noise sweeping up, PEAKING at the cue time, panned L → R
-//   riser    build into a drop: 2 s filtered noise + rising tone, PEAKING at the cue time (set the cue on the drop)
 //   shutter  hard cut / wipe: two band-passed noise clacks
+//   wordclick a word / text slams in: 10 ms bright snap + quiet sub drop (the house sound for kinetic words)
+//   bubble   an icon pops in: round upward 'bloop' (several in a row: rising pitch)
 // Cue fields: t (s), type, gain (0.8), pitch (1 = nominal; sync.mjs jitters ±6 %), pan (-1..1)
 // Supplied sounds: an sfx event with "file": "assets/sfx/<name>.wav|mp3" plays that file instead of a synth (decoded by
 // ffmpeg, mono → centre/pan). "align": "start" (default: the file starts on the cue — pops, clicks, hits) or "peak"
@@ -56,26 +57,44 @@ function whoosh(p, seed) {   // 0.30 s build, 0.14 s release; peaks exactly on t
   for (let i = 0; i < n; i++) { const t = i / SR, u = Math.min(1, t / pre); bp[i] *= (t < pre ? Math.pow(u, 2.2) : Math.exp(-(t - pre) * 24)) * 0.62; }
   return { x: bp, lead: pre, stereo: true };
 }
-function riser(p, seed) {   // 2.0 s build; peaks on the cue, then cuts with a 30 ms tail
-  const pre = 2.0, post = 0.03, n = Math.round((pre + post) * SR);
-  const bp = sweepBP(noise(n, seed), (t) => (300 + 7000 * Math.min(1, t / pre) ** 2.4) * p, 0.8);
-  let ph = 0;
-  for (let i = 0; i < n; i++) {
-    const t = i / SR, u = Math.min(1, t / pre); ph += TAU * 220 * p * Math.pow(2, 2 * u) / SR;
-    const env = t < pre ? Math.pow(u, 2.6) : Math.exp(-(t - pre) * 120);
-    bp[i] = (bp[i] * 0.8 + Math.sin(ph) * 0.18) * env;
-  }
-  return { x: bp, lead: pre };
-}
 function shutter(p, seed) {
   const n = Math.round(0.09 * SR), nz = hp(lp(noise(n, seed), 9000 * p), 2000 * p), x = new Float32Array(n);
   for (let i = 0; i < n; i++) { const t = i / SR; x[i] = nz[i] * (Math.exp(-t * 90) + 0.8 * (t > 0.035 ? Math.exp(-(t - 0.035) * 110) : 0)) * 1.3; }
   return { x, lead: 0 };
 }
-const SYN = { click, tick, pop, thump, whoosh, riser, shutter };
+// wordclick: the "a word slams in" click — a dry ~20 ms bright snap, flat from 2 to 16 kHz, nothing under 1 kHz.
+// Modelled on the reference the user picked for kinetic words (measured, not sampled).
+function wordclick(p, seed) {
+  const n = Math.round(0.03 * SR), x = new Float32Array(n), nz = hp(hp(hp(noise(n, seed), 1800 * p), 1800 * p), 1800 * p); let ph = 0;
+  for (let i = 0; i < n; i++) {
+    const t = i / SR, env = Math.min(1, t / 0.0003) * Math.exp(-t / 0.0032);
+    x[i] = env * (nz[i] + Math.sin(ph) * 0.18); ph += TAU * 3400 * p / SR;
+  }
+  return { x, lead: 0 };
+}
+// bubble: a round, wet "bloop" for an icon popping in — a sine that glides UP fast (≈ 380 → 1250 Hz in
+// 35 ms) with a tiny click on top and a short tail. pitch varies it: several icons in a row → pitch 1, 1.12, 1.26, 1.41.
+function bubble(p, seed) {
+  const n = Math.round(0.12 * SR), x = new Float32Array(n), nz = hp(noise(n, seed), 3000); let ph = 0;
+  for (let i = 0; i < n; i++) {
+    const t = i / SR;
+    const f = (380 + 870 * (1 - Math.exp(-t / 0.014))) * p; ph += TAU * f / SR;
+    const env = Math.min(1, t / 0.0015) * Math.exp(-t / 0.028);
+    x[i] = Math.sin(ph) * env * 0.9 + nz[i] * Math.exp(-t / 0.0015) * 0.25;
+  }
+  return { x, lead: 0 };
+}
+const SYN = { click, tick, pop, thump, whoosh, shutter, wordclick, bubble };
 
+// "lib:<path>" files live in the user's LOCAL sound library (not in the repo: some come from other creators' reels).
+// Location: $MOTION_REEL_SFX_LIB, else ~/Documents/sfx-library. A missing lib file falls back to its synth stand-in.
+import os from 'node:os';
+import pathMod from 'node:path';
+const LIB = process.env.MOTION_REEL_SFX_LIB || pathMod.join(os.homedir(), 'Documents', 'sfx-library');
+const FALLBACK = { 'lib:loucash/clic_palabra_loucash.wav': 'wordclick' };
 const FILES = {};
 function fileSfx(path, align) {
+  if (path.startsWith('lib:')) path = pathMod.join(LIB, path.slice(4));
   if (!FILES[path]) {
     if (!fs.existsSync(path)) throw new Error(`sfx file not found: ${path}`);
     const r = spawnSync('ffmpeg', ['-v', 'error', '-i', path, '-ac', '1', '-ar', String(SR), '-f', 'f32le', '-'], { maxBuffer: 1 << 28 });
@@ -89,9 +108,14 @@ function fileSfx(path, align) {
   return { x: f.x, lead: align === 'peak' ? f.peakAt : 0 };
 }
 
-cues.forEach((c, k) => {
+cues.forEach((c0, k) => {
+  let c = c0;
   if (!c.file && !SYN[c.type]) throw new Error(`unknown sfx type "${c.type}" (have: ${Object.keys(SYN).join(', ')}, or give a "file")`);
-  const { x, lead, stereo } = c.file ? fileSfx(c.file, c.align) : SYN[c.type](c.pitch ?? 1, 9001 + k * 131);
+  let src = c.file;
+  if (src && src.startsWith('lib:') && !fs.existsSync(pathMod.join(LIB, src.slice(4))) && FALLBACK[src]) {
+    console.warn(`WARN: ${src} not found in ${LIB} — using the synth stand-in "${FALLBACK[src]}"`); c = { ...c, type: FALLBACK[src] }; src = null;
+  }
+  const { x, lead, stereo } = src ? fileSfx(src, c.align) : SYN[c.type](c.pitch ?? 1, 9001 + k * 131);
   const start = Math.round((c.t - lead) * SR), g = c.gain ?? 0.8;
   for (let i = 0; i < x.length; i++) {
     const j = start + i; if (j < 0 || j >= N) continue;

@@ -36,6 +36,9 @@ You are a senior motion designer reviewing a product reel before it goes to the 
 - **Brand accuracy → accuracy to the source:** on-screen text is verbatim or shortened from what's said; the resource is shown with its real UI; nothing invented.
 - **Redundancy with the subtitles (hard cap):** any graphic that restates a non-key phrase the subtitle is showing → Variety and Polish max 6. The same in the first 2 s → Hook max 5. Key numbers/names/keywords are fine.
 - **Animation-first (Variety):** count the shot types used (footage move, resource demo, visual element, full-screen cutaway). A film that is only text cards on top of the footage → Variety max 6.
+- **House motion (Motion quality, per reference/ANIMATION.md):** entrances hit — slam / cut in / pop / draw / type / odometer / cursor, landing ON their sound. Soft glides or slow fades as the main language → Motion max 6. The speaker never leaving the frame in a film over 20 s → Variety max 7.
+- **Copied from a reference (hard cap):** an element lifted from a reference reel (its tag, counter, doodle, stamp, wording, € signs) or a motif repeated from the user's previous videos for the same idea → Brand/accuracy max 5.
+- **Red and white (hard fail):** any graphic of ours combining red and white → Brand accuracy max 3 and the verdict cannot be SHIP.
 - **SFX level (Sound sync):** every SFX clearly under the voice; a hit that masks a spoken word → max 7.
 
 ## Known failure modes: check each one explicitly

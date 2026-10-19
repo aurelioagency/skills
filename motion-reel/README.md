@@ -59,6 +59,7 @@ python -m pip install -r requirements.txt
 
 - Node 22+, ffmpeg, Playwright (con Chromium)
 - Python 3.9+ con numpy, scipy, soundfile, librosa y pillow (`requirements.txt`)
+- Solo Rama B: biblioteca local de sonidos en `Documents/sfx-library/` (o la carpeta de la variable `MOTION_REEL_SFX_LIB`). **No está en el repo** (el clic sale del reel de otro creador): copiala a mano a cada PC. Sin ella, la skill avisa y usa un clic sintético de respaldo.
 - Solo Rama B: `faster-whisper` (incluido en `requirements.txt`), para la transcripción con timestamps por palabra (`scripts/transcribe.py`)
 - Claude Code
 
