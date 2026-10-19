@@ -1282,6 +1282,10 @@ Invocar esta skill ya es la autorización del usuario para todo lo que ella hace
 
 Cuando el usuario aprueba, el trabajo no termina hasta que el video esté publicado (y las automatizaciones creadas). **No se frena ni se le hace una pregunta cuya respuesta ya está escrita en las skills** (por ejemplo "¿borro la automatización más vieja?": sí, siempre). Si un paso falla (un deploy, una cuota, un permiso bloqueado), se reintenta o se usa la alternativa que la skill describe, y se sigue con el resto. Solo se frena ante algo que no se puede resolver con lo que ya está escrito, y en ese caso se dice qué falta y se deja hecho todo lo demás. El usuario no está mirando la pantalla: tiene que poder volver horas después y encontrar el reel publicado.
 
+**Un paso que falló nunca se da por terminado.** Si algo falla en una cuenta o una red (por ejemplo la cuota 429 de ReplyKaro en @ing.gustavopaz), se vuelve a leer la skill dueña de ese paso y se aplica su receta alternativa en el mismo turno, antes de decirle al usuario que el flujo terminó. Pasó 2026-10-18: la automatización de una cuenta falló por cuota, se siguió con las redes y se la dio por cerrada, cuando la skill de ReplyKaro ya decía cargarla por el panel sin avisar. Antes del mensaje final, recorrer la lista de pasos del flujo (Drive, página, ReplyKaro en las dos cuentas, cada red) y comprobar que cada uno quedó hecho, no solo intentado.
+
+**Una orden del usuario en el chat no se vuelve a preguntar.** Si el usuario ya dijo "borrá", "andá", "hacelo", se ejecuta; si el sistema de permisos rechaza la acción, se reintenta (volviendo a buscar el elemento en la página si hace falta, o esperando si el rechazo es un fallo temporal del sistema). Frenar con "autorizame" o "borrá vos" es el último recurso, solo tras reintentar, y nunca para algo que la skill ya autoriza.
+
 ## Mostrar todo, siempre, en el mensaje final
 
 El usuario no puede aprobar lo que no ve. **Todo lo que se produce se muestra, sin que lo pida**, en el cuerpo del mensaje (nunca solo dentro de un cuadro de preguntas ni de un mensaje intermedio, porque se tapan):
@@ -1290,3 +1294,10 @@ El usuario no puede aprobar lo que no ve. **Todo lo que se produce se muestra, s
 - la lista de planos con el gancho y el CTA, y la tira de cuadros de `--out-check`;
 - al entregar: el bloque Run para abrir la carpeta, un link por archivo (video, portada, caption, dm-reply), la portada enviada como imagen, el caption y el dm-reply pegados completos;
 - al terminar: la URL de la página del recurso, el resultado de cada automatización y el link de cada red publicada.
+
+Reglas de cómo se muestra, porque el 2026-10-18 se pidió aprobación sin que el usuario viera nada:
+
+- **Nunca se pide una aprobación (ni se llama a `wrap_up` con una pregunta) si el mensaje no trae antes todo lo que se aprueba.** Aprobar "el video" exige que el usuario lo haya podido ver: se envía una vista previa liviana con `SendUserFile` (el 4K de 100 MB supera el límite de 30 MB, así que se genera un `preview.mp4` de 540 px en el scratchpad) y además se abre en el panel de archivos con `show_pane`. El link al archivo grande va aparte, no lo reemplaza.
+- **Gancho, CTA y planos van siempre en texto dentro del mensaje**, con sus tiempos, antes de pedir cualquier aprobación (ver paso 3 y 4b), junto con la tira de cuadros enviada como imagen.
+- **Lo que el usuario pregunta se responde primero y de frente**, en el cuerpo del mensaje. Si pregunta "por qué no lo hiciste", se contesta con el motivo real, sin evadir ni cambiar de tema.
+- Si el usuario dice que no ve algo, se asume que falló la forma de mostrarlo (mensaje tapado, archivo que no sube) y se lo muestra por otro canal en el acto.
