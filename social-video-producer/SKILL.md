@@ -552,7 +552,7 @@ node "<skill-dir>\scripts\transcribe-media.mjs" --input "raws\<video>.mp4" --out
 
 The script reports `lowConfidence` words. Read the transcript from the JSON file with a UTF-8 reader, never from terminal output.
 
-3. **Transcript Approval Gate (blocking).** Show the user the full text and flag every suspicious word — proper nouns, brand and product names, low-confidence tokens, and any form that clashes with the register of the rest (a `puedes` inside an otherwise voseo script is a misrecognition, not a style choice). Wait for explicit approval. Write the approved fixes to a corrections file:
+3. **Transcript Approval Gate (blocking).** Before asking for approval, run `detect-shots.py` (step 4b) on the raw transcript so the same message carries the transcript AND the structure. Never ask for approval with the transcript alone. The message body (never an intermediate message, never inside the question box) shows: the full text, the hook and the CTA as plain text with their time ranges, the list of shots with their time ranges, and the `shots-check.png` strip sent as an image. Flag every suspicious word — proper nouns, brand and product names, low-confidence tokens, and any form that clashes with the register of the rest (a `puedes` inside an otherwise voseo script is a misrecognition, not a style choice). Wait for explicit approval. After it, re-run 4b on the approved transcript. Write the approved fixes to a corrections file:
 
 ```json
 [{ "at": 4.72, "from": "puedes", "to": "podés" }]
@@ -582,7 +582,7 @@ An accent colour is opt-in, not the default: pass `--accent "<hex>"` to turn the
 
 For a keyword-only highlight (only hand-picked terms ever get the accent), add `--accent "<hex>" --accent-mode keyword --accent-terms "..."`.
 
-4b. **Detect the hook, the CTA and which text belongs to which shot (automatic).** Right after the transcript is approved, run:
+4b. **Detect the hook, the CTA and which text belongs to which shot (automatic).** Run it once on the raw transcript before asking for the transcript approval (step 3) and again on the approved transcript right after it. Command:
 
 ```powershell
 python "<skill-dir>\scripts\detect-shots.py" --video "raws\<video>.mp4" --transcript "assets\voice\<slug>.approved.json" --out-shots "manifests\shots.json" --out-zones "manifests\caption-zones.json" --out-check "snapshots\shots-check.png"
