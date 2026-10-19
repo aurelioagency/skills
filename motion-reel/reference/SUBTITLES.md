@@ -176,7 +176,7 @@ node <skill>/scripts/verify-render.mjs --file renders/final/<slug>-subs.mp4 --ex
 
 One encode pass: the whole caption design lives in the `.ass`; never chain extra ffmpeg passes to add caption features. Then extract frames from the FINAL file — at minimum one per framing (talking head, punch-in, split, cutaway) and one wrapped two-line caption if any — and look at them.
 
-`renders/final/<slug>-subs.mp4` is the deliverable. If the mix changes later, re-mux (`render.mjs --mux`) the clean master and burn again; the `.ass` and zones are kept in the project so a re-burn takes seconds.
+Then build the cover and burn it in as frame 0 (COVER.md); `renders/final/<slug>-final.mp4` is the deliverable. If the mix changes later, re-mux (`render.mjs --mux`) the clean master and burn again; the `.ass` and zones are kept in the project so a re-burn takes seconds.
 
 ## libass behaviour that costs a render cycle
 

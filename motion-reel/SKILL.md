@@ -8,7 +8,7 @@ description: Produce beat-synced motion graphics made entirely in code, in one o
 A film is a pure function of time. `window.seek(t)` paints frame t in headless Chromium, and ffmpeg encodes it. Picture and sound share one `timeline.json` in beats on a measured grid.
 
 **Read before building:** [reference/RULES.md](reference/RULES.md) (contract, look, rhythm, motion, sound).
-**Also here:** [reference/ANIMATION.md](reference/ANIMATION.md) (Branch B motion language), [reference/SUBTITLES.md](reference/SUBTITLES.md) (Branch B subtitles, same as social-video-producer), [reference/ENGINE.md](reference/ENGINE.md) (engine API, patterns, commands), [reference/AUDIO.md](reference/AUDIO.md) (music, grid, SFX, VO, mix), [reference/CRITIQUE.md](reference/CRITIQUE.md) (critic prompt).
+**Also here:** [reference/ANIMATION.md](reference/ANIMATION.md) (Branch B motion language), [reference/SUBTITLES.md](reference/SUBTITLES.md) and [reference/COVER.md](reference/COVER.md) (Branch B subtitles and cover, same as social-video-producer), [reference/ENGINE.md](reference/ENGINE.md) (engine API, patterns, commands), [reference/AUDIO.md](reference/AUDIO.md) (music, grid, SFX, VO, mix), [reference/CRITIQUE.md](reference/CRITIQUE.md) (critic prompt).
 **Toolchain:** node + playwright (chromium), ffmpeg, python3 with numpy, scipy, soundfile, librosa and pillow, and (Branch B only) `faster-whisper` and `opencv-python` for transcription and subtitles (`scripts/transcribe-media.mjs`, `scripts/detect-shots.py`). `init.sh` checks the first set.
 
 ## Choose the branch
@@ -103,6 +103,8 @@ The user's own talking-head video (and its own audio) is the base. Timing comes 
 
 **Subtitles: always on, and identical to social-video-producer's.** Every rule and script lives in [reference/SUBTITLES.md](reference/SUBTITLES.md) (a copy of that skill's burn-in captions branch): transcript approval gate, Neue Montreal Bold 104px all white one word at a time, per-shot zones below the face, libass burn. The film never draws subtitles; they are burned onto the final render as the last step (S4–S8), so they follow the face as the film frames it. Follow SUBTITLES.md to the letter; when it changes in one skill, change it in the other.
 
+**Cover: always, identical to social-video-producer's.** Every rule lives in [reference/COVER.md](reference/COVER.md): a frame of the source with the three-line headline (Neue Montreal Bold, white style, `--small-size 68 --big-size 166`, never `--fit`), delivered as `<slug>-portada.png` AND burned into the video as its frame 0. Not optional and not something to ask about.
+
 ### B0. Intake
 The user sends the raw video (always vertical 9:16, at its own resolution; normally already through CapCut, so the audio arrives finished). Ask only for what's missing and can't be found:
 - the **resource** the video talks about, if the video names something without a findable link — usually something someone else made (a site, a tool, a repo, a doc). It is the main asset source.
@@ -152,7 +154,7 @@ Render checks as in A7 (`--sheet`, `--at`, `--range`, `--verify`).
 ### B6–B8. Critique loop, final render, deliver
 Shared with Branch A — see below, with the Branch B criteria in `reference/CRITIQUE.md` (redundancy with the subtitles, animation-first, accuracy to the source). The critique drafts carry no subtitles; the critic judges redundancy against `transcript/approved.json`.
 
-Branch B differs at the end: the final render is the clean master (`node scripts/render.mjs --crf 10`, only the 9x16 format), then the subtitles are burned onto it (SUBTITLES.md S4–S8). The deliverable is `renders/final/<slug>-subs.mp4`. If the mix changes later, `--mux` the master and burn again.
+Branch B differs at the end: the final render is the clean master (`node scripts/render.mjs --crf 10`, only the 9x16 format), then the subtitles are burned onto it (SUBTITLES.md S4–S8), then the cover is built and burned in as frame 0 (COVER.md). The deliverables are `renders/final/<slug>-final.mp4` and `renders/final/<slug>-portada.png`. If the mix changes later, `--mux` the master, burn the subtitles again and re-add frame 0.
 
 ---
 
