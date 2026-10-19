@@ -158,6 +158,11 @@ Branch B differs at the end: after SHIP the user watches the draft and approves 
 
 ---
 
+## First look: the user sees the first build before any critique round (blocking)
+As soon as every scene of the approved plan/shotlist is built, and before round 1: `node scripts/sfx.mjs && python3 scripts/mix.py && node scripts/render.mjs --draft --all`, and send the user `renders/draft_<fmt>.mp4`, saying it is the unpolished first build (it may have errors). The plan was text; this is the first time the user sees how the animations appear and what is on screen, and their comments now are cheaper than after the rounds.
+- **Wait for the user's comments or an explicit go-ahead.** Apply the comments, send a new draft if they ask to see it, and only then start the critique loop.
+- The rounds polish what the user already saw and liked; they never replace this look.
+
 ## Critique loop: at least 3 rounds, until every score is ≥ 8
 Each round:
 1. `node scripts/sfx.mjs && python3 scripts/mix.py` (draft sound, so sync can be scored)
