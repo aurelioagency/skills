@@ -154,7 +154,7 @@ Render checks as in A7 (`--sheet`, `--at`, `--range`, `--verify`).
 ### B6–B8. Critique loop, final render, deliver
 Shared with Branch A — see below, with the Branch B criteria in `reference/CRITIQUE.md` (redundancy with the subtitles, animation-first, accuracy to the source). The critique drafts carry no subtitles; the critic judges redundancy against `transcript/approved.json`.
 
-Branch B differs at the end: the final render is the clean master (`node scripts/render.mjs --crf 10`, only the 9x16 format), then the subtitles are burned onto it (SUBTITLES.md S4–S8), then the cover is built and burned in as frame 0 (COVER.md). The deliverables are `renders/final/<slug>-final.mp4` and `renders/final/<slug>-portada.png`. If the mix changes later, `--mux` the master, burn the subtitles again and re-add frame 0.
+Branch B differs at the end: after SHIP the user watches the draft and approves it (**User review of the draft**, below); only then the final render is the clean master (`node scripts/render.mjs --crf 10`, only the 9x16 format), then the subtitles are burned onto it (SUBTITLES.md S4–S8), then the cover is built and burned in as frame 0 (COVER.md). The deliverables are `renders/final/<slug>-final.mp4` and `renders/final/<slug>-portada.png`. If the mix changes later, `--mux` the master, burn the subtitles again and re-add frame 0.
 
 ---
 
@@ -167,6 +167,12 @@ Each round:
 5. Fix the 3 worst problems, verify each fix with stills or clips, and log what changed.
 
 Stop only when the verdict is SHIP: every score ≥ 8 and at least 3 rounds done. Never show the user a film before that.
+
+## User review of the draft (blocking)
+After SHIP, send the user the latest `renders/draft_<fmt>.mp4` (no subtitles, low quality) to watch on their phone. An approved plan is only text: whether the animations work is decided by seeing them, so the user reviews the draft before anything final.
+- **Wait for the user's corrections or an explicit OK on the draft.** Sending the draft is not an approval, and neither is silence or an OK given earlier to the plan.
+- Apply each correction, re-render the draft (`--draft`, plus stills of the moments touched) and send it again. Repeat until the user OKs the draft.
+- Only that explicit OK starts the final render (and, in Branch B, the subtitles and the cover).
 
 ## Final render, SFX, mix, all formats
 1. **Render** the primary format: `node scripts/render.mjs` (60 fps, adaptive 180° motion blur). Watch it via `review.py` on the final: `python3 scripts/review.py final`.

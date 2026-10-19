@@ -106,10 +106,14 @@ async function openFilm(fmt) {
   await page.waitForFunction(() => window.READY, null, { timeout: 120000 });
   await page.evaluate(() => window.READY);
   const cdp = await page.context().newCDPSession(page);
+  // deviceScaleFactor alone can come back at 1x (seen on Windows: a 1080 film in the corner of a 4K frame), so the
+  // capture asks for the missing factor itself: clip.scale = SCALE / the page's real devicePixelRatio.
+  const dpr = await page.evaluate(() => window.devicePixelRatio || 1);
+  const clipScale = SCALE / dpr;
   const info = await page.evaluate(() => ({ DUR: window.DURATION, FPS: window.FPS, CUTS: window.CUTS || [], BEATS: window.BEATS || {} }));
   const png = async (t) => {
     await page.evaluate((t) => window.seek(t), t);
-    const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', optimizeForSpeed: true });
+    const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', optimizeForSpeed: true, ...(Math.abs(clipScale - 1) > 1e-6 ? { clip: { x: 0, y: 0, width: W0, height: H0, scale: clipScale } } : {}) });
     return Buffer.from(data, 'base64');
   };
   return { page, png, W, H, ...info };
