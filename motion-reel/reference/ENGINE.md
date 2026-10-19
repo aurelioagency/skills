@@ -14,7 +14,7 @@ film/film.js                               THE FILM: scenes (replace the starter
 film/video.js                              Branch B only (init.sh --overlay): wires C.videoBG, see below
 assets/{site,fonts,brand,cap}/             capture.mjs output + anything supplied
 assets/source/                             Branch B only: the user's own source video
-transcript/                                Branch B only: whisper's word-level transcript.json
+transcript/                                Branch B only: word-level transcript.json (raw) and approved.json
 audio/  music.wav drums.wav sfx.wav vo/ vo.wav mix.wav
 renders/  <fmt>.mp4  draft_<fmt>.mp4  clip_*.mp4
 review/   sheets/  stills/  r<N>/          contact sheets, stills, critique kits

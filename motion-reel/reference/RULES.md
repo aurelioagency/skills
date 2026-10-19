@@ -69,7 +69,7 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 - **Branch B:** SFX sit well under the voice — `mix.sfx` -14 dB, primary hits gain ≤ 0.5, texture ≤ 0.25. A low thump on a spoken word masks it: ≤ 0.1 or none. The narration is the user's finished audio; only loudness is touched, and a quiet source (> +8 dB needed) is reported to the user, not silently pumped.
 
 ## Branch B (motion graphics on the user's own footage)
-**The point is the animation.** The video always carries subtitles (they will come from the user's subtitles skill — integration pending; no subtitle rules live here), so every graphic must show something the subtitles don't.
+**The point is the animation.** The video always carries subtitles (burned onto the final render, identical to social-video-producer's; every subtitle rule lives in SUBTITLES.md), so every graphic must show something the subtitles don't.
 - **No echo.** Never put a phrase on screen that the subtitle is showing, unless it is the key datum of that moment (a number, a name, a price, one keyword). Non-key phrases never — least of all in the hook: the first second is for the strongest visual, not for the opening words.
 - **On-screen text is key data only:** short (1–3 words or a number), verbatim or shortened from what's said, never an invented claim, number or feature.
 - **Reference ≠ template:** take the references' technique, never their elements; every visual is created for this video, no signature motif repeated across videos, money in $ / USD (ANIMATION.md §0).
