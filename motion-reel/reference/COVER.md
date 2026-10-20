@@ -4,7 +4,7 @@ Every finished Branch B video ships with a cover, made **exactly as social-video
 
 The cover is one frame of the video with a three-line headline burned onto it, as a PNG at the source's native resolution, named `<slug>-portada.png` and delivered next to the MP4. **This is not an optional extra and it is not something to ask about.** A finished reel is a publishable post, and the cover is what decides whether anyone opens it. Produce it in the same run, after the subtitles (SUBTITLES.md S8).
 
-**Raw takes (SKILL.md B0b):** the base photo is the cover candidate picked from the user's still "posing" seconds (`assets/source/cover-candidate-<n>.png`, from the raw takes, colour-corrected like the edit), shown to the user at the B0b gate; build with `--input <that png> --frame 0`. A smile without teeth is the usual pose; with teeth is fine too.
+**Raw takes (SKILL.md B0b):** the base photo is the cover candidate picked from the user's still "posing" seconds (`assets/source/cover-candidate-<n>.png`, from the raw takes, colour-corrected like the edit), shown to the user at B0b gate 1; build with `--input <that png> --frame 0`. A smile without teeth is the usual pose; with teeth is fine too.
 
 The agent writes the headline. The frame: **if the user supplied a cover image or pointed at a specific frame, use exactly that as the BASE PHOTO — never swap it for another.** If they did not, the agent picks the frame (that silence means "you choose it"). Either way, do not hand the decision back as a question — bring the result and let them veto it.
 

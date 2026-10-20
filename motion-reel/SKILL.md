@@ -131,11 +131,15 @@ It transcribes each take, keeps from the first word to the last (head and tail s
 - **Cover frame:** the user stands still for a few seconds "posing", usually at the start of the first take or the end of the last — inside the silence that gets trimmed, so the candidates come from the raw takes. Look at `snapshots/cover-candidates.png` and pick the sharpest frame looking at camera, with a smile — usually without teeth, with teeth is fine too. The chosen `assets/source/cover-candidate-<n>.png` is the BASE PHOTO for COVER.md (`build-cover.mjs --input <that png> --frame 0`).
 - **HDR takes:** the plan stops; ask the user to turn off Settings → Camera → Record Video → HDR Video. HEVC (the iPhone's "High Efficiency") is fine: the build re-encodes to H.264 anyway, in a couple of minutes.
 
-**One approval gate** (blocking): show the user, in one message, the cut list (per take: kept range, seconds trimmed, any long inner pause to ask about), the colour before/after image and the cover candidate you picked (plus the sheet with the other two). On the OK:
+- **Look at every take's start and end before showing the cuts.** The first word's timestamp is not where the take really starts: before speaking the user often settles in (adjusts, makes a face, takes a breath with the mouth open), and that moment must go too. Check frames across the second before each take's first word and after its last; if the speaker is still settling, move the keep range (`build --keep <take>:<start>-<end>`) so the take opens on a still face that starts talking.
+
+**Gate 1** (blocking): show the user, in one message, the cut list (per take: kept range, seconds trimmed, any long inner pause to ask about), the colour before/after image and the cover candidate you picked (plus the sheet with the other two). On the OK:
 ```
-python <skill>/scripts/prep-takes.py build [--color 0.35] [--cut 2:14.2-16.8]
+python <skill>/scripts/prep-takes.py build [--color 0.35] [--cut 2:14.2-16.8] [--keep 2:1.60-15.34]
 ```
-→ `assets/source/<slug>-edit.mp4`: one H.264 file at the takes' own resolution, colour-corrected, voice levelled, seekable by Chromium (no render copy needed). It IS the source from here on: B1 continues on it (skip the `cp`). The raw takes stay in `.work` and never ship.
+→ `assets/source/<slug>-edit.mp4`: one H.264 file at the takes' own resolution, colour-corrected, voice levelled, seekable by Chromium (no render copy needed), plus `review/union-preview.mp4`, a light copy (1080 wide, well under 30 MB) of the same joined video.
+
+**Gate 2: the user watches the joined video** (blocking, never skipped): send `review/union-preview.mp4` with the cut list again and **wait for an explicit OK on the join and the cuts**. The cut list on paper is not enough: only the video shows a face being made, a bad start or a jump at the join (user, 2026-10-20: "si no me pasás el video unido y recortado, yo no puedo aprobarte para que continúes"). An OK to the colour or to the cover at gate 1 is not an OK to the cuts. Nothing of B1 (transcription included) starts before this OK; every correction rebuilds and sends the preview again. Only then is `<slug>-edit.mp4` the source from here on: B1 continues on it (skip the `cp`). The raw takes stay in `.work` and never ship.
 
 ### B1. Scaffold, source, transcript
 ```

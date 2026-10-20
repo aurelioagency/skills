@@ -10,16 +10,22 @@
 #         snapshots/color-before-after.png     one frame per take, before | after, for the user's eye
 #         snapshots/cover-candidates.png       the 3 best still frames (sharp, face to camera), numbered
 #         assets/source/cover-candidate-<n>.png  each candidate at full resolution, colour-corrected
-#   python <skill>/scripts/prep-takes.py build [--color 0.35] [--cut 2:14.2-16.8 ...] [--slug <slug>]
+#   python <skill>/scripts/prep-takes.py build [--color 0.35] [--cut 2:14.2-16.8 ...] [--keep 2:1.60-15.34 ...] [--slug <slug>]
+#       --keep overrides a take's kept range (seconds of that take): the start the plan takes from the first word can
+#       still hold the user settling in (a face, a breath) before speaking — look at the frames and move it.
 #       one pass: trims and joins the takes in order, applies the colour correction at --color strength, encodes
 #       H.264 at the takes' own resolution (CRF 12, short GOP so Chromium can seek it — no render copy needed), then
 #       levels the voice to the house level (--voice-lufs, default -21.5 LUFS: what the user's +15 dB in CapCut gave)
-#       with a -1 dBTP limiter → assets/source/<slug>-edit.mp4. The rest of SKILL.md B1 continues on that file.
+#       with a -1 dBTP limiter → assets/source/<slug>-edit.mp4, plus review/union-preview.mp4 (a light 1080-wide
+#       copy) that the USER WATCHES and OKs (join + cuts) before SKILL.md B1 continues on the edit (gate 2).
 #
 # Defaults agreed with the user (2026-10-20): the takes are already correctly spoken (no repeated lines to hunt);
 # trim only head/tail silence; ask before cutting a long inner pause; colour at 35 % (the user uses 30-40 % of
 # CapCut's auto adjust); the voice to the level of the approved reels.
 import json, math, os, re, subprocess, sys
+
+try: sys.stdout.reconfigure(encoding='utf-8'); sys.stderr.reconfigure(encoding='utf-8')   # Windows cp1252 consoles
+except Exception: pass
 
 SKILL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HEAD_PAD, TAIL_PAD, LONG_PAUSE = 0.25, 0.40, 1.2
@@ -204,6 +210,10 @@ def build():
     takes = plan_['takes']
     if abs(strength - plan_['color_strength']) > 1e-6:          # the user asked for more / less: recompute
         for t in takes: t['color'] = color_params(t['path'], t['keep'][0], t['keep'][1], strength)
+    for k in args_after('--keep'):                                # 2:1.60-15.34 — the user still settling in at the start
+        m = re.match(r'(\d+):([\d.]+)-([\d.]+)$', k)
+        if not m: raise SystemExit(f'bad --keep {k} (use take:start-end, seconds of that take)')
+        takes[int(m.group(1)) - 1]['keep'] = [float(m.group(2)), float(m.group(3))]
     for c in args_after('--cut'):                                 # 2:14.2-16.8 — a long inner pause the user OKed cutting
         m = re.match(r'(\d+):([\d.]+)-([\d.]+)$', c)
         if not m: raise SystemExit(f'bad --cut {c} (use take:start-end, seconds of that take)')
@@ -236,11 +246,18 @@ def build():
          f'volume={gain:.2f}dB,aresample=192000,alimiter=limit=0.891:attack=1:release=50:level=false,aresample=48000',
          '-c:a', 'aac', '-b:a', '320k', '-movflags', '+faststart', out])
     os.remove(tmp)
+    # a light copy for the user to WATCH: the join and the cuts are approved on the video, never on the list (gate 2)
+    os.makedirs('review', exist_ok=True)
+    run(['ffmpeg', '-v', 'error', '-y', '-i', out, '-vf', 'scale=1080:-2', '-c:v', 'libx264', '-crf', '24', '-preset', 'fast',
+         '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', 'review/union-preview.mp4'])
     dur = probe(out)['dur']
     plan_['built'] = {'file': out, 'seconds': round(dur, 2), 'segments': len(segs), 'color_strength': strength,
                       'voice_in_lufs': I, 'voice_gain_db': round(gain, 1)}
     json.dump(plan_, open(PLAN, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(f'{out}: {len(segs)} segment(s), {dur:.1f} s, {W}x{H} {FPS} fps · colour {int(strength * 100)} % · voice {I:.1f} → {plan_["voice_lufs"]} LUFS ({gain:+.1f} dB)')
+    for i, t in enumerate(takes, 1):
+        print(f"  take {i}: kept {t['keep'][0]:.2f}-{t['keep'][1]:.2f} of {t['dur']:.2f} s")
+    print('GATE 2: send review/union-preview.mp4 to the user and wait for an explicit OK on the join and the cuts before B1')
 
 
 if __name__ == '__main__':
