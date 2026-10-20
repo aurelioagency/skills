@@ -180,7 +180,11 @@ Start from the starter `film/film.js`: scenes per plan row (no subtitles in the 
 Render checks as in A7 (`--sheet`, `--at`, `--range`, `--verify`).
 
 ### B5. Audio
-`node scripts/autosfx.mjs` writes the kit's cues into `timeline.sfx` (house sounds: words/screens → `clic_palabra_loucash`, icons → `bubble`, cursor → `click`, typing/counters → `tick`); hand-written entries are kept. Then `node scripts/sync.mjs && node scripts/sfx.mjs && python3 scripts/mix.py`. SFX sit well under the voice (`mix.sfx` -14 dB default; primary hits gain ≤ 0.5). Thumps/low hits on a spoken word mask it: keep them ≤ 0.1 or skip them. The voice is never re-processed or re-levelled. House sounds: AUDIO.md §2.
+`node scripts/autosfx.mjs` writes the kit's cues into `timeline.sfx` (house sounds: words/screens → `clic_palabra_loucash`, icons → `bubble`, cursor → `click`, typing/counters → `tick`); hand-written entries are kept. Then `node scripts/sync.mjs && node scripts/sfx.mjs && python3 scripts/bed.py && python3 scripts/mix.py`.
+
+**Background music is mandatory (user, 2026-10-20: "no es algo que pueda faltar, tiene que estar siempre").** `python3 scripts/bed.py` lays a steady track from the skill's library 34 dB under the narration (`audio/bed.wav`, AUDIO.md §2b) and `mix.py` adds it. It runs BEFORE the first draft the user sees, so every draft already carries the music and the user judges the whole sound (voice, SFX and music) on the draft, never for the first time on the final. Before sending any draft, check that `mix.py` lists `bed` among its inputs. Only the user can ask for a video without music.
+
+ SFX sit well under the voice (`mix.sfx` -14 dB default; primary hits gain ≤ 0.5). Thumps/low hits on a spoken word mask it: keep them ≤ 0.1 or skip them. The voice is never re-processed or re-levelled. House sounds: AUDIO.md §2.
 
 ### B6–B8. Critique loop, final render, deliver
 Shared with Branch A — see below, with the Branch B criteria in `reference/CRITIQUE.md` (redundancy with the subtitles, animation-first, accuracy to the source). Every draft the USER sees carries the subtitles (SUBTITLES.md S-draft); the critic judges redundancy against `transcript/approved.json`.
@@ -190,13 +194,13 @@ Branch B differs at the end: after the rounds the user watches the subtitled dra
 ---
 
 ## First look: the user sees the first build before any critique round (blocking)
-As soon as every scene of the approved plan/shotlist is built, and before round 1: `node scripts/sfx.mjs && python3 scripts/mix.py && node scripts/render.mjs --draft --all`, burn the subtitles on it in Branch B (SUBTITLES.md S-draft), and send the user the draft, saying it is the unpolished first build (it may have errors). The plan was text; this is the first time the user sees how the animations appear and what is on screen, and their comments now are cheaper than after the rounds.
+As soon as every scene of the approved plan/shotlist is built, and before round 1: `node scripts/sfx.mjs && python3 scripts/bed.py && python3 scripts/mix.py && node scripts/render.mjs --draft --all` (Branch B: the background music is in the draft, B5), burn the subtitles on it in Branch B (SUBTITLES.md S-draft), and send the user the draft, saying it is the unpolished first build (it may have errors). The plan was text; this is the first time the user sees how the animations appear and what is on screen, and their comments now are cheaper than after the rounds.
 - **Wait for the user's comments or an explicit go-ahead.** Apply the comments and send a new draft each time; iterate on the draft with the user until they OK how the animation looks. Only then start the critique loop. If a correction is about one moment, send just that frame or a few seconds of it instead of a full draft (cheaper and faster).
 - The rounds polish what the user already saw and approved; they never change it. Three rounds of polishing on something the user then rejects is the waste this order exists to prevent (user, 2026-10-19).
 
 ## Critique loop: after the user's OK on the first look, up to 3 rounds
 Each round:
-1. `node scripts/sfx.mjs && python3 scripts/mix.py` (draft sound, so sync can be scored)
+1. `node scripts/sfx.mjs && python3 scripts/mix.py` (draft sound, so sync can be scored; Branch B: `audio/bed.wav` from B5 must already exist, so the mix keeps the music)
 2. `node scripts/render.mjs --sheet --all && node scripts/render.mjs --draft --all`
 3. `python3 scripts/review.py <N> --draft`
 4. **Critic:** spawn a fresh subagent with `reference/CRITIQUE.md`, the project path and N. It LOOKS at every sheet and strip, scores the 8 criteria with evidence, and appends the round to `docs/review_log.md`.
