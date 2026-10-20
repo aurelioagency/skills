@@ -13,3 +13,6 @@ assets/music/
 *.mp4
 *.wav
 *.mp3
+
+# shipped with the motion-reel skill on purpose: the steady background-music library
+!motion-reel/music/*.mp3
