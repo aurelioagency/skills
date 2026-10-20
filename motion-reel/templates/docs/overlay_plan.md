@@ -7,10 +7,12 @@ so every row must show something the subtitles don't say. Rules: reference/RULES
 
 **Layout proposal (the user chooses):** over the footage / split / full-screen cutaways / mix — and why: …
 
-| # | Time (s) | Trigger (what's said) | Shot type | What the viewer SEES that the subtitle doesn't say | On-screen text (key data only, or —) | Motion | SFX (type/file · gain) |
-|---|---|---|---|---|---|---|---|
-| 1 | | | | | | | |
-| 2 | | | | | | | |
+| # | Time (s) | Trigger (what's said) | Shot type | What the viewer SEES that the subtitle doesn't say | On-screen text (key data only, or —) | Motion | Slam / impact (on which word, or —) | SFX (type/file · gain) |
+|---|---|---|---|---|---|---|---|---|
+| 1 | | | | | | | | |
+| 2 | | | | | | | | |
+
+**Slams and impacts of the film:** <second · element · word, one per line> (SKILL.md B3: always named, never hidden behind "cae" / "aparece").
 
 Shot types: footage move (punch-in / drift / shake) · resource demo (scroll, cursor, zoom, highlight on the real UI) ·
 visual element (logos, icons, counter, price tag, arrows, comparison) · full-screen cutaway (voice continues) ·

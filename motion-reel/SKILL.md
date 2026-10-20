@@ -166,6 +166,8 @@ ffmpeg -i references/ref.mp4 -vf "select='gt(scene,0.3)',showinfo" -f null - 2>&
 ### B3. Animation plan, then STOP for the OK
 Write `docs/overlay_plan.md` from the template. **First propose the layout(s)** — over the footage (e.g. a floating browser window), split, full-screen cutaways, or a mix — with a one-line why, and let the user choose (ANIMATION.md §2). Then one row per moment with the trigger words, the **shot type** (RULES.md Branch B), **what the viewer SEES that the subtitle doesn't say**, any on-screen text (key data only), motion and SFX. A row whose answer to "what does it add" is nothing gets cut. Check face-safe zones, the 9:16 UI zones, and keep the subtitle band (just under the chin, in every framing) free of graphics (SUBTITLES.md).
 
+**Name the slams and impacts in the plan (user, 2026-10-20).** The slam (`OV.slam`: something falls in big and lands in 0.1 s) and the impact (`OV.impact` / the slam's own jolt: the whole frame shakes for 2–4 frames) are what grab attention most, so the user wants to see them in writing before approving. Every row says its entrance by name, and every row with a slam or an impact says so explicitly, with the word it lands on ("slam + impact en 'API'"); never hide them behind a vague "cae" or "aparece". The table sent to the user carries a "Slam / impact" column, and a line under it lists every slam and impact of the film with its second.
+
 Send the user the plan as a short table. **Wait for an explicit OK.** Build nothing until then.
 
 ### B4. Build
