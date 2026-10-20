@@ -53,7 +53,7 @@ ya encontrado, o a través de lo que un buscador (Brave/Yahoo) ya indexó (Modo 
 
 1. **Confirmar la fuente.** Si el usuario no dio la ruta, preguntar qué archivo/lista
    hay que completar. Para el caso ya conocido de vendedores de Mercado Libre, la fuente
-   de verdad es `G:\Unidades compartidas\Aurelio\Leads MercadoLibre Autopartes AR-MX.xlsm`
+   de verdad es `G:\Unidades compartidas\Aurelio\leads_aurelio.xlsm`
    (hoja "Leads"; el archivo tiene solo dos pestañas, Leads y Seguimientos) — editar ese mismo
    archivo (Python/openpyxl con `keep_vba=True`), nunca crear una copia ni pestañas nuevas.
 2. **Para vendedores de Mercado Libre**, seguir el flujo exacto de
@@ -87,8 +87,8 @@ Leer `references/metodo-busqueda-leads.md` antes de empezar (reglas completas, g
    - Si el usuario escribe en "Otro" un **rubro que no está en la lista**, crearlo: copiar `rubros/<un rubro parecido>.json`, cambiar
      sub-rubros, palabra, `instagram.bio_regex`, `excluir_regex` y descartes, agregarlo a `rubros.json` con estado "propuesto, sin
      probar" y mostrarle al usuario lo que se armó antes de buscar.
-   - No preguntar nada más: ni "¿confirmás?", ni el Excel (es el de la memoria, `G:\Unidades compartidas\Aurelio\Leads MercadoLibre
-     Autopartes AR-MX.xlsm`), ni el nombre de los archivos.
+   - No preguntar nada más: ni "¿confirmás?", ni el Excel (es el de la memoria, `G:\Unidades compartidas\Aurelio\leads_aurelio.xlsm`),
+     ni el nombre de los archivos.
 2. **Chequear Scrapling y su navegador** (los scripts lo hacen solos al empezar). Si falta, pedirle OK al usuario y correr
    `python -m patchright install chromium`.
 3. **Arrancar, sin esperar respuesta**: correr
