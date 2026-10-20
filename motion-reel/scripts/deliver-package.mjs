@@ -208,7 +208,7 @@ function main() {
   if (!captionPath) throw new Error('No post description found. Write renders/final/caption-<slug>.txt before delivering.');
 
   const transcriptPath = args.transcript ? path.resolve(projectDir, args.transcript) : findTranscript(projectDir);
-  if (!transcriptPath) throw new Error('No transcript found under transcript/ or assets/voice/.');
+  // Branch A films without a voiceover have no transcript; everything else still ships.
 
   const coverPath = args.cover ? path.resolve(projectDir, args.cover) : findCover(projectDir);
   const dmReplyPath = args.dmReply ? path.resolve(projectDir, args.dmReply) : findDmReply(projectDir);
@@ -223,9 +223,11 @@ function main() {
 
   // The word-level JSON is a build input for the caption pipeline, not something the
   // user asked to receive. It stays in the project; only readable text ships.
-  const textPath = path.join(sourceDir, `transcript-${slug}.txt`);
-  fs.writeFileSync(textPath, transcriptToText(readWords(transcriptPath)), 'utf8');
-  delivered.push(textPath);
+  if (transcriptPath) {
+    const textPath = path.join(sourceDir, `transcript-${slug}.txt`);
+    fs.writeFileSync(textPath, transcriptToText(readWords(transcriptPath)), 'utf8');
+    delivered.push(textPath);
+  }
 
   for (const extra of args.extra) {
     const resolved = path.resolve(projectDir, extra);

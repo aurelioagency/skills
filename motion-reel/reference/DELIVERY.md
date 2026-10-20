@@ -1,16 +1,16 @@
-# Caption, DM reply, delivery folder and Drive (Branch B)
+# Project folders, caption, DM reply, delivery folder and Drive (both branches)
 
 A copy of social-video-producer's **Post Description**, **DM Reply**, **Delivery Package** and **Publish To Drive** sections, with the paths changed to this skill (`<Documents>\motion-reel\`). The two scripts, `scripts/deliver-package.mjs` and `scripts/publish-to-drive.mjs`, are the same as that skill's; `deliver-package.mjs` also reads this skill's transcript at `transcript/approved.json`. When a rule changes in one skill, change it in the other.
 
-**Project layout (Branch B).** Every project lives at `<Documents>\motion-reel\.work\<slug>\` (derive `<Documents>` from the current environment), and its delivery folder is `<Documents>\motion-reel\<slug>\`. **The slug must be descriptive of the video's actual topic, in kebab-case**: never the source filename, a date or a non-descriptive label (`0824`, `video1`, `reel-1019`, `final2`). It is not knowable before the transcript is read, so if the project must be created first, use a short placeholder and rename the folder plus every file inside it that carries the slug right after the Transcript Approval Gate. Never ship a delivery folder or final filename still named after a placeholder. **Never `cd` into the project folder** (the shell's working directory persists between commands): use absolute paths. A session whose working directory is inside `.work\<slug>\` cannot rename that folder and `publish-to-drive.mjs` cannot delete it (`EPERM`).
+**Project layout (both branches).** Every project lives at `<Documents>\motion-reel\.work\<slug>\` (derive `<Documents>` from the current environment), and its delivery folder is `<Documents>\motion-reel\<slug>\`. **The slug must be descriptive of the video's actual topic, in kebab-case**: never the source filename, a date or a non-descriptive label (`0824`, `video1`, `reel-1019`, `final2`). In Branch A it comes from the product at intake. In Branch B it is not knowable before the transcript is read, so if the project must be created first, use a short placeholder and rename the folder plus every file inside it that carries the slug right after the Transcript Approval Gate. Never ship a delivery folder or final filename still named after a placeholder. **Before renaming the project folder or running `publish-to-drive.mjs`, get the shell out of it** (`cd` to `<Documents>`; the shell's working directory persists between commands): a session whose working directory is inside `.work\<slug>\` cannot rename that folder and `publish-to-drive.mjs` cannot delete it (`EPERM`).
 
 ```text
 motion-reel\<slug>\              <- DELIVERY: only what the user consumes
   source\
-    <slug>-portada.png
-    transcript-<slug>.txt
+    <slug>-portada.png            (Branch B)
+    transcript-<slug>.txt         (when the video has a voice)
   output\
-    <the finished video>          (subtitles + cover burned in as frame 0)
+    <the finished video(s)>       (Branch B: subtitles + cover as frame 0; Branch A: one per format)
     caption-<slug>.txt
     dm-reply-<slug>.txt           (only when the caption has the comment-for-DM line)
 

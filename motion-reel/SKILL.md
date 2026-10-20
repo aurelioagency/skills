@@ -16,7 +16,14 @@ A film is a pure function of time. `window.seek(t)` paints frame t in headless C
 - **Branch A — from scratch.** The user wants a launch reel/showreel/promo for a product or brand, and there is no existing footage of them to build on. The film is built entirely as code: brand assets captured from a URL, synthesized or supplied music, springs-driven scenes.
 - **Branch B — motion graphics on your own footage.** The user hands over a video of themselves talking and wants it animated: the resource they mention shown in motion, logos, counters, diagrams, punch-ins, full-screen cutaways under their voice — plus subtitles, identical to social-video-producer's. The footage and its audio stay the base; timing comes from the transcript, no beat grid.
 
-Both branches share the same engine, springs, type system, critique loop and render pipeline. Only the intake, asset source, and timing source differ.
+Both branches share the same engine, springs, type system, critique loop and render pipeline. Only the way the video is built differs (intake, asset source, timing source); everything around it is the same for both.
+
+**Project folders, names and delivery: the same for both branches, identical to social-video-producer's.** Every rule and both scripts live in [reference/DELIVERY.md](reference/DELIVERY.md):
+- every project lives at `<Documents>\motion-reel\.work\<slug>\` and its delivery folder at `<Documents>\motion-reel\<slug>\`, split into `source\` + `output\`, with a slug that says what the video is about;
+- the post description `caption-<slug>.txt`, plus `dm-reply-<slug>.txt` when the caption asks to comment a word for the resource;
+- `deliver-package.mjs` builds the delivery folder; only after the user approves, `publish-to-drive.mjs` copies it to the Aurelio **Reels** shared drive and deletes the `.work\<slug>\` project.
+
+Follow DELIVERY.md to the letter; when it changes in one skill, change it in the other.
 
 ---
 
@@ -38,7 +45,7 @@ Ask for every missing input in ONE AskUserQuestion round. Use a default only whe
 
 ### A1. Scaffold
 ```
-sh <skill>/scripts/init.sh videos/<distinctive-slug> [--preset presets/<name>]
+sh <skill>/scripts/init.sh <Documents>/motion-reel/.work/<distinctive-slug> [--preset presets/<name>]   # layout and slug rules: DELIVERY.md
 ```
 `--preset` runs `scripts/preset.mjs`. It copies the preset's fonts to `assets/fonts/`, writes its colour tokens into `film/index.html`, merges its timeline defaults and prefills `brief.md`. Start from `presets/blank/preset.jsonc`, which documents every field.
 Parallel sessions may run the same brief. `init.sh` refuses an existing folder, so never write into one you didn't create. Work from the project root from here on.
@@ -105,8 +112,6 @@ The user's own talking-head video (and its own audio) is the base. Timing comes 
 
 **Cover: always, identical to social-video-producer's.** Every rule lives in [reference/COVER.md](reference/COVER.md): a frame of the source with the three-line headline (Neue Montreal Bold, white style, `--small-size 68 --big-size 166`, never `--fit`), delivered as `<slug>-portada.png` AND burned into the video as its frame 0. Not optional and not something to ask about.
 
-**Caption, DM reply, delivery folder and Drive: always, identical to social-video-producer's.** Every rule and both scripts live in [reference/DELIVERY.md](reference/DELIVERY.md): the post description `caption-<slug>.txt`, the `dm-reply-<slug>.txt` when the caption asks to comment a word for the resource, the delivery folder `<Documents>\motion-reel\<slug>\` split into `source\` + `output\` (`deliver-package.mjs`), and, only after the user approves, the copy to the Aurelio **Reels** shared drive (`publish-to-drive.mjs`), which deletes the `.work\<slug>\` project. Follow DELIVERY.md to the letter; when it changes in one skill, change it in the other.
-
 ### B0. Intake
 The user sends the raw video (always vertical 9:16, at its own resolution; normally already through CapCut, so the audio arrives finished). Ask only for what's missing and can't be found:
 - the **resource** the video talks about, if the video names something without a findable link — usually something someone else made (a site, a tool, a repo, a doc). It is the main asset source.
@@ -158,8 +163,6 @@ Shared with Branch A — see below, with the Branch B criteria in `reference/CRI
 
 Branch B differs at the end: after SHIP the user watches the draft and approves it (**User review of the draft**, below); only then the final render is the clean master (`node scripts/render.mjs --crf 10`, only the 9x16 format), then the subtitles are burned onto it (SUBTITLES.md S4–S8), then the cover is built and burned in as frame 0 (COVER.md). The deliverables are `renders/final/<slug>-final.mp4` and `renders/final/<slug>-portada.png`. If the mix changes later, `--mux` the master, burn the subtitles again and re-add frame 0.
 
-Then, as in social-video-producer (DELIVERY.md): write `renders/final/caption-<slug>.txt` and, when it carries the comment-for-DM line, `renders/final/dm-reply-<slug>.txt`; run `node <skill>/scripts/deliver-package.mjs --project "<project>"` and hand over the delivery folder. Only after the user's explicit approval of the video, cover and caption: `node <skill>/scripts/publish-to-drive.mjs --project "<project>"`. In Branch B these replace the **Deliver** report below.
-
 ---
 
 ## First look: the user sees the first build before any critique round (blocking)
@@ -191,9 +194,10 @@ After SHIP, send the user the latest `renders/draft_<fmt>.mp4` (no subtitles, lo
 4. **All formats:** `node scripts/render.mjs --all` (or `--mux --all` if only the audio changed). Run `python3 scripts/review.py final` again and look at every `phone_*.jpg` and `safe_9x16.jpg`.
 
 ## Deliver
-Report:
-- `renders/<fmt>.mp4` paths, duration, loudness, and final scores (the table from `review_log.md`)
-- the contact sheet
-- anything knowingly left imperfect
+Both branches end the same way, as in social-video-producer (DELIVERY.md):
+1. Put in `renders/final/` exactly the video(s) that ship, and nothing else: in Branch B the 9x16 with subtitles and frame 0, plus `<slug>-portada.png`; in Branch A the final `renders/<fmt>.mp4` of each format, renamed `<slug>-<fmt>.mp4`.
+2. Write `renders/final/caption-<slug>.txt` and, when it carries the comment-for-DM line, `renders/final/dm-reply-<slug>.txt`.
+3. `node <skill>/scripts/deliver-package.mjs --project "<project>"` and hand over the delivery folder, plus: duration, loudness, the final scores (the table from `review_log.md`), the contact sheet, and anything knowingly left imperfect.
+4. Only after the user's explicit approval of the video, cover and caption: `node <skill>/scripts/publish-to-drive.mjs --project "<project>"`.
 
-Offer tweaks. Changes go through `timeline.json` / `film.js`, followed by `--draft` and `review.py` before any re-final.
+Changes before approval go through `timeline.json` / `film.js`, followed by `--draft` and `review.py` before any re-final, and then `deliver-package.mjs --overwrite`.
