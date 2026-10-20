@@ -180,6 +180,7 @@ After SHIP, send the user the latest `renders/draft_<fmt>.mp4` (no subtitles, lo
 - Only that explicit OK starts the final render (and, in Branch B, the subtitles and the cover).
 
 ## Final render, SFX, mix, all formats
+**A final costs ~25 min at 4K: it never starts untested.** Run `node scripts/render.mjs --preflight` first (seconds): it renders final-size frames and stops unless they are exactly W×H with the whole frame drawn. The final render runs the same check itself and aborts on its first frame if a capture comes back the wrong size. Any change to `render.mjs`, the capture, `film/video.js` or `timeline.scale` is tested with `--preflight` (and a final-scale clip when the change is in the capture) before a full final; never launch a full final to find out whether a fix works.
 1. **Render** the primary format: `node scripts/render.mjs` (60 fps, adaptive 180° motion blur). Watch it via `review.py` on the final: `python3 scripts/review.py final`.
 2. **SFX:** re-check `metrics.sync` on the final. Nudge marks or gains in `timeline.sfx`, then run `sync.mjs` and `sfx.mjs`.
 3. **Mix:** `python3 scripts/mix.py`. It must reach -14 LUFS with true peak ≤ -1 dBTP and print no WARNING.

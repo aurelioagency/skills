@@ -6,6 +6,7 @@
 //   node scripts/render.mjs [--fmt 16x9 | --all]                  final: 60 fps, adaptive 180° motion blur, H.264 yuv420p CRF 16 → renders/<fmt>.mp4
 //   node scripts/render.mjs --range 3,5 [--blur 0]                a clip of seconds 3–5 → renders/clip_<fmt>_3-5.mp4 (motion checks)
 //   node scripts/render.mjs --mux [--all]                         re-mux the current audio/mix.wav into existing renders without re-rendering
+//   node scripts/render.mjs --preflight                           seconds: prove a final-size frame is W×H and fully drawn (finals run it themselves)
 //   node scripts/render.mjs --verify [--all]                      determinism check: 12 probes, cold vs after seeking elsewhere
 //   options: --fps N  --blur 0|1 (default 1 for finals)  --crf N  --audio path (default audio/mix.wav if present)
 import http from 'node:http';
@@ -116,8 +117,25 @@ async function openFilm(fmt) {
   const png = async (t) => {
     await page.evaluate((t) => window.seek(t), t);
     const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', optimizeForSpeed: true, ...(Math.abs(clipScale - 1) > 1e-6 ? { clip: { x: 0, y: 0, width: W0, height: H0, scale: clipScale } } : {}) });
-    return Buffer.from(data, 'base64');
+    const buf = Buffer.from(data, 'base64'), cw = buf.readUInt32BE(16), ch = buf.readUInt32BE(20);
+    // hard stop on the FIRST bad frame: a final costs ~25 min, a wrong-size capture must never get past frame 0
+    if (cw !== W || ch !== H) throw new Error(`capture is ${cw}x${ch}, expected ${W}x${H} — render aborted (scale/capture bug, see preflight)`);
+    return buf;
   };
+  // PREFLIGHT (finals and --preflight): before the long render, prove the capture fills the whole W×H frame. A film
+  // drawn at 1x in the top-left corner of a 4K frame leaves the bottom-right quadrant empty at every time; real
+  // footage or graphics light it up at least at one of these times. Seconds, instead of a wasted 25-minute render.
+  if (SCALE !== 1 || has('preflight')) {
+    let lit = 0;
+    for (const t of [0.5, 0.3 * info.DUR, 0.5 * info.DUR, 0.7 * info.DUR, 0.9 * info.DUR]) {
+      const r = spawnSync('ffmpeg', ['-hide_banner', '-f', 'png_pipe', '-i', '-', '-vf', 'crop=iw/2:ih/2:iw/2:ih/2,signalstats,metadata=print:key=lavfi.signalstats.YMAX', '-f', 'null', '-'], { input: await png(t) });
+      const m = String(r.stderr).match(/YMAX=(\d+)/);
+      if (m && +m[1] > 40) lit++;
+    }
+    if (!lit) throw new Error(`preflight: the bottom-right quarter of the ${W}x${H} frame is empty at every probe — the film is not filling the frame (scale/capture bug). Render aborted.`);
+    console.log(`preflight OK: ${W}x${H} frames, the whole frame is drawn (${lit}/5 probes lit in the bottom-right quarter)`);
+    if (has('preflight')) { await browser.close(); server.close(); process.exit(0); }
+  }
   return { page, png, W, H, ...info };
 }
 
