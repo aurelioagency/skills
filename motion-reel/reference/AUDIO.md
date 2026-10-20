@@ -57,7 +57,7 @@ What failed on the way: SFX at -14 dB with gains 0.07–0.13 sat 17 dB under the
 
 **Background music: always, steady and low.** Every Branch B video gets a background track unless the user says otherwise. Use the skill's own library, `music/` (`library.json`: title, artist, source, cut, duration, integrated loudness and loudness range of each track, sorted steadiest first, all LRA ≤ 2 LU): `bed.py` picks the steadiest track long enough for the video, or `--track <file>`. A new track joins the library only if its loudness range is ≤ 2 LU (`ffmpeg -i x.mp3 -af ebur128 -f null -`), with its source recorded; add it to `library.json` and to the repo. Check the license on the source page before a track is used for a client.
 
-**The narration's loudness:** `mix.py` warns when the source is quiet (the user may have forgotten the CapCut pass). Tell the user once and leave the voice as it is.
+**The narration's loudness:** raw takes are levelled to -21.5 LUFS by `prep-takes.py build` (SKILL.md B0b; what the user's +15 dB in CapCut gave). An already edited video is left as it comes: `mix.py` warns when it is more than 3 dB under that level — tell the user once.
 
 ## 3. Voiceover (Fish Audio MCP, when the brief asks for it)
 Tools: `search_voices`, `get_voice`, `text_to_speech` (returns a permanent audio URL), `get_credit_balance`.

@@ -106,18 +106,36 @@ The user's own talking-head video (and its own audio) is the base. Timing comes 
 **What this branch is for: ANIMATION.** The user hands over the raw video and Claude does everything else. Read [reference/ANIMATION.md](reference/ANIMATION.md) (the motion language from the user's reference reels) and the Branch B rules in [reference/RULES.md](reference/RULES.md) before planning — the ones that matter most:
 - **Never echo a non-key phrase the subtitles show.** A key number, name or keyword in an animation is fine; a restated sentence is not — and never as the hook ("Alguien en internet" on a card in second 0 is the canonical failure).
 - **Animate the footage too**, not only on top of it: punch-ins, moves, full-screen cutaways while the voice keeps talking.
-- **Never lower the quality of the deliverable**: the source is used as it comes (no conversion), and the final renders at the source's own resolution.
+- **Never lower the quality of the deliverable**: an edited source is used as it comes; raw takes go through ONE visually-lossless encode at their own resolution (B0b); the final renders at the source's own resolution.
 
 **Subtitles: always on, and identical to social-video-producer's.** Every rule and script lives in [reference/SUBTITLES.md](reference/SUBTITLES.md) (a copy of that skill's burn-in captions branch): transcript approval gate, Neue Montreal Bold 104px all white one word at a time, per-shot zones below the face, libass burn. The film never draws subtitles; they are burned onto the final render as the last step (S4–S8), so they follow the face as the film frames it. Follow SUBTITLES.md to the letter; when it changes in one skill, change it in the other.
 
 **Cover: always, identical to social-video-producer's.** Every rule lives in [reference/COVER.md](reference/COVER.md): a frame of the source with the three-line headline (Neue Montreal Bold, white style, `--small-size 68 --big-size 166`, never `--fit`), delivered as `<slug>-portada.png` AND burned into the video as its frame 0. Not optional and not something to ask about.
 
 ### B0. Intake
-The user sends the raw video (always vertical 9:16, at its own resolution; normally already through CapCut, so the audio arrives finished). Ask only for what's missing and can't be found:
+The user sends either **raw phone takes** (one or several, straight from the phone: silence at the head and tail, no colour or volume work — the normal case from 2026-10-20, so nothing goes through CapCut any more) → B0b first; or an **already edited video** (through CapCut, audio finished) → straight to B1. Always vertical 9:16, at its own resolution. Ask only for what's missing and can't be found:
 - the **resource** the video talks about, if the video names something without a findable link — usually something someone else made (a site, a tool, a repo, a doc). It is the main asset source.
 - new **reference reels** (.mp4), only if the user offers them (`references/` in the project).
 
 Don't ask for formats (always 9:16), duration (the source's), a brand kit, colours or a logo: the look comes from the resource and the reference reels, not from the user's brand, unless the user asks for it.
+
+### B0b. Pre-edit the raw takes (replaces CapCut)
+After `init.sh` (B1's first line), with the takes in the order the user gave them:
+```
+python <skill>/scripts/prep-takes.py plan --takes <take1> <take2> ...
+```
+It transcribes each take, keeps from the first word to the last (head and tail silence out, with a small margin), measures light and colour, and finds the cover candidates. What the user agreed (2026-10-20):
+- **The takes are already correctly spoken.** Never hunt for mistakes or repeated lines; only the head/tail silence goes. A long pause INSIDE the speech (listed by the plan, > 1.2 s) is cut only after asking the user (`build --cut <take>:<start>-<end>`).
+- **Colour and light:** an automatic levels correction (exposure, contrast, white balance; it also evens out takes shot in different light) at **35 %** by default — the user sets CapCut's auto adjust to 30–40 %, never its suggested 80 %. Show `snapshots/color-before-after.png`; the user may ask for more or less (`build --color 0.25`).
+- **Voice level:** `build` brings the joined voice to **-21.5 LUFS** (true peak ≤ -1 dBTP): the level the user got from +15 dB in CapCut, the level of the approved reels.
+- **Cover frame:** the user stands still for a few seconds "posing", usually at the start of the first take or the end of the last — inside the silence that gets trimmed, so the candidates come from the raw takes. Look at `snapshots/cover-candidates.png` and pick the sharpest frame looking at camera, with a smile — usually without teeth, with teeth is fine too. The chosen `assets/source/cover-candidate-<n>.png` is the BASE PHOTO for COVER.md (`build-cover.mjs --input <that png> --frame 0`).
+- **HDR takes:** the plan stops; ask the user to turn off Settings → Camera → Record Video → HDR Video. HEVC (the iPhone's "High Efficiency") is fine: the build re-encodes to H.264 anyway, in a couple of minutes.
+
+**One approval gate** (blocking): show the user, in one message, the cut list (per take: kept range, seconds trimmed, any long inner pause to ask about), the colour before/after image and the cover candidate you picked (plus the sheet with the other two). On the OK:
+```
+python <skill>/scripts/prep-takes.py build [--color 0.35] [--cut 2:14.2-16.8]
+```
+→ `assets/source/<slug>-edit.mp4`: one H.264 file at the takes' own resolution, colour-corrected, voice levelled, seekable by Chromium (no render copy needed). It IS the source from here on: B1 continues on it (skip the `cp`). The raw takes stay in `.work` and never ship.
 
 ### B1. Scaffold, source, transcript
 ```
@@ -127,10 +145,10 @@ ffprobe -v error -show_entries stream=width,height:stream_side_data=rotation -of
 node <skill>/scripts/transcribe-media.mjs --input assets/source/<file> --out-audio transcript/voice16k.wav --out-transcript transcript/transcript.json --language es
 ```
 - **Transcript Approval Gate (blocking):** SUBTITLES.md S2. Show the corrected transcript with hook, CTA and shots, wait for the OK, write `transcript/approved.json`. Everything after this (animation marks and subtitles) reads the approved transcript. Then freeze the caption font (S3).
-- `--overlay` sets Branch B defaults in `timeline.json` (bpm 60, 9x16, narration base, **SFX at -14 dB**), copies `engine/video.js` + `engine/overlay.js` (the `OV` kit: `settleOn`, `slide`, `putSlide`, `OV.bg`) and the Branch B starter `film.js`. The transcription and subtitle scripts run from the skill folder.
+- `--overlay` sets Branch B defaults in `timeline.json` (bpm 60, 9x16, narration base, **SFX at -3 dB**, AUDIO.md §2b), copies `engine/video.js` + `engine/overlay.js` (the `OV` kit: `settleOn`, `slide`, `putSlide`, `OV.bg`) and the Branch B starter `film.js`. The transcription and subtitle scripts run from the skill folder.
 - **Deliverable resolution = the source's.** The film is laid out at 1080x1920; set `timeline.scale` to the source's width / 1080 (2 for a 2160x3840 phone 4K) and the final render captures at that size. Drafts, sheets and stills stay at 1080 for speed — they are never delivered.
-- Point `C.videoBG` at the source file itself. Only if headless Chromium cannot decode it (e.g. HEVC) make an internal visually-lossless H.264 copy **at the same resolution** for rendering — tell the user, and never deliver anything below the source's resolution.
-- The narration is the base track: `ffmpeg -i assets/source/<file> -vn -ar 48000 -ac 2 -c:a pcm_s24le audio/music.wav`. `mix.py` keeps it at its own level; if it warns that the source is quiet, tell the user — probably the raw phone take that skipped CapCut.
+- Point `C.videoBG` at the source file itself (after B0b, the `-edit.mp4`). Only if headless Chromium cannot decode it (e.g. an edited HEVC video) make an internal visually-lossless H.264 copy **at the same resolution** for rendering (a couple of minutes, fine with the user), and never deliver anything below the source's resolution.
+- The narration is the base track: `ffmpeg -i assets/source/<file> -vn -ar 48000 -ac 2 -c:a pcm_s24le audio/music.wav`. `mix.py` keeps it at its own level (B0b already levelled raw takes to -21.5 LUFS); if it warns that the source is quiet, tell the user — an edited video whose voice was not raised.
 
 ### B2. Assets and references
 - Resource: `node scripts/capture.mjs <url>` (screenshots incl. the full page for scroll-throughs, logos, fonts, colours). Logos of tools the user names: from their own sites.

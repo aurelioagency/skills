@@ -67,5 +67,6 @@ if not NARRATION and (abs(I + 14) > 0.5 or TP > -1): print('WARNING: off target 
 # means a raw phone recording slipped through: say so to the user, don't silently pump it.
 if NARRATION:
     print(f'narration kept at its own level (not re-levelled): mix {I:.1f} LUFS')
-    if need > 6:
-        print(f'WARNING: the source narration is quiet ({I0:.1f} LUFS, {need:+.1f} dB under -14). It may be the raw phone take — ask the user whether it skipped the CapCut pass before rendering finals.')
+    # the house voice level is -21.5 LUFS (prep-takes.py levels raw takes there; it is what the user's CapCut +15 dB gave)
+    if I0 < -21.5 - 3:
+        print(f'WARNING: the source narration is quiet ({I0:.1f} LUFS, {-21.5 - I0:+.1f} dB under the house level -21.5). Tell the user: an edited video whose voice was not raised (raw takes go through prep-takes.py, which levels them).')
