@@ -1,0 +1,24 @@
+{
+  "_comentario": "Ejemplo de un negocio ficticio (una pastelería que regala su recetario). La entrevista de SKILL.md arma un archivo así con las respuestas de la persona; los campos que empiezan con _ se ignoran.",
+  "target": "next",
+  "trigger_type": "keyword",
+  "trigger_keyword": "RECETAS",
+  "comment_reply_templates": [
+    "¡Te lo mandé por DM! 📩 Si no lo ves, fijate en las solicitudes de mensajes",
+    "Listo, revisá tus mensajes (y las solicitudes, por las dudas) 🙌",
+    "¡Ya te llegó! 👀 Mirá también en las solicitudes ocultas"
+  ],
+  "custom_greeting": "¡Hola! Qué bueno verte por acá",
+  "reply_message": "Gracias por comentar 🙌\nTocá el botón de abajo y te mando el recetario.",
+  "button_text": "Quiero el recetario",
+  "require_follow": true,
+  "follow_gate_message": "Para desbloquearlo, seguime primero 👋",
+  "follow_button_text": "Seguir la cuenta",
+  "verify_button_text": "Ya te sigo 👍",
+  "follow_gate_retry_message": "Todavía no te veo entre mis seguidores 🤔 Seguime y tocá 'Ya te sigo' de nuevo.",
+  "final_message": "Acá tenés el recetario 🍰\nTocá el botón y descargalo.",
+  "final_button_text": "Abrir recetario",
+  "link_url": "https://ejemplo.com/recetario.pdf",
+  "additional_buttons": [],
+  "followup_enabled": false
+}
