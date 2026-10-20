@@ -16,3 +16,7 @@ assets/music/
 
 # shipped with the motion-reel skill on purpose: the steady background-music library
 !motion-reel/music/*.mp3
+
+# python bytecode
+__pycache__/
+*.pyc
