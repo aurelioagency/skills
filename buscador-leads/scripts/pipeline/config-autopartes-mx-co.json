@@ -1,0 +1,47 @@
+{
+  "nombre": "autopartes Mercado Libre, México y Colombia (ejemplo de configuración, el rubro y los países se cambian acá)",
+  "rubro": "autopartes",
+  "paises": {
+    "MX": {"nombre": "Mexico", "prefijo": "52", "largo": 10, "marketplace": "mercadolibre.com.mx"},
+    "CO": {"nombre": "Colombia", "prefijo": "57", "largo": 10, "inicio_valido": "36", "marketplace": "mercadolibre.com.co"}
+  },
+  "palabras_genericas": ["autopartes", "refacciones", "refaccionaria", "repuestos", "partes", "parts", "auto", "automotriz"],
+  "subrubros": {
+    "MX": ["partes electricas automotrices", "clima automotriz compresor", "inyeccion electronica", "partes diesel camion", "refacciones jeep", "refacciones seat", "refacciones peugeot", "refacciones mitsubishi", "refacciones suzuki", "refacciones isuzu", "autopartes usadas yonke", "accesorios camioneta", "birlos tuercas", "faros niebla", "kit clutch", "balatas", "amortiguadores", "radiadores", "mangueras automotrices", "bandas automotrices", "refacciones tsuru", "refacciones aveo", "refacciones jetta", "refacciones vocho", "tren motriz", "juntas homocineticas", "bombas de gasolina", "sistema electrico auto", "carroceria hojalateria", "vidrios autos"],
+    "CO": ["repuestos chery", "repuestos jac", "repuestos suzuki", "repuestos mitsubishi", "repuestos peugeot", "repuestos daewoo", "repuestos spark", "repuestos logan", "repuestos duster", "repuestos camiones", "repuestos diesel", "aire acondicionado carro", "kit embrague", "pastillas freno", "amortiguadores", "radiadores", "bandas carro", "repuestos usados carro", "accesorios camioneta", "farolas", "caja de cambios", "sistema electrico carro", "latoneria", "vidrios carro", "bombas de gasolina"]
+  },
+  "zonas": {
+    "MX": ["jalisco", "nuevo leon", "estado de mexico", "puebla", "guanajuato", "sonora", "sinaloa", "chihuahua", "coahuila", "yucatan", "michoacan", "veracruz", "baja california", "tamaulipas", "queretaro", "aguascalientes", "san luis potosi", "tabasco", "chiapas", "oaxaca", "hidalgo", "morelos", "guerrero", "nayarit", "zacatecas", "durango", "quintana roo", "campeche", "colima", "tlaxcala"],
+    "CO": ["antioquia", "valle del cauca", "cundinamarca", "santander", "atlantico", "boyaca", "tolima", "huila", "risaralda", "caldas", "bolivar", "meta", "norte de santander", "cordoba", "narino", "cauca", "cesar", "magdalena", "sucre", "quindio", "casanare", "caqueta"]
+  },
+  "consultas": {
+    "MX": [
+      {"para": "subrubros", "texto": "site:{marketplace}/tienda {x}"},
+      {"para": "subrubros", "texto": "site:{marketplace}/pagina {x}"},
+      {"para": "zonas", "texto": "site:instagram.com refacciones {x} envios mercado libre"},
+      {"para": "zonas", "texto": "site:instagram.com autopartes {x} whatsapp"},
+      {"para": "zonas", "texto": "refaccionaria {x} tienda en linea mercadolibre whatsapp"}
+    ],
+    "CO": [
+      {"para": "subrubros", "texto": "site:{marketplace}/tienda {x}"},
+      {"para": "subrubros", "texto": "site:{marketplace}/pagina {x}"},
+      {"para": "zonas", "texto": "site:instagram.com repuestos {x} envios mercado libre"},
+      {"para": "zonas", "texto": "site:instagram.com autopartes {x} whatsapp"},
+      {"para": "zonas", "texto": "almacen de repuestos {x} tienda virtual mercadolibre whatsapp"}
+    ]
+  },
+  "tiendas_ml": {
+    "activar": true,
+    "producto_regex": "amortiguador|freno|balata|pastilla|clutch|embrague|bujia|radiador|calavera|faro|farola|parachoque|defensa|suspensi|rotula|horquilla|filtro|alternador|marcha|arranque|sensor|bomba|empaque|junta|mofle|silenciador|exosto|escape|retrovisor|espejo|parabrisas|bateria|banda|correa|tensor|polea|inyector|bobina|termostato|manguera|soporte|maza|balero|rodamiento|flecha|homocinet|cremallera|direcci|cilindro|valvula|piston|aceite|refacci|repuesto|autoparte|chevrolet|nissan|renault|mazda|toyota|volkswagen|ford|hyundai|kia|honda|dodge|jeep|chrysler|mitsubishi|suzuki|seat|peugeot|tsuru|sentra|aveo|jetta|spark|tapete|carroceria|puerta|cofre|salpicadera|moldura|manija|chapa|switch|obd",
+    "excluir_producto_regex": "\\bmoto|motocicleta|cuatrimoto|italika|yamaha|bajaj|scooter",
+    "minimo_producto": 0.7,
+    "maximo_excluido": 0.3
+  },
+  "instagram": {
+    "bio_regex": "auto|refacc|repuest|carro|vehic|freno|suspens|escape|mofle|radiador|motor|parts|partes|llanta|faro|taller|mecan|4x4|lubric|aceite|nissan|chevrolet|renault|mazda|toyota|ford",
+    "excluir_regex": "moto(?!r)|concesionari|seminuevo|agencia|lavado|detailing|polariz|hogar|electrodom|cosmet|belleza",
+    "min_seguidores": 20
+  },
+  "descartar_nombre_regex": "moto(?!r)|concesionari|ferreter|coleccion|escala|nautic|camping|detailing|montacarg|hogar|electrodom|cosmet|belleza|fundaci[oó]n|pasajeros|transporte",
+  "descartar_marcas": ["Depo", "OEP", "GMB", "Denso", "ACDelco", "Shell", "Castrol", "Mobil", "Bosch", "Monroe", "Kavak"]
+}

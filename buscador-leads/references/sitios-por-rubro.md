@@ -15,7 +15,8 @@ anti-bot; si todos tienen protección fuerte, usar `StealthyFetcher` (navegador 
 - inmuebles24.com (MX)
 
 ## Restaurantes / gastronomía
-- Google Maps (búsqueda "restaurantes en <zona>") — vía browser, no vía Scrapling directo
+- Google Maps (búsqueda "restaurantes en <zona>") — con `StealthyFetcher` (`network_idle=True`, `wait=3500`) la ficha devuelve
+  nombre, teléfono y web cuando la búsqueda da un solo local (probado en octubre de 2026); validar que el título de la ficha lleve la marca
 - guiaoleo.com.ar
 - TripAdvisor (rubro restaurantes por ciudad)
 

@@ -5,6 +5,8 @@ An agent skill that finds potential clients by scraping public sites, and fills 
 ```
 Mode A:  industry + city → pick the site → inspect the real page → scrape → contacts per lead → list for review
 Mode B:  existing list   → find each lead's own page → extract contacts → show what was found and where → save
+Mode C:  campaign Excel  → search NEW leads of any industry/country without repeating the Excel → verify the industry →
+                           contacts from the company's own sources → cross-check every datum → CSV → (only if asked) append to the Excel
 ```
 
 It only searches and hands over data. It never sends, publishes, or contacts anyone — outreach is a separate, later step.
@@ -21,6 +23,8 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 | [scripts/fetch.py](scripts/fetch.py) | Downloads a page so its real structure can be inspected before writing selectors (`--stealth` for JS-heavy sites, `--html` for raw markup) |
 | [scripts/extract_contacts.py](scripts/extract_contacts.py) | Pulls email, WhatsApp, Instagram, and website from a page |
 | [scripts/export_csv.py](scripts/export_csv.py) | Exports a list of results to CSV |
+| [references/metodo-busqueda-leads.md](references/metodo-busqueda-leads.md) | Mode C method for any industry: dedup rules, dorks, quality rules, known errors, pending improvements |
+| [scripts/pipeline/](scripts/pipeline/) | Mode C pipeline: `buscar_leads.py`, `completar_datos.py`, `verificar_datos.py`, `cargar_excel.py`, shared `leads_common.py`, and an example config (`config-autopartes-mx-co.json`) where industry, countries, zones and filters are changed |
 
 ## Key features
 
@@ -32,6 +36,10 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 - **Escalates only when needed.** A plain fetcher first; a real-browser stealth fetcher if the site blocks it, before discarding the source.
 - **Social networks only as enrichment.** Instagram, LinkedIn, and Facebook are never the source of the initial list (they block fast scraping) — only a one-off lookup for a lead already found elsewhere.
 - **Nothing is sent anywhere.** No messages, no posts, and nothing written into a campaign file unless you ask for it.
+- **The industry is not fixed.** The Mode C method is industry-agnostic: change the config (industry, sub-industries, countries, zones, filters) and run it again. Auto parts in Mexico and Colombia is just the first config.
+- **No duplicates.** It builds an index of everything already in the Excel (names, Instagram handles, domains, phones, emails, stores) and drops candidates before spending time on them.
+- **Every datum has a source and a check.** Contacts come only from the company's own pages (website, Instagram bio, linktree, Facebook page, matching Google Maps listing); a cross-check removes phones/emails shared between companies, already in the Excel, from another country, or from an unrelated domain.
+- **Loads into the Excel safely.** Works on a temporary copy, proves that every existing cell is unchanged, and replaces the original only if nobody touched it meanwhile; if the file is open in Excel it stops and asks to close it.
 
 ## Installation
 
@@ -88,7 +96,7 @@ Or simply delete that folder yourself.
 
 ## Requirements
 
-- **Python 3** with [Scrapling](https://github.com/D4Vinci/Scrapling): `pip install scrapling` (for `--stealth`, also the browser dependencies Scrapling documents).
+- **Python 3** with [Scrapling](https://github.com/D4Vinci/Scrapling): `pip install scrapling` (for `--stealth` and the Mode C pipeline, also its browser: `python -m patchright install chromium`; the pipeline checks it on start and tells you if it is missing).
 - **openpyxl** — only when enriching an Excel file: `pip install openpyxl`.
 - **No API keys and no paid providers.**
 
