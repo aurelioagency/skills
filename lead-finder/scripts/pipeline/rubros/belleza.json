@@ -1,0 +1,87 @@
+{
+ "id": "belleza",
+ "nombre": "Belleza",
+ "estado": "probado en México (campaña de cosméticos, octubre 2026)",
+ "descripcion": "Marcas y tiendas de cosmética, skincare, cabello, uñas y perfumería (vendedores de Mercado Libre y tiendas propias).",
+ "servicio_aurelio": "Automatización de catálogo, precios y atención por WhatsApp con IA; contenido (reels y carruseles) y tienda web.",
+ "palabra": "cosmeticos",
+ "palabras_genericas": [
+  "cosmetica",
+  "cosmeticos",
+  "belleza",
+  "beauty",
+  "natural",
+  "skin"
+ ],
+ "subrubros": {
+  "*": [
+   "cosmetica natural",
+   "maquillaje",
+   "skincare cuidado de la piel",
+   "cuidado del cabello shampoo",
+   "esmaltes y unas",
+   "perfumeria",
+   "productos de barberia",
+   "protector solar bronceador",
+   "cremas faciales",
+   "suplementos y bienestar",
+   "belleza profesional"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "subrubros",
+    "texto": "site:{marketplace}/tienda {x}"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:{marketplace}/pagina {x}"
+   },
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} envios mercado libre"
+   },
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} tienda en linea mercadolibre whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": true,
+  "producto_regex": "crema|serum|shampoo|champu|acondicionador|mascarilla|tratamiento|maquillaje|labial|base de|corrector|rubor|sombra|delineador|pestanina|esmalte|u[nñ]as|perfume|fragancia|colonia|facial|corporal|capilar|cabello|piel|skincare|bronceador|protector solar|hidratante|exfoliante|jabon|aceite|barba|cera|gel|locion|desodorante|cosmetic|belleza|natural",
+  "excluir_producto_regex": "repuesto|autopart|tornillo|herramienta",
+  "minimo_producto": 0.7,
+  "maximo_excluido": 0.3
+ },
+ "instagram": {
+  "bio_regex": "belleza|cosm|skin|maquill|beauty|piel|cabello|u[nñ]as|perfum|barber|estetic|natural|makeup|hair",
+  "excluir_regex": "autopartes|repuest|refacc|inmobiliari|clinica|consultorio",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [
+  "Nivea",
+  "Dove",
+  "Maybelline",
+  "L'Oreal",
+  "LBel",
+  "Natura",
+  "Avon",
+  "Revlon",
+  "Clinique",
+  "MAC",
+  "Bioderma",
+  "Cetaphil",
+  "Eucerin",
+  "ISDIN",
+  "Vichy",
+  "NYX"
+ ],
+ "portales": {}
+}

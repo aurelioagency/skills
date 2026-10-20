@@ -1,7 +1,7 @@
 """Controla que cada dato de un CSV de leads corresponda a su empresa, y suma lo que trajo completar_datos.py.
 
 Uso:
-  python verificar_datos.py --config config.json --excel "<Excel>" --csv tanda1.csv [--csv tanda2.csv ...]
+  python verificar_datos.py --rubro <id> --paises AR,MX --excel "<Excel>" --csv tanda1.csv [--csv tanda2.csv ...]
          [--completados tanda1.completados.jsonl ...] [--hoja Leads]
 
 Controles (lo que no pasa se SACA del dato, no de la empresa; se imprime qué se sacó):
@@ -32,7 +32,7 @@ def src_add(r, kind, val, where):
 
 
 def main():
-    cfg = C.load_config(C.arg_value("--config"))
+    cfg = C.config_from_args()
     excel, hoja = C.arg_value("--excel"), C.arg_value("--hoja", "Leads")
     paths = C.arg_list("--csv")
     comps = C.arg_list("--completados")
@@ -93,7 +93,7 @@ def main():
                 else:
                     keep.append(ph)
             r[col] = "; ".join(keep)
-        tk = C.tok(nm, cfg.get("palabras_genericas", [])) + C.tok(C.handle_of(r["Instagram"]), cfg.get("palabras_genericas", []))
+        tk = C.tok(nm, (cfg.get("palabras_genericas") or [])) + C.tok(C.handle_of(r["Instagram"]), (cfg.get("palabras_genericas") or []))
         webs = [re.sub(r"^https?://(www\.)?", "", w).split("/")[0].lower() for w in re.split(r"[;,]", r["Web"]) if w.strip()]
         keep = []
         for e in C.split(r["Email"]):

@@ -1,8 +1,9 @@
 """Busca leads NUEVOS de un rubro (sin repetir lo que ya está en el Excel) y les saca el contacto.
 
 Uso:
-  python buscar_leads.py --config config-autopartes-mx-co.json --excel "<Excel>" --salida leads-nuevos.csv
-         [--hoja Leads] [--previos otro.csv ...] [--trabajo carpeta_intermedios] [--prueba]
+  python buscar_leads.py --rubro inmobiliarias --paises AR,MX --excel "<Excel>" --salida leads-nuevos.csv
+         [--hoja Leads] [--previos otro.csv ...] [--trabajo carpeta_intermedios] [--limite-consultas N] [--prueba]
+  (rubros en rubros.json, países en paises.json; o --config <archivo.json> con una configuración completa)
 
 Etapas (cada una guarda su avance en --trabajo y se puede reanudar):
   A  buscar candidatos con Brave/Yahoo (tiendas de Mercado Libre y cuentas de Instagram)
@@ -42,21 +43,29 @@ def fuera_de_pais(texto, webs, emails, paises_ok):
 
 
 def consultas(cfg):
-    Q = []
+    """Todas las consultas, intercaladas entre países y entre tipos de consulta: si se corta con --limite-consultas, queda algo de cada país."""
+    from itertools import zip_longest
+    por_pais = []
     for pais, pc in cfg["paises"].items():
+        q = []
         for t in cfg["consultas"].get(pais, []):
+            if "{marketplace}" in t["texto"] and not pc.get("marketplace"):
+                continue  # ese país no tiene Mercado Libre
             lista = cfg["subrubros"].get(pais, []) if t["para"] == "subrubros" else cfg["zonas"].get(pais, [])
-            for x in lista:
-                Q.append((pais, t["texto"].format(marketplace=pc.get("marketplace", ""), x=x)))
-    return Q
+            q.append([(pais, t["texto"].format(marketplace=pc.get("marketplace") or "", x=x, palabra=cfg.get("palabra", {}).get(pais, ""), pais=pc["nombre"].lower())) for x in lista])
+        por_pais.append([x for grupo in zip_longest(*q) for x in grupo if x] if q else [])
+    return [x for grupo in zip_longest(*por_pais) for x in grupo if x]
 
 
 def etapa_a(cfg, idx, trabajo, prueba):
-    pat = re.compile(r"mercadolibre\.com\.(mx|co|ar|cl|pe|uy)/(tienda|pagina)/([A-Za-z0-9_\-\.]+)")
+    pat = re.compile(r"mercadolibre\.(?:com\.|co\.)?(ar|mx|co|cl|pe|uy|ec|cr|pa|ve|bo|py)/(tienda|pagina)/([A-Za-z0-9_\-\.]+)")
     igp = re.compile(r"instagram\.com/([A-Za-z0-9_\.]{3,30})(?:/|[^A-Za-z0-9_\.])")
     f = os.path.join(trabajo, "cands.json")
     cand = json.load(open(f, encoding="utf8")) if os.path.exists(f) else {"tie": {}, "ig": {}, "qs": []}
     Q = consultas(cfg)
+    lim = C.arg_value("--limite-consultas")
+    if lim:
+        Q = Q[: int(lim)]
     if prueba:
         Q = Q[:2]
     hechas = set(cand["qs"])
@@ -65,14 +74,17 @@ def etapa_a(cfg, idx, trabajo, prueba):
         pais, q = item
         txt = ""
         for off in (0, 1):
-            r = C.stealth("https://search.brave.com/search?q=" + urllib.parse.quote(q) + f"&offset={off}")
-            txt += r.body.decode("utf8", "ignore") if r is not None else ""
+            txt += C.fetch_serp("https://search.brave.com/search?q=" + urllib.parse.quote(q) + f"&offset={off}")
             time.sleep(2)
         for b in (1, 11):
-            r = C.stealth("https://search.yahoo.com/search?p=" + urllib.parse.quote(q) + f"&b={b}")
-            txt += r.body.decode("utf8", "ignore") if r is not None else ""
+            txt += C.fetch_serp("https://search.yahoo.com/search?p=" + urllib.parse.quote(q) + f"&b={b}")
             time.sleep(2)
+        txt += C.fetch_serp("https://lite.duckduckgo.com/lite/?q=" + urllib.parse.quote(q))
+        time.sleep(2)
         txt = urllib.parse.unquote(txt)
+        if len(txt) < 5000:  # sin resultados (buscadores limitando): no se marca como hecha, queda para reintentar
+            print("A", "sin resultados para:", q[:60], flush=True)
+            return
         with C.LK:
             for m in pat.finditer(txt):
                 if m.group(1).upper() != pais:
@@ -96,13 +108,13 @@ def etapa_a(cfg, idx, trabajo, prueba):
 
 
 def etapa_b(cfg, cand, idx, trabajo, prueba):
-    tm = cfg.get("tiendas_ml", {})
+    tm = cfg.get("tiendas_ml") or {}
     if not tm.get("activar"):
         return []
     prod = re.compile(tm["producto_regex"], re.I)
     exc = re.compile(tm["excluir_producto_regex"], re.I) if tm.get("excluir_producto_regex") else None
-    desc = re.compile(cfg.get("descartar_nombre_regex", "a^"), re.I)
-    marcas = [norm(m) for m in cfg.get("descartar_marcas", [])]
+    desc = re.compile(cfg.get("descartar_nombre_regex") or "a^", re.I)
+    marcas = [norm(m) for m in (cfg.get("descartar_marcas") or [])]
 
     def titles(u):
         for mode in ("f", "s"):
@@ -120,7 +132,7 @@ def etapa_b(cfg, cand, idx, trabajo, prueba):
 
     def one(item):
         slug, info = item
-        tld = cfg["paises"][info["pais"]].get("marketplace", "")
+        tld = cfg["paises"][info["pais"]].get("marketplace") or ""
         u = f"https://www.{tld}/{info['kind']}/{slug}"
         name, t = titles(u)
         a = sum(1 for x in t if prod.search(x))
@@ -238,7 +250,7 @@ def contactos(ent, cfg, idx):
                 em_f[e] = w
     texto = " ".join([ent["name"], ig["bio"] if ig else "", ent.get("ig", "")])
     ajeno = fuera_de_pais(texto, webs, list(em_f), list(cfg["paises"]))
-    row = dict(Empresa=(ig["name"] if ig and ig["name"] else ent["name"]), Pais=pais, Fuente=ent["fuente"], Tienda_MercadoLibre=ent.get("ml", ""),
+    row = dict(Empresa=(ig["name"] if ig and ig["name"] else ent["name"]), Pais=pais, Rubro=cfg.get("rubro_nombre", ""), Fuente=ent["fuente"], Tienda_MercadoLibre=ent.get("ml", ""),
                Instagram=(f"https://www.instagram.com/{ent['ig']}/" if ig else ""), Seguidores_IG=(ig["followers"] if ig else ""),
                Web=", ".join(dict.fromkeys(webs)), Email="; ".join(list(em_f)[:2]), WhatsApp="; ".join(list(wa_f)[:2]), Telefono="; ".join(list(tel_f)[:2]),
                De_donde_sale=" | ".join([f"mail {e}: {w}" for e, w in list(em_f.items())[:2]] + [f"WA {p}: {w}" for p, w in list(wa_f.items())[:2]] + [f"tel {p}: {w}" for p, w in list(tel_f.items())[:2]]),
@@ -248,7 +260,7 @@ def contactos(ent, cfg, idx):
 
 
 def main():
-    cfg = C.load_config(C.arg_value("--config"))
+    cfg = C.config_from_args()
     excel = C.arg_value("--excel")
     hoja = C.arg_value("--hoja", "Leads")
     salida = C.arg_value("--salida", "leads-nuevos.csv")
@@ -262,7 +274,7 @@ def main():
     tiendas = etapa_b(cfg, cand, idx, trabajo, prueba)
     print("tiendas del rubro:", len(tiendas), flush=True)
     ents = [dict(name=t["name"], pais=t["pais"], slug=t["slug"], ml=t["url"], ig="", fuente="Tienda Mercado Libre") for t in tiendas]
-    ic = cfg.get("instagram", {})
+    ic = cfg.get("instagram") or {}
     bio_ok = re.compile(ic.get("bio_regex", "."), re.I)
     bio_no = re.compile(ic.get("excluir_regex", "a^"), re.I)
 

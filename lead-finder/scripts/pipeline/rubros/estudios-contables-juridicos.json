@@ -1,0 +1,54 @@
+{
+ "id": "estudios-contables-juridicos",
+ "nombre": "Estudios contables y jurídicos",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Estudios de abogados, contadores, escribanías, gestorías y asesorías.",
+ "servicio_aurelio": "Automatización de documentos y trámites repetitivos, atención de consultas por WhatsApp con IA y captación de clientes.",
+ "palabra": "estudio contable",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "estudio juridico abogados",
+   "estudio contable contadores",
+   "escribania",
+   "gestoria",
+   "asesoria impositiva",
+   "consultora de recursos humanos"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "estudio|abogad|jur[ií]dic|contador|contable|impuest|escriban|gestor[ií]a|asesor|legal",
+  "excluir_regex": "autopartes|repuest|cosmet|inmobiliari",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

@@ -1,0 +1,54 @@
+{
+ "id": "gimnasios",
+ "nombre": "Gimnasios y centros de entrenamiento",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Gimnasios, crossfit, pilates, yoga y entrenamiento personalizado.",
+ "servicio_aurelio": "Altas, cuotas y turnos por WhatsApp con IA, reactivación de socios y contenido para redes.",
+ "palabra": "gimnasio",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "gimnasio crossfit",
+   "estudio de pilates",
+   "centro de yoga",
+   "gimnasio funcional",
+   "box de artes marciales",
+   "entrenamiento personalizado"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "gimnasio|gym|crossfit|pilates|yoga|fitness|entrenamiento|funcional|box|musculaci[oó]n",
+  "excluir_regex": "autopartes|repuest|clinica|inmobiliari",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

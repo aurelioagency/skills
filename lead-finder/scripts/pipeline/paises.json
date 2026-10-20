@@ -1,0 +1,319 @@
+{
+ "MX": {
+  "nombre": "Mexico",
+  "estado": "probado",
+  "prefijo": "52",
+  "largo": 10,
+  "marketplace": "mercadolibre.com.mx",
+  "directorios": [
+   "paginasamarillas.com.mx",
+   "cybo.com"
+  ],
+  "zonas": [
+   "ciudad de mexico",
+   "jalisco",
+   "nuevo leon",
+   "estado de mexico",
+   "puebla",
+   "guanajuato",
+   "sonora",
+   "sinaloa",
+   "chihuahua",
+   "coahuila",
+   "yucatan",
+   "michoacan",
+   "veracruz",
+   "baja california",
+   "tamaulipas",
+   "queretaro",
+   "aguascalientes",
+   "san luis potosi",
+   "tabasco",
+   "chiapas",
+   "oaxaca",
+   "hidalgo",
+   "morelos",
+   "guerrero",
+   "nayarit",
+   "zacatecas",
+   "durango",
+   "quintana roo",
+   "campeche",
+   "colima",
+   "tlaxcala"
+  ]
+ },
+ "AR": {
+  "nombre": "Argentina",
+  "estado": "probado en campañas anteriores, no con el pipeline nuevo",
+  "prefijo": "54",
+  "largo": 10,
+  "movil_prefijo": "9",
+  "marketplace": "mercadolibre.com.ar",
+  "directorios": [
+   "paginasamarillas.com.ar",
+   "cybo.com"
+  ],
+  "zonas": [
+   "buenos aires",
+   "capital federal",
+   "cordoba",
+   "santa fe",
+   "rosario",
+   "mendoza",
+   "tucuman",
+   "salta",
+   "neuquen",
+   "entre rios",
+   "corrientes",
+   "chaco",
+   "misiones",
+   "san juan",
+   "san luis",
+   "jujuy",
+   "santiago del estero",
+   "la pampa",
+   "rio negro",
+   "chubut",
+   "santa cruz",
+   "tierra del fuego",
+   "la plata",
+   "mar del plata",
+   "bahia blanca",
+   "catamarca",
+   "la rioja",
+   "formosa"
+  ]
+ },
+ "CO": {
+  "nombre": "Colombia",
+  "estado": "probado",
+  "prefijo": "57",
+  "largo": 10,
+  "inicio_valido": "36",
+  "marketplace": "mercadolibre.com.co",
+  "directorios": [
+   "paginasamarillas.com.co",
+   "cybo.com"
+  ],
+  "zonas": [
+   "bogota",
+   "medellin",
+   "cali",
+   "barranquilla",
+   "cartagena",
+   "antioquia",
+   "valle del cauca",
+   "cundinamarca",
+   "santander",
+   "atlantico",
+   "boyaca",
+   "tolima",
+   "huila",
+   "risaralda",
+   "caldas",
+   "bolivar",
+   "meta",
+   "norte de santander",
+   "cordoba",
+   "narino",
+   "cauca",
+   "cesar",
+   "magdalena",
+   "sucre",
+   "quindio",
+   "casanare",
+   "caqueta"
+  ]
+ },
+ "CL": {
+  "nombre": "Chile",
+  "estado": "configurado, sin probar",
+  "prefijo": "56",
+  "largo": 9,
+  "marketplace": "mercadolibre.cl",
+  "directorios": [
+   "paginasamarillas.cl",
+   "cybo.com"
+  ],
+  "zonas": [
+   "santiago",
+   "valparaiso",
+   "vina del mar",
+   "concepcion",
+   "la serena",
+   "antofagasta",
+   "temuco",
+   "rancagua",
+   "talca",
+   "iquique",
+   "puerto montt",
+   "arica",
+   "osorno",
+   "copiapo",
+   "punta arenas"
+  ]
+ },
+ "PE": {
+  "nombre": "Peru",
+  "estado": "configurado, sin probar",
+  "prefijo": "51",
+  "largo": 9,
+  "inicio_valido": "9",
+  "marketplace": "mercadolibre.com.pe",
+  "directorios": [
+   "paginasamarillas.com.pe",
+   "cybo.com"
+  ],
+  "zonas": [
+   "lima",
+   "arequipa",
+   "trujillo",
+   "chiclayo",
+   "piura",
+   "cusco",
+   "huancayo",
+   "iquitos",
+   "tacna",
+   "ica",
+   "cajamarca",
+   "pucallpa",
+   "ayacucho",
+   "chimbote",
+   "puno"
+  ]
+ },
+ "UY": {
+  "nombre": "Uruguay",
+  "estado": "configurado, sin probar",
+  "prefijo": "598",
+  "largo": 8,
+  "marketplace": "mercadolibre.com.uy",
+  "directorios": [
+   "paginasamarillas.com.uy",
+   "cybo.com"
+  ],
+  "zonas": [
+   "montevideo",
+   "canelones",
+   "maldonado",
+   "punta del este",
+   "salto",
+   "paysandu",
+   "colonia",
+   "rivera",
+   "tacuarembo",
+   "rocha"
+  ]
+ },
+ "EC": {
+  "nombre": "Ecuador",
+  "estado": "configurado, sin probar",
+  "prefijo": "593",
+  "largo": 9,
+  "inicio_valido": "9",
+  "marketplace": "mercadolibre.com.ec",
+  "directorios": [
+   "cybo.com"
+  ],
+  "zonas": [
+   "quito",
+   "guayaquil",
+   "cuenca",
+   "ambato",
+   "manta",
+   "loja",
+   "portoviejo",
+   "machala",
+   "ibarra",
+   "santo domingo",
+   "riobamba"
+  ]
+ },
+ "PY": {
+  "nombre": "Paraguay",
+  "estado": "configurado, sin probar",
+  "prefijo": "595",
+  "largo": 9,
+  "marketplace": null,
+  "directorios": [
+   "cybo.com"
+  ],
+  "zonas": [
+   "asuncion",
+   "ciudad del este",
+   "encarnacion",
+   "luque",
+   "san lorenzo",
+   "lambare",
+   "fernando de la mora",
+   "capiata",
+   "pedro juan caballero"
+  ]
+ },
+ "BO": {
+  "nombre": "Bolivia",
+  "estado": "configurado, sin probar",
+  "prefijo": "591",
+  "largo": 8,
+  "marketplace": null,
+  "directorios": [
+   "cybo.com"
+  ],
+  "zonas": [
+   "la paz",
+   "santa cruz de la sierra",
+   "cochabamba",
+   "el alto",
+   "sucre",
+   "oruro",
+   "tarija",
+   "potosi",
+   "cobija",
+   "trinidad"
+  ]
+ },
+ "PA": {
+  "nombre": "Panama",
+  "estado": "configurado, sin probar",
+  "prefijo": "507",
+  "largo": 8,
+  "marketplace": "mercadolibre.com.pa",
+  "directorios": [
+   "cybo.com"
+  ],
+  "zonas": [
+   "ciudad de panama",
+   "colon",
+   "david",
+   "la chorrera",
+   "santiago",
+   "penonome",
+   "chitre",
+   "arraijan",
+   "boquete"
+  ]
+ },
+ "CR": {
+  "nombre": "Costa Rica",
+  "estado": "configurado, sin probar",
+  "prefijo": "506",
+  "largo": 8,
+  "marketplace": "mercadolibre.co.cr",
+  "directorios": [
+   "cybo.com"
+  ],
+  "zonas": [
+   "san jose",
+   "alajuela",
+   "cartago",
+   "heredia",
+   "liberia",
+   "puntarenas",
+   "limon",
+   "escazu",
+   "santa ana",
+   "jaco"
+  ]
+ }
+}

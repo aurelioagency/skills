@@ -1,9 +1,9 @@
 ---
-name: buscador-leads
-description: Buscar clientes potenciales (leads) para Aurelio Agency scrapeando sitios públicos con Scrapling, y completar datos de contacto faltantes (mail, WhatsApp, Instagram) de un listado o Excel ya existente. También busca leads NUEVOS de cualquier rubro y país (tiendas de Mercado Libre, Instagram, webs, Google Maps, Facebook, directorios) sin repetir lo que ya está en el Excel de campaña, controla que cada dato corresponda a su empresa y, si el usuario lo pide, los carga al final del Excel. Usar cuando el usuario pida buscar clientes/leads de un rubro (inmobiliarias, restaurantes, vendedores de Mercado Libre, autopartes, pymes, etc.), "buscá más leads", armar un listado de prospectos con contacto, o completar/enriquecer los datos de contacto faltantes de una lista o Excel que ya tiene. No publica ni envía nada: solo busca y entrega el listado para revisión.
+name: lead-finder
+description: Buscar clientes potenciales (leads) para Aurelio Agency scrapeando sitios públicos con Scrapling, y completar datos de contacto faltantes (mail, WhatsApp, Instagram) de un listado o Excel ya existente. Al invocarla muestra un menú para elegir rubros (autopartes, belleza, inmobiliarias, clínicas y consultorios y más) y países (México, Argentina, Colombia y más) y busca leads NUEVOS de cada combinación (tiendas de Mercado Libre, Instagram, webs, Google Maps, Facebook, directorios) sin repetir lo que ya está en el Excel de campaña, con el contacto más completo posible de cada negocio (web, Instagram, mail, WhatsApp, teléfono), controla que cada dato corresponda a su empresa y los carga al final del Excel con la columna Rubro. Solo busca: el envío y el seguimiento los hace otra skill. Usar cuando el usuario pida buscar clientes/leads de un rubro (inmobiliarias, restaurantes, vendedores de Mercado Libre, autopartes, pymes, etc.), "buscá más leads", armar un listado de prospectos con contacto, o completar/enriquecer los datos de contacto faltantes de una lista o Excel que ya tiene. No publica ni envía nada: solo busca y entrega el listado para revisión.
 ---
 
-# Buscador de leads
+# Lead finder (buscador de leads)
 
 Tres modos. Preguntar cuál corresponde si no queda claro por el pedido:
 
@@ -64,33 +64,52 @@ ya encontrado, o a través de lo que un buscador (Brave/Yahoo) ya indexó (Modo 
    ubicar su página propia (sitio, ML, red social) y correr
    `scripts/extract_contacts.py <url> --stealth` sobre ella; si falta algo, buscar el
    nombre con `WebSearch` para encontrar su sitio/Instagram propio y sacarlo de ahí.
-   Para completar muchos leads de una vez, usar `scripts/pipeline/completar_datos.py` (Modo C, paso 6).
+   Para completar muchos leads de una vez, usar `scripts/pipeline/completar_datos.py` (Modo C).
 4. **No completar nunca un campo sin fuente real.** Si después de perfil + búsqueda web
    no aparece mail o teléfono público, esa celda queda vacía con una nota tipo "no
    público" — no rellenar con nada inventado ni aproximado.
 5. Mostrar al usuario, antes de guardar en el Excel, qué se encontró y de dónde (para que
    pueda revisar), salvo que ya haya pedido que se guarde directo.
 
-## Modo C — Leads nuevos sin repetir (método de `references/metodo-busqueda-leads.md`)
+## Modo C — Leads nuevos de uno o más rubros y países, sin repetir (método de `references/metodo-busqueda-leads.md`)
 
-Leer `references/metodo-busqueda-leads.md` antes de empezar: tiene las reglas completas (son las del documento "Método de
-búsqueda y enriquecimiento de leads (autopartes ML)", generalizadas para cualquier rubro). Los scripts están en `scripts/pipeline/` y se manejan con un config JSON.
+Es el modo principal y está pensado para dejarlo **automatizado**: el usuario invoca la skill, elige rubros y países en un menú y la
+búsqueda arranca sola. Esta skill **solo busca**: el envío de mensajes y el seguimiento los hace otra skill.
+Leer `references/metodo-busqueda-leads.md` antes de empezar (reglas completas, generalizadas para cualquier rubro).
 
-1. **Confirmar rubro, países, Excel y qué descartar.** Copiar `scripts/pipeline/config-autopartes-mx-co.json` y cambiar rubro,
-   sub-rubros, zonas, consultas y filtros. El rubro no tiene por qué ser autopartes ni vender en Mercado Libre.
+1. **Mostrar el menú de selección (desplegables) con `AskUserQuestion`**, salvo que el pedido ya diga rubro y país
+   ("buscá clientes de inmobiliarias en Argentina"). Leer `scripts/pipeline/rubros.json` y `scripts/pipeline/paises.json` y armar, en
+   **una sola llamada**, estas preguntas, todas con `multiSelect: true`:
+   - **Rubros 1/3, 2/3 y 3/3**: los rubros de `rubros.json` de a 4 por pregunta, en el orden del archivo (primero los probados). La
+     descripción de cada opción sale de `descripcion` y `estado` del rubro.
+   - **Países**: México, Argentina, Colombia y Chile; el usuario puede escribir otros en "Otro" (Perú, Uruguay, Ecuador, Paraguay,
+     Bolivia, Panamá, Costa Rica: están todos en `paises.json`).
+   - Si el usuario escribe en "Otro" un **rubro que no está en la lista**, crearlo: copiar `rubros/<un rubro parecido>.json`, cambiar
+     sub-rubros, palabra, `instagram.bio_regex`, `excluir_regex` y descartes, agregarlo a `rubros.json` con estado "propuesto, sin
+     probar" y mostrarle al usuario lo que se armó antes de buscar.
+   - No preguntar nada más: ni "¿confirmás?", ni el Excel (es el de la memoria, `G:\Unidades compartidas\Aurelio\Leads MercadoLibre
+     Autopartes AR-MX.xlsm`), ni el nombre de los archivos.
 2. **Chequear Scrapling y su navegador** (los scripts lo hacen solos al empezar). Si falta, pedirle OK al usuario y correr
    `python -m patchright install chromium`.
-3. **Buscar**: `python scripts/pipeline/buscar_leads.py --config <config> --excel "<Excel>" --salida <csv> --trabajo <carpeta>`.
-   Tarda; lanzarlo en segundo plano y avisar por hitos. `--prueba` hace una corrida chica para probar el config.
-4. **Completar lo que falta**: `completar_datos.py --config <config> --csv <csv>` (Google Maps, Facebook, directorios, webs).
-5. **Verificar**: `verificar_datos.py --config <config> --excel "<Excel>" --csv <csv> --completados <jsonl>`. Saca los datos que no
-   corresponden (compartidos entre empresas, ya en el Excel, de otro país, dominio ajeno) y suma lo nuevo. Revisar a mano lo que
-   lista como "posible empresa repetida" y mirar una muestra antes de entregar.
-6. **Entregar el CSV** (mandarlo con `SendUserFile` si el usuario está desde el celular) con: cantidad por país, cuántos tienen
-   Instagram / mail / WhatsApp, cuántos están completos y cuántos solo tienen Instagram, qué se descartó y por qué.
-7. **Cargar al Excel solo si el usuario lo pide**: `cargar_excel.py --excel "<Excel>" --csv <csv> --carga "<fecha y búsqueda>"`.
-   Trabaja en una copia temporal, comprueba que nada existente cambió y recién ahí reemplaza el original. Si el Excel está
-   abierto, pedirle al usuario que lo cierre (nunca cerrarlo vos).
+3. **Arrancar, sin esperar respuesta**: correr
+   `python scripts/pipeline/buscar_todo.py --rubros <ids separados por coma> --paises <códigos> --excel "<Excel>" --salida-dir <carpeta> --trabajo <carpeta>`
+   **en segundo plano** y avisar el avance por hitos. Antes de lanzarlo, correr el mismo comando con `--estimar` y decirle al usuario
+   en una línea cuántas consultas son y cuánto tarda. Si son más de 6 horas, empezar con `--limite-consultas 150` por rubro (una primera
+   pasada de unos 60 minutos por rubro, repartida entre todos los países) y avisar que se puede correr completa después.
+   El proceso hace solo, rubro por rubro: buscar candidatos, verificar el rubro, sacar los contactos de fuentes propias, completar lo
+   que falte (Google Maps, Facebook, directorios, webs), controlar cada dato y dejar un CSV por rubro.
+   `--prueba` hace una corrida chica para probar la configuración.
+4. **El objetivo es el contacto más completo posible de cada negocio**: web, Instagram, mail, WhatsApp y teléfono, para que el
+   usuario pueda escribirles o llamarles después. Cada CSV marca en "Estado" qué le falta a cada uno y en "De_donde_sale" la fuente
+   de cada dato.
+5. **Entregar los CSV** (mandarlos con `SendUserFile` si el usuario está desde el celular) con: cantidad por rubro y país, cuántos
+   tienen Instagram / mail / WhatsApp, cuántos están completos y cuántos solo tienen Instagram, qué se descartó y por qué.
+6. **Cargar al Excel**: por defecto se pregunta una sola vez al final ("¿Cargo estos N leads al Excel?"). Si el usuario pidió cargar
+   en el mismo mensaje ("y cargalos"), correr `buscar_todo.py` con `--cargar`. `cargar_excel.py` agrega las filas al final de `Leads`
+   con la columna **Rubro**, sin tocar nada existente: trabaja en una copia temporal, comprueba que nada existente cambió y recién ahí
+   reemplaza el original. Si el Excel está abierto, pedirle al usuario que lo cierre (nunca cerrarlo vos).
+7. Los pasos sueltos siguen disponibles para casos puntuales: `buscar_leads.py`, `completar_datos.py`, `verificar_datos.py` y
+   `cargar_excel.py` (todos con `--rubro` y `--paises`).
 
 ## Reglas duras (todos los modos)
 
@@ -123,5 +142,7 @@ búsqueda y enriquecimiento de leads (autopartes ML)", generalizadas para cualqu
 - `scripts/fetch.py` — bajar una página para inspeccionar antes de armar selectores.
 - `scripts/extract_contacts.py` — sacar mail/whatsapp/instagram/sitio de una página.
 - `scripts/export_csv.py` — exportar una lista de resultados a CSV.
-- `scripts/pipeline/` — el proceso del Modo C: `leads_common.py` (funciones compartidas), `buscar_leads.py`, `completar_datos.py`,
-  `verificar_datos.py`, `cargar_excel.py` y `config-autopartes-mx-co.json` (ejemplo de config).
+- `references/rubros-y-paises.md` — los rubros y países disponibles, el servicio de Aurelio Agency que encaja con cada rubro, y cómo sumar uno nuevo.
+- `scripts/pipeline/` — el proceso del Modo C: `buscar_todo.py` (corre todo para los rubros y países elegidos), `buscar_leads.py`,
+  `completar_datos.py`, `verificar_datos.py`, `cargar_excel.py`, `leads_common.py` (funciones compartidas), `rubros.json` + `rubros/`
+  (un archivo por rubro) y `paises.json` (prefijo de teléfono, zonas, directorios y Mercado Libre de cada país).

@@ -1,0 +1,53 @@
+{
+ "id": "concesionarias",
+ "nombre": "Concesionarias y venta de autos",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Concesionarias, agencias de autos usados y 0 km, venta de camionetas y motos.",
+ "servicio_aurelio": "Calificación de consultas y financiación por WhatsApp con IA, publicación automática de stock y contenido de unidades.",
+ "palabra": "concesionaria",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "concesionaria de autos usados",
+   "agencia de autos 0km",
+   "concesionaria de motos",
+   "venta de camionetas",
+   "compra venta de autos"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "concesionari|agencia de autos|autos usados|0 ?km|veh[ií]culos|camionetas|compra ?venta|motos",
+  "excluir_regex": "repuest|refacc|autopartes|inmobiliari",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

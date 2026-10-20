@@ -1,0 +1,52 @@
+{
+ "id": "veterinarias",
+ "nombre": "Veterinarias y pet shops",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Veterinarias, clínicas veterinarias, pet shops y peluquerías caninas.",
+ "servicio_aurelio": "Turnos y recordatorios de vacunas por WhatsApp con IA, catálogo del pet shop y contenido.",
+ "palabra": "veterinaria",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "veterinaria clinica",
+   "pet shop",
+   "peluqueria canina",
+   "guarderia canina"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "veterinari|mascotas|pet ?shop|perros|gatos|canina|animales",
+  "excluir_regex": "autopartes|repuest|inmobiliari|clinica humana",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

@@ -1,0 +1,55 @@
+{
+ "id": "ecommerce",
+ "nombre": "Tiendas online y marcas e-commerce",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Marcas y tiendas que venden por internet (Tiendanube, Shopify, Instagram).",
+ "servicio_aurelio": "Automatización de catálogo, precios y stock, atención por WhatsApp con IA, contenido para redes y mejora del sitio.",
+ "palabra": "tienda online",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "tienda tiendanube",
+   "tienda shopify",
+   "marca de ropa online",
+   "accesorios y regalos online",
+   "hogar y deco online",
+   "tecnologia accesorios online",
+   "productos para mascotas online"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "tienda|shop|online|env[ií]os|cat[aá]logo|ecommerce|compr[aá]|pedidos",
+  "excluir_regex": "autopartes|repuest|inmobiliari|clinica",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

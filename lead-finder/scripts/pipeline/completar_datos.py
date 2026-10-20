@@ -1,7 +1,7 @@
 """Segunda pasada: completa los mails y teléfonos que faltan en un CSV de leads.
 
 Uso:
-  python completar_datos.py --config config.json --csv leads-nuevos.csv [--salida completados.jsonl]
+  python completar_datos.py --rubro <id> --paises AR,MX --csv leads-nuevos.csv [--salida completados.jsonl] [--trabajo carpeta]
 
 Para cada lead al que le falta mail o WhatsApp/teléfono busca, en este orden y solo en fuentes PROPIAS de la empresa:
   ficha de Google Maps (con la ciudad de la bio), página de Facebook (el título tiene que llevar la marca),
@@ -31,7 +31,7 @@ def title_of(tx):
 def trabajar(r, cfg, bios):
     pais = r["Pais"]
     pc = cfg["paises"][pais]
-    extra = cfg.get("palabras_genericas", [])
+    extra = cfg.get("palabras_genericas") or []
     h = C.handle_of(r["Instagram"])
     tk = (C.tok(r["Empresa"], extra) + C.tok(h, extra))[:4] or [C.nt(r["Empresa"])]
     em, wa, tel = {}, {}, {}
@@ -86,7 +86,7 @@ def trabajar(r, cfg, bios):
         if em or tel:
             break
     # c) directorios (el título tiene que llevar la marca)
-    for dq in cfg.get("directorios", {}).get(pais, ["cybo.com"]):
+    for dq in (pc.get("directorios") or ["cybo.com"]):
         tt = C.search(f'site:{dq} "{r["Empresa"]}" {city}')
         for m in list(re.finditer(r'https?://[^\s"<>]*' + re.escape(dq.split(".")[0]) + r'[^\s"<>]*', tt))[:2]:
             u = m.group(0).split("&")[0]
@@ -128,7 +128,7 @@ def trabajar(r, cfg, bios):
 
 
 def main():
-    cfg = C.load_config(C.arg_value("--config"))
+    cfg = C.config_from_args()
     path = C.arg_value("--csv")
     salida = C.arg_value("--salida", os.path.splitext(path)[0] + ".completados.jsonl")
     trabajo = C.arg_value("--trabajo", "trabajo-leads")

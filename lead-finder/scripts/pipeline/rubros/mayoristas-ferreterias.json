@@ -1,0 +1,54 @@
+{
+ "id": "mayoristas-ferreterias",
+ "nombre": "Distribuidores mayoristas y ferreterías",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Distribuidoras mayoristas, ferreterías industriales y corralones.",
+ "servicio_aurelio": "Automatización de catálogo, listas de precios y cotizaciones por WhatsApp con IA (como en autopartes).",
+ "palabra": "distribuidora mayorista",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "ferreteria industrial",
+   "corralon de materiales",
+   "distribuidora de bebidas",
+   "distribuidora de limpieza",
+   "mayorista de electricidad",
+   "distribuidora de alimentos"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "mayorista|distribuidor|ferreter[ií]a|corral[oó]n|industrial|materiales|suministros|venta por mayor",
+  "excluir_regex": "cosmet|clinica|inmobiliari",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

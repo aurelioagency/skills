@@ -1,0 +1,53 @@
+{
+ "id": "arquitectura-construccion",
+ "nombre": "Arquitectura, constructoras e ingeniería",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Estudios de arquitectura, constructoras, desarrolladoras y estudios de ingeniería.",
+ "servicio_aurelio": "Automatización de presupuestos y seguimiento de obra, captación de clientes con contenido y sitio web (ya hubo prospección de arquitectura).",
+ "palabra": "estudio de arquitectura",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "constructora",
+   "estudio de ingenieria",
+   "empresa de remodelaciones",
+   "arquitecto diseno de interiores",
+   "desarrolladora de obras"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "arquitect|constructora|construcci[oó]n|ingenier|remodelaci|obra|dise[nñ]o de interiores|desarrolladora",
+  "excluir_regex": "autopartes|repuest|cosmet|clinica",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

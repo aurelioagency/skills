@@ -1,0 +1,55 @@
+{
+ "id": "gastronomia",
+ "nombre": "Restaurantes y gastronomía",
+ "estado": "propuesto, sin probar",
+ "descripcion": "Restaurantes, cafeterías, pizzerías, panaderías, bares y dark kitchens con delivery.",
+ "servicio_aurelio": "Pedidos y reservas por WhatsApp con IA, menú digital, contenido (reels) y respuesta automática a reseñas.",
+ "palabra": "restaurante",
+ "palabras_genericas": [],
+ "subrubros": {
+  "*": [
+   "restaurante delivery",
+   "cafeteria",
+   "pizzeria",
+   "hamburgueseria",
+   "panaderia pasteleria",
+   "cerveceria bar",
+   "dark kitchen"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "restaurant|resto|caf[eé]|pizza|hamburgues|panader|pasteler|bar\\b|cocina|delivery|comida|gastro",
+  "excluir_regex": "autopartes|repuest|inmobiliari|clinica",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {}
+}

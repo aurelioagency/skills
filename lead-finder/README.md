@@ -1,4 +1,4 @@
-# Buscador de Leads — Lead Search and Contact Enrichment Skill
+# Lead Finder — Lead Search and Contact Enrichment Skill
 
 An agent skill that finds potential clients by scraping public sites, and fills in missing contact data (email, WhatsApp, Instagram) on a list you already have:
 
@@ -24,7 +24,8 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 | [scripts/extract_contacts.py](scripts/extract_contacts.py) | Pulls email, WhatsApp, Instagram, and website from a page |
 | [scripts/export_csv.py](scripts/export_csv.py) | Exports a list of results to CSV |
 | [references/metodo-busqueda-leads.md](references/metodo-busqueda-leads.md) | Mode C method for any industry: dedup rules, dorks, quality rules, known errors, pending improvements |
-| [scripts/pipeline/](scripts/pipeline/) | Mode C pipeline: `buscar_leads.py`, `completar_datos.py`, `verificar_datos.py`, `cargar_excel.py`, shared `leads_common.py`, and an example config (`config-autopartes-mx-co.json`) where industry, countries, zones and filters are changed |
+| [references/rubros-y-paises.md](references/rubros-y-paises.md) | The industries and countries available (and the Aurelio Agency service that fits each industry), and how to add new ones |
+| [scripts/pipeline/](scripts/pipeline/) | Mode C pipeline: `buscar_todo.py` runs everything for the chosen industries and countries; `buscar_leads.py`, `completar_datos.py`, `verificar_datos.py`, `cargar_excel.py`, shared `leads_common.py`; `rubros.json` + `rubros/` (one file per industry) and `paises.json` (phone prefix, zones, directories and Mercado Libre domain per country) |
 
 ## Key features
 
@@ -36,7 +37,7 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 - **Escalates only when needed.** A plain fetcher first; a real-browser stealth fetcher if the site blocks it, before discarding the source.
 - **Social networks only as enrichment.** Instagram, LinkedIn, and Facebook are never the source of the initial list (they block fast scraping) — only a one-off lookup for a lead already found elsewhere.
 - **Nothing is sent anywhere.** No messages, no posts, and nothing written into a campaign file unless you ask for it.
-- **The industry is not fixed.** The Mode C method is industry-agnostic: change the config (industry, sub-industries, countries, zones, filters) and run it again. Auto parts in Mexico and Colombia is just the first config.
+- **Pick industries and countries from a menu.** When invoked, the skill shows dropdowns with the available industries (auto parts, beauty, real estate, clinics and more) and countries (Mexico, Argentina, Colombia, Chile and more) and then runs the whole search by itself for every combination. New industries and countries are just data files.
 - **No duplicates.** It builds an index of everything already in the Excel (names, Instagram handles, domains, phones, emails, stores) and drops candidates before spending time on them.
 - **Every datum has a source and a check.** Contacts come only from the company's own pages (website, Instagram bio, linktree, Facebook page, matching Google Maps listing); a cross-check removes phones/emails shared between companies, already in the Excel, from another country, or from an unrelated domain.
 - **Loads into the Excel safely.** Works on a temporary copy, proves that every existing cell is unchanged, and replaces the original only if nobody touched it meanwhile; if the file is open in Excel it stops and asks to close it.
@@ -46,10 +47,10 @@ Works with agent harnesses that support file-based skills (Claude Code, Codex, a
 **Option A — let your agent install it (recommended).** Open Claude Code and paste:
 
 ```text
-Install the buscador-leads skill from https://github.com/aurelioagency/skills :
+Install the lead-finder skill from https://github.com/aurelioagency/skills :
 1. Run: git clone --filter=blob:none --sparse https://github.com/aurelioagency/skills.git into a temporary folder.
-2. Inside it, run: git sparse-checkout set buscador-leads
-3. Copy the buscador-leads/ folder into ~/.claude/skills/buscador-leads/
+2. Inside it, run: git sparse-checkout set lead-finder
+3. Copy the lead-finder/ folder into ~/.claude/skills/lead-finder/
 4. Delete the temporary clone and confirm the skill loads.
 5. Check the requirements: Python 3 and the scrapling package (and openpyxl if I
    will enrich Excel files). Install anything missing (ask me to approve each
@@ -63,8 +64,8 @@ Install the buscador-leads skill from https://github.com/aurelioagency/skills :
 ```powershell
 git clone https://github.com/aurelioagency/skills.git
 cd skills
-node install-skills.mjs buscador-leads          # Claude Code
-node install-skills.mjs buscador-leads --codex  # Codex
+node install-skills.mjs lead-finder          # Claude Code
+node install-skills.mjs lead-finder --codex  # Codex
 ```
 
 Any other harness: point it at this folder's `SKILL.md`.
@@ -75,21 +76,21 @@ Improvements land in the repo; your installed copy never updates itself. To upda
 
 ```powershell
 git pull
-node install-skills.mjs buscador-leads
+node install-skills.mjs lead-finder
 ```
 
 To find out whether you are behind without installing anything:
 
 ```powershell
-node install-skills.mjs buscador-leads --check
+node install-skills.mjs lead-finder --check
 ```
 
 ## Uninstalling
 
-The installed skill lives in `~/.claude/skills/buscador-leads/`. Removing it touches nothing else. From a clone:
+The installed skill lives in `~/.claude/skills/lead-finder/`. Removing it touches nothing else. From a clone:
 
 ```powershell
-node install-skills.mjs buscador-leads --remove
+node install-skills.mjs lead-finder --remove
 ```
 
 Or simply delete that folder yourself.

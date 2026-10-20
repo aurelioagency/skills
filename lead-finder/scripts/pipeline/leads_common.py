@@ -44,6 +44,58 @@ def load_config(path):
     return cfg
 
 
+def _here():
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def lista_paises():
+    return json.load(open(os.path.join(_here(), "paises.json"), encoding="utf-8"))
+
+
+def lista_rubros():
+    return json.load(open(os.path.join(_here(), "rubros.json"), encoding="utf-8"))
+
+
+def build_config(rubro, paises):
+    """Arma la configuración de una búsqueda juntando el rubro (rubros/<id>.json) con los países elegidos (paises.json).
+    rubro: id ("inmobiliarias") o nombre ("Clínicas y consultorios"). paises: lista de códigos ["MX", "AR"]."""
+    P = lista_paises()
+    idx = lista_rubros()
+    rid = None
+    for r in idx:
+        if rubro.lower() in (r["id"].lower(), r["nombre"].lower()):
+            rid = r["id"]
+    if rid is None:
+        sys.exit("Rubro desconocido: %s. Rubros: %s" % (rubro, ", ".join(r["id"] for r in idx)))
+    for p in paises:
+        if p not in P:
+            sys.exit("País desconocido: %s. Países: %s" % (p, ", ".join(P)))
+    R = json.load(open(os.path.join(_here(), "rubros", rid + ".json"), encoding="utf-8"))
+    cfg = dict(rubro=R["id"], rubro_nombre=R["nombre"], paises={}, subrubros={}, zonas={}, consultas={}, palabra={})
+    for p in paises:
+        pc = dict(P[p])
+        cfg["zonas"][p] = pc.pop("zonas")
+        cfg["paises"][p] = pc
+        sub, cons, pal = R["subrubros"], R["consultas"], R["palabra"]
+        cfg["subrubros"][p] = sub.get(p) or sub.get("*", [])
+        cfg["consultas"][p] = cons.get(p) or cons.get("*", [])
+        cfg["palabra"][p] = (pal.get(p) or pal.get("*", "")) if isinstance(pal, dict) else pal
+    for k in ("palabras_genericas", "tiendas_ml", "instagram", "descartar_nombre_regex", "descartar_marcas", "portales"):
+        cfg[k] = R.get(k)
+    return cfg
+
+
+def config_from_args():
+    """--rubro <id|nombre> --paises MX,AR,CO   (o --config <archivo.json> con una configuración completa ya armada)."""
+    path = arg_value("--config")
+    if path:
+        return load_config(path)
+    rubro, paises = arg_value("--rubro"), arg_value("--paises")
+    if not rubro or not paises:
+        sys.exit("Falta --rubro y --paises (por ejemplo: --rubro inmobiliarias --paises AR,MX)")
+    return build_config(rubro, [p.strip().upper() for p in paises.split(",") if p.strip()])
+
+
 def arg_value(flag, default=None):
     if flag in sys.argv:
         i = sys.argv.index(flag)
@@ -133,27 +185,63 @@ def check_browser():
         # cualquier otro error (red, sitio caído) no significa que falte el navegador: se sigue
 
 
+ENFRIAR = {}  # buscador -> hasta cuándo no usarlo (porque limitó por exceso de consultas)
+
+
+def _motor(u):
+    return "brave" if "brave.com" in u else "yahoo" if "yahoo.com" in u else "ddg" if "duckduckgo" in u else u.split("/")[2]
+
+
+def fetch_serp(u):
+    """Baja una página de resultados. Si un buscador limita por exceso de consultas (429), se lo deja descansar 10 minutos y se
+    sigue con el otro; si los dos están descansando, espera a que termine el primero. Devuelve "" si no hubo resultados."""
+    m = _motor(u)
+    with LK:
+        ahora = time.time()
+        hasta = ENFRIAR.get(m, 0)
+        otros = [ENFRIAR.get(x, 0) for x in ("brave", "yahoo", "ddg") if x != m]
+    if hasta > ahora:
+        if all(o > ahora for o in otros):
+            espera = min([hasta] + otros) - ahora
+            print(f"  los buscadores limitaron (429), espero {int(espera)} s", flush=True)
+            time.sleep(max(espera, 1))
+        else:
+            return ""
+    r = stealth(u)
+    if r is not None and getattr(r, "status", 200) == 429:
+        with LK:
+            ENFRIAR[m] = time.time() + 600
+        print(f"  {m} limitó (429): lo dejo descansar 10 minutos", flush=True)
+        return ""
+    return r.body.decode("utf8", "ignore") if r is not None else ""
+
+
 def search(q):
-    """Brave + Yahoo. Google y Bing bloquean a Scrapling (captcha o resultados basura)."""
+    """Brave + Yahoo + DuckDuckGo Lite. Google y Bing bloquean a Scrapling (captcha o resultados basura)."""
     out = ""
-    for u in ("https://search.brave.com/search?q=" + urllib.parse.quote(q), "https://search.yahoo.com/search?p=" + urllib.parse.quote(q)):
-        r = stealth(u)
-        if r is not None:
-            out += r.body.decode("utf8", "ignore")
+    for u in ("https://search.brave.com/search?q=" + urllib.parse.quote(q), "https://search.yahoo.com/search?p=" + urllib.parse.quote(q),
+              "https://lite.duckduckgo.com/lite/?q=" + urllib.parse.quote(q)):
+        out += fetch_serp(u)
         time.sleep(1.5)
     return H.unescape(urllib.parse.unquote(out))
 
 
 # ---------------- teléfonos / mails ----------------
 def norm_phone(p, pais_cfg):
-    """Devuelve +<prefijo><número nacional> o None. pais_cfg: {"prefijo":"52","largo":10,"inicio_valido":"36"(opcional)}."""
+    """Devuelve +<prefijo><número nacional> o None.
+    pais_cfg: {"prefijo":"52","largo":10,"inicio_valido":"36"(opcional),"movil_prefijo":"9"(opcional, Argentina)}."""
     pre = str(pais_cfg["prefijo"])
     largo = int(pais_cfg.get("largo", 10))
+    mp = str(pais_cfg.get("movil_prefijo") or "")
     d = re.sub(r"\D", "", p)
     if pre == "52" and d.startswith("521") and len(d) == 13:
         d = d[3:]
-    elif d.startswith(pre) and len(d) == len(pre) + largo:
+    elif d.startswith(pre) and len(d) in (len(pre) + largo, len(pre) + largo + len(mp)):
         d = d[len(pre):]
+    if len(d) == largo + 1 and d.startswith("0"):  # 0 de troncal (Uruguay, Argentina, Chile...)
+        d = d[1:]
+    if mp and len(d) == largo + len(mp) and d.startswith(mp):
+        return "+" + pre + d
     if len(d) != largo:
         return None
     ini = pais_cfg.get("inicio_valido")
@@ -273,7 +361,7 @@ def estado(o):
     return "Completo" if not falt else "Falta: " + ", ".join(falt) + " (no publicado en fuentes propias)"
 
 
-CSV_COLS = ["Empresa", "Pais", "Fuente", "Tienda_MercadoLibre", "Instagram", "Seguidores_IG", "Web", "Email", "WhatsApp", "Telefono", "De_donde_sale", "Estado"]
+CSV_COLS = ["Empresa", "Pais", "Rubro", "Fuente", "Tienda_MercadoLibre", "Instagram", "Seguidores_IG", "Web", "Email", "WhatsApp", "Telefono", "De_donde_sale", "Estado"]
 
 
 def write_csv(path, rows):

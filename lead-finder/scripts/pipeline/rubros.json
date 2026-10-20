@@ -1,0 +1,86 @@
+[
+ {
+  "id": "autopartes",
+  "nombre": "Autopartes",
+  "estado": "probado en México y Colombia (octubre 2026)",
+  "descripcion": "Vendedores de autopartes y repuestos, sobre todo los que venden en Mercado Libre.",
+  "servicio_aurelio": "Automatización de catálogo y precios, atención por WhatsApp con IA, contenido para redes."
+ },
+ {
+  "id": "belleza",
+  "nombre": "Belleza",
+  "estado": "probado en México (campaña de cosméticos, octubre 2026)",
+  "descripcion": "Marcas y tiendas de cosmética, skincare, cabello, uñas y perfumería (vendedores de Mercado Libre y tiendas propias).",
+  "servicio_aurelio": "Automatización de catálogo, precios y atención por WhatsApp con IA; contenido (reels y carruseles) y tienda web."
+ },
+ {
+  "id": "inmobiliarias",
+  "nombre": "Inmobiliarias",
+  "estado": "configurado, sin probar",
+  "descripcion": "Inmobiliarias, corredores y desarrolladoras que venden o alquilan propiedades.",
+  "servicio_aurelio": "Atención y calificación de consultas por WhatsApp con IA, respuesta automática a portales, contenido de propiedades (reels y carruseles) y sitio web."
+ },
+ {
+  "id": "clinicas-consultorios",
+  "nombre": "Clínicas y consultorios",
+  "estado": "configurado, sin probar",
+  "descripcion": "Clínicas, consultorios y centros de salud privados (médicos, odontología, psicología, kinesiología, nutrición, estética médica).",
+  "servicio_aurelio": "Turnos y recordatorios por WhatsApp con IA, atención de consultas frecuentes, captación de pacientes con contenido y sitio web."
+ },
+ {
+  "id": "ecommerce",
+  "nombre": "Tiendas online y marcas e-commerce",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Marcas y tiendas que venden por internet (Tiendanube, Shopify, Instagram).",
+  "servicio_aurelio": "Automatización de catálogo, precios y stock, atención por WhatsApp con IA, contenido para redes y mejora del sitio."
+ },
+ {
+  "id": "estudios-contables-juridicos",
+  "nombre": "Estudios contables y jurídicos",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Estudios de abogados, contadores, escribanías, gestorías y asesorías.",
+  "servicio_aurelio": "Automatización de documentos y trámites repetitivos, atención de consultas por WhatsApp con IA y captación de clientes."
+ },
+ {
+  "id": "gimnasios",
+  "nombre": "Gimnasios y centros de entrenamiento",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Gimnasios, crossfit, pilates, yoga y entrenamiento personalizado.",
+  "servicio_aurelio": "Altas, cuotas y turnos por WhatsApp con IA, reactivación de socios y contenido para redes."
+ },
+ {
+  "id": "gastronomia",
+  "nombre": "Restaurantes y gastronomía",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Restaurantes, cafeterías, pizzerías, panaderías, bares y dark kitchens con delivery.",
+  "servicio_aurelio": "Pedidos y reservas por WhatsApp con IA, menú digital, contenido (reels) y respuesta automática a reseñas."
+ },
+ {
+  "id": "concesionarias",
+  "nombre": "Concesionarias y venta de autos",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Concesionarias, agencias de autos usados y 0 km, venta de camionetas y motos.",
+  "servicio_aurelio": "Calificación de consultas y financiación por WhatsApp con IA, publicación automática de stock y contenido de unidades."
+ },
+ {
+  "id": "arquitectura-construccion",
+  "nombre": "Arquitectura, constructoras e ingeniería",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Estudios de arquitectura, constructoras, desarrolladoras y estudios de ingeniería.",
+  "servicio_aurelio": "Automatización de presupuestos y seguimiento de obra, captación de clientes con contenido y sitio web (ya hubo prospección de arquitectura)."
+ },
+ {
+  "id": "veterinarias",
+  "nombre": "Veterinarias y pet shops",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Veterinarias, clínicas veterinarias, pet shops y peluquerías caninas.",
+  "servicio_aurelio": "Turnos y recordatorios de vacunas por WhatsApp con IA, catálogo del pet shop y contenido."
+ },
+ {
+  "id": "mayoristas-ferreterias",
+  "nombre": "Distribuidores mayoristas y ferreterías",
+  "estado": "propuesto, sin probar",
+  "descripcion": "Distribuidoras mayoristas, ferreterías industriales y corralones.",
+  "servicio_aurelio": "Automatización de catálogo, listas de precios y cotizaciones por WhatsApp con IA (como en autopartes)."
+ }
+]

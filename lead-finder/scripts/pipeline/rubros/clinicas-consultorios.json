@@ -1,0 +1,84 @@
+{
+ "id": "clinicas-consultorios",
+ "nombre": "Clínicas y consultorios",
+ "estado": "configurado, sin probar",
+ "descripcion": "Clínicas, consultorios y centros de salud privados (médicos, odontología, psicología, kinesiología, nutrición, estética médica).",
+ "servicio_aurelio": "Turnos y recordatorios por WhatsApp con IA, atención de consultas frecuentes, captación de pacientes con contenido y sitio web.",
+ "palabra": "clinica",
+ "palabras_genericas": [
+  "clinica",
+  "consultorio",
+  "centro",
+  "medico",
+  "salud"
+ ],
+ "subrubros": {
+  "*": [
+   "clinica medica",
+   "consultorio odontologico",
+   "dentista ortodoncia",
+   "psicologo psicologia",
+   "kinesiologia fisioterapia",
+   "nutricionista",
+   "dermatologia",
+   "ginecologia",
+   "pediatria",
+   "oftalmologia",
+   "centro de estetica medica",
+   "laboratorio de analisis clinicos",
+   "fonoaudiologia",
+   "traumatologia"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "cl[ií]nica|consultorio|odontolog|dental|dentista|m[eé]dic|salud|psicolog|nutric|kinesi|fisioter|dermat|pediatr|oftalm|terapia|centro m[eé]dico|ginecolog|ortodoncia",
+  "excluir_regex": "farmacia|veterinari|autopartes|repuest|inmobiliari|gimnasio",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {
+  "AR": [
+   "doctoralia.com.ar"
+  ],
+  "MX": [
+   "doctoralia.com.mx"
+  ],
+  "CO": [
+   "doctoralia.co"
+  ],
+  "CL": [
+   "doctoralia.cl"
+  ],
+  "PE": [
+   "doctoralia.pe"
+  ]
+ }
+}

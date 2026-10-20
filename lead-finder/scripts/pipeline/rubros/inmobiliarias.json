@@ -1,0 +1,96 @@
+{
+ "id": "inmobiliarias",
+ "nombre": "Inmobiliarias",
+ "estado": "configurado, sin probar",
+ "descripcion": "Inmobiliarias, corredores y desarrolladoras que venden o alquilan propiedades.",
+ "servicio_aurelio": "Atención y calificación de consultas por WhatsApp con IA, respuesta automática a portales, contenido de propiedades (reels y carruseles) y sitio web.",
+ "palabra": "inmobiliaria",
+ "palabras_genericas": [
+  "inmobiliaria",
+  "propiedades",
+  "bienes",
+  "raices"
+ ],
+ "subrubros": {
+  "*": [
+   "venta de departamentos",
+   "alquiler de propiedades",
+   "desarrollos inmobiliarios",
+   "corredor inmobiliario",
+   "tasaciones",
+   "administracion de propiedades",
+   "lotes y terrenos",
+   "alquileres temporarios",
+   "oficinas y locales comerciales",
+   "casas en venta"
+  ]
+ },
+ "consultas": {
+  "*": [
+   {
+    "para": "zonas",
+    "texto": "site:instagram.com {palabra} {x} whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} contacto whatsapp"
+   },
+   {
+    "para": "zonas",
+    "texto": "{palabra} {x} instagram"
+   },
+   {
+    "para": "subrubros",
+    "texto": "site:instagram.com {x} {pais} whatsapp"
+   },
+   {
+    "para": "subrubros",
+    "texto": "{x} {pais} contacto whatsapp"
+   }
+  ]
+ },
+ "tiendas_ml": {
+  "activar": false
+ },
+ "instagram": {
+  "bio_regex": "inmobiliari|propiedad|bienes ra[ií]ces|real estate|alquiler|venta de (casas|departamentos)|desarroll|corredor|tasaci|lotes|terrenos|departamentos",
+  "excluir_regex": "autopartes|repuest|cosmet|belleza|clinica",
+  "min_seguidores": 20
+ },
+ "descartar_nombre_regex": "fundaci[oó]n|municipalidad|gobierno",
+ "descartar_marcas": [],
+ "portales": {
+  "AR": [
+   "zonaprop.com.ar",
+   "argenprop.com",
+   "remax.com.ar"
+  ],
+  "MX": [
+   "inmuebles24.com",
+   "lamudi.com.mx",
+   "remax.com.mx"
+  ],
+  "CO": [
+   "fincaraiz.com.co",
+   "metrocuadrado.com"
+  ],
+  "CL": [
+   "portalinmobiliario.com",
+   "toctoc.com"
+  ],
+  "PE": [
+   "urbania.pe",
+   "adondevivir.com"
+  ],
+  "UY": [
+   "infocasas.com.uy",
+   "gallito.com.uy"
+  ],
+  "EC": [
+   "plusvalia.com"
+  ],
+  "PA": [
+   "encuentra24.com"
+  ]
+ }
+}

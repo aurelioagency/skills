@@ -1,8 +1,10 @@
 """Agrega leads nuevos (CSV) AL FINAL de la hoja Leads del Excel de campaña, sin tocar ninguna fila existente.
 
 SOLO se corre cuando el usuario lo pidió ("cargalos al Excel"). Uso:
-  python cargar_excel.py --excel "<Excel>" --csv tanda1.csv [--csv tanda2.csv ...] [--hoja Leads]
+  python cargar_excel.py --excel "<Excel>" --csv tanda1.csv [--csv tanda2.csv ...] [--hoja Leads] [--rubro <id|nombre>]
          [--carga "2026-10-20 (búsqueda MX/CO)"] [--prueba] [--backup "<ruta del backup>"]
+  --rubro rellena la columna "Rubro" de las filas nuevas (si la hoja no la tiene, la agrega al final). Si el CSV ya trae la columna
+  Rubro, se usa esa.
 
 Cómo trabaja (para no romper el archivo de nadie):
   1. copia el Excel a una carpeta temporal y trabaja ahí
@@ -36,6 +38,13 @@ def main():
     carga = C.arg_value("--carga", "")
     backup = C.arg_value("--backup")
     prueba = "--prueba" in sys.argv
+    rubro_arg = C.arg_value("--rubro")
+    rubro_nombre = ""
+    if rubro_arg:
+        for rr in C.lista_rubros():
+            if rubro_arg.lower() in (rr["id"].lower(), rr["nombre"].lower()):
+                rubro_nombre = rr["nombre"]
+        rubro_nombre = rubro_nombre or rubro_arg
     H = lambda p: hashlib.md5(open(p, "rb").read()).hexdigest()  # noqa: E731
     hash0 = H(excel)
     tmpdir = tempfile.mkdtemp(prefix="leads_")
@@ -63,6 +72,7 @@ def main():
     c_tel, c_email, c_insta = col("Teléfono / WhatsApp", "Telefono / WhatsApp"), col("Email"), col("Instagram")
     c_id, c_para = col("ID"), col("Para hacer")
     c_web, c_ml, c_nota, c_carga = col("Web"), col("Tienda Mercado Libre", "Tienda_MercadoLibre"), col("Notas y fuente de los datos"), col("Carga")
+    c_rubro = col("Rubro")
     faltan = [n for n, c in (("Empresa", c_emp), ("País", c_pais), ("Instagram", c_insta), ("Email", c_email)) if c is None]
     if faltan:
         sys.exit(f"ABORTO: la hoja {hoja} no tiene las columnas {faltan}")
@@ -83,6 +93,11 @@ def main():
         idx["phones"] |= ph
         nuevos.append(r)
     print("a cargar:", len(nuevos), "| omitidos porque ya existen:", len(omit), omit[:5])
+    if c_rubro is None and (rubro_nombre or any((r.get("Rubro") or "").strip() for r in nuevos)):
+        c_rubro = ws.max_column + 1
+        ws.cell(1, c_rubro, "Rubro")
+        ws.cell(1, c_rubro)._style = copy.copy(ws.cell(1, c_rubro - 1)._style)
+        print("la hoja no tenía la columna Rubro: se agregó al final")
     last = n0
     while last > 1 and not ws.cell(last, c_emp).value:
         last -= 1
@@ -124,6 +139,9 @@ def main():
             ws.cell(rl, c_nota, f"{r['Estado']}. Fuente de cada dato: {r['De_donde_sale']}{extra}")
         if c_carga and carga:
             ws.cell(rl, c_carga, carga)
+        rb = (r.get("Rubro") or "").strip() or rubro_nombre
+        if c_rubro and rb:
+            ws.cell(rl, c_rubro, rb)
     nl = last + len(nuevos)
     if nuevos:
         if ws.auto_filter.ref:

@@ -6,11 +6,12 @@ Autopartes en Mercado Libre es solo el primer ejemplo de configuración.
 
 ## 1. Qué cambia en cada búsqueda y qué no
 
-- **Cambia (va en un archivo de configuración, ver `scripts/pipeline/config-autopartes-mx-co.json`):** el rubro, los sub-rubros,
+- **Cambia (va en `scripts/pipeline/rubros/<rubro>.json` y `paises.json`, ver `rubros-y-paises.md`):** el rubro, los sub-rubros,
   los países (prefijo de teléfono, dónde se vende), las zonas (ciudades o estados), las consultas, la lista de qué descartar
   y cómo se reconoce que una tienda o una cuenta de Instagram es del rubro.
-- **No cambia:** las reglas de abajo. Para otro rubro se copia el config, se cambian esos campos y se corre igual.
-- Si el rubro no vende en Mercado Libre, se apaga `tiendas_ml.activar` y la búsqueda sale de Instagram, webs y directorios.
+- **No cambia:** las reglas de abajo. Para otro rubro se copia el archivo de un rubro parecido, se cambian esos campos y se corre igual.
+  Rubros y países se eligen en el menú que muestra la skill al invocarla; el proceso corre solo para cada combinación.
+- Si el rubro no vende en Mercado Libre, `tiendas_ml.activar` queda en `false` y la búsqueda sale de Instagram, webs, Google Maps y directorios.
 
 ## 2. Fuente de verdad y anti-duplicados
 
