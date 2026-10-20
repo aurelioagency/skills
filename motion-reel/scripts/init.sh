@@ -30,7 +30,7 @@ fi
 mkdir -p "$DEST"/film/lib "$DEST"/scripts "$DEST"/docs "$DEST"/audio/vo "$DEST"/assets/fonts "$DEST"/assets/brand "$DEST"/assets/cap "$DEST"/renders "$DEST"/review
 cp "$SKILL"/engine/index.html "$SKILL"/engine/core.js "$SKILL"/engine/type.js "$SKILL"/engine/film.js "$DEST"/film/
 cp "$SKILL"/engine/lib/motion.js "$SKILL"/engine/lib/motion.test.js "$DEST"/film/lib/
-for f in render.mjs sync.mjs sfx.mjs capture.mjs beats.py music.py vo.py mix.py review.py preset.mjs; do cp "$SKILL/scripts/$f" "$DEST/scripts/"; done
+for f in render.mjs sync.mjs sfx.mjs capture.mjs beats.py music.py vo.py mix.py bed.py review.py preset.mjs; do cp "$SKILL/scripts/$f" "$DEST/scripts/"; done
 cp "$SKILL"/templates/brief.md "$SKILL"/templates/timeline.json "$DEST"/
 cp "$SKILL"/templates/docs/*.md "$DEST"/docs/
 # the house sounds travel with the skill: every project gets its own copy (lib: paths in timeline.sfx resolve here)
@@ -41,6 +41,8 @@ if [ -n "$OVERLAY" ]; then
   mkdir -p "$DEST"/assets/source
   mkdir -p "$DEST"/transcript "$DEST"/manifests/audits "$DEST"/snapshots "$DEST"/renders/final
   cp "$SKILL"/engine/video.js "$SKILL"/engine/overlay.js "$DEST"/film/
+  # the Aurelio closing wordmark (OV.wordmark): the site's star mark and serif, so the CTA never clashes
+  [ -d "$SKILL/assets/brand/aurelio" ] && mkdir -p "$DEST"/assets/brand && cp -r "$SKILL"/assets/brand/aurelio "$DEST"/assets/brand/aurelio
   cp "$SKILL"/engine/film_overlay.js "$DEST"/film/film.js   # Branch B starter replaces the Branch A one
   cp "$SKILL"/scripts/autosfx.mjs "$DEST"/scripts/
   cp "$SKILL"/templates/docs/overlay_plan.md "$DEST"/docs/ 2>/dev/null || true
@@ -50,7 +52,7 @@ if [ -n "$OVERLAY" ]; then
          print }' "$DEST"/film/index.html > "$DEST"/film/index.html.tmp
   mv "$DEST"/film/index.html.tmp "$DEST"/film/index.html
   # Branch B timeline defaults: seconds as beats, vertical, narration as the base track, SFX well under the voice
-  node -e "const f='$DEST/timeline.json',fs=require('fs'),t=JSON.parse(fs.readFileSync(f,'utf8'));Object.assign(t,{bpm:60,formats:['9x16'],music:{source:'narration'},voiceover:null,marks:{},sfx:[],mix:{music:0,sfx:-14,vo:0,duck:false}});fs.writeFileSync(f,JSON.stringify(t,null,2))"
+  node -e "const f='$DEST/timeline.json',fs=require('fs'),t=JSON.parse(fs.readFileSync(f,'utf8'));Object.assign(t,{bpm:60,formats:['9x16'],music:{source:'narration'},voiceover:null,marks:{},sfx:[],mix:{music:0,sfx:-3,vo:0,duck:false}});fs.writeFileSync(f,JSON.stringify(t,null,2))"
   echo "overlay mode: film/video.js + overlay.js wired in, timeline set to Branch B defaults. Next: copy the source AS IT COMES into assets/source/, set timeline.scale = source width / 1080, transcribe with the skill's transcribe-media.mjs (SKILL.md B1)."
 fi
 

@@ -1,6 +1,6 @@
 ---
 name: motion-reel
-description: Produce beat-synced motion graphics made entirely in code, in one of two branches. Branch A builds a product launch reel / showreel / promo from scratch: captures a product URL's real brand assets, writes a style guide, measures a beat grid, gets a shotlist approved, then builds with springs. Branch B takes a video the user filmed of themselves talking and animates it: the resource they mention shown in motion, logos, counters, diagrams, punch-ins on the speaker and full-screen cutaways under their voice, with subtitles and nothing that merely repeats them, timed to their speech. Both branches run 3+ scored critique rounds to 8+ before delivering H.264 in 16:9, 1:1, 4:5 and 9:16. Use when the user asks for a launch video, product reel, motion reel, showreel, promo, sizzle, social ad, or wants motion-graphics overlays added to a video of themselves talking, or says "motion-reel".
+description: Produce beat-synced motion graphics made entirely in code, in one of two branches. Branch A builds a product launch reel / showreel / promo from scratch: captures a product URL's real brand assets, writes a style guide, measures a beat grid, gets a shotlist approved, then builds with springs. Branch B takes a video the user filmed of themselves talking and animates it: the resource they mention shown in motion, logos, counters, diagrams, punch-ins on the speaker and full-screen cutaways under their voice, with subtitles and nothing that merely repeats them, timed to their speech. The user sees the first build as a draft right away; once they OK what the animation looks like, up to 3 scored critique rounds polish it before delivering H.264 in 16:9, 1:1, 4:5 and 9:16. Use when the user asks for a launch video, product reel, motion reel, showreel, promo, sizzle, social ad, or wants motion-graphics overlays added to a video of themselves talking, or says "motion-reel".
 ---
 
 # Motion reel
@@ -159,18 +159,18 @@ Render checks as in A7 (`--sheet`, `--at`, `--range`, `--verify`).
 `node scripts/autosfx.mjs` writes the kit's cues into `timeline.sfx` (house sounds: words/screens → `clic_palabra_loucash`, icons → `bubble`, cursor → `click`, typing/counters → `tick`); hand-written entries are kept. Then `node scripts/sync.mjs && node scripts/sfx.mjs && python3 scripts/mix.py`. SFX sit well under the voice (`mix.sfx` -14 dB default; primary hits gain ≤ 0.5). Thumps/low hits on a spoken word mask it: keep them ≤ 0.1 or skip them. The voice is never re-processed or re-levelled. House sounds: AUDIO.md §2.
 
 ### B6–B8. Critique loop, final render, deliver
-Shared with Branch A — see below, with the Branch B criteria in `reference/CRITIQUE.md` (redundancy with the subtitles, animation-first, accuracy to the source). The critique drafts carry no subtitles; the critic judges redundancy against `transcript/approved.json`.
+Shared with Branch A — see below, with the Branch B criteria in `reference/CRITIQUE.md` (redundancy with the subtitles, animation-first, accuracy to the source). Every draft the USER sees carries the subtitles (SUBTITLES.md S-draft); the critic judges redundancy against `transcript/approved.json`.
 
-Branch B differs at the end: after SHIP the user watches the draft and approves it (**User review of the draft**, below); only then the final render is the clean master (`node scripts/render.mjs --crf 10`, only the 9x16 format), then the subtitles are burned onto it (SUBTITLES.md S4–S8), then the cover is built and burned in as frame 0 (COVER.md). The deliverables are `renders/final/<slug>-final.mp4` and `renders/final/<slug>-portada.png`. If the mix changes later, `--mux` the master, burn the subtitles again and re-add frame 0.
+Branch B differs at the end: after the rounds the user watches the subtitled draft and approves it (**User review of the draft**, below); only then the final render is the clean master (`node scripts/render.mjs --crf 10`, only the 9x16 format), then the subtitles are burned onto it (SUBTITLES.md S4–S8), then the cover is built and burned in as frame 0 (COVER.md). The deliverables are `renders/final/<slug>-final.mp4` and `renders/final/<slug>-portada.png`. If the mix changes later, `--mux` the master, burn the subtitles again and re-add frame 0.
 
 ---
 
 ## First look: the user sees the first build before any critique round (blocking)
-As soon as every scene of the approved plan/shotlist is built, and before round 1: `node scripts/sfx.mjs && python3 scripts/mix.py && node scripts/render.mjs --draft --all`, and send the user `renders/draft_<fmt>.mp4`, saying it is the unpolished first build (it may have errors). The plan was text; this is the first time the user sees how the animations appear and what is on screen, and their comments now are cheaper than after the rounds.
-- **Wait for the user's comments or an explicit go-ahead.** Apply the comments, send a new draft if they ask to see it, and only then start the critique loop.
-- The rounds polish what the user already saw and liked; they never replace this look.
+As soon as every scene of the approved plan/shotlist is built, and before round 1: `node scripts/sfx.mjs && python3 scripts/mix.py && node scripts/render.mjs --draft --all`, burn the subtitles on it in Branch B (SUBTITLES.md S-draft), and send the user the draft, saying it is the unpolished first build (it may have errors). The plan was text; this is the first time the user sees how the animations appear and what is on screen, and their comments now are cheaper than after the rounds.
+- **Wait for the user's comments or an explicit go-ahead.** Apply the comments and send a new draft each time; iterate on the draft with the user until they OK how the animation looks. Only then start the critique loop. If a correction is about one moment, send just that frame or a few seconds of it instead of a full draft (cheaper and faster).
+- The rounds polish what the user already saw and approved; they never change it. Three rounds of polishing on something the user then rejects is the waste this order exists to prevent (user, 2026-10-19).
 
-## Critique loop: at least 3 rounds, until every score is ≥ 8
+## Critique loop: after the user's OK on the first look, up to 3 rounds
 Each round:
 1. `node scripts/sfx.mjs && python3 scripts/mix.py` (draft sound, so sync can be scored)
 2. `node scripts/render.mjs --sheet --all && node scripts/render.mjs --draft --all`
@@ -178,10 +178,10 @@ Each round:
 4. **Critic:** spawn a fresh subagent with `reference/CRITIQUE.md`, the project path and N. It LOOKS at every sheet and strip, scores the 8 criteria with evidence, and appends the round to `docs/review_log.md`.
 5. Fix the 3 worst problems, verify each fix with stills or clips, and log what changed.
 
-Stop only when the verdict is SHIP: every score ≥ 8 and at least 3 rounds done. Never show the user a film before that.
+Stop when the verdict is SHIP (every score ≥ 8) or after 3 rounds, whichever comes first; report any score still under 8. A round only fixes problems inside what the user approved (blank frames, legibility, sync, levels, finish): a fix that would change an approved animation goes to the user as a question instead.
 
 ## User review of the draft (blocking)
-After SHIP, send the user the latest `renders/draft_<fmt>.mp4` (no subtitles, low quality) to watch on their phone. An approved plan is only text: whether the animations work is decided by seeing them, so the user reviews the draft before anything final.
+After the rounds, send the user the latest draft with its subtitles (SUBTITLES.md S-draft; low quality, under 30 MB so it reaches their phone). An approved plan is only text: whether the animations work is decided by seeing them, so the user reviews the draft before anything final.
 - **Wait for the user's corrections or an explicit OK on the draft.** Sending the draft is not an approval, and neither is silence or an OK given earlier to the plan.
 - Apply each correction, re-render the draft (`--draft`, plus stills of the moments touched) and send it again. Repeat until the user OKs the draft.
 - Only that explicit OK starts the final render (and, in Branch B, the subtitles and the cover).

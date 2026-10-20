@@ -9,11 +9,11 @@ import { pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
 
 const HOUSE = {
-  word:   { file: 'lib:loucash/clic_palabra_loucash.wav', gain: 0.45 },   // a key word / text slams or cuts in
-  screen: { file: 'lib:loucash/clic_palabra_loucash.wav', gain: 0.4 },    // a screen, screenshot or card appears
-  icon:   { type: 'bubble', gain: 0.38 },                                  // an icon pops in (runs climb in pitch)
-  click:  { type: 'click', gain: 0.4 },                                    // the cursor clicks
-  type:   { type: 'tick', gain: 0.14 },                                    // typing / a rolling counter
+  word:   { file: 'lib:loucash/clic_palabra_loucash.wav', gain: 0.18 },   // a key word / text slams or cuts in
+  screen: { file: 'lib:loucash/clic_palabra_loucash.wav', gain: 0.14 },    // a screen, screenshot or card appears
+  icon:   { type: 'bubble', gain: 0.14 },                                  // an icon pops in (runs climb in pitch)
+  click:  { type: 'click', gain: 0.17 },                                    // the cursor clicks
+  type:   { type: 'tick', gain: 0.11 },                                    // typing / a rolling counter
   whoosh: { type: 'whoosh', gain: 0.3, align: 'peak' },                    // a big move into a cutaway (use sparingly)
 };
 const RUN = [1, 1.12, 1.26, 1.41, 1.58];   // bubble pitches for icons landing within 0.45 s of each other

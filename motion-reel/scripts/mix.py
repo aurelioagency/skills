@@ -1,7 +1,7 @@
 # Mix music + sfx + voiceover → audio/mix.wav at -14 LUFS integrated, ≤ -1 dBTP, 48 kHz 24-bit. Run from the project root.
 # Branch B (music.source = narration): the user's narration keeps its own level; only the SFX are added under it.
 #   python3 scripts/mix.py
-# Inputs (any may be missing except music): audio/music.wav, audio/sfx.wav, audio/vo.wav
+# Inputs (any may be missing except music): audio/music.wav, audio/sfx.wav, audio/vo.wav, audio/bed.wav (Branch B background music, scripts/bed.py)
 # Levels in dB from timeline.json "mix": { "music": 0, "sfx": -3, "vo": 0, "duck": true }
 # The music is trimmed/padded to timeline.duration with a 0.3 s tail fade, and side-chain ducked under the VO.
 import json, os, subprocess
@@ -9,7 +9,7 @@ import json, os, subprocess
 TL = json.load(open('timeline.json'))
 DUR = float(TL['duration'])
 LV = {'music': 0.0, 'sfx': -3.0, 'vo': 0.0, 'duck': True, **(TL.get('mix') or {})}
-have = {k: os.path.exists(f'audio/{k}.wav') for k in ('music', 'sfx', 'vo')}
+have = {k: os.path.exists(f'audio/{k}.wav') for k in ('music', 'sfx', 'vo', 'bed')}
 if not have['music']: raise SystemExit('audio/music.wav missing (python3 scripts/music.py, or copy the supplied track there)')
 
 
@@ -27,13 +27,16 @@ def inp(name, gain, mono_to_stereo=False):
 inp('music', LV['music'])
 chains[-1] = chains[-1].replace('[music]', f',afade=t=out:st={DUR - 0.3}:d=0.3[music]')
 if have['sfx']: inp('sfx', LV['sfx'])
+# Branch B background music (audio/bed.wav, made by scripts/bed.py): a steady bed already levelled well under the
+# narration and the SFX (voice > SFX > music); added as is, never ducked, so it stays constant.
+if have['bed']: inp('bed', LV.get('bed', 0.0))
 if have['vo']:
     inp('vo', LV['vo'], mono_to_stereo=True)
     if LV['duck']:
         chains.append('[vo]asplit[vo_out][vo_key]')
         chains.append('[music][vo_key]sidechaincompress=threshold=0.04:ratio=4:attack=15:release=280:makeup=1[music_out]')
 ducked = have['vo'] and LV['duck']
-labels = (['[music_out]'] if ducked else ['[music]']) + (['[sfx]'] if have['sfx'] else []) + ((['[vo_out]'] if ducked else ['[vo]']) if have['vo'] else [])
+labels = (['[music_out]'] if ducked else ['[music]']) + (['[sfx]'] if have['sfx'] else []) + (['[bed]'] if have['bed'] else []) + ((['[vo_out]'] if ducked else ['[vo]']) if have['vo'] else [])
 graph = ';'.join(chains) + f";{''.join(labels)}amix=inputs={len(labels)}:normalize=0:duration=first,alimiter=limit=0.95:level=false[mix]"
 ff([*inputs, '-filter_complex', graph, '-map', '[mix]', '-c:a', 'pcm_f32le', 'audio/mix_raw.wav'])
 

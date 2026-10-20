@@ -22,7 +22,7 @@
   scene({
     name: 'example-cutaway', from: 2.0, to: 3.5, cut: false,
     build(root) {
-      el('div', { class: 'abs', style: `left:0;top:0;width:${W}px;height:${H}px;background:#f6f6f4` }, root);
+      OV.cutawayBg(root, '#f6f6f4');   // opaque, jolt-proof background (the voice keeps playing)
       cutIn(el('div', { class: 'abs', style: 'left:90px;top:620px;width:900px;height:500px;border-radius:18px;background:#ddd' }, root), { at: 2.05, sfx: 'screen', what: 'resource screenshot' });
       pop(el('div', { class: 'abs', style: 'left:820px;top:560px;width:160px;height:160px;border-radius:40px;background:#3b82f6' }, root), { at: 2.5, what: 'icon' });
     },
@@ -30,5 +30,6 @@
 
   // no subtitles in the film: they are burned onto the final render (reference/SUBTITLES.md)
   C.start();
-  C.videoBG('../assets/source/clip.mp4');   // point at the source file as it came (assets/source/<file>)
+  C.videoBG('../assets/source/clip.mp4', { fps: 30 });   // the source as it came (assets/source/<file>); fps = the source's frame rate
+  // CTA close on the Aurelio keyword: OV.wordmark(root, { at: <keyword start> }) inside the last scene's build() (ANIMATION.md §3c)
 })();

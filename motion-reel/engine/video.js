@@ -8,7 +8,9 @@
 // core.js, or any audio/beat script are needed — timeline.json just uses bpm:60 so one beat = one second,
 // and marks are the transcript's own timestamps instead of a measured music grid.
 (() => {
-  function videoBG(src, { objectPosition = 'center' } = {}) {
+  // fps: the source's frame rate (e.g. 30 for a phone video). With it, a seek that lands inside the frame already on
+  // screen is skipped — at 60 fps finals that halves the seeks.
+  function videoBG(src, { objectPosition = 'center', fps = null } = {}) {
     const v = document.createElement('video');
     v.src = src;
     v.muted = true;            // the ORIGINAL audio is muxed back in by mix.py/render.mjs, never played here
@@ -26,13 +28,17 @@
     let lastSeeked = -1;
     window.seek = async (t) => {
       t = Math.max(0, Math.min(C.DUR - 1e-6, t));
-      if (Math.abs(t - lastSeeked) > 1 / 240) {
+      const same = fps && lastSeeked >= 0 && Math.floor(t * fps + 1e-6) === Math.floor(lastSeeked * fps + 1e-6);
+      if (!same && Math.abs(t - lastSeeked) > 1 / 240) {
         await ready;
         await new Promise((resolve) => {
           const onSeeked = () => { v.removeEventListener('seeked', onSeeked); resolve(); };
           v.addEventListener('seeked', onSeeked);
           v.currentTime = t;
         });
+        // 'seeked' can fire before the new frame is composited: wait until it is presented, so a captured frame is never
+        // the black placeholder (seen right after cutaways). Bounded, so a missed callback cannot hang the render.
+        if (v.requestVideoFrameCallback) await new Promise((resolve) => { v.requestVideoFrameCallback(() => resolve()); setTimeout(resolve, 120); });
         lastSeeked = t;
       }
       paint(t);

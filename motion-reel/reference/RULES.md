@@ -66,12 +66,14 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 - Every hit sits on the measured beat grid (`beats.json`), and every SFX event is declared in `timeline.json` `sfx`.
 - The mix sits at -14 LUFS integrated with true peak ≤ -1 dBTP (`mix.py`).
 - Voiceover is cut into phrases and each phrase is placed on a beat. Never speed up a whole take.
-- **Branch B:** SFX sit well under the voice — `mix.sfx` -14 dB, primary hits gain ≤ 0.5, texture ≤ 0.25. A low thump on a spoken word masks it: ≤ 0.1 or none. The narration is the user's finished audio; only loudness is touched, and a quiet source (> +8 dB needed) is reported to the user, not silently pumped.
+- **Branch B: voice > SFX > music, and the SFX must be clearly heard.** Reference levels approved by the user (AUDIO.md §2b): `mix.sfx` -3 dB with the house gains (word 0.18, screen 0.14, click 0.17, icon 0.14, ticks 0.11), so SFX peaks sit ~9 dB under the voice peaks; a steady background track ~34 dB under the narration (`scripts/bed.py`). SFX 17 dB under the voice were lost (user, 2026-10-19). A low thump on a spoken word masks it: ≤ 0.1 or none. The narration is the user's finished audio; only loudness is touched, and a quiet source (> +8 dB needed) is reported to the user, not silently pumped.
 
 ## Branch B (motion graphics on the user's own footage)
 **The point is the animation.** The video always carries subtitles (burned onto the final render, identical to social-video-producer's; every subtitle rule lives in SUBTITLES.md), so every graphic must show something the subtitles don't.
 - **No echo.** Never put a phrase on screen that the subtitle is showing, unless it is the key datum of that moment (a number, a name, a price, one keyword). Non-key phrases never — least of all in the hook: the first second is for the strongest visual, not for the opening words.
 - **On-screen text is key data only:** short (1–3 words or a number), verbatim or shortened from what's said, never an invented claim, number or feature.
+- **Only what the video is about.** Show data from the resource only when it serves what the speaker says: a figure that happens to sit on the page (GitHub stars of a third-party repo on the user's own tool page) does not go in. And keep shown figures credible and illustrative: one app marked in a calculator with its real value, not every option at once inflating the number (user, 2026-10-19).
+- **The close never clashes.** The CTA is built in the look of what the film already showed; for the Aurelio keyword the house close is `OV.wordmark` (the site's own wordmark and its AI animation), kept until the user asks for another.
 - **Reference ≠ template:** take the references' technique, never their elements; every visual is created for this video, no signature motif repeated across videos, money in $ / USD (ANIMATION.md §0).
 - **Reference techniques are a vocabulary, not a checklist.** Pick per video and per moment what serves it; a move seen once in one reference is an option, never a rule.
 - **Fade to white** (thomas: the frame whitens over ~4 frames into a full-screen white cutaway): optional and rare — at most once or twice per video, never in a run, never as the default way into a cutaway. What matters is the animation inside the cutaway, not the transition into it.
@@ -87,6 +89,6 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 - `timeline.json` uses `bpm: 60` with no measured grid, so marks are literal transcript timestamps.
 
 ## Process
-- Loop before showing anything: contact sheet → score → fix the 3 worst → repeat until every score is ≥ 8, with at least 3 rounds.
+- The user sees the first build as a draft before any round (SKILL.md First look). After their OK: contact sheet → score → fix the 3 worst → repeat until every score is ≥ 8, at most 3 rounds, polishing only what the user approved.
 - Judge from the rendered MP4s and sheets. Never judge from the page or from memory of the code.
 - Parallel sessions may run the same brief. Use a distinctive `videos/<slug>`, never write into a folder you did not create, and if files change under you, stop and check.

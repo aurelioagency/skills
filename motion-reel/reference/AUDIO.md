@@ -26,7 +26,7 @@ node scripts/sfx.mjs                                        → audio/sfx.wav
 | `whoosh` | whip, morph, push-through | builds 0.3 s, PEAKS on the cue (put the cue on the landing) |
 | `thump` | logo, impact | on the cue |
 | `shutter` | hard cut, wipe | on the cue |
-Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't stack more than two sounds on one frame. **Branch B (under a voice): halve those and keep `mix.sfx` at -14 dB** — primary ≤ 0.5, texture ≤ 0.25, thump ≤ 0.1.
+Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't stack more than two sounds on one frame. **Branch B (under a voice): use the reference levels of §2b** (`mix.sfx` -3 dB, the house gains below); thump ≤ 0.1.
 
 **Supplied sounds** (e.g. taken from a reference reel or a library): put the file in `assets/sfx/` and declare it with `"file"` instead of `"type"`:
 ```jsonc
@@ -38,9 +38,26 @@ Gains: primary hits 0.7–0.9, secondary 0.45–0.6, texture 0.3–0.4. Don't st
 **House sounds (Branch B)** — use these unless the user asks otherwise:
 | Moment | SFX | Gain under the voice |
 |---|---|---|
-| a word / key text slams in, a screen or screenshot appears | `{ "file": "lib:loucash/clic_palabra_loucash.wav" }` — the user's chosen click (the original loucash click, denoised, cut at 60 ms) | 0.35–0.5 |
-| an icon pops in (several in a row: pitch 1, 1.12, 1.26, 1.41) | `{ "type": "bubble" }` | 0.3–0.45 |
+| a word / key text slams in | `{ "file": "lib:loucash/clic_palabra_loucash.wav" }` — the user's chosen click (the original loucash click, denoised, cut at 60 ms) | 0.18 |
+| a screen or screenshot appears | same click | 0.14 |
+| a run of items appearing (names, cards): one click per item, even 0.05 s apart — the user wants to hear every one | same click | 0.13 |
+| an icon pops in (several in a row: pitch 1, 1.12, 1.26, 1.41) | `{ "type": "bubble" }` | 0.14 |
+| the cursor clicks | `{ "type": "click" }` | 0.17 |
+| typing / a rolling counter | `{ "type": "tick" }` | 0.11 |
 `lib:` paths resolve to the skill's own sound library: `skill/sfx/`, copied into every project as `sfx-lib/` by `init.sh` (override with `$MOTION_REEL_SFX_LIB`). It installs with the skill — nothing to copy by hand. If a file is missing, `sfx.mjs` warns and falls back to the synth `wordclick`.
+
+## 2b. Branch B levels and background music (reference values, approved by the user)
+Measured on `aure-apps-22-apps-gratis` (2026-10-19), after the user listened three times and called them right ("van perfectos"). Order of importance: **voice > SFX > music**, and every SFX must be clearly heard.
+| Stem | Setting | Where it lands |
+|---|---|---|
+| Voice (`audio/music.wav`, the narration) | as delivered, never re-levelled | that video: -21.6 LUFS integrated, peaks -7 to -17 dBFS |
+| SFX (`audio/sfx.wav`) | `timeline.mix.sfx` = **-3 dB**, house gains of §2 (`autosfx.mjs` writes them) | peaks ~ -20 dBFS: about 9 dB under the voice peaks |
+| Background music (`audio/bed.wav`) | `python3 scripts/bed.py` = **34 dB under the narration** (a -16 LUFS track at -39.6 dB) | ~ -55 LUFS, peaks ~ -49 dBFS: ~28 dB under the SFX |
+What failed on the way: SFX at -14 dB with gains 0.07–0.13 sat 17 dB under the voice and were lost; the bed at 22 dB and at 30 dB under the voice was still "too loud". Start from these values; move them only when the user asks.
+
+**Background music: always, steady and low.** Every Branch B video gets a background track unless the user says otherwise. Use the skill's own library, `music/` (`library.json`: title, artist, source, cut, duration, integrated loudness and loudness range of each track, sorted steadiest first, all LRA ≤ 2 LU): `bed.py` picks the steadiest track long enough for the video, or `--track <file>`. A new track joins the library only if its loudness range is ≤ 2 LU (`ffmpeg -i x.mp3 -af ebur128 -f null -`), with its source recorded; add it to `library.json` and to the repo. Check the license on the source page before a track is used for a client.
+
+**The narration's loudness:** `mix.py` warns when the source is quiet (the user may have forgotten the CapCut pass). Tell the user once and leave the voice as it is.
 
 ## 3. Voiceover (Fish Audio MCP, when the brief asks for it)
 Tools: `search_voices`, `get_voice`, `text_to_speech` (returns a permanent audio URL), `get_credit_balance`.

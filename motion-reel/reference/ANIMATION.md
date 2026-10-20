@@ -45,6 +45,10 @@ emotion and the CTA.
 | **Cursor click** | the cursor glides in, presses (×0.82) and a ring expands | "you click here", buttons, installing, toggles | `OV.cursor(parent, { path, clicks })` | mouse click |
 Soft rises (`OV.slide`) are not the house look: only for a rare calm moment.
 
+## 3c. The close (CTA)
+On the Aurelio keyword the house close is **`OV.wordmark(root, { at })`**: the aurelioagency.com wordmark (star + AURELIO, Cormorant Garamond, cream on a dark card) slams in on the word, then plays the site's own animation — the letters U R E L O close until only "AI" is left, hold, and open again (3.6 s). Saved by the user after the first film that used it; keep it until they ask for another. Whatever the close is, it is built in the look the film already showed: a pill, a colour or a face that appears nowhere else in the film is the "desentona" failure.
+Full-screen cutaways get their background with **`OV.cutawayBg(root, color)`** so a slam's jolt never shows the footage at the frame edges.
+
 ## 3b. The camera (the footage moves too)
 - **Jump-cut zooms** (`OV.punch([[t, 1.15–1.25]])`, default kind `'cut'`): the speaker is suddenly closer on a strong word, and back out on the next beat. `'snap'` gets there in 0.12 s; `'smooth'` is a slow push for a calm line. Something every few seconds in talking stretches.
 - **Impact jolt**: when something slams in, the whole frame (footage + graphics) jolts for 2–4 frames (± ~10 px and a 1.5 % kick). Every `OV.slam` does it by default (`impact: 0` turns it off; smaller elements ~6); `OV.impact(at, amp)` adds one.

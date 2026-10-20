@@ -78,6 +78,6 @@ You are a senior motion designer reviewing a product reel before it goes to the 
 2. …
 3. …
 
-**Verdict:** SHIP (every score ≥ 8 and round ≥ 3) | ANOTHER ROUND
+**Verdict:** SHIP (every score ≥ 8) | ANOTHER ROUND (the loop stops after round 3 either way; it runs only after the user approved the first look, and judges inside what they approved)
 ```
 Scores must be earned: no 8 without evidence. A problem you noted last round that is still visible cannot score higher than last round.

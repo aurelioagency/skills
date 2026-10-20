@@ -16,6 +16,10 @@
 //   OV.layout([[t, 'full' | 'split' | 'gone'], …], { face })              the speaker full / in the bottom half / gone
 //   OV.punch([[t, scale, 'cut' | 'snap' | 'smooth'], …])                  zooms on the speaker (default: jump-cut zoom)
 //   OV.impact(at, amp)                                                     an extra frame jolt (slams add their own)
+//   OV.cutawayBg(root, color)                                              opaque background of a full-screen cutaway (jolt-proof)
+//   OV.wordmark(parent, { at, x, y, size, out })                            the Aurelio closing wordmark (star + AURELIO on a dark
+//                                                                         card), slams in ON `at`, then plays the site's own
+//                                                                         animation: the letters close to "AI" and open again
 // `out`: the element hard-cuts away at that time (outKind 'drop' = shrinks out in 0.1 s instead).
 // `sfx`: 'word' | 'screen' | 'icon' | 'click' | 'type' | 'whoosh' | null — the default comes from the kind; the cue lands
 //        on the same frame as the visual. scripts/autosfx.mjs turns OV_CUES into timeline.sfx (AUDIO.md house sounds).
@@ -77,7 +81,7 @@
     if (s.out != null && t >= s.out + 0.08) return { o: 0 };
     const k = clamp((t - t0) / 0.08), after = Math.max(0, t - s.at);
     let sc = k < 1 ? 0.3 + 0.85 * easeOut3(k) : 1 + 0.15 * Math.exp(-after / 0.06) * Math.cos(after * 30);
-    let o = clamp(k * 3);
+    let o = k > 0 ? 1 : 0;   // full opacity from its first frame: a faint first frame reads as a ghost (critique 2026-10-19)
     if (s.out != null && t >= s.out) { const q = clamp((t - s.out) / 0.08); sc *= 1 - q; o = 1 - q; }
     return { o, s: sc };
   }
@@ -207,7 +211,8 @@
     const J = impactAt(t);
     if (window.OV.bg) {
       const m = layoutAt(t), H = C.H, P = punchAt(t);
-      if (m === 'gone') C.put(window.OV.bg, { o: 0 });
+      // hidden by clipping, never by visibility: a <video> toggled to hidden paints one black frame when it comes back
+      if (m === 'gone') C.put(window.OV.bg, { clip: 'inset(0 0 100% 0)' });
       else if (m === 'split') {
         const shift = 0.75 * H - LAYOUT.face * H, top = (0.5 * H - shift) / H * 100;
         C.put(window.OV.bg, { x: J.x, y: shift + J.y, s: P * J.s, clip: `inset(${top.toFixed(2)}% 0 0 0)` });
@@ -231,6 +236,42 @@
     return win;
   }
 
+  // WORDMARK — the Aurelio CTA close, saved by the user as the house close (2026-10-19, "me encanta"): the site's own
+  // header/footer wordmark (aurelioagency.com: AnimatedLogoWord) — star mark + AURELIO in Cormorant Garamond 500,
+  // letter-spacing .42em, cream .92 — on a dark card, slammed in on the keyword. Then the site's animation, 3.6 s
+  // ease-in-out: keyframes 0/20/75/100 % full · 40/60 % the letters U R E L O at width 0, opacity 0, blur — only "AI"
+  // stays. Assets: assets/brand/aurelio/ (init.sh --overlay copies them). Never restyle it in another face or colour:
+  // the CTA must not clash with the rest of the film.
+  const WM_FULL = { A: 25.234, U: 25.094, R: 24.672, E: 21.5625, L: 21.4375, I: 16.922, O: 26.578 };   // site's --full-width at 22.4 px
+  function wordmark(parent, o = {}) {
+    if (!document.getElementById('wm-font')) {
+      const st = document.createElement('style'); st.id = 'wm-font';
+      st.textContent = "@font-face{font-family:'AurelioSerif';src:url(../assets/brand/aurelio/cormorant-garamond.woff2) format('woff2');font-weight:300 700}";
+      document.head.appendChild(st);
+      C.fonts = [...(C.fonts || []), "500 40px AurelioSerif"];
+    }
+    const fs = o.size || 76, k = fs / 22.4, ls = 0.42 * fs, mark = fs * 1.16, pad = fs * 0.63;
+    const wordW = Object.values(WM_FULL).reduce((a, b) => a + b, 0) * k;
+    const w = o.w || Math.round(pad + mark + fs * 0.79 + wordW + pad), h = o.h || Math.round(fs * 2.26);
+    const panel = C.el('div', { class: 'abs', style: `left:${o.x ?? Math.round((C.W - w) / 2)}px;top:${o.y ?? 520}px;width:${w}px;height:${h}px;border-radius:14px;background:rgba(10,10,10,.92);border:1px solid rgba(244,240,234,.22);box-shadow:0 30px 80px -20px rgba(0,0,0,.65)` }, parent);
+    C.el('img', { class: 'abs', src: '../assets/brand/aurelio/logo-mark.svg', style: `left:${pad}px;top:${(h - mark) / 2}px;width:${mark}px;display:block` }, panel);
+    const word = C.el('div', { class: 'abs', style: `left:${pad + mark + fs * 0.14}px;top:0;height:${h}px;display:flex;align-items:center;white-space:nowrap;font:500 ${fs}px/1 AurelioSerif,Georgia,serif;letter-spacing:${ls}px;color:rgba(244,240,234,.92);padding-left:${ls}px` }, panel);
+    const letters = [...'AURELIO'].map((ch) => ({ e: C.reg(C.el('span', { style: `display:inline-block;overflow:hidden;width:${WM_FULL[ch] * k}px` }, word, ch)), w: WM_FULL[ch] * k, vanish: !'AI'.includes(ch) }));
+    slam(panel, { at: o.at, out: o.out, from: o.from ?? 1.6, rot: 0, sfx: o.sfx, gain: o.gain, what: o.what || 'AURELIO wordmark' });
+    SPECS.push({ k: 'wordmark', el: panel, letters, at: o.at, cycle: o.cycle || 3.6, blur: 1.5 * k });
+    return panel;
+  }
+  function wordmarkRun(t, s) {
+    const f = clamp((t - s.at) / s.cycle);
+    const q = f < 0.2 ? 0 : f < 0.4 ? C.ease.inOut((f - 0.2) / 0.2) : f < 0.6 ? 1 : f < 0.75 ? 1 - C.ease.inOut((f - 0.6) / 0.15) : 0;
+    for (const L of s.letters) if (L.vanish) C.put(L.e, { css: { width: `${(L.w * (1 - q)).toFixed(2)}px` }, o: 1 - q, filter: q > 0.001 ? `blur(${(s.blur * q).toFixed(2)}px)` : undefined });
+  }
+
+  // CUTAWAY BG — the opaque full-frame background of a full-screen cutaway. Every slam jolts each scene root by ±10 px,
+  // so a background the exact size of the frame shows the footage at the edges on every hit: this one is 60 px larger
+  // on every side and the root stops clipping it.
+  function cutawayBg(root, color = '#000') { root.style.overflow = 'visible'; return C.el('div', { class: 'abs', style: `left:-60px;top:-60px;width:${C.W + 120}px;height:${C.H + 120}px;background:${color}` }, root); }
+
   // one before-hook animates the camera and every declared element, every frame (pure function of t)
   C.hooks.before.push((t) => {
     cameraRun(t);
@@ -242,6 +283,7 @@
       else if (s.k === 'draw') C.put(s.el, drawProps(t, s));
       else if (s.k === 'odo') odoRun(t, s);
       else if (s.k === 'cursor') cursorRun(t, s);
+      else if (s.k === 'wordmark') wordmarkRun(t, s);
     }
   });
 
@@ -259,7 +301,7 @@
 
   // Subtitles are not drawn here: they are burned onto the rendered film with libass (reference/SUBTITLES.md).
 
-  window.OV = { specs: SPECS, settleOn, slide, putSlide, slam, cutIn, pop, typeOn, draw, odometer, cursor, browser, layout, layoutAt, punch, impact, cue, T95, bg: null };
+  window.OV = { specs: SPECS, settleOn, slide, putSlide, slam, cutIn, pop, typeOn, draw, odometer, cursor, browser, wordmark, cutawayBg, layout, layoutAt, punch, impact, cue, T95, bg: null };
   // keep a handle on the background video so the kit (layout, punch) and films can animate it
   const orig = C.videoBG;
   if (orig) C.videoBG = (src, o) => { const r = orig(src, o); C.reg(r.el); window.OV.bg = r.el; return r; };

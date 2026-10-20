@@ -91,6 +91,7 @@ For a keyword-only highlight add `--accent "<hex>" --accent-mode keyword --accen
 
 - Sample **every distinct framing in the film**, not "2-3 timestamps". In Branch B the film itself creates framings: punch-ins (the face grows and drops), `split` (the speaker in the bottom half), full-screen cutaways (no face), plus whatever cuts the source already had. For each framing, find the LOWEST the chin gets.
 - Captions must NOT cover the face. Face in the upper/middle third → visible lower third (above the platform UI safe zone). Face centred → the band between the chin and the safe zone.
+- **One continuous shot = one height for the whole video (user, 2026-10-19).** When the source is a single continuous shot (one framing, even with a camera move at the start or punch-ins on top), the subtitles keep ONE height from the first word to the last: the line just under the LOWEST the chin gets anywhere in the video, measured on the rendered film (the opening camera move usually holds it). It may sit over the mic or the hands at times; that is fine. A jump in height inside one shot is noticed and rejected ("los supernoté al principio"). The per-shot zones below apply only when the video really has different shots (a cut to another framing, the speaker crouching in another take).
 - **The caption band follows the face across shots; it is never one fixed Y.** A fixed band that clears the face in one shot lands across the mouth in another. "Below the face" also means *not* stranded at the very bottom of the frame where the face rides high — each shot gets a band just below its own chin. Never above the head.
 - **In a wide/full-body shot the caption goes on the chest, just below the chin, the same rule as the close framings.** Never push the band down to sit below the speaker's hand or held object (mic, prop, phone): the text belongs next to the face, where the viewer is looking, not further down the body. The user corrected this explicitly (2026-10-19): an earlier version anchored the wide-shot band under the hand/prop, which was wrong. The band may overlap the hand or the prop if that is what sits right under the chin; it must never cover the face. Re-derive the chin position per project; never reuse a previous video's number.
 - **A crossfade or dissolve is not an instant cut.** The zone boundary goes where the outgoing framing's face stops matching, not where the transition starts; a word that starts just before a 0.2-0.3 s crossfade takes the position of the shot it resolves into. Sample frames in ~0.1 s steps across it.
@@ -110,9 +111,20 @@ The subtitles are burned on top of everything, so a graphic placed in the captio
 
 ---
 
+## S-draft. Subtitles on every draft the user sees
+Every draft sent to the user carries the subtitles burned in, exactly as they will ship (same font, size, one word at a time, same placement), so placement is corrected on the draft and never after a 4K render. On the 1080 draft (`renders/draft_9x16.mp4`):
+
+```
+python <skill>/scripts/detect-shots.py --video renders/draft_9x16.mp4 --transcript transcript/approved.json --out-shots manifests/shots-draft.json --out-zones manifests/caption-zones-draft.json --out-check snapshots/shots-check-draft.png
+node <skill>/scripts/build-burn-in-captions.mjs --transcript transcript/approved.json --output renders/subs-draft.ass --font-file assets/fonts/captions/NeueMontreal-Bold.otf --video-width 1080 --video-height 1920 --size 104 --zones manifests/caption-zones-draft.json
+node <skill>/scripts/burn-in-captions.mjs --input renders/draft_9x16.mp4 --ass renders/subs-draft.ass --output renders/draft_9x16_subs.mp4 --fonts-dir assets/fonts/captions
+```
+
+Check and correct the zones as in S5 (one height for one continuous shot) before burning. The approved draft zones carry over to the final: multiply every `marginBottom` by `width / 1080` (2 for 4K) into `manifests/caption-zones.json`, then S6–S8 on the 4K master. Send the user the subtitled draft; under 30 MB it reaches their phone.
+
 ## S4. Final render without subtitles
 
-After the critique loop reaches SHIP, render the primary format as a high-quality master for the burn (the burn is one more encode, so the master goes in nearly lossless):
+After the user OKs the subtitled draft, render the primary format as a high-quality master for the burn (the burn is one more encode, so the master goes in nearly lossless):
 
 ```
 node scripts/render.mjs --crf 10
