@@ -7,3 +7,5 @@ pillow
 # Branch B only: word-level transcription (transcribe-media.mjs) and subtitles (detect-shots.py, measure_text.py)
 faster-whisper
 opencv-python
+# Branch B only, when a graphic passes behind the speaker: the person matte (matte.py)
+onnxruntime

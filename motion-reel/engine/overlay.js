@@ -29,6 +29,7 @@
 //   OV.slide(t, inAt, outAt, h)     soft card rise out of its own edge (not the house look — use slam/cutIn/pop first)
 //   OV.putSlide(el, slide, extra)   put() a slide's y / clip / visibility
 //   OV.bg                           the background <video> element once C.videoBG ran
+//   OV.cut                          the cut-out speaker <canvas> (C.videoBG(src, { matte })): over scene({ behind: true })
 (() => {
   const C = window.C;
   const { clamp, lerp } = C;
@@ -206,17 +207,21 @@
     return { x, y, s: 1 + k };
   }
 
-  // the camera: one place combines layout, punch-ins and impacts on the footage, and impacts on every scene
+  // the camera: one place combines layout, punch-ins and impacts on the footage (and on the cut-out speaker over the
+  // behind scenes, which must sit on exactly the same pixels), and impacts on every scene
   function cameraRun(t) {
     const J = impactAt(t);
     if (window.OV.bg) {
       const m = layoutAt(t), H = C.H, P = punchAt(t);
+      let p;
       // hidden by clipping, never by visibility: a <video> toggled to hidden paints one black frame when it comes back
-      if (m === 'gone') C.put(window.OV.bg, { clip: 'inset(0 0 100% 0)' });
+      if (m === 'gone') p = { clip: 'inset(0 0 100% 0)' };
       else if (m === 'split') {
         const shift = 0.75 * H - LAYOUT.face * H, top = (0.5 * H - shift) / H * 100;
-        C.put(window.OV.bg, { x: J.x, y: shift + J.y, s: P * J.s, clip: `inset(${top.toFixed(2)}% 0 0 0)` });
-      } else C.put(window.OV.bg, { x: J.x, y: J.y, s: P * J.s });
+        p = { x: J.x, y: shift + J.y, s: P * J.s, clip: `inset(${top.toFixed(2)}% 0 0 0)` };
+      } else p = { x: J.x, y: J.y, s: P * J.s };
+      C.put(window.OV.bg, p);
+      if (window.OV.cut) C.put(window.OV.cut, p);
     }
     if (J.x || J.y) for (const S of C.SCENES) if (S.name !== 'subs') C.put(S.root, { x: J.x, y: J.y });
   }
@@ -301,8 +306,9 @@
 
   // Subtitles are not drawn here: they are burned onto the rendered film with libass (reference/SUBTITLES.md).
 
-  window.OV = { specs: SPECS, settleOn, slide, putSlide, slam, cutIn, pop, typeOn, draw, odometer, cursor, browser, wordmark, cutawayBg, layout, layoutAt, punch, impact, cue, T95, bg: null };
-  // keep a handle on the background video so the kit (layout, punch) and films can animate it
+  window.OV = { specs: SPECS, settleOn, slide, putSlide, slam, cutIn, pop, typeOn, draw, odometer, cursor, browser, wordmark, cutawayBg, layout, layoutAt, punch, impact, cue, T95, bg: null, cut: null };
+  // keep a handle on the background video (and the cut-out speaker, with { matte }) so the kit (layout, punch) and films
+  // can animate it
   const orig = C.videoBG;
-  if (orig) C.videoBG = (src, o) => { const r = orig(src, o); C.reg(r.el); window.OV.bg = r.el; return r; };
+  if (orig) C.videoBG = (src, o) => { const r = orig(src, o); C.reg(r.el); window.OV.bg = r.el; window.OV.cut = r.cut; return r; };
 })();

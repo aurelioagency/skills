@@ -9,7 +9,7 @@ A film is a pure function of time. `window.seek(t)` paints frame t in headless C
 
 **Read before building:** [reference/RULES.md](reference/RULES.md) (contract, look, rhythm, motion, sound).
 **Also here:** [reference/ANIMATION.md](reference/ANIMATION.md) (Branch B motion language), [reference/SUBTITLES.md](reference/SUBTITLES.md) and [reference/COVER.md](reference/COVER.md) (Branch B subtitles and cover, same as social-video-producer), [reference/DELIVERY.md](reference/DELIVERY.md) (Branch B caption, DM reply, delivery folder and Drive, same as social-video-producer), [reference/ENGINE.md](reference/ENGINE.md) (engine API, patterns, commands), [reference/AUDIO.md](reference/AUDIO.md) (music, grid, SFX, VO, mix), [reference/CRITIQUE.md](reference/CRITIQUE.md) (critic prompt).
-**Toolchain:** node + playwright (chromium), ffmpeg, python3 with numpy, scipy, soundfile, librosa and pillow, and (Branch B only) `faster-whisper` and `opencv-python` for transcription and subtitles (`scripts/transcribe-media.mjs`, `scripts/detect-shots.py`). `init.sh` checks the first set.
+**Toolchain:** node + playwright (chromium), ffmpeg, python3 with numpy, scipy, soundfile, librosa and pillow, and (Branch B only) `faster-whisper` and `opencv-python` for transcription and subtitles (`scripts/transcribe-media.mjs`, `scripts/detect-shots.py`), plus `onnxruntime` for the person matte (`scripts/matte.py`). `init.sh` checks the first set.
 
 ## Choose the branch
 
@@ -178,6 +178,7 @@ Send the user the plan as a short table. **Wait for an explicit OK.** Build noth
 Start from the starter `film/film.js`: scenes per plan row (no subtitles in the film), `C.start()`, then `C.videoBG('../assets/source/<file>')`. Build with the `OV` kit (ANIMATION.md §3, header of `engine/overlay.js`) — declare in each scene's `build()`:
 - entrances: `OV.slam`, `OV.cutIn`, `OV.pop`, `OV.draw`, `OV.typeOn`, `OV.odometer`, `OV.cursor` (each lands ON its cue and registers its sound)
 - the frame: `OV.layout([[t,'full'|'split'|'gone'], …], { face })`, snap zooms `OV.punch([[t, scale], …])`
+- behind the speaker, only where a graphic does not fit above the head: `python <skill>/scripts/matte.py` + `C.videoBG(src, { matte })` + `scene({ behind: true })` (ANIMATION.md §2b)
 - full-screen cutaway: `'gone'` + a scene with an opaque full-frame background; the voice keeps playing
 - exits: `out:` (hard cut) or `outKind: 'drop'`
 - type over bright footage sits on a panel, never bare

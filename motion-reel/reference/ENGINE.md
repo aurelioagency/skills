@@ -57,13 +57,14 @@ Change it, then run `node scripts/sync.mjs`. The film and the SFX both read it, 
 | `C.hooks.before/after.push(fn)` | global per-frame work: camera, cursor, overlays |
 | `C.mulberry32(seed)`, `C.noise1(seed)` | seeded randomness |
 | `C.fonts = ['600 100px Display', …]` | awaited before frame 0. A missing face logs `[page] font failed` |
-| `C.videoBG(src)` | **Branch B only** (`film/video.js`, call right after `C.start()`). Inserts the user's own video behind the stage and keeps `window.seek(t)` synchronized to it — seeks the `<video>` to `t` and awaits the decoded frame before any scene paints. Muted; the real audio is muxed back in during mix, never played here. With `bpm: 60` and no measured grid, `C.bt(n) === n` seconds, so every mark in `timeline.json` is a literal timestamp and every spring/type helper above works unchanged. |
+| `C.videoBG(src)` | **Branch B only** (`film/video.js`, call right after `C.start()`). Inserts the user's own video behind the stage and keeps `window.seek(t)` synchronized to it — seeks the `<video>` to `t` and awaits the decoded frame before any scene paints. Muted; the real audio is muxed back in during mix, never played here. With `bpm: 60` and no measured grid, `C.bt(n) === n` seconds, so every mark in `timeline.json` is a literal timestamp and every spring/type helper above works unchanged. `{ matte: '../assets/matte/<file>-matte.mp4' }` (made by `scripts/matte.py`) adds the cut-out speaker over the scenes marked `behind: true` (ANIMATION.md §2b). |
 
 ## Scenes
 ```js
 scene({
   name: 'features', from: 'mid', to: 'end',   // beats or marks; root visible on [from - pre, to + post)
   pre: 0, post: 0,                              // overlap for whips/wipes. cut defaults to pre === 0
+  behind: false,                                // Branch B: true → drawn under the cut-out speaker (videoBG { matte })
   build(root, S) { /* DOM once; store on S */ },
   run(t, b, S)   { /* put() everything you animate, every frame */ },
   after(t, b, S) { /* things that follow live layout (rectOf) */ },

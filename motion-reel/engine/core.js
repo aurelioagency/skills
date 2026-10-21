@@ -160,9 +160,10 @@
   }
 
   // ------------------------------------------------------------------ scenes
-  // scene({ name, from, to, pre, post, cut, build(root, S), run(t, b, S), after(t, b, S) })
+  // scene({ name, from, to, pre, post, cut, behind, build(root, S), run(t, b, S), after(t, b, S) })
   //   from/to: beats or mark names. The root is visible on [from - pre, to + post) beats and run() is only called then.
   //   cut: true (default when pre === 0) → from is a hard cut: motion-blur samples never straddle it.
+  //   behind: true (Branch B, needs C.videoBG(src, { matte })) → the scene draws under the cut-out speaker (video.js).
   //   S = { root, name, from, to } plus anything build() stores on it.
   const SCENES = [];
   function scene(def) {
@@ -178,12 +179,13 @@
   };
   const hooks = { before: [], after: [] };      // global per-frame hooks (camera, cursor, overlays)
 
+  // a scene starting at beat <= 0 owns frame 0 even when the measured beat 0 sits a hair after t = 0
+  const isLive = (S, b) => (beatOf(S.from) <= 0 || b >= beatOf(S.from) - S.pre) && b < beatOf(S.to) + S.post;
   function paint(t) {
     OVER = new Map();
     const b = beatAt(t);
     for (const h of hooks.before) h(t, b);
-    // a scene starting at beat <= 0 owns frame 0 even when the measured beat 0 sits a hair after t = 0
-    const live = SCENES.filter((S) => (beatOf(S.from) <= 0 || b >= beatOf(S.from) - S.pre) && b < beatOf(S.to) + S.post);
+    const live = SCENES.filter((S) => isLive(S, b));
     for (const S of live) { put(S.root, { hide: false }); S.run && S.run(t, b, S); }
     commit();
     if (hooks.after.length || live.some((S) => S.after)) {
@@ -196,7 +198,7 @@
   window.C = {
     TL, BEATS, FMT, W, H, FPS, DUR, LEAD, leadFor, stage, pick,
     bt, beatAt, beatOf, clamp, lerp, seg, ease, sp, spHit, trk, trkObj, win, mulberry32, noise1,
-    el, frag, reg, put, commit, inset, rectOf, scene, canvas, hooks, SCENES,
+    el, frag, reg, put, commit, inset, rectOf, scene, canvas, hooks, SCENES, isLive,
     fonts: [],              // film.js: e.g. C.fonts = ['500 100px Display', '400 40px UI'] — awaited before frame 0
   };
 
