@@ -240,6 +240,8 @@ the middle cannot pass for a complete upload.
 that expires — its token carries about a two-hour window. `media_url` expires
 in 24 hours if it goes unused. Upload as part of the publish, not hours ahead.
 
+**A post scheduled more than ~20 hours ahead is not created now (user, 2026-10-20).** The uploaded file may expire before `scheduled_at` arrives, and Post for Me does not say whether a scheduled post counts as "using" it. Do the homework now (accounts, caption, titles, configurations) and create a **one-time scheduled task** (`mcp__scheduled-tasks__create_scheduled_task`, `fireAt` = 3 hours before the publish time) whose self-contained prompt uploads the video and creates the post with that same `scheduled_at`, the exact account ids, caption file path, titles, configurations and `external_id`, then checks `--external-id` first so it never creates a duplicate. Tell the user the post goes out at the hour they asked and the upload happens 3 hours before, while the app is open (if the app is closed then, it runs on next launch: say so).
+
 ### No second confirmation
 
 The owner's instruction to publish is the confirmation. By the time a delivery reaches this step it has already been reviewed and approved, so **do not stop to show a gate and ask for a second yes** — publish right away. Asking twice is the failure, not the safeguard.
@@ -367,6 +369,8 @@ One distinction worth keeping straight: a result row with `success: false` is a 
 This is the step everyone forgets, because by the time you publish, the folder that produced the files was built in another session days ago. Do it here, while you still know both halves.
 
 **A publish is not finished until the folder is renamed.** On this machine the convention is settled: it is part of the publish, not a follow-up question. Do not ask permission, do not offer it as an option, and do not leave it for the next turn. Deliverables live under `G:\Unidades compartidas\Aurelio\` — `Reels\` and `Carruseles\`.
+
+**A scheduled post is not published: do not rename its folder when you schedule it (user, 2026-10-20: "no fue publicado, poné el nombre descriptivo y nada más").** The folder keeps its plain topic name until the post actually goes out. The rename happens after `scheduled_at`: the session or scheduled task that follows the post up reads `--results`, and once the post went out it marks the folder with that date. Everything below about marking applies to posts published now.
 
 **Mark it once the post is created. Do not wait for the per-account results.** The owner of this machine decided that explicitly: `processing` with no results yet still gets marked, because the post was sent and the results routinely confirm later, after the session is over. Waiting means the folder never gets marked at all. Report the pending confirmation in the summary — but rename first, in the same turn.
 

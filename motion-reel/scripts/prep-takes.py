@@ -77,7 +77,11 @@ def frames(path, t0, t1, fps, width=480):
 
 def transcribe(path, idx):
     os.makedirs('transcript/takes', exist_ok=True)
-    wav, out = f'transcript/takes/take{idx}.wav', f'transcript/takes/take{idx}.json'
+    # cache keyed by the FILE (name, size, mtime), not by its position: re-planning in another order must never reuse
+    # another take's transcript (2026-10-20: the order changed and take 3 got take 1's words and keep range)
+    st = os.stat(path)
+    key = re.sub(r'[^A-Za-z0-9_-]', '_', os.path.splitext(os.path.basename(path))[0]) + f'-{st.st_size}-{int(st.st_mtime)}'
+    wav, out = f'transcript/takes/{key}.wav', f'transcript/takes/{key}.json'
     if not os.path.exists(out):
         run(['ffmpeg', '-v', 'error', '-y', '-i', path, '-vn', '-ac', '1', '-ar', '16000', wav])
         run([sys.executable, os.path.join(SKILL, 'scripts', 'lib', 'transcribe_words.py'), wav, out,
@@ -109,7 +113,7 @@ def cover_candidates(takes, n=3):
     cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     found = []
 
-    def scan(i, tk, t0, t1, fps):
+    def scan(i, tk, t0, t1, fps, still_max=2.5):
         fr = frames(tk['path'], t0, t1, fps, 360)
         if len(fr) < 3: return
         gray = [cv2.cvtColor(x, cv2.COLOR_RGB2GRAY) for x in fr]
@@ -117,7 +121,7 @@ def cover_candidates(takes, n=3):
         for k in range(1, len(gray) - 1):
             t = t0 + k / fps
             still = max(motion[max(0, k - 2):k + 3])          # no movement around this frame
-            if still > 2.5: continue
+            if still > still_max: continue
             faces = cascade.detectMultiScale(gray[k], 1.1, 5, minSize=(40, 40))
             if not len(faces): continue
             x, y, w, h = max(faces, key=lambda b: b[2] * b[3])
@@ -128,11 +132,12 @@ def cover_candidates(takes, n=3):
             found.append({'take': i + 1, 't': round(t, 2), 'score': round(score, 1), 'posing': posing})
 
     # the pose lives in the silent head/tail that gets trimmed: scan those densely, the speech only if nothing was found
+    # Whisper often pins the first word at 0.0 even after a silent pose, so the head/tail window is at least 1 s.
     for i, tk in enumerate(takes):
-        if tk['keep'][0] > 0.4: scan(i, tk, 0, tk['keep'][0], 8)
-        if tk['dur'] - tk['keep'][1] > 0.4: scan(i, tk, tk['keep'][1], tk['dur'], 8)
-    if len(found) < n:
-        for i, tk in enumerate(takes): scan(i, tk, tk['keep'][0], tk['keep'][1], 2)
+        scan(i, tk, 0, max(tk['keep'][0], min(1.0, tk['dur'])), 8)
+        scan(i, tk, min(tk['keep'][1], max(0.0, tk['dur'] - 1.0)), tk['dur'], 8)
+    if len(found) < n:   # no pose found (2026-10-20): look through the speech, denser and less strict about stillness
+        for i, tk in enumerate(takes): scan(i, tk, tk['keep'][0], tk['keep'][1], 6, still_max=6.0)
     found.sort(key=lambda c: -c['score'])
     pick = []
     for c in found:

@@ -45,6 +45,14 @@ emotion and the CTA.
 | **Cursor click** | the cursor glides in, presses (×0.82) and a ring expands | "you click here", buttons, installing, toggles | `OV.cursor(parent, { path, clicks })` | mouse click |
 Soft rises (`OV.slide`) are not the house look: only for a rare calm moment.
 
+**Slam + impact is the default entrance (user, 2026-10-20: "necesitamos impacto en todo con efectos de sonido").** Every card, screen, browser window, logo, icon, tag and file that enters lands with `OV.slam` (the frame jolts, the sound hits on the same frame). Cut-in, pop and type-on are for what runs in quick series inside one element (the rows of a list, the letters of a prompt) or for a title that appears together with a slam; slams closer than 0.4 s take a smaller jolt (`impact: 6`). Every entrance has its sound.
+
+## 3d. Sizes that read (approved: `reverse-api-engineer-web-a-api`, 2026-10-20)
+The user approved this reel's sizes after asking for the small cards to be fixed; use them as the floor (1080-wide design space):
+- **Over the footage, above the head:** a browser window with a real page 840–900 px wide (only an image that reads at that size, e.g. the site's hero); a cropped UI strip (a repo's name row) in a 660 × 120 px card, text ≥ 30 px; logo tiles 190 px; a terminal 940 × 225 px at 34 px mono. A whole web page shrunk into a 600 px card was rejected as unreadable, twice.
+- **Full-screen cutaway (dark background):** cards 940 px wide; two side-by-side logo cards 440 × 440 px with the name at 58 px; file rows 900 × 100 px at 44 px mono; list rows at 30 px mono minimum; a cropped real panel shown 940 px wide.
+- The film itself is in Drive: `Reels\reverse-api-engineer-web-a-api\output\`.
+
 ## 3c. The close (CTA)
 On the Aurelio keyword the house close is **`OV.wordmark(root, { at })`**: the aurelioagency.com wordmark (star + AURELIO, Cormorant Garamond, cream on a dark card) slams in on the word, then plays the site's own animation — the letters U R E L O close until only "AI" is left, hold, and open again (3.6 s). Saved by the user after the first film that used it; keep it until they ask for another. Whatever the close is, it is built in the look the film already showed: a pill, a colour or a face that appears nowhere else in the film is the "desentona" failure.
 Full-screen cutaways get their background with **`OV.cutawayBg(root, color)`** so a slam's jolt never shows the footage at the frame edges.

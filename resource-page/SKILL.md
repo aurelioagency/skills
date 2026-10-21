@@ -17,6 +17,8 @@ La página no aparece en la lista de `/blog`, lleva `noindex` y no hay ningún l
 
 Todo es parte del mismo "aprobado". No pedir un segundo OK.
 
+**La página existe antes de que su link se use en cualquier lado (usuario, 2026-10-20).** El `dm-reply-<slug>.txt` lleva la URL de esta página desde que se escribe el caption, así que la página se crea apenas el usuario aprueba el video, sin esperar a Drive, a la publicación ni a otro paso, y siempre antes de que esa URL aparezca en un DM, en ReplyKaro o en una publicación. Un link a una página que todavía no existe es el error que esta regla evita: el usuario entró y no estaba.
+
 ### Cuándo NO usar esta skill
 
 Esta skill existe para un recurso que **no es de Aurelio** (un repo de GitHub, la herramienta de otro, un sitio externo) — ahí hace falta una página propia que lo presente, con la comunidad de Skool y la consultoría al lado, en vez de mandar a la gente directo afuera.
