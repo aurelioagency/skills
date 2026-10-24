@@ -1,8 +1,10 @@
 # Subtitles (Branch B)
 
-Branch B videos always ship with subtitles, and they must come out **identical to the ones social-video-producer burns**: same transcript pipeline, same approval gate, same font, same size, same one-word reveal, same per-shot placement under the face, same libass burn. These rules and the scripts are a copy of that skill's Burn-In Captions branch and Caption Contract. When one changes, change the other in the same pass so the two skills keep producing the same subtitles.
+Branch B videos always ship with subtitles, and they must come out **identical to the ones social-video-producer burns**: same transcript pipeline, same approval gate, same font, same size, same one-word reveal, same per-shot placement under the face, same libass burn. These rules and the scripts are a copy of that skill's Burn-In Captions branch and Caption Contract. Matching the shared visual style does not authorize editing another skill.
 
 Subtitles are **not** drawn by the film (no HTML captions, no `OV` helper). The film renders clean; the subtitles are burned onto the final render with libass, as the last step. That is what makes them match social-video-producer pixel for pixel, and it lets the caption band follow the face as the film actually frames it (punch-ins, split, cutaways), not as the raw source framed it.
+
+**Normal workflow:** pipeline.py transcribe/draft/final performs these technical steps and caches them. The commands below are low-level diagnostics, not a second checklist to repeat. Final zones are always scaled from the approved draft.
 
 All subtitle scripts run from the skill folder (`node <skill>/scripts/...`, `python <skill>/scripts/...`), from the project root. They need Node, ffmpeg, and Python with `faster-whisper`, `Pillow` and `opencv-python`. Check this before starting, not when a script fails halfway through.
 
@@ -132,13 +134,13 @@ node scripts/render.mjs --crf 10
 
 `renders/9x16.mp4` is now the clean film at the source's resolution. It is not a deliverable on its own.
 
-## S5. Detect shots and caption zones on the rendered film
+## S5. Detect zones on the DRAFT; reuse approved zones in the final
 
 ```
-python <skill>/scripts/detect-shots.py --video renders/9x16.mp4 --transcript transcript/approved.json --out-shots manifests/shots.json --out-zones manifests/caption-zones.json --out-check snapshots/shots-check.png
+python <skill>/scripts/detect-shots.py --video renders/draft_9x16.mp4 --transcript transcript/approved.json --out-shots manifests/shots-draft.json --out-zones manifests/caption-zones-draft.json --out-check snapshots/shots-check-draft.png
 ```
 
-Run it on the **rendered film**, not on the source: punch-ins, `split` and cutaways move the face, and the zones must follow the face the viewer will actually see.
+Run detection only on the **rendered draft**, not again on the final. The final uses the approved draft zones multiplied by output width / 1080. Draft detection matters because punch-ins, `split` and cutaways move the face, and the zones must follow the face the viewer will actually see.
 
 The script finds the **hook** (first full sentence), the **CTA** (last full sentence, extended backwards over sentences that also ask the viewer to do something) and the **body**, then the framing changes from where the speaker's face sits (never from pixel scene-detect). The hook and the CTA are each kept inside one shot; every other cut is moved onto the start of a word (a word starting up to 0.25 s before a cut takes the new shot), so no word is split between two zones. Zones never overlap: each ends exactly where the next starts. It measures the lowest chin per shot and writes `manifests/caption-zones.json`. Where there is no face (a full-screen cutaway) it falls back to the median chin.
 
@@ -152,7 +154,7 @@ It prints `Plano 1 (...): <text>`, ..., `GANCHO (...)` and `CTA (...)` (`ATENCIO
 node <skill>/scripts/build-burn-in-captions.mjs --transcript transcript/approved.json --output renders/subs.ass --font-file assets/fonts/captions/NeueMontreal-Bold.otf --video-width <w> --video-height <h> --size 104 --zones manifests/caption-zones.json
 ```
 
-Pass the RENDER's real dimensions (`ffprobe renders/9x16.mp4`), and scale every caption dimension by `width / 1080` — the defaults are expressed against the 1080-wide house design. On a 2160x3840 film that is `--video-width 2160 --video-height 3840 --size 208 --outline 0 --shadow 8 --blur 0 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their size, and it passes the width gate while doing it.
+Pass the RENDER's real dimensions (`ffprobe renders/9x16.mp4`), and scale every caption dimension by `width / 1080` — the defaults are expressed against the 1080-wide house design. On a 2160x3840 film that is `--video-width 2160 --video-height 3840 --size 208 --outline 0 --shadow 12 --blur 0 --margin-lr 240 --margin-bottom 1000`. Leaving the 1080 numbers on a 4K frame renders captions at half their size, and it passes the width gate while doing it.
 
 Each caption takes the `marginBottom` of the first zone whose `[start, end)` contains its start time; gaps and time past the last zone fall back to `--margin-bottom`. Example:
 
@@ -169,7 +171,7 @@ Each caption takes the `marginBottom` of the first zone whose `[start, end)` con
 Two failure modes this example encodes:
 
 - **A "wide intro" is not one zone.** A wide framing where the face rides high (`1480`) that cuts at 3.4 s to a tighter shot where the face drops (`830`) needs a boundary exactly on the cut. One zone left the caption stranded far below a high face.
-- **A 2-line chunk grows upward from the baseline**, so in a low-face shot it can touch the chin even when 1-line captions clear it, and the width gate cannot see this. Give that moment its own lower micro-zone (38.0–39.6), or size the type down so nothing wraps.
+- **A 2-line chunk grows upward from the baseline**, so in a low-face shot it can touch the chin even when 1-line captions clear it, and the width gate cannot see this. Give that moment its own lower micro-zone (38.0–39.6), or correct the transcript segmentation; do not shrink the fixed house size.
 
 ## S7. Width gate (hard stop)
 

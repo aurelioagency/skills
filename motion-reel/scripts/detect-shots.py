@@ -36,6 +36,7 @@ def parse():
     p.add_argument('--out-shots', default=None)
     p.add_argument('--out-zones', default=None)
     p.add_argument('--out-check', default=None, help='write a labelled strip of frames at hook/CTA edges and cuts')
+    p.add_argument('--allow-no-face', action='store_true', help='emit an explicitly unverified fallback zone when no face is detected')
     p.add_argument('--step', type=int, default=3, help='analyse every Nth frame')
     p.add_argument('--jump', type=float, default=0.07,
                    help='face-bottom jump, as a fraction of frame height, that counts as a new shot')
@@ -50,6 +51,8 @@ def face_track(video, step):
     n = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    if fps <= 0 or n <= 0 or width <= 0 or height <= 0 or step < 1:
+        raise ValueError('Invalid video or sampling step')
     cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     scale = 540.0 / width
     track = []
@@ -110,8 +113,8 @@ def sentences(words):
 
 
 CTA_RE = re.compile(
-    r'(coment\w*|segu[ií]s|seguime|seguinos|segu[ií]|guard[aá]\w*|compart\w*|mand[aá]\w*|'
-    r'escrib\w*|suscrib\w*|descarg\w*|link|palabra|dm|perfil|bio)', re.IGNORECASE)
+    r'\b(coment\w*|segu[ií]s|seguime|seguinos|segu[ií]|guard[aá]\w*|compart\w*|mand[aá]\w*|'
+    r'escrib\w*|suscrib\w*|descarg\w*|link|palabra|dm|perfil|bio)\b', re.IGNORECASE)
 MAX_CTA_EXTRA_SENTENCES = 2
 
 
@@ -229,12 +232,12 @@ def main():
     a = parse()
     track, height, width, duration = face_track(a.video, a.step)
     sm = smooth(track)
-    if not sm:
+    if not sm and not a.allow_no_face:
         sys.exit('No face detected in the video.')
     cuts = find_cuts(sm, height, a.jump)
 
     tr = json.load(open(a.transcript, encoding='utf-8'))
-    words = [w for s in tr['segments'] for w in s['words']]
+    words = [w for s in tr['segments'] for w in s['words']] if 'segments' in tr else tr.get('words', [])
     hook, cta = find_hook_and_cta(words)
     cuts = snap_cuts_to_words(cuts, words, hook, cta, a.tail)
     bounds = [0.0] + cuts + [duration]
@@ -256,9 +259,10 @@ def main():
     zones = []
     for s in shots:
         chins = [c for t, c, _ in sm if s['start'] <= t < s['end']]
-        chin = max(chins) if chins else statistics.median(c for _, c, _ in sm)
-        s['lowestChinPx'] = round(chin)
-        s['marginBottom'] = int(round(height - chin - 340 * k_scale))
+        chin = max(chins) if chins else statistics.median(c for _, c, _ in sm) if sm else None
+        s['lowestChinPx'] = round(chin) if chin is not None else None
+        s['marginBottom'] = max(0, int(round(height - chin - 340 * k_scale))) if chin is not None else round(500 * width / 1080)
+        s['needsReview'] = chin is None
         s['text'] = ' '.join(s.pop('words'))
         # Zones tile the timeline with no overlap: each one ends exactly where the next starts.
         zones.append({'start': round(s['start'], 3),
@@ -276,6 +280,8 @@ def main():
             times += [(name + ' inicio', t0 + 0.05), (name + ' fin', t1 - 0.05)]
         for s in shots[1:]:
             times += [('corte', s['start'] - 0.1), ('corte', s['start'] + 0.1)]
+        if not times:
+            times = [('SIN ROSTRO: revisar zona' if not sm else 'inicio', min(0.1, duration / 2))]
         save_check_strip(a.video, sorted(times, key=lambda x: x[1]), a.out_check)
         print(f'Tira de cuadros para revisar a ojo: {a.out_check}')
     if a.out_shots:

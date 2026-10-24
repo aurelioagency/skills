@@ -1,6 +1,6 @@
 # Critique prompt
 
-Give this file to a fresh critic: a subagent that did NOT write the film. Hand it the project path and the round number. If no subagent is available, run it yourself and keep the critic's voice: evidence first, no defending the code.
+After first-look approval, use one independent Opus critic when useful. Otherwise review with evidence first, without defending the code. Pass only the approved plan, transcript, compact metrics, current rendered evidence and unresolved findings. No full conversation or reference library.
 
 ---
 
@@ -18,7 +18,7 @@ You are a senior motion designer reviewing a product reel before it goes to the 
   - `metrics.json`
 - `docs/review_log.md`: previous rounds. Check that last round's fixes actually landed.
 
-**Look at every image.** Read `metrics.json` in full. When a moment is ambiguous, ask for stills (`node scripts/render.mjs --at <t>`) or a clip (`--range a,b`) rather than guessing.
+**First audit:** inspect the contact sheet, phone/safe-zone views and fastest-motion strips. Read the compact summary first; inspect detailed metrics for flagged issues. **Follow-up:** inspect changed moments and directly affected views, then a whole-film final check. Do not repeat a passed audit without a change or unresolved problem. Pipeline images are in `review/rdraft` or `review/rfinal`; Branch B uses the subtitled video, including the cover on final. When a moment is ambiguous, ask for stills (`node scripts/render.mjs --at <t>`) or a clip (`--range a,b`) rather than guessing.
 
 ## Score each 1–10 (8 = shippable to a demanding client)
 | Criterion | 10 looks like | Automatic cap |
@@ -28,9 +28,11 @@ You are a senior motion designer reviewing a product reel before it goes to the 
 | **Motion quality** | Springs with weight. Overlap and follow-through. Nothing snaps or pops in. Nothing fades as an enter or exit. Motion blur on fast moves. Strips show clean arcs. | A fade-in/out used as a transition → max 6. A visible pop or jump in a strip → max 7 |
 | **Variety / pacing** | Something new every 2–4 s (`max_gap_between_visual_events`). Shot sizes and transition types vary. The build accelerates into the logo. | Any gap > 4 s, or a static run > 2 s outside the end card → max 7 |
 | **Brand accuracy** | Real UI and real logo. Exact colours, the one accent, the real faces. The voice matches the site. None of the reference's content copied. | Invented UI where real UI exists, a wrong font, or a second accent → max 6 |
-| **Sound sync** | Every hit lands with its picture (±45 ms in `metrics.sync`). Whooshes peak on landings. Loudness -14 ±0.5 LUFS, true peak ≤ -1 dBTP. The VO matches the on-screen words. | Hits off by > 80 ms, or loudness off target → max 6 |
+| **Sound sync** | Every hit lands with its picture (±45 ms in `metrics.sync`). Whooshes peak on landings. Branch A: -14 ±0.5 LUFS. Branch B: retain source narration (raw edit target -21.5 LUFS). Both: true peak ≤ -1 dBTP. The VO matches the on-screen words. | Hits off by > 80 ms, or loudness off target → max 6 |
 | **Composition (every format)** | Each format is re-blocked, not cropped. No dead zones. Type never centred on an empty field. Depth from perspective and shadow. | 9:16 with a third of the frame empty for > 1 s → max 7 |
 | **Polish** | No blank frames (`near_blank_frames`), no double exposures at swaps, no stray carets, no glyph slivers at masks, no orphaned captions. Clean loop seam. | Any blank frame mid-film, or a double-exposed caption → max 7 |
+
+Sync and visual-event measurements are heuristics, especially under speech, music and subtitles; confirm flagged moments before capping creative scores.
 
 ## Branch B (motion graphics on the user's footage): read these criteria this way
 - **Brand accuracy → accuracy to the source:** on-screen text is verbatim or shortened from what's said; the resource is shown with its real UI; nothing invented.

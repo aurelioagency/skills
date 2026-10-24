@@ -17,6 +17,8 @@ DRAFT = '--draft' in sys.argv
 OUT = f'review/r{R}'; os.makedirs(OUT, exist_ok=True)
 TL = json.load(open('timeline.json'))
 V = {f: f"renders/{'draft_' if DRAFT else ''}{f}.mp4" for f in TL['formats'] if os.path.exists(f"renders/{'draft_' if DRAFT else ''}{f}.mp4")}
+if '--video' in sys.argv:
+    V = {'9x16': sys.argv[sys.argv.index('--video') + 1]}
 if not V: raise SystemExit('no renders found: node scripts/render.mjs --draft --all  (or a final render)')
 P = TL['formats'][0] if TL['formats'][0] in V else next(iter(V))
 try: FONT = ImageFont.truetype('/System/Library/Fonts/Menlo.ttc', 15)

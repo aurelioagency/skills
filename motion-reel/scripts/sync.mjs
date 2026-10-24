@@ -8,6 +8,12 @@
 import fs from 'node:fs';
 
 const TL = JSON.parse(fs.readFileSync('timeline.json', 'utf8'));
+const autoIndex = process.argv.indexOf('--auto-cues');
+if (autoIndex >= 0) {
+  const automatic = JSON.parse(fs.readFileSync(process.argv[autoIndex + 1], 'utf8'));
+  if (!Array.isArray(automatic)) throw new Error('--auto-cues must contain an array');
+  TL.sfx = [...(TL.sfx || []).filter((event) => !event.auto), ...automatic];
+}
 const measured = fs.existsSync('beats.json');
 const G = measured ? JSON.parse(fs.readFileSync('beats.json', 'utf8'))
   : { bpm: TL.bpm, beat: 60 / TL.bpm, offset: 0, beats: [], hits: [], nominal: true };

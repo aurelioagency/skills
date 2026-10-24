@@ -43,7 +43,16 @@ for (const c of cues.slice().sort((a, b) => a.at - b.at)) {
 }
 // two sounds on the very same frame mask each other: keep the first, drop exact duplicates
 const seen = new Set(), dedup = auto.filter((e) => { const k = `${e.at}|${e.type || e.file}`; if (seen.has(k)) return false; seen.add(k); return true; });
-TL.sfx = [...keep, ...dedup];
-fs.writeFileSync('timeline.json', JSON.stringify(TL, null, 2));
-console.log(`timeline.sfx: ${keep.length} hand-written + ${dedup.length} auto`);
+const outputIndex = process.argv.indexOf('--output');
+if (outputIndex >= 0) {
+  const output = process.argv[outputIndex + 1];
+  if (!output || output.startsWith('--')) throw new Error('--output requires a path');
+  fs.mkdirSync(path.dirname(output), { recursive: true });
+  fs.writeFileSync(output, JSON.stringify(dedup, null, 2));
+  console.log(`${output}: ${dedup.length} auto cues (timeline unchanged)`);
+} else {
+  TL.sfx = [...keep, ...dedup];
+  fs.writeFileSync('timeline.json', JSON.stringify(TL, null, 2));
+  console.log(`timeline.sfx: ${keep.length} hand-written + ${dedup.length} auto`);
+}
 for (const e of dedup) console.log(`  ${String(e.at).padStart(6)}s  ${(e.file || e.type).padEnd(38)} gain ${e.gain}${e.pitch ? ' pitch ' + e.pitch : ''}${e.every ? ' every ' + e.every + 's → ' + e.to : ''}  ${e.what}`);

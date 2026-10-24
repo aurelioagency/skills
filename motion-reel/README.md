@@ -5,7 +5,22 @@ Produces motion graphics entirely in code, in one of two branches. `window.seek(
 - **Branch A — from scratch.** A product launch reel / showreel / promo. The pipeline captures a product URL's real brand assets with Playwright, writes a style guide and shotlist and **stops for your OK**, then animates with closed-form springs on a measured music beat grid.
 - **Branch B — overlays on your own footage.** You hand over a video of yourself talking; the skill transcribes it (Whisper, word-level), writes an overlay plan (kinetic text cards, stat callouts, step chips — generated from what you actually say, never invented) and **stops for your OK**, then composites those overlays over your own footage with the same springs engine, timed to your speech instead of a music beat.
 
-Both branches run the same critique loop — a fresh critic subagent scores the render against 8 criteria, fixes the worst problems, and repeats until everything is 8+ — before delivering the final MP4 in every requested format (16:9, 1:1, 4:5, 9:16).
+Both branches show the first build before creative critique. After approval, review up to three rounds, stopping when all eight criteria reach 8; repeat only for unresolved issues or changes. Branch B delivers native-resolution 9:16 footage with subtitles and cover; Branch A delivers the requested formats.
+
+## Flujo con menos intervención del modelo
+
+Opus 5.5 con esfuerzo alto se ocupa de la dirección, el plan, el código de animación y la revisión creativa. `scripts/pipeline.py` ejecuta la preparación, transcripción local, audio, render, subtítulos, portada y empaquetado. Guarda caché por contenido, resúmenes breves y aprobaciones vinculadas a los archivos revisados. Una corrección de audio reutiliza la captura de video.
+
+Usá `/motion-reel` en Claude Code. El modelo y esfuerzo del frontmatter aplican al turno que invoca la skill, sujetos a disponibilidad/configuración del runtime. No se instalan agentes persistentes ni se llaman APIs pagas desde el ejecutor.
+
+Detalles: [flujo y configuración](reference/PIPELINE.md), [distribución de tareas y modelos](reference/MODELS.md). El reconocimiento local con Whisper también es IA, aunque no consume tokens de Claude. El ahorro total se mide con registros comparables, incluyendo subagentes:
+
+```powershell
+python scripts/usage-report.py --before <registros-anteriores> --after <registros-nuevos>
+python -B -m unittest discover -s scripts/tests -v
+```
+
+Los proyectos antiguos conservan su procedimiento original; el ejecutor empieza en proyectos nuevos. Las entregas son copias independientes y la publicación conserva `.work` para reutilizar caché. No se modifican otras skills por compartir convenciones visuales.
 
 Branch A is the kit the creator of "How to Make Insane Motion Graphics With Opus 5.5" gives away for free — brought into this repo as-is (engine, pipeline scripts, reference docs, presets, chapter prompts), not a reconstruction from the video's transcript. Branch B is built on top of that same engine (`engine/video.js`), added in this repo to cover the "I have my own talking video" case the original kit doesn't.
 
@@ -17,7 +32,7 @@ Branch A is the kit the creator of "How to Make Insane Motion Graphics With Opus
 | [reference/RULES.md](reference/RULES.md) | House rules: render contract, look, rhythm, motion (springs), sound |
 | [reference/ENGINE.md](reference/ENGINE.md) | Engine API (`window.C`, `window.TYPE`), project layout, render commands |
 | [reference/AUDIO.md](reference/AUDIO.md) | Music → beat grid, SFX, Fish Audio voiceover, mix/master |
-| [reference/CRITIQUE.md](reference/CRITIQUE.md) | The critic prompt — hand this to a fresh subagent after every render |
+| [reference/CRITIQUE.md](reference/CRITIQUE.md) | Scoped creative review after first-look approval |
 | [engine/](engine) | `core.js`, `film.js`, `type.js`, `lib/motion.js` (closed-form springs) — copied into every new project |
 | [scripts/](scripts) | `init.sh`, `capture.mjs`, `music.py`, `beats.py`, `sfx.mjs`, `sync.mjs`, `mix.py`, `vo.py`, `review.py`, `render.mjs`, `preset.mjs` |
 | [templates/](templates) | `brief.md`, `timeline.json`, `docs/style_guide.md`, `docs/shotlist.md`, `docs/review_log.md` |

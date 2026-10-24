@@ -22,7 +22,7 @@
 # Defaults agreed with the user (2026-10-20): the takes are already correctly spoken (no repeated lines to hunt);
 # trim only head/tail silence; ask before cutting a long inner pause; colour at 35 % (the user uses 30-40 % of
 # CapCut's auto adjust); the voice to the level of the approved reels.
-import json, math, os, re, subprocess, sys
+import hashlib, json, math, os, re, subprocess, sys
 
 try: sys.stdout.reconfigure(encoding='utf-8'); sys.stderr.reconfigure(encoding='utf-8')   # Windows cp1252 consoles
 except Exception: pass
@@ -80,7 +80,12 @@ def transcribe(path, idx):
     # cache keyed by the FILE (name, size, mtime), not by its position: re-planning in another order must never reuse
     # another take's transcript (2026-10-20: the order changed and take 3 got take 1's words and keep range)
     st = os.stat(path)
-    key = re.sub(r'[^A-Za-z0-9_-]', '_', os.path.splitext(os.path.basename(path))[0]) + f'-{st.st_size}-{int(st.st_mtime)}'
+    content = hashlib.sha256()
+    with open(path, 'rb') as stream:
+        for block in iter(lambda: stream.read(4 * 1024 * 1024), b''):
+            content.update(block)
+    content.update((arg('--model', 'large-v3') + '|' + arg('--language', 'es')).encode())
+    key = re.sub(r'[^A-Za-z0-9_-]', '_', os.path.splitext(os.path.basename(path))[0]) + '-' + content.hexdigest()[:24]
     wav, out = f'transcript/takes/{key}.wav', f'transcript/takes/{key}.json'
     if not os.path.exists(out):
         run(['ffmpeg', '-v', 'error', '-y', '-i', path, '-vn', '-ac', '1', '-ar', '16000', wav])
@@ -155,10 +160,16 @@ def plan():
     paths = args_after('--takes')
     if not paths: raise SystemExit('usage: prep-takes.py plan --takes <take1> <take2> ...  (in order)')
     strength = float(arg('--color', 0.35))
+    if not 0 <= strength <= 1:
+        raise SystemExit('--color must be between 0 and 1')
     os.makedirs('manifests', exist_ok=True); os.makedirs('snapshots', exist_ok=True); os.makedirs('assets/source', exist_ok=True)
     takes = []
     for i, p in enumerate(paths, 1):
         info = probe(p)
+        if abs(info['w'] / info['h'] - 9 / 16) > .005:
+            raise SystemExit(f'take {i}: expected vertical 9:16 footage')
+        if takes and (info['w'], info['h']) != (takes[0]['w'], takes[0]['h']):
+            raise SystemExit('Mixed take resolutions need an explicit output-resolution decision; refusing silent downscaling')
         if info['hdr']:
             raise SystemExit(f'take {i} ({p}) is HDR. Ask the user to turn off Settings → Camera → Record Video → HDR Video, or convert it to SDR first; this script does not tone-map.')
         words = transcribe(p, i)
@@ -218,11 +229,17 @@ def build():
     for k in args_after('--keep'):                                # 2:1.60-15.34 — the user still settling in at the start
         m = re.match(r'(\d+):([\d.]+)-([\d.]+)$', k)
         if not m: raise SystemExit(f'bad --keep {k} (use take:start-end, seconds of that take)')
-        takes[int(m.group(1)) - 1]['keep'] = [float(m.group(2)), float(m.group(3))]
+        index, start, end = int(m.group(1)) - 1, float(m.group(2)), float(m.group(3))
+        if not 0 <= index < len(takes) or not 0 <= start < end <= takes[index]['dur']:
+            raise SystemExit(f'invalid --keep range: {k}')
+        takes[index]['keep'] = [start, end]
     for c in args_after('--cut'):                                 # 2:14.2-16.8 — a long inner pause the user OKed cutting
         m = re.match(r'(\d+):([\d.]+)-([\d.]+)$', c)
         if not m: raise SystemExit(f'bad --cut {c} (use take:start-end, seconds of that take)')
-        takes[int(m.group(1)) - 1]['cuts'].append([float(m.group(2)), float(m.group(3))])
+        index, start, end = int(m.group(1)) - 1, float(m.group(2)), float(m.group(3))
+        if not 0 <= index < len(takes) or not takes[index]['keep'][0] <= start < end <= takes[index]['keep'][1]:
+            raise SystemExit(f'invalid --cut range: {c}')
+        takes[index]['cuts'].append([start, end])
     W, H, FPS = takes[0]['w'], takes[0]['h'], takes[0]['fps']
     segs = []
     for t in takes:                                               # keep range minus the OKed inner cuts
@@ -258,7 +275,10 @@ def build():
     dur = probe(out)['dur']
     plan_['built'] = {'file': out, 'seconds': round(dur, 2), 'segments': len(segs), 'color_strength': strength,
                       'voice_in_lufs': I, 'voice_gain_db': round(gain, 1)}
-    json.dump(plan_, open(PLAN, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    # The pipeline keeps the approved input immutable so a build cannot invalidate its own approval.
+    built_path = arg('--out-built', PLAN)
+    os.makedirs(os.path.dirname(os.path.abspath(built_path)), exist_ok=True)
+    json.dump(plan_, open(built_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print(f'{out}: {len(segs)} segment(s), {dur:.1f} s, {W}x{H} {FPS} fps · colour {int(strength * 100)} % · voice {I:.1f} → {plan_["voice_lufs"]} LUFS ({gain:+.1f} dB)')
     for i, t in enumerate(takes, 1):
         print(f"  take {i}: kept {t['keep'][0]:.2f}-{t['keep'][1]:.2f} of {t['dur']:.2f} s")

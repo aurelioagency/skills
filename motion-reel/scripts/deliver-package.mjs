@@ -55,6 +55,7 @@ function parseArgs(argv) {
     else if (item === '--dest') args.dest = argv[++i];
     else if (item === '--overwrite') args.overwrite = true;
     else if (item === '--no-open') args.noOpen = true;
+    else if (item === '--copy') args.copy = true;
     else if (item === '--help' || item === '-h') args.help = true;
     else throw new Error(`Unknown argument: ${item}`);
   }
@@ -140,6 +141,11 @@ function transcriptToText(words, width = 90) {
 // back to a real copy when it does not (different drive, filesystem without hardlinks).
 function placeInto(source, destDir) {
   const target = path.join(destDir, path.basename(source));
+  // Cached pipelines rebuild files in place. A delivery must not change via a hardlink.
+  if (process.argv.includes('--copy')) {
+    fs.copyFileSync(source, target);
+    return target;
+  }
   try {
     fs.linkSync(source, target);
   } catch {
