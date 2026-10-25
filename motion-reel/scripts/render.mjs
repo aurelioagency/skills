@@ -5,6 +5,7 @@
 //   node scripts/render.mjs --draft [--all]                       30 fps, no blur, CRF 22 → renders/draft_<fmt>.mp4 (for review rounds)
 //   node scripts/render.mjs [--fmt 16x9 | --all]                  final: 60 fps, adaptive 180° motion blur, H.264 yuv420p CRF 16 → renders/<fmt>.mp4
 //   node scripts/render.mjs --range 3,5 [--blur 0]                a clip of seconds 3–5 → renders/clip_<fmt>_3-5.mp4 (motion checks)
+//   --final-segment --frames START,END --output FILE            native-scale silent final, frame indexes [START,END); used by render-final.py
 //   node scripts/render.mjs --mux [--all]                         re-mux the current audio/mix.wav into existing renders without re-rendering
 //   node scripts/render.mjs --preflight                           seconds: prove a final-size frame is W×H and fully drawn (finals run it themselves)
 //   node scripts/render.mjs --verify [--all]                      determinism check: 12 probes, cold vs after seeking elsewhere
@@ -26,6 +27,11 @@ try { ({ chromium } = require('playwright')); } catch {
 const argv = process.argv.slice(2);
 const opt = (k, d) => { const i = argv.indexOf(`--${k}`); return i < 0 ? d : (argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : true); };
 const has = (k) => argv.includes(`--${k}`);
+const FINAL_SEGMENT = has('final-segment');
+if (FINAL_SEGMENT && (['draft', 'range', 'sheet', 'at', 'verify', 'mux', 'all'].some(has) || !has('frames') || !has('output'))) {
+  throw new Error('final-segment needs --frames and --output; incompatible with preview modes or --all');
+}
+if (has('frames') && !FINAL_SEGMENT) throw new Error('--frames requires --final-segment');
 const TL = JSON.parse(fs.readFileSync(path.join(ROOT, 'timeline.json'), 'utf8'));
 const SIZES = { '16x9': [1920, 1080], '1x1': [1080, 1080], '4x5': [1080, 1350], '9x16': [1080, 1920] };
 const FORMATS = has('all') ? TL.formats : [opt('fmt', TL.formats[0])];
@@ -141,11 +147,16 @@ async function openFilm(fmt) {
 
 function ffmpeg(a) {
   const p = spawn('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...a], { stdio: ['pipe', 'inherit', 'inherit'] });
-  const done = new Promise((ok, bad) => p.on('close', (c) => (c ? bad(new Error(`ffmpeg exit ${c}`)) : ok())));
+  encoders.add(p);
+  const done = new Promise((ok, bad) => { p.on('error', bad); p.on('close', (c) => { encoders.delete(p); c ? bad(new Error(`ffmpeg exit ${c}`)) : ok(); }); });
+  done.catch(() => {}); // Failure is propagated by write()/await done, without an unhandled rejection mid-capture.
+  p.stdin.on('error', () => {});
   return { p, done };
 }
-const write = async (s, buf) => { if (!s.write(buf)) await new Promise((r) => s.once('drain', r)); };
+const encoders = new Set();
+const write = (s, buf) => new Promise((resolve, reject) => s.write(buf, error => error ? reject(error) : resolve()));
 
+try {
 for (const fmt of FORMATS) {
   const F = await openFilm(fmt);
   const t0 = Date.now();
@@ -192,15 +203,19 @@ for (const fmt of FORMATS) {
     }
   } else {
     const fps = +opt('fps', DRAFT ? 30 : F.FPS);
+    if (!Number.isFinite(fps) || fps <= 0) throw new Error('fps must be positive');
     const blur = !DRAFT && String(opt('blur', '1')) !== '0';
     const [a, b] = has('range') ? String(opt('range')).split(',').map(Number) : [0, F.DUR];
-    const out = path.join(ROOT, 'renders', has('range') ? `clip_${fmt}_${a}-${b}.mp4` : `${DRAFT ? 'draft_' : ''}${fmt}.mp4`);
+    const bounds = FINAL_SEGMENT ? String(opt('frames')).split(',').map(Number) : null;
+    if (bounds && (bounds.length !== 2 || bounds.some(x => !Number.isSafeInteger(x)) || bounds[0] < 0 || bounds[1] <= bounds[0] || bounds[1] > Math.round(F.DUR * fps))) throw new Error('Invalid final frame interval');
+    const out = has('output') ? path.resolve(ROOT, opt('output')) : path.join(ROOT, 'renders', has('range') ? `clip_${fmt}_${a}-${b}.mp4` : `${DRAFT ? 'draft_' : ''}${fmt}.mp4`);
     mkdir(path.dirname(out));
-    const withAudio = hasAudio && !has('range');
+    const withAudio = hasAudio && !has('range') && !FINAL_SEGMENT;
     const { p, done } = ffmpeg([
       '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', `${F.W}x${F.H}`, '-framerate', String(fps), '-probesize', '100M', '-i', '-',
       ...(withAudio ? ['-i', AUDIO] : []),
       '-c:v', 'libx264', '-preset', DRAFT ? 'veryfast' : 'slow', '-crf', String(opt('crf', DRAFT ? 22 : 16)), '-pix_fmt', 'yuv420p', '-profile:v', 'high',
+      ...(has('threads') ? ['-threads', String(opt('threads'))] : []),
       '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709',
       ...(withAudio ? ['-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '320k', '-shortest'] : []),
       '-movflags', '+faststart', out,
@@ -217,20 +232,24 @@ for (const fmt of FORMATS) {
       return ts;
     };
     const at = (tc, u) => clampCut(tc, Math.max(0, Math.min(F.DUR - 1e-6, tc + (u - 0.5) * SHUTTER / fps)));
-    const N = Math.round((b - a) * fps), acc = new Float32Array(F.W * F.H * 3), buf = Buffer.alloc(F.W * F.H * 3), hist = {};
-    for (let i = 0; i < N; i++) {
-      const tc = a + i / fps;
-      if (!blur) { await write(p.stdin, Buffer.from(decodePNG(await F.png(tc)))); }
+    const N = bounds ? bounds[1] - bounds[0] : Math.round((b - a) * fps), acc = new Float32Array(F.W * F.H * 3), buf = Buffer.alloc(F.W * F.H * 3), hist = {};
+    // Legacy videoBG caches source frames and has a near-time seek tolerance. Prime a short
+    // sequential shutter history after preflight so a cold segment starts like a continuous
+    // render. Preroll is discarded: encoded intervals remain exactly [START, END).
+    const warmup = bounds ? Math.min(bounds[0], Math.ceil(fps * 0.1)) : 0;
+    for (let i = -warmup; i < N; i++) {
+      const tc = bounds ? (bounds[0] + i) / fps : a + i / fps;
+      if (!blur) { const frame = Buffer.from(decodePNG(await F.png(tc))); if (i >= 0) await write(p.stdin, frame); }
       else {
         const x = decodePNG(await F.png(at(tc, 0.25))), y = decodePNG(await F.png(at(tc, 0.75)));
         let d = 0; for (let q = 0; q < x.length; q += 97) d += Math.abs(x[q] - y[q]); d /= x.length / 97;
         const SUB = d < 0.35 ? MIN_SUB : Math.min(MAX_SUB, Math.max(4, Math.round(4 + d * 1.6)));
-        hist[SUB] = (hist[SUB] || 0) + 1;
+        if (i >= 0) hist[SUB] = (hist[SUB] || 0) + 1;
         acc.fill(0);
         const add = (im) => { for (let q = 0; q < acc.length; q++) acc[q] += im[q]; };
         if (SUB === 2) { add(x); add(y); } else for (let k = 0; k < SUB; k++) add(decodePNG(await F.png(at(tc, (k + 0.5) / SUB))));
         for (let q = 0; q < acc.length; q++) buf[q] = Math.min(255, Math.round(acc[q] / SUB));
-        await write(p.stdin, buf);
+        if (i >= 0) await write(p.stdin, buf);
       }
       if (i % 60 === 0) process.stdout.write(`\r${fmt} frame ${i}/${N}  ${((Date.now() - t0) / 1000).toFixed(0)}s   `);
     }
@@ -239,4 +258,7 @@ for (const fmt of FORMATS) {
   }
   await F.page.close();
 }
-await browser.close(); server.close();
+} finally {
+  for (const p of encoders) p.kill();
+  await browser.close(); server.close();
+}

@@ -31,7 +31,7 @@ def finish(source, cover, output):
                     '-r', str(fps), '-c:v', 'libx264', '-crf', '14', '-preset', 'slow', '-pix_fmt', 'yuv420p',
                     '-c:a', 'aac', '-b:a', '320k', '-movflags', '+faststart', str(output)], check=True)
     result = probe(output)
-    if (result['width'], result['height']) != (w, h) or abs(result['duration'] - duration) > max(.08, 2 / fps):
+    if (result['width'], result['height']) != (w, h) or abs(result['fps'] - fps) > .001 or not result['audio'] or abs(result['duration'] - duration) > max(.08, 2 / fps):
         raise ValueError('Finished video failed dimensions/duration verification')
     return result
 

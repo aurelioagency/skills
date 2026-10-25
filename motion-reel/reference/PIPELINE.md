@@ -59,6 +59,18 @@ Init generates the config. Paths are relative to the project or absolute. Edit o
 - Optional `transcriptInput: "<word-timestamp-json>"` imports existing timestamps; transcript review/approval still applies.
 - `timeline.json` controls creative timing, formats, music/manual SFX. Auto cues live separately in `manifests/auto-cues.json` and do not mutate timeline.
 
+## Parallel final rendering
+
+`final` automatically runs `render-final.py`: contiguous integer-frame segments, 3 seconds by default, rendered by independent Chromium/FFmpeg processes at the final scale. These are local code workers, not AI subagents. They use absolute film time, including motion-blur samples across segment boundaries. A discarded 0.1-second preroll warms legacy footage seek caches before each segment; it adds no frames to the output. The concatenation copies video streams without another lossy encode; audio is muxed once, then approved subtitles and the cover are applied over the complete film.
+
+Optional config: `"render": {"workers": "auto", "segmentSeconds": 3}`. Parallel is the default: auto uses up to four workers, bounded by CPU and currently available memory. Less capable machines use fewer simultaneous workers; when only one fits, the film is rendered in one continuous interval without partitioning or concatenation. A positive integer requests a worker limit (still resource-capped, maximum eight); `workers: 1` also selects a single uninterrupted render. More workers are not always faster: simultaneous reels, video decoding and memory/disk contention can dominate. Never reduce fps, resolution or motion blur to accelerate a final. Timeline fps remains authoritative (default 60); Branch B rejects a lower fps than the source and rejects dimensions different from the source. Do not change an approved timeline to bypass this.
+
+Legacy/ad-hoc projects: from their root, run `python "<skill>/scripts/render-final.py" --project . --fmt 9x16 --crf 10` after syncing film data. Set `NODE_PATH` to the skill's node_modules if needed. This produces **silent** `renders/9x16.mp4`; mux the approved mix once, then captions/cover and final QA. Branch A normally uses CRF 16. Verify the timeline scale against original footage before using this low-level command. Never use preview `--range` for final segments.
+
+Run the single owning command using the host's supported long-running/background execution and keep its session alive; poll that session, not individual workers. The runner waits for all children, checks resolution/fps/decoded frame count per segment and assembled master, and retries a failed segment once serially. Failure aborts delivery, never reports partial output as complete. Cached verified segments survive interruptions; rerunning the same command reuses them. Changed visual inputs/settings invalidate them. Do not edit inputs while a render is running.
+
+Evidence: `manifests/render-final-<fmt>.json` reports dimensions/fps, worker count, reused/retried segments and measured seconds. Segment logs/receipts live under `renders/segments`. After a crash, verify the PID in `manifests/render-<fmt>.lock` is no longer running before removing that stale lock. A complete master replaces the previous master only after verification. Parallel capture does not parallelize the later caption/cover encoding; do not promise a fixed full-render duration.
+
 ## Cache and recovery
 
 `manifests/pipeline-state.json` stores content hashes, steps, receipts and approvals. Missing/changed outputs regenerate; script changes conservatively invalidate stages. Keep state and project together. Existing ad-hoc projects retain their original workflow; no in-place automatic migration.

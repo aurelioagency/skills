@@ -44,6 +44,7 @@ def initialize(root, branch, source=None, takes=None, preset=None):
     config = {"version": 1, "branch": branch, "source": None, "takes": [], "language": "es", "model": "large-v3",
               "resources": [], "edits": {"color": 0.35, "keep": [], "cut": []},
               "captions": {"zones": None, "singleShot": True},
+              "render": {"workers": "auto", "segmentSeconds": 3},
               "cover": {"input": None, "frame": 0, "lines": [], "yOffset": 0},
               "caption": {"paragraph": "", "hashtags": [], "commentWord": "", "resourceName": "", "resourceUrl": ""}}
     if branch == "B":
@@ -367,19 +368,34 @@ class Pipeline:
 
     def render(self, final=False):
         tl = read_json(self.p("timeline.json"))
+        if final and self.config["branch"] == "B":
+            info = probe(self.source())
+            expected = (round(1080 * tl.get("scale", 1)), round(1920 * tl.get("scale", 1)))
+            if expected != (info["width"], info["height"]):
+                raise ValueError(f"Final must retain native source resolution {info['width']}x{info['height']}; timeline is {expected}. No preview-size final.")
+            if tl["fps"] + .001 < info["fps"]:
+                raise ValueError("Final fps cannot be lower than the source. Never lower quality to meet a deadline.")
         for fmt in tl["formats"]:
             name = ("master-" if final else "draft-") + fmt
             output = self.p(f"renders/{fmt}.mp4" if final else f"renders/draft_{fmt}.mp4")
             silent = self.p(f"renders/clean/{name}.mp4")
             def capture(fmt=fmt, output=output, silent=silent, name=name):
-                flags = ["--crf", "10"] if final and self.config["branch"] == "B" else [] if final else ["--draft"]
-                self.command(name, self.js("render.mjs", "--fmt", fmt, "--audio", "audio/.no-audio.wav", *flags))
+                if final:
+                    settings = self.config.get("render", {})
+                    self.command(name, self.py("render-final.py", "--project", self.root, "--fmt", fmt,
+                        "--workers", settings.get("workers", "auto"), "--segment-seconds", settings.get("segmentSeconds", 3),
+                        "--crf", 10 if self.config["branch"] == "B" else 16, "--key", digest(self.visual_key())))
+                else:
+                    self.command(name, self.js("render.mjs", "--fmt", fmt, "--audio", "audio/.no-audio.wav", "--draft"))
                 silent.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(output, silent)
             self.step(name, self.visual_key(), [], [silent], capture)
             self.step(name + "-mux", {}, [silent, self.p("audio/mix.wav")], [output],
                       lambda silent=silent, output=output, name=name: self.command(name + "-mux", ["ffmpeg", "-v", "error", "-y", "-i", silent,
                           "-i", "audio/mix.wav", "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "320k", "-shortest", "-movflags", "+faststart", output]))
+            if final:
+                w, h = (round(v * tl.get("scale", 1)) for v in SIZES[fmt])
+                self.verify(output, w, h, tl["duration"], name + "-verify", fps=tl["fps"])
 
     def captions(self, final=False):
         tl = read_json(self.p("timeline.json"))
@@ -422,13 +438,15 @@ class Pipeline:
         out = self.p("renders/subtitled-master.mp4" if final else "renders/draft_9x16_subs.mp4")
         self.step(name + "-burn", {}, [source, ass, self.p(FONT)], [out],
                   lambda: self.command(name + "-burn", self.js("burn-in-captions.mjs", "--input", source, "--ass", ass, "--output", out, "--fonts-dir", "assets/fonts/captions")))
-        self.verify(out, info["width"], info["height"], tl["duration"], name + "-verify")
+        self.verify(out, info["width"], info["height"], tl["duration"], name + "-verify", fps=tl["fps"] if final else None)
 
-    def verify(self, video, width, height, duration, name):
+    def verify(self, video, width, height, duration, name, fps=None):
         info = probe(video)
         tolerance = max(0.1, 2 / (info["fps"] or 30))
         if (info["width"], info["height"]) != (width, height) or not info["audio"] or abs(info["duration"] - duration) > tolerance:
             raise ValueError(f"{name}: invalid resolution, duration or missing audio: {info}")
+        if fps is not None and abs(info["fps"] - fps) > .001:
+            raise ValueError(f"{name}: fps changed from {fps} to {info['fps']}")
         write_json(self.p(f"manifests/audits/{name}.json"), info)
 
     def review(self, final=False):
@@ -541,7 +559,7 @@ class Pipeline:
             self.step("cover-frame", {}, [subs, cover], [output], lambda: self.command("cover-frame",
                       self.py("finish-video.py", "--input", subs, "--cover", cover, "--output", output)))
             info = probe(subs)
-            self.verify(output, info["width"], info["height"], info["duration"] + 1 / info["fps"], "delivery-video")
+            self.verify(output, info["width"], info["height"], info["duration"] + 1 / info["fps"], "delivery-video", fps=tl["fps"])
         else:
             for fmt, output in zip(tl["formats"], self.final_paths()):
                 source = self.p(f"renders/{fmt}.mp4")
