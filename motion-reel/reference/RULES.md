@@ -31,7 +31,7 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 ## Rhythm
 - Something new must happen on screen every 2–4 s. Nothing holds longer than one bar without a new element. The end card holds ≤ 2 s and is never static.
 - Hard cuts land on bar lines. Inner events land on beats or half-beats, in beats on the measured grid (`beats.json`), never in hard-coded seconds.
-- The hook reads in the first 2 s, and frame 0 is never empty.
+- Branch A: the hook reads in the first 2 s, and frame 0 is never empty. Branch B: the footage is frame 0 and the first animation waits (see Branch B).
 - Every held shot keeps moving: a micro push of 1.00 → 1.03–1.08, or drift.
 
 ## Motion (lib/motion.js springs)
@@ -70,7 +70,7 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 
 ## Branch B (motion graphics on the user's own footage)
 **The point is the animation.** The video always carries subtitles (burned onto the final render, identical to social-video-producer's; every subtitle rule lives in SUBTITLES.md), so every graphic must show something the subtitles don't.
-- **No echo.** Never put a phrase on screen that the subtitle is showing, unless it is the key datum of that moment (a number, a name, a price, one keyword). Non-key phrases never — least of all in the hook: the first second is for the strongest visual, not for the opening words.
+- **No echo.** Never put a phrase on screen that the subtitle is showing, unless it is the key datum of that moment (a number, a name, a price, one keyword). Non-key phrases never — least of all in the hook: the first animation is the strongest visual, not the opening words.
 - **On-screen text is key data only:** short (1–3 words or a number), verbatim or shortened from what's said, never an invented claim, number or feature.
 - **Never over the face (user, 2026-10-20).** No graphic covers any part of the face or the hair, in any framing: measure where the top of the hair gets in every take AND under every punch-in (a punch-in raises the head), and keep everything above it with air; shrink it if it does not fit. The way out when something does not fit above the head is *behind* the speaker: that part of the animation passes behind them, cut out in front of it (`scene({ behind: true })`, ANIMATION.md §2). It is the exception for that moment, not a look for the whole video: above the head stays the default (user, 2026-10-21).
 - **Subtitles are never lost.** A full-screen cutaway or any graphic under the subtitle band never uses a white, cream or other light background: the subtitles are white. Cutaways go on a dark background (the resource's own dark when it has one), and their content stays above the subtitle band.
@@ -78,6 +78,8 @@ Apply these in every project, including one with no CLAUDE.md. A project's CLAUD
 - **Real data only, no invented numbers.** Never invent a number, a price, a statistic, a feature or a claim the user did not say or the resource does not state. A generic illustration of a concept (a list of network requests to show "the traffic", a JSON block to show "the data") is fine; invented figures or facts presented as real are not.
 - **Simple things for everyone.** The user talks about tools for a broad audience: prefer the examples and logos most people know (Claude Code, Codex, ChatGPT) over niche ones, as long as what is shown is true.
 - **Only what the video is about.** Show data from the resource only when it serves what the speaker says: a figure that happens to sit on the page (GitHub stars of a third-party repo on the user's own tool page) does not go in. And keep shown figures credible and illustrative: one app marked in a calculator with its real value, not every option at once inflating the number (user, 2026-10-19).
+- **The opening is clean footage (user, 2026-10-25).** No animation from second 0: no graphic, punch-in, impact or cutaway. The first one lands once the camera has settled (an opening pan or move has finished) and 1–3 s after the speaker starts talking (the first word of `transcript/approved.json`). The plan names that moment; `pipeline.py` stops the draft if anything animates before the first word + 1 s.
+- **The Aurelio close always finishes (user, 2026-10-25).** Its animation closes to "AI" and must open back to AURELIO before the film ends; a video that ends on "AI" is a failure. `OV.wordmark` fits its cycle into the time left (3.6 s when there is room), and `pipeline.py` stops the draft when less than 1.4 s is left after it lands: then land it earlier in the CTA.
 - **The close never clashes.** The CTA is built in the look of what the film already showed; for the Aurelio keyword the house close is `OV.wordmark` (the site's own wordmark and its AI animation), kept until the user asks for another.
 - **Reference ≠ template:** take the references' technique, never their elements; every visual is created for this video, no signature motif repeated across videos, money in $ / USD (ANIMATION.md §0).
 - **Reference techniques are a vocabulary, not a checklist.** Pick per video and per moment what serves it; a move seen once in one reference is an option, never a rule.

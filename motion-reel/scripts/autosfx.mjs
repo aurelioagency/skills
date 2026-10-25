@@ -27,6 +27,7 @@ page.on('pageerror', (e) => { console.error('[pageerror]', e.message); process.e
 await page.goto(pathToFileURL(path.join(ROOT, 'film/index.html')).href + '?fmt=9x16');
 await page.waitForFunction(() => window.OV_CUES && window.READY, null, { timeout: 60000 });
 const cues = await page.evaluate(() => window.OV_CUES);
+const timing = await page.evaluate(() => (window.OV_TIMING ? window.OV_TIMING() : null));
 await browser.close();
 
 const TL = JSON.parse(fs.readFileSync('timeline.json', 'utf8'));
@@ -43,6 +44,13 @@ for (const c of cues.slice().sort((a, b) => a.at - b.at)) {
 }
 // two sounds on the very same frame mask each other: keep the first, drop exact duplicates
 const seen = new Set(), dedup = auto.filter((e) => { const k = `${e.at}|${e.type || e.file}`; if (seen.has(k)) return false; seen.add(k); return true; });
+// --timing <file>: the film's animation onsets and Aurelio closes, for the pipeline's opening / close checks
+const timingIndex = process.argv.indexOf('--timing');
+if (timingIndex >= 0) {
+  const file = process.argv[timingIndex + 1];
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify({ cues: cues.map((c) => ({ at: c.at, kind: c.kind, what: c.what })), ...(timing || { missing: true }) }, null, 2));
+}
 const outputIndex = process.argv.indexOf('--output');
 if (outputIndex >= 0) {
   const output = process.argv[outputIndex + 1];

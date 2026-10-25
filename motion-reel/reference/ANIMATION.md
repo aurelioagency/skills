@@ -61,7 +61,7 @@ The user approved this reel's sizes after asking for the small cards to be fixed
 - The film itself is in Drive: `Reels\reverse-api-engineer-web-a-api\output\`.
 
 ## 3c. The close (CTA)
-On the Aurelio keyword the house close is **`OV.wordmark(root, { at })`**: the aurelioagency.com wordmark (star + AURELIO, Cormorant Garamond, cream on a dark card) slams in on the word, then plays the site's own animation — the letters U R E L O close until only "AI" is left, hold, and open again (3.6 s). Saved by the user after the first film that used it; keep it until they ask for another. Whatever the close is, it is built in the look the film already showed: a pill, a colour or a face that appears nowhere else in the film is the "desentona" failure.
+On the Aurelio keyword the house close is **`OV.wordmark(root, { at })`**: the aurelioagency.com wordmark (star + AURELIO, Cormorant Garamond, cream on a dark card) slams in on the word, then plays the site's own animation — the letters U R E L O close until only "AI" is left, hold, and open again (3.6 s). **It always plays to the end**: the film never ends on "AI" (the kit fits the cycle to the time left; under 1.4 s the draft stops, land it earlier). Saved by the user after the first film that used it; keep it until they ask for another. Whatever the close is, it is built in the look the film already showed: a pill, a colour or a face that appears nowhere else in the film is the "desentona" failure.
 Full-screen cutaways get their background with **`OV.cutawayBg(root, color)`** so a slam's jolt never shows the footage at the frame edges.
 
 ## 3b. The camera (the footage moves too)
@@ -98,7 +98,7 @@ Two sources, always together:
 ## 6. Rhythm
 - Dense speech: a new visual every **0.5–1 s** (joebrunner, thomas); calmer stretches: every 2–3 s at most.
 - The speaker leaves the frame roughly every **5–10 s**, for 1.5–8 s.
-- The hook (first 1–2 s) is a hit — the strongest visual, not the opening words.
+- **No animation from second 0** (RULES.md Branch B): the first one lands once the camera has settled and 1–3 s after the speaker starts talking, and it is a hit, the strongest visual, not the opening words.
 - The CTA ("comentá X") is a slam of the keyword in a solid tag, on the face shot.
 
 ## 7. Sound (automatic)

@@ -35,6 +35,8 @@ You are a senior motion designer reviewing a product reel before it goes to the 
 Sync and visual-event measurements are heuristics, especially under speech, music and subtitles; confirm flagged moments before capping creative scores.
 
 ## Branch B (motion graphics on the user's footage): read these criteria this way
+- **Hook → the opening:** frame 0 is the footage, clean. Any animation before the camera settles or before 1 s of speech → Hook max 5 (the pipeline already stops it). The first animation landing later than 3 s after the speech starts → Hook max 7.
+- **The close:** the Aurelio wordmark ends back on AURELIO before the last frame; a film that ends on "AI" → Polish max 5.
 - **Brand accuracy → accuracy to the source:** on-screen text is verbatim or shortened from what's said; the resource is shown with its real UI; nothing invented.
 - **Redundancy with the subtitles (hard cap):** any graphic that restates a non-key phrase the subtitle is showing → Variety and Polish max 6. The same in the first 2 s → Hook max 5. Key numbers/names/keywords are fine.
 - **Animation-first (Variety):** count the shot types used (footage move, resource demo, visual element, full-screen cutaway). A film that is only text cards on top of the footage → Variety max 6.

@@ -16,7 +16,7 @@ import sys
 import time
 
 from lib.pipeline_support import (StepCache, caption_text, digest, file_hash, fingerprint,
-                                  probe, read_json, scale_zones, validate_transcript, write_json)
+                                  probe, read_json, scale_zones, validate_transcript, words_of, write_json)
 
 SKILL = Path(__file__).resolve().parent.parent
 SIZES = {"9x16": (1080, 1920), "16x9": (1920, 1080), "1x1": (1080, 1080), "4x5": (1080, 1350)}
@@ -339,13 +339,34 @@ class Pipeline:
                     self.root = original
             self.step(f"capture-{i}", resource, [], [folder / "assets"], capture)
 
+    def check_film_timing(self):
+        """Branch B hard stops (user, 2026-10-25), checked on the film itself before anything renders:
+        no animation from second 0, the first one lands 1-3 s after the speaker starts talking (and only once the
+        opening camera move has settled, which the plan states); every Aurelio close plays to the end, never frozen on AI."""
+        timing = read_json(self.p("manifests/film-timing.json"))
+        if timing.get("missing"):
+            raise ValueError("film/overlay.js is older than the opening/close checks: copy <skill>/engine/overlay.js into film/ and run draft again.")
+        first_word = words_of(read_json(self.p("transcript/approved.json")))[0]["start"]
+        onsets = sorted([(c["at"], c.get("what") or c["kind"]) for c in timing["cues"]]
+                        + [(t, "punch-in") for t in timing["punch"]] + [(t, "impact") for t in timing["impacts"]]
+                        + [(t, "layout switch") for t in timing["layout"]])
+        if onsets and onsets[0][0] < first_word + 1.0 - 0.02:
+            raise ValueError(f"First animation ({onsets[0][1]}) at {onsets[0][0]:.2f} s: nothing may animate before {first_word + 1.0:.2f} s "
+                             f"(speech starts at {first_word:.2f} s; the first animation lands 1-3 s after that, once the camera has settled). "
+                             "Move it in docs/overlay_plan.md and film/film.js.")
+        for w in timing["wordmarks"]:
+            if w["cycle"] < 1.4 or w["at"] + w["cycle"] > timing["duration"] + 1e-3:
+                raise ValueError(f"The Aurelio close at {w['at']:.2f} s cannot finish its animation before the film ends ({timing['duration']:.2f} s): "
+                                 "it needs at least 1.4 s after it lands. Land it earlier in the CTA or keep more tail after the last word.")
+
     def audio(self):
         tl = read_json(self.p("timeline.json"))
         if self.config["branch"] == "B":
             # autosfx evaluates the film, so it must see current duration/marks before collecting cues.
             self.command("sync-before-cues", self.js("sync.mjs"))
-            self.step("autosfx", self.visual_key(), [], [self.p("manifests/auto-cues.json")],
-                      lambda: self.command("autosfx", self.js("autosfx.mjs", "--output", "manifests/auto-cues.json")))
+            self.step("autosfx", self.visual_key(), [], [self.p("manifests/auto-cues.json"), self.p("manifests/film-timing.json")],
+                      lambda: self.command("autosfx", self.js("autosfx.mjs", "--output", "manifests/auto-cues.json", "--timing", "manifests/film-timing.json")))
+            self.check_film_timing()
         elif tl.get("music", {}).get("source") == "synth":
             self.step("music", {k: tl.get(k) for k in ("music", "duration", "bpm", "marks")}, [],
                       [self.p("audio/music.wav"), self.p("audio/drums.wav")], lambda: self.command("music", self.py("music.py")))

@@ -19,7 +19,9 @@
 //   OV.cutawayBg(root, color)                                              opaque background of a full-screen cutaway (jolt-proof)
 //   OV.wordmark(parent, { at, x, y, size, out })                            the Aurelio closing wordmark (star + AURELIO on a dark
 //                                                                         card), slams in ON `at`, then plays the site's own
-//                                                                         animation: the letters close to "AI" and open again
+//                                                                         animation: the letters close to "AI" and open again,
+//                                                                         always COMPLETE before the film ends (the cycle fits
+//                                                                         the time left; under 1.4 s the pipeline stops)
 // `out`: the element hard-cuts away at that time (outKind 'drop' = shrinks out in 0.1 s instead).
 // `sfx`: 'word' | 'screen' | 'icon' | 'click' | 'type' | 'whoosh' | null — the default comes from the kind; the cue lands
 //        on the same frame as the visual. scripts/autosfx.mjs turns OV_CUES into timeline.sfx (AUDIO.md house sounds).
@@ -247,6 +249,7 @@
   // ease-in-out: keyframes 0/20/75/100 % full · 40/60 % the letters U R E L O at width 0, opacity 0, blur — only "AI"
   // stays. Assets: assets/brand/aurelio/ (init.sh --overlay copies them). Never restyle it in another face or colour:
   // the CTA must not clash with the rest of the film.
+  const WORDMARKS = [];
   const WM_FULL = { A: 25.234, U: 25.094, R: 24.672, E: 21.5625, L: 21.4375, I: 16.922, O: 26.578 };   // site's --full-width at 22.4 px
   function wordmark(parent, o = {}) {
     if (!document.getElementById('wm-font')) {
@@ -263,7 +266,11 @@
     const word = C.el('div', { class: 'abs', style: `left:${pad + mark + fs * 0.14}px;top:0;height:${h}px;display:flex;align-items:center;white-space:nowrap;font:500 ${fs}px/1 AurelioSerif,Georgia,serif;letter-spacing:${ls}px;color:rgba(244,240,234,.92);padding-left:${ls}px` }, panel);
     const letters = [...'AURELIO'].map((ch) => ({ e: C.reg(C.el('span', { style: `display:inline-block;overflow:hidden;width:${WM_FULL[ch] * k}px` }, word, ch)), w: WM_FULL[ch] * k, vanish: !'AI'.includes(ch) }));
     slam(panel, { at: o.at, out: o.out, from: o.from ?? 1.6, rot: 0, sfx: o.sfx, gain: o.gain, what: o.what || 'AURELIO wordmark' });
-    SPECS.push({ k: 'wordmark', el: panel, letters, at: o.at, cycle: o.cycle || 3.6, blur: 1.5 * k });
+    // the animation must end back on AURELIO before the film ends (user, 2026-10-25: a close frozen on "AI" is a failure):
+    // the 3.6 s cycle shrinks to the time left after `at` (minus 0.1 s); under 1.4 s the pipeline stops the draft.
+    const cycle = o.cycle || Math.min(3.6, C.DUR - o.at - 0.1);
+    WORDMARKS.push({ at: o.at, cycle });
+    SPECS.push({ k: 'wordmark', el: panel, letters, at: o.at, cycle, blur: 1.5 * k });
     return panel;
   }
   function wordmarkRun(t, s) {
@@ -305,6 +312,16 @@
   const putSlide = (e, sl, extra = {}) => C.put(e, { o: sl.hide ? 0 : 1, y: sl.y, clip: sl.clip, ...extra });
 
   // Subtitles are not drawn here: they are burned onto the rendered film with libass (reference/SUBTITLES.md).
+
+  // what the pipeline checks before the draft (scripts/autosfx.mjs --timing): when the first animation starts (graphic
+  // entrances are in OV_CUES; camera moves and layout switches here) and whether every Aurelio close completes
+  window.OV_TIMING = () => ({
+    duration: C.DUR,
+    punch: PUNCH.filter(([, sc]) => sc !== 1).map(([t]) => t),
+    impacts: IMPACTS.map((i) => i.at),
+    layout: LAYOUT ? LAYOUT.keys.filter(([, m]) => m !== 'full').map(([t]) => t) : [],
+    wordmarks: WORDMARKS,
+  });
 
   window.OV = { specs: SPECS, settleOn, slide, putSlide, slam, cutIn, pop, typeOn, draw, odometer, cursor, browser, wordmark, cutawayBg, layout, layoutAt, punch, impact, cue, T95, bg: null, cut: null };
   // keep a handle on the background video (and the cut-out speaker, with { matte }) so the kit (layout, punch) and films
