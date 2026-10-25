@@ -45,7 +45,7 @@ Init generates the config. Paths are relative to the project or absolute. Edit o
   "resources": [{"url": "https://example.com", "sections": ["Features"]}],
   "edits": {"color": 0.35, "keep": [], "cut": []},
   "captions": {"singleShot": true, "zones": null},
-  "cover": {"input": null, "frame": 1.2, "lines": ["Setup", "*KEY WORD*", "Payoff"], "yOffset": 0},
+  "cover": {"input": null, "frame": 1.2, "lines": ["Setup", "*KEY WORD*", "Payoff"], "anchor": "top", "yOffset": 0},
   "caption": {"paragraph": "Approved text.", "hashtags": ["#One", "#Two", "#Three", "#Four"], "commentWord": "", "resourceName": "", "resourceUrl": ""}
 }
 ```

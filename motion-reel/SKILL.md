@@ -31,7 +31,7 @@ Use actual SDR 9:16 footage at native resolution. Raw takes need preparation; ed
 6. **Review:** follow the shared process below, then obtain separate `draft` approval on the latest video before `final`.
 7. **Finish:** choose cover photo/headline and caption content in config. Read [COVER.md](reference/COVER.md) for composition exceptions and [DELIVERY.md](reference/DELIVERY.md) for text rules. Run `final`, then `deliver`: native master, subtitles, one cover frame with matching silence, checks and explicit final files. Inspect full cover/grid crop and final review images. Show video, cover and full caption. `publish` needs their explicit approval and retains work for future revisions.
 
-Captions: Neue Montreal Bold 104px at design width 1080, white, shadow 6, outline/blur 0, one word at a time. One continuous shot uses one Y despite punch-ins; actual separate shots may have separate zones. Correct placement in the draft via `captions.zones`. Final scales approved draft zones and typography to native resolution, never re-detects them. No-face fallback zones require visual verification. Cover: white, three lines, sizes 68/166, bottom anchor, never auto-fit.
+Captions: Neue Montreal Bold 104px at design width 1080, white, shadow 6, outline/blur 0, one word at a time. One continuous shot uses one Y despite punch-ins; actual separate shots may have separate zones. Correct placement in the draft via `captions.zones`. Final scales approved draft zones and typography to native resolution, never re-detects them. No-face fallback zones require visual verification. Cover: white, three lines, sizes 68/166, never auto-fit; headline above the head when the free space is there (`cover.anchor: "top"`), torso only otherwise (COVER.md).
 
 ## Branch A: product film
 

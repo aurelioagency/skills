@@ -45,7 +45,7 @@ def initialize(root, branch, source=None, takes=None, preset=None):
               "resources": [], "edits": {"color": 0.35, "keep": [], "cut": []},
               "captions": {"zones": None, "singleShot": True},
               "render": {"workers": "auto", "segmentSeconds": 3},
-              "cover": {"input": None, "frame": 0, "lines": [], "yOffset": 0},
+              "cover": {"input": None, "frame": 0, "lines": [], "anchor": "bottom", "yOffset": 0},
               "caption": {"paragraph": "", "hashtags": [], "commentWord": "", "resourceName": "", "resourceUrl": ""}}
     if branch == "B":
         timeline.update(bpm=60, formats=["9x16"], music={"source": "narration"}, voiceover=None,
@@ -533,10 +533,12 @@ class Pipeline:
             return output
         if len(c.get("lines", [])) != 3:
             raise ValueError("Set cover.lines to the three agreed headline lines (wrap emphasis in *).")
+        if c.get("anchor", "bottom") not in ("top", "bottom"):
+            raise ValueError('cover.anchor must be "top" (free space above the head) or "bottom" (torso); see COVER.md.')
         source = self.p(c.get("input") or self.source())
         output = self.p(f"renders/final/{self.root.name}-portada.png")
         args = self.js("build-cover.mjs", "--project", self.root, "--input", source, "--frame", c.get("frame", 0),
-                       "--font-file", FONT, "--style", "white", "--anchor", "bottom", "--small-size", 68, "--big-size", 166,
+                       "--font-file", FONT, "--style", "white", "--anchor", c.get("anchor", "bottom"), "--small-size", 68, "--big-size", 166,
                        "--y-offset", c.get("yOffset", 0), "--output", output)
         for line in c["lines"]:
             args += ["--line", line]

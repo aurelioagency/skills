@@ -14,9 +14,9 @@ The agent writes the headline. The frame: **if the user supplied a cover image o
 
 - **The frozen caption font**, Neue Montreal Bold — the same file the subtitles use (`assets/fonts/captions/NeueMontreal-Bold.otf`). Always pass it with `--font-file`: Branch B projects also keep resource fonts in `assets/fonts/`, and the script would otherwise grab the first font it finds there.
 - **The cover's treatment MUST match the subtitles burned into the video** — the two are seen side by side in the feed. Branch B subtitles are the house white style, so the cover is **`--style white`**: crisp solid-white fill, NO outline, NO blur on the letters, just a plain low-contrast drop shadow. A black outline or a blurred fill looks wrong on this style. Only if the user asked for cyan Inter Black subtitles does the cover go `--style cyan` (cyan fill, fully opaque black outline, soft drop; `--accent-big` for unusually busy footage). Neue Montreal never takes cyan.
-- **Three lines, one block, anchored bottom.** Small setup line, big line, small payoff line, sitting over the torso.
+- **Three lines, one block.** Small setup line, big line, small payoff line, in the free space above the head when it fits there, otherwise over the torso (next rule).
 - **The emphasis is per WORD.** Wrap what carries the cover in `*asterisks*` and it is set at the big size. Normally that is the whole middle line; a second word further down can take it too (`--line "y esta *skill* lo arregla"`).
-- **`--anchor bottom` is the answer for a talking head.** Text above the speaker lands on hair and forehead and leaves a dead gap through the middle. Move it only over footage with real empty space up there, and only after looking at the frame.
+- **Free space above the head comes first (user, 2026-10-25).** Before building, measure the top of the hair on the cover frame in 1080x1920 design space. With `cover.anchor: "top"` the block spans about y 378–678; if the hair top sits below y 720 (sky, a plain wall, any empty band above the head), the headline goes there: set `cover.anchor` to `"top"`. Only when that band is busy or the head is too high does it go over the torso (`"bottom"`, the default). Never default to the torso without measuring: a cover with a big empty sky and the title on the chest was rejected. Either way, look at the result: the block never touches the hair or the face.
 - **Fixed sizes: `--small-size 68 --big-size 166`, never `--fit`.** `--fit` changes the rendered size per video depending on how many words the headline has, which is the exact inconsistency the fixed numbers exist to prevent. The numbers are literal: never substitute `--fit` or another pair "to make it look better". When asked to nudge the block, apply only the specific change requested (e.g. a given `--y-offset`) and leave the sizes untouched.
 - **Never add an outline, a colour, or any treatment the current instructions did not ask for, even if older covers have it.** A past cover is a record of what an earlier session produced, not authority for this one. If a past example looks different and that difference seems worth copying, ask in one concrete question ("¿querés contorno negro como en `<archivo>` o liso como pide la skill?") instead of pattern-matching silently.
 
@@ -32,7 +32,7 @@ The sheet is head-and-shoulders crops at 5 fps, so the mouth is legible. Cell `(
 
 - **mouth closed or a slight smile** — a mid-word open mouth reads as a bad screenshot;
 - eyes to camera;
-- a clean band under the face for the text, clear of hands and props.
+- a clean band for the text, above the head first or under the face, clear of hands and props.
 
 **When the user gave you the frame, you do not get to pick for a clean band — work with that frame.** Measure where the chin actually sits (a grid overlay beats eyeballing — the chin is usually lower than it looks) and place the block from there.
 
@@ -54,7 +54,7 @@ esta skill te da            Claude ignoró
 para tu próximo video       y esta SKILL lo arregla
 ```
 
-- **Three lines. One block. Anchored bottom, over the torso.** Not two blocks, not a band above the head.
+- **Three lines. One block**, above the head when the free space is there, otherwise over the torso. Not two blocks.
 - **The middle line is the big one**, and it is the whole line. A second word may go big further down (`skill` above), but the middle line carries the cover.
 - **Six to eight words**, small line → BIG line → small line.
 - **Read the big words alone and it still has to mean something**: "10 ganchos", "la herramienta · skill".
@@ -66,10 +66,10 @@ Budget the width before writing: at the house sizes a big word runs about `0.17 
 ## Building it
 
 ```
-node <skill>/scripts/build-cover.mjs --project . --input assets/source/<file> --frame 19.0 --font-file assets/fonts/captions/NeueMontreal-Bold.otf --style white --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor bottom --small-size 68 --big-size 166 --output renders/final/<slug>-portada.png
+node <skill>/scripts/build-cover.mjs --project . --input assets/source/<file> --frame 19.0 --font-file assets/fonts/captions/NeueMontreal-Bold.otf --style white --line "esta skill te da" --line "*10 ganchos*" --line "para tu próximo video" --anchor top --small-size 68 --big-size 166 --output renders/final/<slug>-portada.png
 ```
 
-Geometry is expressed in 1080-wide design space and scaled by `sourceWidth / 1080`, so a 4K source gets 4K-sized text with no arguments. The script gates the width against the real font metrics, verifies the rendered fill colour, and reports `insideGridCrop` — whether the block survives the profile grid's crop. Treat `false` as a blocker, not a warning: nudge with `--y-offset` (positive is down, in source pixels) and rebuild.
+The pipeline passes `cover.anchor` (`top` | `bottom`) as `--anchor`. Geometry is expressed in 1080-wide design space and scaled by `sourceWidth / 1080`, so a 4K source gets 4K-sized text with no arguments. The script gates the width against the real font metrics, verifies the rendered fill colour, and reports `insideGridCrop` — whether the block survives the profile grid's crop. Treat `false` as a blocker, not a warning: nudge with `--y-offset` (positive is down, in source pixels) and rebuild.
 
 Then **look at both outputs** — the full cover and the grid-crop preview it writes next to it. The text landing across the speaker's hands or a prop is the failure the script cannot see.
 

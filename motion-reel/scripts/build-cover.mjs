@@ -58,7 +58,7 @@ const BASE = {
 // top band lands on hair and forehead and leaves a dead gap through the middle of the
 // frame. It only works over footage with real empty space above the head, and nothing
 // here can verify that, so the failure mode is not worth the feature.
-const ANCHORS = { top: 0.17, center: 0.5, bottom: 0.693 };
+const ANCHORS = { top: 0.275, center: 0.5, bottom: 0.693 };
 
 // Same cyan as the caption accent. The cover and the captions inside the video speak one
 // language on purpose: that repetition is what makes the grid recognisable.
