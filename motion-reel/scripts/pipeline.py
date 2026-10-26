@@ -383,7 +383,8 @@ class Pipeline:
         self.step("sfx", {}, [self.p("cues.json"), self.p("sfx-lib"), self.p("assets/sfx")], [self.p("audio/sfx.wav")], lambda: self.command("sfx", self.js("sfx.mjs")))
         if self.config["branch"] == "B":
             self.step("bed", {"duration": tl["duration"], "bed": self.config.get("bed")}, [self.p("audio/music.wav"), SKILL / "music", self.p(self.config.get("bed", {}).get("track", "audio/music.wav"))], [self.p("audio/bed.wav")],
-                      lambda: self.command("bed", self.py("bed.py", *(["--track", str(self.p(self.config["bed"]["track"]))] if self.config.get("bed", {}).get("track") else []))))
+                      lambda: self.command("bed", self.py("bed.py", *(["--track", str(self.p(self.config["bed"]["track"]))] if self.config.get("bed", {}).get("track") else []),
+                                                         *(["--under", str(self.config["bed"]["under"])] if self.config.get("bed", {}).get("under") else []))))
         self.step("mix", {"mix": tl.get("mix"), "duration": tl["duration"], "music": tl.get("music")},
                   [self.p(f"audio/{k}.wav") for k in ("music", "sfx", "vo", "bed")], [self.p("audio/mix.wav")], lambda: self.command("mix", self.py("mix.py")))
 
