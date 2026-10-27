@@ -1,14 +1,19 @@
 # Branch B background music: a steady track from the skill's library, laid under the narration → audio/bed.wav
 # (mix.py adds it as is: no ducking, so it stays constant). Run from the project root, after audio/music.wav exists.
 #
-#   python3 scripts/bed.py                       the steadiest track of music/library.json that is long enough
+#   python3 scripts/bed.py                       a track of music/library.json, rotated across videos (below)
 #   python3 scripts/bed.py --track <file.mp3>    a specific track of the library (or any path)
 #   python3 scripts/bed.py --under 34            dB under the narration's integrated loudness (default 34)
 #
 # Reference levels (aure-apps-22-apps-gratis, approved by the user 2026-10-19 after three rounds of listening):
 # narration as delivered (~-21.6 LUFS) · SFX bus mix.sfx -3 dB, peaks ~9 dB under the voice peaks · bed ~34 dB under
 # the narration (track at -16 LUFS → volume -39.6 dB). Order of importance: voice > SFX > music.
-import json, os, re, subprocess, sys
+#
+# Rotation (user, 2026-10-26: "le estás poniendo la misma música a todos"): among the tracks long enough for the film,
+# the one no other video has used yet, else the one used longest ago; ties go to the steadiest. A project keeps the
+# track it got the first time, so re-running the bed never swaps its music. The choices live outside the skill and the
+# projects (deleted after delivery): ~/.claude/motion-reel/music-history.json, or MOTION_REEL_MUSIC_HISTORY.
+import json, os, re, subprocess, sys, time
 
 SKILL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIB_DIRS = [os.environ.get('MOTION_REEL_MUSIC_LIB'), os.path.join('music-lib'), os.path.join(SKILL, 'music'),
@@ -31,7 +36,20 @@ if not track:
     if not LIB: raise SystemExit('music library not found (skill/music/library.json)')
     lib = json.load(open(os.path.join(LIB, 'library.json'), encoding='utf-8'))
     ok = [r for r in lib if r['duration_s'] >= DUR + 0.5] or lib
-    track = os.path.join(LIB, sorted(ok, key=lambda r: r['loudness_range_lu'])[0]['file'])
+    hist_path = os.environ.get('MOTION_REEL_MUSIC_HISTORY') or os.path.join(os.path.expanduser('~'), '.claude', 'motion-reel', 'music-history.json')
+    hist = json.load(open(hist_path, encoding='utf-8')) if os.path.exists(hist_path) else {}
+    slug = os.path.basename(os.getcwd())
+    mine = hist.get(slug, {}).get('track')
+    if mine not in {r['file'] for r in ok}:
+        last = {}
+        for other, h in hist.items():
+            if other != slug: last[h['track']] = max(last.get(h['track'], ''), h['at'])
+        mine = sorted(ok, key=lambda r: (last.get(r['file'], ''), r['loudness_range_lu']))[0]['file']
+        hist[slug] = {'track': mine, 'at': time.strftime('%Y-%m-%dT%H:%M:%S')}
+        os.makedirs(os.path.dirname(hist_path), exist_ok=True)
+        json.dump(hist, open(hist_path + '.tmp', 'w', encoding='utf-8'), indent=1)
+        os.replace(hist_path + '.tmp', hist_path)
+    track = os.path.join(LIB, mine)
 if not os.path.exists('audio/music.wav'): raise SystemExit('audio/music.wav (the narration) missing — extract it first (SKILL.md B1)')
 
 narr = loud('audio/music.wav')
