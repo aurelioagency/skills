@@ -939,7 +939,7 @@ esta skill te da            Claude ignoró
 para tu próximo video       y esta skill lo arregla
 ```
 
-- **Normal case, never all caps.** The big line is bigger, not capitalised: write it as a sentence. The user corrected every all-caps cover to lowercase (user, 2026-10-26).
+- **Everything in lowercase, always.** Every line, including the first letter of the first line (`tu IA nunca más`, never `Tu IA nunca más`), and the big line too (never all caps). The only capitals are proper names, tool names and acronyms written that way (`Claude`, `WiFi`, `IA`). The big line is bigger, not capitalised (user, 2026-10-27); an older cover or example with capitals is not a reference.
 
 - **Three lines. One block. Anchored bottom, over the torso.** Not two blocks, not a band
   above the head — see the note on ANCHORS in build-cover.mjs for why that was removed.
