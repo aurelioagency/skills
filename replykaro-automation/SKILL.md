@@ -7,6 +7,12 @@ description: Crea en ReplyKaro la automatización "comentá la palabra y te mand
 
 Crea la automatización completa del asistente de 4 pasos de ReplyKaro (saludo, follow gate, mensaje final, botones, respuestas públicas) con un solo comando. La parte **fija** sale de `references/plantilla-base.json`; lo único que cambia por reel es el mensaje final y el link del recurso.
 
+## Cuándo se crea: si la publicación está programada, justo antes de esa hora
+
+Si el usuario programa la subida para una hora (por ejemplo "programá a las 21"), la automatización **no** se crea en el momento en que se aprueba el video: se crea poco antes de esa hora, para llegar a la hora programada con todo listo y subir. La página del recurso (`resource-page`) sí se crea antes, apenas se aprueba. Instagram se sube a mano desde Edits a esa hora; el resto de las redes las publica `post-for-me` programado. Motivo: `NEXT_MEDIA` se lo lleva el próximo post de la cuenta, y además cada automatización creada antes de tiempo ocupa uno de los 3 lugares del plan gratis (usuario, 2026-10-27).
+
+Si la publicación es inmediata (sin hora), se crea en el momento, como siempre.
+
 ## Por qué MCP y no la API REST
 
 `https://www.replykaro.com/api/v1/automations` solo guarda palabra clave, follow gate (prendido/apagado), respuestas públicas y un botón. **Ignora** en silencio el saludo, los textos del follow gate, el mensaje final y los botones extra (probado tres veces, 2026-10-06). El endpoint `https://www.replykaro.com/api/mcp` (herramienta `create_automation`) sí guarda todo, con tildes y emojis. El script usa MCP para crear y REST solo para listar, leer y borrar. Siempre releer lo guardado: el script lo hace y falla en voz alta si algo no quedó.
