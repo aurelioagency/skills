@@ -792,10 +792,11 @@ delivered next to the MP4. **This is not an optional extra and it is not somethi
 about.** A request for subtitles is a request for a publishable post, and the cover is what
 decides whether anyone opens it. Produce it in the same run.
 
-The agent writes the headline. The frame: **if the user supplied a cover image or pointed at
+The agent proposes the headline as three options and the user picks one (see Writing The
+Headline). The frame: **if the user supplied a cover image or pointed at
 a specific frame, use exactly that as the BASE PHOTO — never swap it for another.** If they
 did not, the agent picks the frame (that silence means "you choose it"). Either way, do not
-hand the decision back as a question — bring the result and let them veto it.
+hand the frame decision back as a question — bring the result and let them veto it.
 
 **"Use exactly that" answers a different question than "does it need a headline."** It says
 which photo is the base — not whether to add the title. A user-supplied cover image is raw
@@ -921,6 +922,8 @@ chin — onto the neck/chest, and over the mic / hands / whatever is down there 
 what it takes. Text over a prop is fine; text on the face is not. Keep all the lines.
 
 ### Writing The Headline
+
+**Three headline options first (user, 2026-10-27).** Before building any cover, write three headline options in the message, each as its three lines with the big line marked, and wait for the user to pick one (or reword it). Never build, show or deliver a cover with a headline the user did not choose: a cover built from a headline nobody approved was rejected ("no me convence"). Whenever it fits, every option carries the name of the tool or resource the video offers (`REA`, `Heretic`, `OpenMontage`), on the big line or a small one. The three options must differ in idea, not just in word order. The rules below (lowercase, sizes, shape, six to eight words) apply to each option.
 
 Restate the video's strongest idea, then decide which WORDS carry it and set those big.
 Concrete beats clever. Match the video's own words and register (voseo if that is how it

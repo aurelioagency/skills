@@ -6,7 +6,7 @@ The cover is one frame of the video with a three-line headline burned onto it, a
 
 **Raw takes (PREP.md):** the base photo is the cover candidate picked from the user's still "posing" seconds (`assets/source/cover-candidate-<n>.png`, from the raw takes, colour-corrected like the edit), shown to the user at B0b gate 1; build with `--input <that png> --frame 0`. A smile without teeth is the usual pose; with teeth is fine too.
 
-The agent writes the headline. The frame: **if the user supplied a cover image or pointed at a specific frame, use exactly that as the BASE PHOTO — never swap it for another.** If they did not, the agent picks the frame (that silence means "you choose it"). Either way, do not hand the decision back as a question — bring the result and let them veto it.
+The agent proposes the headline as three options and the user picks one (next paragraph). The frame: **if the user supplied a cover image or pointed at a specific frame, use exactly that as the BASE PHOTO — never swap it for another.** If they did not, the agent picks the frame (that silence means "you choose it"). Either way, do not hand the frame decision back as a question — bring the result and let them veto it.
 
 **"Use exactly that" answers a different question than "does it need a headline."** It says which photo is the base, not whether to add the title. A user-supplied cover image is raw material for `build-cover.mjs --input`, the same as any frame the agent would have picked; it still gets the headline burned onto it before it ships. Do not read "use exactly that image" as "ship it untouched": that rule is about the SOURCE, this one is about the TEXT. If the image is already a finished graphic with a headline composed on it (not a plain photo/frame), that is the one case "use exactly that" does mean ship as-is — ask if it is genuinely unclear which of the two the user handed over.
 
@@ -39,6 +39,8 @@ The sheet is head-and-shoulders crops at 5 fps, so the mouth is legible. Cell `(
 **The headline never covers the face — not the jaw, not the neck right under it.** If the block would touch the face, push it DOWN with `--y-offset` until the top line clears the chin — onto the neck/chest, and over the mic / hands if that is what it takes. Text over a prop is fine; text on the face is not. Keep all the lines.
 
 ## Writing the headline
+
+**Three headline options first (user, 2026-10-27).** Before building any cover, write three headline options in the message, each as its three lines with the big line marked, and wait for the user to pick one (or reword it). Never build, show or deliver a cover with a headline the user did not choose: a cover built from a headline nobody approved was rejected ("no me convence"). Whenever it fits, every option carries the name of the tool or resource the video offers (`REA`, `Heretic`, `OpenMontage`), on the big line or a small one. The three options must differ in idea, not just in word order. The rules below (lowercase, sizes, shape, six to eight words) apply to each option.
 
 Restate the video's strongest idea, then decide which WORDS carry it and set those big. Concrete beats clever. Match the video's own words and register (voseo if that is how it was spoken), with everyday words. Not a summary of the video, and never a line the video does not deliver on.
 
