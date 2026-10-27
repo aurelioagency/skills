@@ -39,8 +39,10 @@ const BASE = {
   softShadow: 5,
   softBlur: 0,
   // A cover line may run wider than a caption line: it is read once, big, not followed
-  // word by word. 70 in 1080-space still leaves a real gate against a runaway headline.
-  marginLr: 70,
+  // word by word. 20 in 1080-space: a big line like "cualquier app" at the fixed 166 must fit
+  // (user, 2026-10-27: a short headline refused for a few pixels of margin was rejected);
+  // the gate only stops a line that would really leave the frame.
+  marginLr: 20,
   // Baseline-to-baseline step, as a fraction of the larger of the two adjacent line
   // sizes. 0.72 is the ratio the original fixed three-line geometry used (115/160).
   // That ratio is calibrated for a big line next to a small one; two lines at the SAME
