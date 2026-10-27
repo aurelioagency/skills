@@ -27,16 +27,24 @@ def inp(name, gain, mono_to_stereo=False):
 inp('music', LV['music'])
 chains[-1] = chains[-1].replace('[music]', f',afade=t=out:st={DUR - 0.3}:d=0.3[music]')
 if have['sfx']: inp('sfx', LV['sfx'])
-# Branch B background music (audio/bed.wav, made by scripts/bed.py): a steady bed already levelled well under the
-# narration and the SFX (voice > SFX > music); added as is, never ducked, so it stays constant.
+# Branch B background music (audio/bed.wav, made by scripts/bed.py): a steady bed levelled under the narration and the
+# SFX (voice > SFX > music). Plain: added as is, constant. mix.bedDuck (user, 2026-10-26: "no se escucha nada la música,
+# que se escuche y no tape mi voz"): the bed sits louder (bed.under ~14) and makes room for the voice instead — a 5 dB
+# dip around 2.5 kHz (where speech is understood) and a side-chain keyed by the narration that pulls it ~6 dB down while
+# the speaker talks (mix=0.62 caps the dip) and lets it back up in the pauses.
+BED_DUCK = have['bed'] and LV.get('bedDuck') and not have['vo']
 if have['bed']: inp('bed', LV.get('bed', 0.0))
+if BED_DUCK:
+    chains.append('[music]asplit[music_v][music_key]')
+    chains.append('[bed]equalizer=f=2500:width_type=o:width=1.6:g=-5[bed_eq];'
+                  '[bed_eq][music_key]sidechaincompress=threshold=0.015:ratio=20:attack=25:release=500:knee=3:mix=0.62[bed_d]')
 if have['vo']:
     inp('vo', LV['vo'], mono_to_stereo=True)
     if LV['duck']:
         chains.append('[vo]asplit[vo_out][vo_key]')
         chains.append('[music][vo_key]sidechaincompress=threshold=0.04:ratio=4:attack=15:release=280:makeup=1[music_out]')
 ducked = have['vo'] and LV['duck']
-labels = (['[music_out]'] if ducked else ['[music]']) + (['[sfx]'] if have['sfx'] else []) + (['[bed]'] if have['bed'] else []) + ((['[vo_out]'] if ducked else ['[vo]']) if have['vo'] else [])
+labels = (['[music_out]'] if ducked else ['[music_v]'] if BED_DUCK else ['[music]']) + (['[sfx]'] if have['sfx'] else []) +          (['[bed_d]'] if BED_DUCK else ['[bed]'] if have['bed'] else []) + ((['[vo_out]'] if ducked else ['[vo]']) if have['vo'] else [])
 graph = ';'.join(chains) + f";{''.join(labels)}amix=inputs={len(labels)}:normalize=0:duration=first,alimiter=limit=0.95:level=false[mix]"
 ff([*inputs, '-filter_complex', graph, '-map', '[mix]', '-c:a', 'pcm_f32le', 'audio/mix_raw.wav'])
 
@@ -60,7 +68,7 @@ for _ in range(1 if NARRATION else 3):
     if NARRATION or abs(I + 14) <= 0.15: break
     gain += -14 - I
 print(f"audio/mix.wav  inputs: {', '.join(k for k, v in have.items() if v)}  levels music {LV['music']} / sfx {LV['sfx']} / vo {LV['vo']} dB"
-      f"{'  (music ducked under VO)' if have['vo'] and LV['duck'] else ''}")
+      f"{'  (music ducked under VO)' if have['vo'] and LV['duck'] else ''}{'  (bed carved and ducked under the narration)' if BED_DUCK else ''}")
 print(f'integrated {I:.1f} LUFS (target -14)   true peak {TP:.1f} dBTP (limit -1)   gain {gain:+.1f} dB into the limiter')
 if not NARRATION and (abs(I + 14) > 0.5 or TP > -1): print('WARNING: off target — the limiter is working too hard; lower the loudest stem (usually sfx) and rerun')
 # Branch B: the narration is the user's own, already-finished audio (they pass it through CapCut first). A big lift
