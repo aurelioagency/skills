@@ -176,19 +176,19 @@ https://www.skool.com/la-casa-de-aurelio-2061
 
 **Only Aurelio's connected accounts.** Call `GET /v1/social-accounts` and filter on `status == "connected"` at publish time — the table below is the expected shape, not a substitute for the check. **Never list, name or mention a disconnected account**, not in the report, not in the summary, not as an aside. They are not of interest and raising them is noise.
 
-A reel goes to these five as a single post:
+A reel (video) goes to these three as a single post, and to nothing else:
 
 | Account | Configuration |
 |---|---|
-| Instagram `lacasadeaurelio` | `placement: 'reels'` |
-| Facebook La Casa de Aurelio | `placement: 'reels'` |
 | TikTok La Casa de Aurelio | `title` |
 | YouTube La Casa de Aurelio | `title`, `privacy_status: 'public'` |
 | LinkedIn Aurelio Agency | — |
 
 Plus `localizations: {}` on every entry, always. `external_id` is the folder slug.
 
-**`ing.gustavopaz` is optional, and it is asked every single time.** It is the owner's second Instagram; some deliveries go there and some do not, and past posts do not settle it. Ask before publishing — `placement: 'reels'` when it is in — and never assume either way from what previous reels did.
+**The ReplyKaro automation always comes first, then the upload (user, 2026-10-26).** When the caption asks to comment a word for a DM ("Comentá Aurelio..."), the automation for that word must already be active in every Instagram account the reel will reach (replykaro-automation skill) before any publish call goes out, including a later upload to one more account. Publishing first and automating after leaves the first comments without their DM.
+
+**A reel never goes to Instagram or Facebook through Post for Me (user, 2026-10-26).** The owner uploads every reel to Instagram by hand from the Edits app, for both accounts (`lacasadeaurelio` and `ing.gustavopaz`), because that is where Instagram gives the extra push; Facebook is not published either. Do not pass those accounts for a video and do not read "todas las cuentas" or a past post that went there as permission. The only exception is the owner explicitly ordering it for that reel ("subilo por Post for Me a ing.gustavopaz"): then that account goes, as its own post. On 2026-10-26 a reel went to Instagram and Facebook through Post for Me and the owner had to delete it and upload it again from Edits. This rule is about reels only: an images carousel keeps its own routing.
 
 #### What you write yourself
 
@@ -248,7 +248,7 @@ The owner's instruction to publish is the confirmation. By the time a delivery r
 
 Before publishing, do the homework (accounts, caption, media, title). Then publish, and state what went out in the report afterwards: accounts by platform and username, caption, media and when.
 
-The only reasons to stop and ask are the ones that need an answer you cannot get from the material: no caption in the folder (see above), an account choice the owner has not made (`ing.gustavopaz`, or a "post everywhere" with no named set), or a genuine platform constraint that changes what goes where. If any part came from your own inference (the `title` for TikTok and YouTube), name it in the report as inferred.
+The only reasons to stop and ask are the ones that need an answer you cannot get from the material: no caption in the folder (see above), an account choice the owner has not made (a "post everywhere" with no named set), or a genuine platform constraint that changes what goes where. If any part came from your own inference (the `title` for TikTok and YouTube), name it in the report as inferred.
 
 ### If the publish call is denied by the permission layer
 
