@@ -935,9 +935,11 @@ These two shipped and were approved. Copy their shape; do not reinvent it per vi
 
 ```text
 esta skill te da            Claude ignoró
-  10 GANCHOS                LA HERRAMIENTA
-para tu próximo video       y esta SKILL lo arregla
+  10 ganchos                la herramienta
+para tu próximo video       y esta skill lo arregla
 ```
+
+- **Normal case, never all caps.** The big line is bigger, not capitalised: write it as a sentence. The user corrected every all-caps cover to lowercase (user, 2026-10-26).
 
 - **Three lines. One block. Anchored bottom, over the torso.** Not two blocks, not a band
   above the head — see the note on ANCHORS in build-cover.mjs for why that was removed.
