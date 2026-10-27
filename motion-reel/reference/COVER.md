@@ -50,9 +50,11 @@ These two shipped and were approved. Copy their shape; do not reinvent it per vi
 
 ```text
 esta skill te da            Claude ignoró
-  10 GANCHOS                LA HERRAMIENTA
-para tu próximo video       y esta SKILL lo arregla
+  10 ganchos                la herramienta
+para tu próximo video       y esta skill lo arregla
 ```
+
+- **Normal case, never all caps.** The big line is bigger, not capitalised: write it as a sentence (`*te dice no*`, never `*TE DICE NO*`). The user corrected every all-caps cover to lowercase (user, 2026-10-26); an older cover or example in caps is not a reference.
 
 - **Three lines. One block**, above the head when the free space is there, otherwise over the torso. Not two blocks.
 - **The middle line is the big one**, and it is the whole line. A second word may go big further down (`skill` above), but the middle line carries the cover.
