@@ -547,7 +547,17 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
   // font size as the half-extent would flag a block that is demonstrably inside the crop.
   const blockTop = ys[0] - lineSizes[0] * 0.45;
   const blockBottom = ys[ys.length - 1] + lineSizes[lineSizes.length - 1] * 0.45;
-  const insideGridCrop = blockTop >= squareTop && blockBottom <= squareBottom;
+  // Every edge of the tile is checked, with a safety margin of 20 px in 1080-space (user,
+  // 2026-10-27: no headline text may fall outside what the profile grid shows). The tile
+  // keeps the full width, so the sides are judged against the frame edges.
+  const gridMargin = Math.round(20 * scale);
+  const gridTile = { x0: gridMargin, x1: width - gridMargin, y0: squareTop + gridMargin, y1: squareBottom - gridMargin };
+  const gridOverflow = [];
+  if (blockTop < gridTile.y0) gridOverflow.push({ edge: 'top', byPx: Math.round(gridTile.y0 - blockTop) });
+  if (blockBottom > gridTile.y1) gridOverflow.push({ edge: 'bottom', byPx: Math.round(blockBottom - gridTile.y1) });
+  const widest = Math.max(...lineWidths);
+  if (widest > gridTile.x1 - gridTile.x0) gridOverflow.push({ edge: 'sides', byPx: Math.round((widest - (gridTile.x1 - gridTile.x0)) / 2) });
+  const insideGridCrop = gridOverflow.length === 0;
 
   const gridPreview = path.join(coverDir, `${slug}-portada-gridcrop.png`);
   run(ffmpeg, [
@@ -592,6 +602,7 @@ ${events.map((text) => `Dialogue: 0,0:00:00.00,0:00:10.00,Cover,0,0,0,,${text}`)
     widestLinePx: Math.round(Math.max(...lineWidths)),
     usableWidthPx: usableWidth,
     insideGridCrop,
+    gridTile: { ...gridTile, marginPx: gridMargin, overflow: gridOverflow },
     next: insideGridCrop
       ? 'Look at BOTH the full cover and the grid-crop preview. Check the text does not land on the hands or a prop; nudge with --y-offset if it does.'
       : 'WARNING: the text block falls outside the centred 3:4 tile the profile grid crops to. Nudge it back with --y-offset before delivering.',
