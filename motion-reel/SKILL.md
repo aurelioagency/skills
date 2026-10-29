@@ -15,11 +15,13 @@ Use `python "<skill>/scripts/pipeline.py" <stage> --project "<project>"`. Read [
 
 Read references only for the current stage. Do not load all scripts, logs or images. stdout is compact; inspect `manifests/logs` only on failure. Reuse cached results rather than re-transcribing, re-capturing, re-rendering or rebuilding captions manually. Run `status` when resuming.
 
-Approvals are real user decisions: show the actual material in the message body and wait. Record received approval using `approve --gate ... --note "<actual user OK>"`. Never fabricate approval or treat a successful script as approval. Changed inputs invalidate dependent approvals. Existing authorization counts when it covers the exact material.
+Approvals are real user decisions: show the actual material in the message body and wait. Record received approval using `approve --gate ... --note "<actual user OK>"`. Never fabricate approval or treat a successful script as approval. Changed inputs invalidate dependent approvals. Existing authorization counts when it covers the exact material; direct-to-draft mode (Branch B) is such a standing authorization, for its four gates only.
 
 Keep creative decisions with Opus. Subagents are optional for bounded tasks that warrant their extra context cost; never create one to run a script. See [MODELS.md](reference/MODELS.md). Do not promise a token saving percentage without comparable measured runs.
 
 ## Branch B: filmed talking head
+
+**Direct-to-draft mode** (default in batch mode, or when the user asks for it): the user's standing authorization (2026-10-29) covers gates `cuts`, `union`, `transcript` and `plan`. Run every check as usual, record each with `approve --gate <g> --note "borrador directo: autorización del usuario 2026-10-29"`, and do not stop at them: cut false starts and settling, cut a long inner pause only when it is clearly a mistake, correct the transcript against audio and script, write the plan and animate. Stop at the first look and send, in one message: the subtitled draft, the resource used, the cuts made, the full transcript with any doubtful words marked, and the plan table. The user fixes words there (a word change only rebuilds the captions). Still stop and ask for anything destructive, a full disk, or footage that cannot be used. From first look on, every gate is a real user decision again.
 
 Use actual SDR 9:16 footage at native resolution. Raw takes need preparation; edited footage goes directly to transcription. Infer spoken language before setting `language`; Spanish is only the initial default. Ask only for missing information that cannot be found. Use the user's resources; disclose additional sites/assets you find in the plan.
 
