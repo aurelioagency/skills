@@ -1,11 +1,13 @@
 ---
 name: motion-reel-pipeline
-description: Flujo de trabajo completo de un reel animado con motion-reel, de punta a punta, en el orden en que se hace. Usar cuando el usuario pase un video suyo hablando y pida armar todo el proceso con motion-reel ("te paso el reel para motion", "armá todo el flujo con motion-reel", "motion reel pipeline"). Es la versión de reel-pipeline con motion-reel en lugar de social-video-producer. Solo marca el orden y llama a las otras skills; cada una sigue funcionando también por separado.
+description: Flujo de trabajo completo de un reel animado con motion-reel, de punta a punta, en el orden en que se hace. Usar cuando el usuario pase un video suyo hablando (o una carpeta con crudos de varios temas y su archivo de guiones) y pida armar todo el proceso con motion-reel ("te paso el reel para motion", "armá todo el flujo con motion-reel", "motion reel pipeline"). Es la versión de reel-pipeline con motion-reel en lugar de social-video-producer. Solo marca el orden y llama a las otras skills; cada una sigue funcionando también por separado.
 ---
 
 # Motion Reel Pipeline
 
 Este es el orden de trabajo con un reel animado. Cada paso lo hace su skill, con sus propias reglas.
+
+0. **Si me pasás una carpeta con crudos de varios temas y el archivo con los guiones,** primero va el modo lote de `motion-reel` (ordena, renombra y abre un tema por sesión). Cada tema sigue después desde el paso 1.
 
 1. **Te paso el reel.** `motion-reel` (rama B) anima el video y crea los subtítulos, la portada (frame 0), el caption, el mensaje de respaldo (`dm-reply`) y la carpeta de entrega. Se la muestro y espero la aprobación del video, la portada y el caption.
 2. **Aprobado → Drive.** `motion-reel` sube la carpeta a la unidad compartida (Reels).
