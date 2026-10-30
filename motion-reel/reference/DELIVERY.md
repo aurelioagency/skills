@@ -1,6 +1,8 @@
 # Delivery and publication
 
-Working project: `<Documents>/motion-reel/.work/<descriptive-topic-slug>`. Delivery: `<Documents>/motion-reel/<slug>`, split into `source/` and `output/`. Use a topic name in kebab-case, never a date, source filename or generic `video1`. The normal workflow is `pipeline.py final`, then `deliver`. Specialized low-level scripts remain available for legacy projects.
+For watched batches, use the root supplied by motion-reel-ingest: `<Videos>/Motion Reel/Entregas/.work/<unique-topic-slug>` for work and `<Videos>/Motion Reel/Entregas/<unique-topic-slug>` for delivery. Existing projects stay in place.
+
+Standalone working project: `<Documents>/motion-reel/.work/<descriptive-topic-slug>`. Delivery: `<Documents>/motion-reel/<slug>`, split into `source/` and `output/`. Use a topic name in kebab-case, never a date, source filename or generic `video1`. The normal workflow is `pipeline.py final`, then `deliver`. Specialized low-level scripts remain available for legacy projects.
 
 ## Caption and optional DM
 
