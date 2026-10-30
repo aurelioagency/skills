@@ -51,7 +51,8 @@ Install the Motion Reel Pipeline package from https://github.com/aurelioagency/s
 4. Delete the temporary clone and confirm the six skills load.
 5. Check the requirements of each skill (see its README) and set up anything missing,
    asking me to approve each command.
-6. Explain how the reel workflow goes, tell me where the files ended up on my machine,
+6. Run motion-reel-ingest/scripts/install-watch.ps1 to detect/install Claude Code, complete account login if needed, and activate and verify the continuous watcher. Do not report installation complete while setup is pending.
+7. Explain how the reel workflow goes, tell me where the files ended up on my machine,
    and ask me if we start my first reel now.
 ```
 
@@ -103,4 +104,4 @@ Each skill lists its own in its README (Node, ffmpeg, Python, API keys and accou
 
 MIT — see [LICENSE](../LICENSE) at the repo root.
 
-The continuous watcher is configured separately after installing the skills; follow motion-reel-ingest/README.md. Installing skill files alone does not start a background task.
+The repository installer automatically configures and starts the continuous watcher on native Windows in the default Claude skills directory. Manual-copy installations must run motion-reel-ingest/scripts/install-watch.ps1 as their final step; see motion-reel-ingest/README.md. Account login may require user interaction.

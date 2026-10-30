@@ -197,4 +197,21 @@ for (const name of args.names) {
     }
   }
 }
+// Intake needs an actual per-user background task, not only copied skill files.
+// Run after the whole package is installed, so sibling dependencies are present.
+if (args.names.includes('motion-reel-ingest')) {
+  const nativeClaudeDestination = path.resolve(os.homedir(), '.claude', 'skills');
+  if (process.platform === 'win32' && path.resolve(args.dest).toLowerCase() === nativeClaudeDestination.toLowerCase()) {
+    const setup = path.join(args.dest, 'motion-reel-ingest', 'scripts', 'install-watch.ps1');
+    console.log('Configuring the continuous Motion Reel watcher (account login may be required)...');
+    try {
+      execFileSync('powershell.exe', ['-NoProfile', '-File', setup], { stdio: 'inherit', windowsHide: true });
+    } catch {
+      console.error('Skill files installed, but watcher setup is incomplete. Resolve the reported dependency/login issue and rerun the installer.');
+      process.exit(4);
+    }
+  } else {
+    console.log('Watcher not activated: automatic setup requires native Windows and the default Claude skills directory. See motion-reel-ingest/reference/WATCHER.md.');
+  }
+}
 console.log(`Done: ${args.names.length} skill(s) now available in every session.`);

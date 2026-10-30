@@ -16,11 +16,10 @@ Videos/Motion Reel/
 
 ## Install
 
-Install the skill permanently before registering the task. First authenticate Claude Code interactively and verify it can access the installed skills, required tools and MCP connections. `claude -p` does not open the Desktop app; review is through local files or the saved CLI session.
+Install the complete skill package permanently before registering the task. The repository installer runs setup automatically on native Windows in the default Claude skills directory; manual-copy installation must run setup before claiming completion. Setup locates Claude Code, installs it through WinGet when absent, checks authentication and invokes browser login if needed. The installing agent checks required Python, processing tools and MCP connections. `claude -p` does not open the Desktop app; review is through local files or the saved CLI session.
 
 ```powershell
-python "<skill>/scripts/watch.py" init --claude "<absolute-path-to-claude.exe>"
-powershell -NoProfile -File "<skill>/scripts/install-watch.ps1" -ClaudeExe "<absolute-path-to-claude.exe>"
+powershell -NoProfile -File "<skill>/scripts/install-watch.ps1"
 ```
 
 The installer registers a per-user task, starts it now, restarts on failure and starts on Windows login, with no execution time limit. It uses the logged-in user's credentials and permissions. The PC must stay on, awake and logged in for uninterrupted 24/7 operation; locked screen is fine. It resumes after login/restart. It does not change power settings or store passwords. Boot-before-login operation would require a separate service account/credential setup.
@@ -43,4 +42,4 @@ Returning successfully from Claude means `waiting_review`, never automatic compl
 
 Failed runs are not automatically retried. Inspect `.control/logs`, fix the cause, and resume explicitly. After a watcher crash, a running job becomes `interrupted` and is not relaunched automatically because its child may still be running. Check Task Manager/Claude session first. A crash during claim is recovered from the journal; if the source was never moved, inspect and repair before retrying. Archive moves are journaled as well. Do not delete state to retry: that can duplicate work.
 
-To stop/remove: use Task Scheduler, or `install-watch.ps1 -Remove -ClaudeExe unused`. Stopping the watcher may leave an existing Claude child alive; inspect it before resuming. Removing the scheduled task preserves all files and state.
+To stop/remove: use Task Scheduler, or `install-watch.ps1 -Remove`. Stopping the watcher may leave an existing Claude child alive; inspect it before resuming. Removing the scheduled task preserves all files and state.

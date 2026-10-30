@@ -19,6 +19,8 @@ For watched jobs use `<Videos>/Motion Reel/Entregas/.work/<unique-topic-slug>` f
 
 ## Watcher setup and operation
 
+Installation includes setup and activation. Do not report the skill fully installed after only copying its folder. The repository installer runs `scripts/install-watch.ps1` automatically after installing the package on native Windows in the default Claude skills directory. If installing by copying files, the installing agent must run that script itself. It discovers Claude Code, installs it through WinGet if missing, checks authentication, creates the Videos folders, registers/starts the task and verifies that it stays running. If Python is missing, the installing agent installs Python 3.10+ and reruns setup. Install all pipeline dependencies and check their requirements as part of onboarding. User browser authentication cannot be fabricated: mark setup pending login until it succeeds. Preserve existing tasks/jobs; do not interrupt active production during updates.
+
 Read [WATCHER.md](reference/WATCHER.md) for setup, readiness, commands and failure recovery. The script never calls a model to check folders. The Windows task keeps it alive; Claude Code runs only for a queued batch or an explicit user continuation. Polling is continuous every 10 seconds, with 60 seconds of unchanged files after `LISTO` is present. No daily AI automation is used.
 
 The watcher starts `motion-reel-pipeline` in a separate Claude Code session with installed user skills. Preserve skill approval gates and configured tool permissions. Missing credentials, CLI, dependencies or MCP connections are setup failures; do not bypass permissions to proceed.

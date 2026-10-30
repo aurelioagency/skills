@@ -12,12 +12,12 @@ From this repository:
 node install-skills.mjs motion-reel-ingest motion-reel-pipeline motion-reel resource-page replykaro-automation post-for-me
 ```
 
-Requires Windows, Python 3.10+, authenticated Claude Code, FFmpeg and faster-whisper for batch processing, plus the production/integration dependencies of the other skills. The watcher itself needs no Python packages. Install does not start the watcher automatically.
+Requires Windows, Python 3.10+, authenticated Claude Code, FFmpeg and faster-whisper for batch processing, plus the production/integration dependencies of the other skills. The watcher itself needs no Python packages. On native Windows, the repository installer automatically runs watcher setup after copying the full package. Setup discovers/installs Claude Code, requests account login when needed, creates the folders and registers, starts and checks the Windows task. Missing prerequisites leave setup explicitly incomplete.
 
-Configure and start the continuous watcher using the actual executable path:
+When installing by copying skill folders, the installing agent must run setup as the final installation step. The same command repairs an incomplete installation; no executable path is normally needed:
 
 ```powershell
-powershell -NoProfile -File "$env:USERPROFILE\.claude\skills\motion-reel-ingest\scripts\install-watch.ps1" -ClaudeExe "C:\path\to\claude.exe"
+powershell -NoProfile -File "$env:USERPROFILE\.claude\skills\motion-reel-ingest\scripts\install-watch.ps1"
 ```
 
 Place each recording batch (mixed videos + script) in `Videos/Motion Reel/Crudos/<batch-name>`, then add an empty `LISTO` file after copying finishes. After 60 stable seconds it moves to `En proceso/<uuid>`, leaving the inbox free. Polling runs every 10 seconds and continues while Claude works. One Claude worker at a time; additional batches queue.
