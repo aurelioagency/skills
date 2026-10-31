@@ -1,13 +1,13 @@
 ---
 name: motion-reel
 description: Create code-rendered product reels, launch videos, showreels and promos, or animate the user's talking-head footage with resource demos, punch-ins, cutaways, synchronized sound, subtitles and a cover. Use for motion-reel requests and motion graphics on filmed videos. Branch A starts from a product; Branch B starts from footage, including a whole folder of raw phone takes for several topics plus their script file (batch mode).
-model: claude-opus-5-5
-effort: high
+model: claude-sonnet-5-5
+effort: medium
 ---
 
 # Motion reel
 
-Opus plans, writes original animation code and judges visual quality. Scripts perform the mechanical work. A film is `window.seek(t)` in Chromium, encoded by FFmpeg; Opus does not generate video pixels. Local Whisper is also AI, but consumes no Claude tokens.
+Sonnet (this session, medium) runs the mechanical work through scripts; an Opus subagent (high) plans, writes the animation code and judges visual quality. Scripts perform the mechanical work. A film is `window.seek(t)` in Chromium, encoded by FFmpeg; Opus does not generate video pixels. Local Whisper is also AI, but consumes no Claude tokens.
 
 ## Execution contract
 
@@ -17,7 +17,9 @@ Read references only for the current stage. Do not load all scripts, logs or ima
 
 Approvals are real user decisions: show the actual material in the message body and wait. Record received approval using `approve --gate ... --note "<actual user OK>"`. Never fabricate approval or treat a successful script as approval. Changed inputs invalidate dependent approvals. Existing authorization counts when it covers the exact material; direct-to-draft mode (Branch B) is such a standing authorization, for its four gates only.
 
-Keep creative decisions with Opus. Subagents are optional for bounded tasks that warrant their extra context cost; never create one to run a script. See [MODELS.md](reference/MODELS.md). Do not promise a token saving percentage without comparable measured runs.
+Keep creative decisions with Opus: the session (Sonnet) prepares, joins, transcribes, corrects the transcript, writes `docs/codex-handoff.md`, then starts ONE Opus subagent (Agent tool, `model: "opus"`, high effort) that reads only that file and what it points to, writes `docs/overlay_plan.md` and `film/film.js` (hook 1 plus the other hooks' openings), reviews the draft frames and returns a short result. Never create a subagent to run a script. See [MODELS.md](reference/MODELS.md).
+
+**One wake per job (user 2026-10-31):** every turn re-reads the whole session history, so never end a turn to wait for a render or a step. Chain all remaining mechanical work (join, transcribe, or draft render plus the other hooks' openings and checks) into ONE background command and end the turn once; wake only when it finishes, then send the videos. No "espero que termine" turns, no polling, no intermediate checks between chained steps. A command under 10 minutes runs in the foreground instead. Do not promise a token saving percentage without comparable measured runs.
 
 ## Branch B: filmed talking head
 

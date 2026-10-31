@@ -1,12 +1,13 @@
 # Model routing and token measurement
 
-This skill targets Claude Code. `model: claude-opus-5-5` and `effort: high` request the user's creative model for the invocation, not permanent account settings. If unavailable, report it instead of silently claiming Opus ran. Other hosts may ignore these fields.
+This skill targets Claude Code. `model: claude-sonnet-5-5` and `effort: medium` run the session's mechanical work; the creative work goes to one Opus subagent at high effort (user 2026-10-31). If unavailable, report it instead of silently claiming Opus ran. Other hosts may ignore these fields.
 
 The model override lasts for the invoking turn. On later turns, invoke `/motion-reel` again or use the session's model/effort controls; a skill cannot promise permanent model selection. See the official [skill frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference) and [subagent model configuration](https://code.claude.com/docs/en/sub-agents#choose-a-model).
 
 | Task | Executor |
 |---|---|
-| Direction, layout, semantic timing, original animation code | Opus 5.5, high |
+| Running scripts, transcript correction, handoff file, delivery | Session: Sonnet 5.5, medium |
+| Direction, layout, semantic timing, original animation code | Opus 5.5 subagent, high, reads only docs/codex-handoff.md |
 | Creative motion/composition review | Opus; optional independent critic |
 | Cut execution, color, mix, render, captions, cover layout, packaging | Local scripts through pipeline.py |
 | Speech recognition | Local faster-whisper; no Claude tokens |
