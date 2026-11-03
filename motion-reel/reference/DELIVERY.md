@@ -6,7 +6,7 @@ Standalone working project: `<Documents>/motion-reel/.work/<descriptive-topic-sl
 
 ## Caption and optional DM
 
-Every finished video includes UTF-8 `caption-<slug>.txt`, plain text, and the full caption pasted in the handoff message:
+Every finished video includes UTF-8 `caption-<slug>.txt`. Hooks of the same topic share ONE caption, identical text in every hook's file (only the hooks and cover headlines vary), plain text, and the full caption pasted in the handoff message:
 
 ```text
 <2–4 lines on the strongest idea, hook or figure>
