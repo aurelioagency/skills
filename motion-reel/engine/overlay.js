@@ -14,7 +14,7 @@
 //   OV.browser(parent, { x, y, w, url, url_t0, url_t1, img, imgH })        a browser window with the real page, to float
 //                                                                         over the footage (give it slam / cutIn)
 //   OV.layout([[t, 'full' | 'split' | 'gone'], …], { face })              the speaker full / in the bottom half / gone
-//   OV.punch([[t, scale, 'cut' | 'snap' | 'smooth'], …])                  zooms on the speaker (default: jump-cut zoom)
+//   OV.punch([[t, scale, 'cut' | 'snap' | 'snap25' | 'smooth'], …])         zooms on the speaker (default: jump-cut zoom)
 //   OV.impact(at, amp)                                                     an extra frame jolt (slams add their own)
 //   OV.cutawayBg(root, color)                                              opaque background of a full-screen cutaway (jolt-proof)
 //   OV.wordmark(parent, { at, x, y, size, out })                            the Aurelio closing wordmark (star + AURELIO on a dark
@@ -178,7 +178,7 @@
   function layoutAt(t) { let m = 'full'; if (LAYOUT) for (const [k, mode] of LAYOUT.keys) if (t >= k) m = mode; return m; }
 
   // PUNCH — zooms on the speaker: [[t, scale, kind], …]. kind 'cut' (default): the zoom jumps on that frame, like a
-  // jump-cut zoom in the references; 'snap': gets there in ~0.12 s; 'smooth': a slow push. Strong lines 1.15–1.25.
+  // jump-cut zoom in the references; 'snap': gets there in ~0.12 s; 'snap25': same ease in 0.25 s (opening zoom, see OPENING-ZOOM.md); 'smooth': a slow push. Strong lines 1.15–1.25.
   let PUNCH = [];
   const punch = (keys) => { PUNCH = keys.slice().sort((a, b) => a[0] - b[0]); };
   function punchAt(t) {
@@ -188,6 +188,7 @@
       const d = t - k;
       if (kind === 'cut') v = sc;
       else if (kind === 'snap') v = lerp(prev, sc, easeOut3(clamp(d / 0.12)));
+      else if (kind === 'snap25') v = lerp(prev, sc, easeOut3(clamp(d / 0.25)));
       else v = lerp(prev, sc, C.ease.inOut(clamp(d / 0.8)));
       prev = sc;
     }
