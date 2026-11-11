@@ -174,7 +174,7 @@ https://www.skool.com/la-casa-de-aurelio-2061
 
 **Only Aurelio's connected accounts.** Call `GET /v1/social-accounts` and filter on `status == "connected"` at publish time — the table below is the expected shape, not a substitute for the check. **Never list, name or mention a disconnected account**, not in the report, not in the summary, not as an aside. They are not of interest and raising them is noise.
 
-A reel (video) goes to these three as a single post, and to nothing else:
+For an ordinary single-hook reel, the standing route uses these three accounts unless the owner asks for another destination. Multi-hook Instagram routing is specified below:
 
 | Account | Configuration |
 |---|---|
@@ -186,13 +186,27 @@ Plus `localizations: {}` on every entry, always. `external_id` is the folder slu
 
 **The ReplyKaro automation always comes first, then the upload (user, 2026-10-26).** When the caption asks to comment a word for a DM ("Comentá Aurelio..."), the automation for that word must already be active in every Instagram account the reel will reach (replykaro-automation skill) before any publish call goes out, including a later upload to one more account. Publishing first and automating after leaves the first comments without their DM.
 
-**A reel never goes to Instagram or Facebook through Post for Me (user, 2026-10-26).** The owner uploads every reel to Instagram by hand from the Edits app, for both accounts (`lacasadeaurelio` and `ing.gustavopaz`), because that is where Instagram gives the extra push; Facebook is not published either. Do not pass those accounts for a video and do not read "todas las cuentas" or a past post that went there as permission. The only exception is the owner explicitly ordering it for that reel ("subilo por Post for Me a ing.gustavopaz"): then that account goes, as its own post. On 2026-10-26 a reel went to Instagram and Facebook through Post for Me and the owner had to delete it and upload it again from Edits. This rule is about reels only: an images carousel keeps its own routing.
+**Instagram y Facebook:** el flujo ordinario de un solo hook sigue la preferencia de subir Instagram desde Edits y no enviar reels a Facebook mediante Post for Me, salvo pedido expreso. Para una entrega con varios hooks, rige la instrucción posterior y específica del usuario que aparece abajo: todos los hooks van a `@lacasadeaurelio` como reels de prueba por Post for Me; si se incluye `@ing.gustavopaz`, solo el hook 1 va allí como reel normal. No tratar esa excepción como autorización automática para Facebook.
 
 #### What you write yourself
 
 **Only the `title` for TikTok and YouTube.** Take it from the piece's own hook; the caption is not a title.
 
 **Describe what you actually did, not a reconstruction of it.** Do not say you "reconstructed", "rebuilt" or "assembled" something. Say what you actually did: read the folder, applied the recipe, wrote the title.
+
+### Un mismo tema con varios hooks: distribución de Instagram
+
+**Regla del usuario:** cuando una entrega tiene dos o más videos terminados del mismo tema con hooks distintos, `@lacasadeaurelio` recibe **todos los hooks como reels de prueba** por Post for Me, incluido el hook 1, con promoción manual. Si `@ing.gustavopaz` está incluida en esa entrega, recibe **solo el hook 1 como reel normal**. No enviar a la cuenta personal los hooks 2, 3, etc., ni convertir un rechazo de prueba en un reel normal sin instrucción expresa. Esta distribución no añade automáticamente la cuenta personal: confirmar su inclusión para cada entrega. Una entrega de un solo hook conserva su flujo habitual salvo indicación expresa.
+
+- Identificar variantes por archivos finales, manifiesto o notas. Deben ser videos terminados del mismo tema con distintas aperturas; clips de `source\`, hooks escritos sin exportación y videos de temas distintos no activan esta regla. No crear variantes adicionales desde esta skill.
+- Crear un post separado por hook para `@lacasadeaurelio`, con un solo video y `configuration: {"placement": "reels", "trial_reel_type": "manual", "localizations": {}}`. `manual` deja al usuario decidir luego si lo comparte con seguidores; usar `performance` solo por pedido expreso. `share_to_feed: false` por sí solo no crea un reel de prueba.
+- Si la cuenta personal está incluida, el hook 1 va en un post separado con `configuration: {"placement": "reels", "localizations": {}}`, sin `trial_reel_type`. Antes de enviarlo, revisar también los reels ya publicados en Instagram o ReplyKaro: un reel subido manualmente puede no figurar en Post for Me. Si ya existe el hook 1 en esa cuenta, no duplicarlo.
+- Conservar el caption entregado para cada variante; si hay uno común, usarlo en todas. Si falta, seguir el procedimiento existente de captions. La regla de variantes es exclusiva de Instagram: para otras redes, mantener el alcance pedido y la versión principal identificada en la entrega.
+- Usar `external_id` estable y distinto por variante y cuenta, por ejemplo `tema-x-hook-1-ig-brand-trial` y `tema-x-hook-1-ig-personal-normal`. Antes de reenviar, consultar ese identificador y las publicaciones manuales de Instagram. Un hook enviado no cubre los demás; un intento fallido tampoco cubre una cuenta distinta.
+- Registrar por hook el archivo, `external_id`, ID del post y resultado por cuenta. Si varios hooks comparten carpeta, marcarla según la convención vigente cuando estén creados o programados todos los envíos previstos; no ocultar hooks pendientes detrás de `_post`.
+- **Elegibilidad en estas cuentas:** el usuario indica **200 seguidores** como umbral operativo de reels de prueba. `@lacasadeaurelio` publicó reels de prueba con 257 seguidores el 31/10/2026; por eso no presentar los 1.000 que figuran en una guía de Post for Me como requisito para estas cuentas. `@ing.gustavopaz`, con menos de 200, recibió un rechazo genérico de permisos para dos reels de prueba; ese error no demuestra por sí solo la causa exacta. No extrapolar el umbral a otras cuentas. Ante un rechazo, informar el resultado y no transformar automáticamente el envío en reel normal.
+
+Referencia de parámetros: [Post for Me — Posting Reels and Stories](https://www.postforme.dev/resources/posting-reels-and-stories). El informe debe distinguir «enviado» de «publicado» y nombrar el tipo de reel de cada cuenta.
 
 ### Before you build the call
 
