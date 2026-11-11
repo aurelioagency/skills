@@ -144,7 +144,7 @@ Then fill the template:
 
 - **The 2-4 line paragraph** restates the single strongest idea — the hook, the figure, the surprising claim — not a summary of everything said. Voseo, direct, no filler, no AI throat-clearing ("En el mundo de hoy...", "¿Sabías que...?" as an opener).
 - **Describe only what the material confirms.** Never invent how a product works, what it includes or what it costs. If the transcript does not say it, it does not go in the caption.
-- **The DM line** goes in only if the outro actually asks for it — take the exact word from the transcript.
+- **The DM call** goes in only if the outro actually asks for it — take the exact word from the transcript.
 - **The four dynamic hashtags** come from the literal words of the piece: tool names, the concept it treats. `#LaCasaDeAurelio` closes.
 - Fixed blocks and blank lines exactly as in the template.
 
@@ -153,8 +153,6 @@ Then fill the template:
 Copied here on request so this skill stands alone. **It also lives in `social-video-producer\SKILL.md` (videos) and `social-carousel-generator\references\la-casa-preset.md` (carousels)** — if the owner changes the template, all three copies need the change.
 
 ```text
-Bienvenidos a la Casa de Aurelio!
-
 <2-4 lineas que resumen el gancho o insight principal, tono directo, sin relleno>
 
 De la teoría a la práctica: Aurelio Agency →
@@ -166,9 +164,9 @@ https://www.skool.com/la-casa-de-aurelio-2061
 <4 hashtags dinamicos segun el tema> #LaCasaDeAurelio
 ```
 
-- The greeting, the services line and both URLs are **fixed**. Never reword, translate or shorten them. Fixed does not mean exempt from voseo: it is `Unite a la comunidad`, not `Únete`.
+- There is **no greeting** (removed months ago): the caption opens straight with the paragraph. Never add "Bienvenidos a la Casa de Aurelio!". The services line and both URLs are **fixed**. Never reword, translate or shorten them. Fixed does not mean exempt from voseo: it is `Unite a la comunidad`, not `Únete`.
 - The only written block is the 2-4 line paragraph — the strongest idea of the piece, not a recap.
-- **The DM call to action is deduced from the material, never invented.** If the video's outro asks the viewer to comment a word to receive something, add `Comentá <PALABRA> y te la mando por DM.` right after the paragraph, and make sure that word also appears written in the paragraph. If the outro says nothing of the sort, leave the line out.
+- **The DM call to action is deduced from the material, never invented.** If the video's outro asks the viewer to comment a word to receive something, close the paragraph with it, inside the same paragraph (e.g. `Si querés probarlo, seguime, la palabra es Aurelio.`), not as a separate line. If the outro says nothing of the sort, leave it out.
 - **Exactly 5 hashtags.** `#LaCasaDeAurelio` last, as signature; the other four picked by the actual topic. An off-topic hashtag subtracts more than it adds.
 - Blank lines between blocks exactly as shown.
 
