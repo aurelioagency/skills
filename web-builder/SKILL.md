@@ -99,6 +99,16 @@ Después:
 2. **Pagos con Stripe** — `npm i stripe @stripe/stripe-js`. Route de checkout (`assets/checkout-route.ts`) que crea la sesión de pago, y webhook (`assets/webhook-route.ts`) que la confirma. El webhook es la única fuente de verdad sobre si se pagó — nunca dar acceso basándose en el redirect del navegador tras el pago.
 3. **Entrega del archivo pesado** — el archivo vive subido de antemano en el bucket (R2/B2), nunca en el repo. Cuando el webhook confirma el pago, se genera una URL firmada de corta duración (`assets/signed-download-route.ts`) apuntando al archivo, que se le manda al comprador o se muestra en una página protegida por login. Ver `references/entrega-de-archivos.md` para el flujo completo y por qué un archivo de varios GB no puede servirse directo desde una route de Next.js.
 
+## Reparto de modelos (para no llenar la ventana)
+
+El modelo principal (Opus) hace todo el trabajo técnico: diseñar, escribir código, debuggear, build, deploy y seguridad. Lo que es solo **leer** va a un subagente con `model: "sonnet"` (herramienta Agent), que devuelve un resumen corto y no el material entero:
+
+- Leer el libro, documentos largos, PDFs o el historial de una sesión anterior.
+- Revisar muchos archivos o carpetas de fotos solo para saber qué hay.
+- Buscar contexto previo (memoria, transcripts) antes de arrancar.
+
+Así la ventana del modelo principal guarda decisiones y código, no páginas de lectura. Sonnet es más barato que Opus, por eso conviene para esta parte. Si la lectura es corta (un archivo chico), se hace directo sin subagente.
+
 ## Reglas duras
 
 **Módulo base:**
