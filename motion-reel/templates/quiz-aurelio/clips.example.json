@@ -1,0 +1,279 @@
+[
+ {
+  "name": "bg-a3",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-all-goals-fifa-0U6od_ryVrs.mp4",
+  "start": 8.0,
+  "dur": 6.6,
+  "mode": "full",
+  "cx": 960,
+  "blur": 30,
+  "dark": 0.42,
+  "sat": 0.35
+ },
+ {
+  "name": "bg-b3",
+  "src": "E:/Motion Reel/Recursos/ia/claude-4PtGWgEO0ME.mp4",
+  "start": 0.2,
+  "dur": 10.0,
+  "mode": "full",
+  "cx": 960,
+  "blur": 34,
+  "dark": 0.62,
+  "sat": 0.0
+ },
+ {
+  "name": "c-mbappe",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-2022-goals-fifa-5pzgfGgI4X8.mp4",
+  "start": 63.3,
+  "dur": 3.1,
+  "speed": 0.6,
+  "mode": "band",
+  "crop": [
+   560,
+   0,
+   1280,
+   720
+  ],
+  "out": [
+   640,
+   360
+  ]
+ },
+ {
+  "name": "c-messi",
+  "src": "E:/Motion Reel/Recursos/futbol/messi-premiacion-conmebol-MJX1_BSkMx8.mp4",
+  "start": 72.3,
+  "dur": 4.0,
+  "speed": 0.5,
+  "mode": "band",
+  "crop": [
+   520,
+   120,
+   1100,
+   619
+  ],
+  "out": [
+   640,
+   360
+  ]
+ },
+ {
+  "name": "f0-2018-cara",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-2018-goals-fifa-DlynAmPw3M0.mp4",
+  "start": 123.0,
+  "dur": 0.5,
+  "mode": "full",
+  "cx": 820
+ },
+ {
+  "name": "f7-2018-red",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-2018-goals-fifa-DlynAmPw3M0.mp4",
+  "start": 114.9,
+  "dur": 0.85,
+  "speed": 0.7,
+  "mode": "full",
+  "cx": 1480
+ },
+ {
+  "name": "f8-2022-espalda",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-2022-goals-fifa-5pzgfGgI4X8.mp4",
+  "start": 33.0,
+  "dur": 0.45,
+  "mode": "full",
+  "cx": 1000
+ },
+ {
+  "name": "f9-2022-gol",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-2022-goals-fifa-5pzgfGgI4X8.mp4",
+  "start": 61.55,
+  "dur": 0.45,
+  "mode": "full",
+  "cx": 1100
+ },
+ {
+  "name": "m-pov",
+  "src": "E:/Motion Reel/Recursos/futbol/meme-ancelotti-ceja-tEF7wcORhVQ.mp4",
+  "start": 4.45,
+  "dur": 1.6,
+  "mode": "band",
+  "crop": [
+   0,
+   0,
+   1920,
+   1080
+  ],
+  "out": [
+   1080,
+   608
+  ]
+ },
+ {
+  "name": "d-grid",
+  "src": "E:/Motion Reel/Recursos/ia/claude-mcp-in-claude-code-kkBFmwkDzdo.mp4",
+  "start": 71.6,
+  "dur": 1.6,
+  "mode": "band",
+  "crop": [
+   0,
+   0,
+   1920,
+   1080
+  ],
+  "out": [
+   1080,
+   608
+  ]
+ },
+ {
+  "name": "d-term",
+  "src": "E:/Motion Reel/Recursos/ia/claude-mcp-in-claude-code-kkBFmwkDzdo.mp4",
+  "start": 44.6,
+  "dur": 1.6,
+  "mode": "band",
+  "crop": [
+   240,
+   60,
+   1440,
+   810
+  ],
+  "out": [
+   1080,
+   608
+  ]
+ },
+ {
+  "name": "c-klose",
+  "src": "E:/Motion Reel/Recursos/futbol/klose-all-wc-goals-fifa-DrAkH2dSozQ.mp4",
+  "start": 44.9,
+  "dur": 3.4,
+  "speed": 0.5,
+  "mode": "band",
+  "crop": [
+   240,
+   60,
+   1440,
+   810
+  ],
+  "out": [
+   640,
+   360
+  ]
+ },
+ {
+  "name": "f3n-remate",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-all-goals-fifa-0U6od_ryVrs.mp4",
+  "start": 3.1,
+  "dur": 0.9,
+  "mode": "crop",
+  "crop": [
+   570,
+   0,
+   461,
+   820
+  ],
+  "out": [
+   1080,
+   1920
+  ],
+  "speed": 1.0
+ },
+ {
+  "name": "f4n-festejo",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-all-goals-fifa-0U6od_ryVrs.mp4",
+  "start": 19.0,
+  "dur": 0.9,
+  "mode": "crop",
+  "crop": [
+   630,
+   0,
+   461,
+   820
+  ],
+  "out": [
+   1080,
+   1920
+  ],
+  "speed": 1.0
+ },
+ {
+  "name": "f5n-brazos",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-all-goals-fifa-0U6od_ryVrs.mp4",
+  "start": 64.1,
+  "dur": 1.7,
+  "mode": "crop",
+  "crop": [
+   650,
+   0,
+   461,
+   820
+  ],
+  "out": [
+   1080,
+   1920
+  ],
+  "speed": 0.8
+ },
+ {
+  "name": "f6n-cierre",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-all-goals-fifa-0U6od_ryVrs.mp4",
+  "start": 89.5,
+  "dur": 2.3,
+  "mode": "crop",
+  "crop": [
+   530,
+   0,
+   461,
+   820
+  ],
+  "out": [
+   1080,
+   1920
+  ],
+  "speed": 0.5
+ },
+ {
+  "name": "d2n-conectores",
+  "src": "E:/Motion Reel/Recursos/ia/claude-4PtGWgEO0ME.mp4",
+  "start": 8.0,
+  "dur": 2.2,
+  "speed": 0.8,
+  "mode": "crop",
+  "crop": [
+   270,
+   0,
+   1380,
+   1080
+  ],
+  "out": [
+   1080,
+   844
+  ]
+ },
+ {
+  "name": "d3n-menu",
+  "src": "E:/Motion Reel/Recursos/ia/claude-4PtGWgEO0ME.mp4",
+  "start": 17.2,
+  "dur": 2.3,
+  "speed": 0.75,
+  "mode": "crop",
+  "crop": [
+   646,
+   52,
+   628,
+   976
+  ],
+  "out": [
+   720,
+   1118
+  ]
+ },
+ {
+  "name": "f6b-2018-grito",
+  "src": "E:/Motion Reel/Recursos/futbol/mbappe-2018-goals-fifa-DlynAmPw3M0.mp4",
+  "start": 123.3,
+  "dur": 2.2,
+  "speed": 0.6,
+  "mode": "full",
+  "cx": 820
+ }
+]

@@ -1,6 +1,6 @@
 ---
 name: motion-reel
-description: Create code-rendered product reels, launch videos, showreels and promos, or animate the user's talking-head footage with resource demos, punch-ins, cutaways, synchronized sound, subtitles and a cover. Use for motion-reel requests and motion graphics on filmed videos. Branch A starts from a product; Branch B starts from footage, including a whole folder of raw phone takes for several topics plus their script file (batch mode).
+description: Create code-rendered product reels, launch videos, showreels and promos, or animate the user's talking-head footage with resource demos, punch-ins, cutaways, synchronized sound, subtitles and a cover. Use for motion-reel requests and motion graphics on filmed videos. Branch A starts from a product; Branch B starts from footage, including a whole folder of raw phone takes for several topics plus their script file (batch mode); Branch C is footage with no resource, where the assistant searches the internet for the clips, photos and images (quiz reels).
 model: claude-sonnet-5-5
 effort: medium
 ---
@@ -43,6 +43,10 @@ Captions: Neue Montreal Bold 104px at design width 1080, white, shadow 6, outlin
 ## Branch A: product film
 
 Read [BRANCH_A.md](reference/BRANCH_A.md) for intake/creative details. `init --branch A [--preset <name>]`; fill brief, resource URLs, timeline, style guide and shotlist. Run `assets`. Use supplied music or synth; external voiceover only when requested with applicable credit approval. Obtain `plan` approval, then Opus builds deterministic spring-driven scenes with beat timing. `draft` handles music/grid, configured VO placement, sound, capture and review. Follow the same first-look, critique, draft approval, final and delivery stages. Final: 60fps, requested formats, -14 ±0.5 LUFS, true peak ≤ -1 dBTP. Never apply that normalization target to Branch B narration.
+
+## Branch C: filmed talking head without a resource (the assistant finds the media)
+
+For talking-head footage with no resource page, no product and no resource URL, where the animation is real media the assistant searches on the internet (first format: the "¿Sabés más de X o de inteligencia artificial?" quiz reel, about 20 topics). It follows Branch B in every stage (direct-to-draft mode, cuts, gates, mandatory music, draft, review, cover, delivery), with a ready template in `templates/quiz-aurelio/`, the Aurelio visual style and extra hard rules (face only when looking at the camera, nothing over the face, no silences, figures on screen equal figures spoken, real legible media). No resource page and no DM reply. Read [BRANCH_C.md](reference/BRANCH_C.md) and the template README before planning.
 
 ## Shared review and completion
 
