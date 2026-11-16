@@ -4,7 +4,7 @@ User 2026-11-15: "cuando no tenés recurso se usaría este estilo o formato, hay
 
 Use it when the user films a talking head and there is NO resource page, no product and no resource URL: the animation is made of real media the assistant searches on the internet. First format: the quiz reel "¿Sabés más de X o de inteligencia artificial?" (two questions, three options each, answer and short explanation). Other topics can reuse the engine and the rules.
 
-Everything of Branch B still applies (prepare, cuts, join, transcript, gates, draft, review, cover, final, deliver, caption rules, music, SFX, captions). Branch C changes only what the animation is made of and the extra checks below. There is NO resource page, NO ReplyKaro DM and no `dm-reply` (the closing line asks for comments, nothing is promised by DM).
+Everything of Branch B still applies (prepare, cuts, join, transcript, gates, draft, review, cover, final, deliver, caption rules, music, SFX, captions). Branch C changes only what the animation is made of and the extra checks below. There is NO new resource page. The resource for every Branch C reel is the existing page `https://www.aurelioagency.com/es/la-casa-de-aurelio` (user 2026-11-16): deliver `dm-reply-<slug>.txt` (two lines, greeting + that URL, nothing else) next to the caption; `replykaro-automation` uses that URL as the DM link.
 
 ## Template (ships with the skill)
 `templates/quiz-aurelio/`: `quiz.js` (engine fed by one data object), `film.example.js` (data of the first finished reel, futbol-mcp), `clips.example.json`, `prep-clips.py`, `fetch-assets.py`, `aurelio-star.svg`, `trophy-cut.png`, and `README.md` with the full step list and style rules. Read that README first and copy the files into the project (`film/quiz.js`, `film/film.js`, `assets/...`). Change only the data and the media.
@@ -33,4 +33,4 @@ Pure black, warm white #F4F0EA, Cormorant Garamond serif (italic for the emphasi
 Music is mandatory (see Branch B step 5). Use the skill's music library: an instrumental, medium-tempo track, one constant level under the voice (about 24 dB below it, `bed.under`; no ducking or rises, the user rejected a level that moves), short fade in and out. Voice stays at -21.5 LUFS, mix peak below -1 dBFS. Save the track under `Recursos\musica\`, note source and licence in `overlay_plan.md` and check the licence on the source page before using it for a client.
 
 ## Delivery
-Same folder rules as Branch B (`source/` + `output/`). Caption text and hashtags follow DELIVERY.md (Instagram: at most 5 hashtags). No resource page, no DM reply. Publishing needs the user's explicit approval, only to Aurelio accounts.
+Same folder rules as Branch B (`source/` + `output/`). Caption text and hashtags follow DELIVERY.md (Instagram: at most 5 hashtags). No new resource page; `dm-reply-<slug>.txt` points to La Casa de Aurelio (see top). Publishing needs the user's explicit approval, only to Aurelio accounts.
