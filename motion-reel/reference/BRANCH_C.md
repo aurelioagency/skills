@@ -32,5 +32,8 @@ Pure black, warm white #F4F0EA, Cormorant Garamond serif (italic for the emphasi
 ## Music
 Music is mandatory (see Branch B step 5). Use the skill's music library: an instrumental, medium-tempo track, one constant level under the voice (about 24 dB below it, `bed.under`; no ducking or rises, the user rejected a level that moves), short fade in and out. Voice stays at -21.5 LUFS, mix peak below -1 dBFS. Save the track under `Recursos\musica\`, note source and licence in `overlay_plan.md` and check the licence on the source page before using it for a client.
 
+## Comment to DM (ReplyKaro), Branch C only (user 2026-11-16)
+Every Branch C reel uses ReplyKaro (not Jack, which is Aurelio's AI that answers messages and is not used here) with this rule: ANY comment triggers it, whatever the person writes, no keyword. Public reply to the comment: "¿Querés aprender más sobre inteligencia artificial? Te mandé algo por DM". DM: the link `https://www.aurelioagency.com/es/la-casa-de-aurelio` (the section with LinkedIn, Skool and YouTube, so the person chooses where to go), with the follow gate on so that people also follow the account. Use the `replykaro-automation` skill (its fixed Aurelio keyword does not apply to this format; check that ReplyKaro really offers an any-comment trigger, and if its API only accepts a keyword, tell the user instead of faking it). The text of `dm-reply-<slug>.txt` stays as the manual backup.
+
 ## Delivery
 Same folder rules as Branch B (`source/` + `output/`). Caption text and hashtags follow DELIVERY.md (Instagram: at most 5 hashtags). No new resource page; `dm-reply-<slug>.txt` points to La Casa de Aurelio (see top). Publishing needs the user's explicit approval, only to Aurelio accounts.
