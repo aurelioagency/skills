@@ -33,8 +33,8 @@ Formato de 17 reels. Ejemplo completo: `futbol-mcp` (su `film/film.js` = `film.e
 
 ## Música (para los 16 que siguen)
 - Siempre lleva música de fondo instrumental, sin voz. Sale de la biblioteca de la skill (`~/.claude/skills/motion-reel/music/library.json`, temas de Jamendo/archive.org y YouTube Audio Library, todos parejos: rango de volumen de 2 LU o menos). `bed.py` rota los temas para que no se repitan entre videos; el proyecto conserva el suyo en las repeticiones.
-- Para fijar un tema: copiarlo a `E:\Motion Reel\Recursos\musica\` y poner en `pipeline.json` `"bed": { "track": "<ruta>", "under": 24 }`; en `timeline.json` `"mix": { ..., "bedCarve": true }` (le hace lugar a la voz bajando 5 dB alrededor de 2.5 kHz). Anotar título, autor y fuente en `overlay_plan.md` y revisar la licencia en la página de la fuente antes de usarlo para un cliente.
-- Nivel: UNO solo y constante, 24 dB bajo la voz (voz -21.5 LUFS, cama alrededor de -45.5 LUFS). Sin ducking, sin subir ni bajar en pausas o revelaciones: el usuario ya rechazó una música que sube y baja en medio del video. La skill pone fade in de 0.4 s y fade out de 1.2 s.
+- Para fijar un tema: copiarlo a `E:\Motion Reel\Recursos\musica\` y poner en `pipeline.json` `"bed": { "track": "<ruta>", "under": 19 }`; en `timeline.json` `"mix": { ..., "bedCarve": true }` (le hace lugar a la voz bajando 5 dB alrededor de 2.5 kHz). Anotar título, autor y fuente en `overlay_plan.md` y revisar la licencia en la página de la fuente antes de usarlo para un cliente.
+- Nivel: UNO solo y constante, 19 dB bajo la voz (voz -21.5 LUFS, cama alrededor de -40.5 LUFS). Aprobado en futbol-mcp: a 24 dB se escuchaba poco y 14 dB fue "muy fuerte"; no subir de 17. Sin ducking, sin subir ni bajar en pausas o revelaciones: el usuario ya rechazó una música que sube y baja en medio del video. La skill pone fade in de 0.4 s y fade out de 1.2 s.
 - Control: voz -21.5 LUFS, mezcla con pico de -1 dBTP o menos (`ffmpeg -i audio/mix.wav -af ebur128=peak=true -f null -`).
 
 ## Reglas que ya trae
