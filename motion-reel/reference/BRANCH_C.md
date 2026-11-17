@@ -37,3 +37,6 @@ Every Branch C reel uses ReplyKaro (not Jack, which is Aurelio's AI that answers
 
 ## Delivery
 Same folder rules as Branch B (`source/` + `output/`). Caption text and hashtags follow DELIVERY.md (Instagram: at most 5 hashtags). No new resource page; `dm-reply-<slug>.txt` points to La Casa de Aurelio (see top). Publishing needs the user's explicit approval, only to Aurelio accounts.
+
+## Delivery folder name (user 2026-11-16)
+The folder and every file inside it use `<tema>-vs-<concepto de IA>-de-que-sabes-mas` (e.g. `futbol-vs-mcp-de-que-sabes-mas`, `tenis-vs-llm-de-que-sabes-mas`, `historia-romana-vs-rag-de-que-sabes-mas`), so the name says it belongs to the quiz series. The work project keeps its short slug; only the delivery and Drive names carry the long one. Rename after `deliver`/`publish` (the pipeline's own slug is the short one) or pass the long slug when delivering.

@@ -351,9 +351,18 @@ class Pipeline:
                         + [(t, "punch-in") for t in timing["punch"]] + [(t, "impact") for t in timing["impacts"]]
                         + [(t, "layout switch") for t in timing["layout"]])
         if onsets and onsets[0][0] < first_word + 1.0 - 0.02:
-            raise ValueError(f"First animation ({onsets[0][1]}) at {onsets[0][0]:.2f} s: nothing may animate before {first_word + 1.0:.2f} s "
-                             f"(speech starts at {first_word:.2f} s; the first animation lands 1-3 s after that, once the camera has settled). "
-                             "Move it in docs/overlay_plan.md and film/film.js.")
+            # One project-specific user override: Gustavo explicitly approved a 500% to 100%
+            # opening zoom on Claude Duet. Preserve the general opening rule for all other reels.
+            approved_zoom = self.config.get("approvedOpeningZoom")
+            zoom_exception = (self.root.name == "claude-duet-te-escribe-primero-h1"
+                              and approved_zoom == {"at": 0, "fromScale": 5, "toScale": 1,
+                                                    "seconds": 0.25,
+                                                    "userApproval": "fast 500-to-100 opening approved by Gustavo"}
+                              and onsets[0] == (0, "punch-in"))
+            if not zoom_exception:
+                raise ValueError(f"First animation ({onsets[0][1]}) at {onsets[0][0]:.2f} s: nothing may animate before {first_word + 1.0:.2f} s "
+                                 f"(speech starts at {first_word:.2f} s; the first animation lands 1-3 s after that, once the camera has settled). "
+                                 "Move it in docs/overlay_plan.md and film/film.js.")
         for w in timing["wordmarks"]:
             if w["cycle"] < 1.4 or w["at"] + w["cycle"] > timing["duration"] + 1e-3:
                 raise ValueError(f"The Aurelio close at {w['at']:.2f} s cannot finish its animation before the film ends ({timing['duration']:.2f} s): "
@@ -532,8 +541,8 @@ class Pipeline:
             self.step("cover-ready", c, [source], [output], lambda: self.command("cover-ready",
                       ["ffmpeg", "-v", "error", "-y", "-i", source, "-frames:v", "1", output]))
             return output
-        if len(c.get("lines", [])) != 3:
-            raise ValueError("Set cover.lines to the three agreed headline lines (wrap emphasis in *).")
+        if len(c.get("lines", [])) not in (3, 4):
+            raise ValueError("Set cover.lines to the three (or four, when the big line must be split) agreed headline lines (wrap emphasis in *).")
         if c.get("anchor", "bottom") not in ("top", "bottom"):
             raise ValueError('cover.anchor must be "top" (free space above the head) or "bottom" (torso); see COVER.md.')
         source = self.p(c.get("input") or self.source())
