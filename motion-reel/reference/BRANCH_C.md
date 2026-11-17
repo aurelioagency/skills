@@ -40,3 +40,17 @@ Same folder rules as Branch B (`source/` + `output/`). Caption text and hashtags
 
 ## Delivery folder name (user 2026-11-16)
 The folder and every file inside it use `<tema>-vs-<concepto de IA>-de-que-sabes-mas` (e.g. `futbol-vs-mcp-de-que-sabes-mas`, `tenis-vs-llm-de-que-sabes-mas`, `historia-romana-vs-rag-de-que-sabes-mas`), so the name says it belongs to the quiz series. The work project keeps its short slug; only the delivery and Drive names carry the long one. Rename after `deliver`/`publish` (the pipeline's own slug is the short one) or pass the long slug when delivering.
+
+## Consistencia con los reels aprobados (user 2026-11-17, obligatorio)
+
+Los reels ya aprobados (futbol-mcp, tenis-llm, colon-temperatura, historia-romana-rag) son la referencia. Cada reel nuevo replica su formato, estilo, recorte y música sin variar. El usuario no debe repetir estas reglas.
+
+1. Antes de armar cualquier reel Branch C, leer los valores reales (negro, alpha, borde, radio, tamaños, tiempos) del proyecto aprobado futbol-mcp y reutilizarlos tal cual. La píldora "Pregunta N de 2" y el bloque de título llevan el mismo negro opaco en todos. Nada de recuadros transparentes ni grises.
+2. Gancho siempre igual: bloque de título con estrella, "<tema> vs IA", objetos PNG a cada lado, píldora "Pregunta 1 de 2".
+3. Los objetos del gancho son el emblema propio del tema, buscado y recortado en PNG nítido con fondo transparente: River = escudo de River, Boca = escudo de Boca, Messi = la M o recorte de Messi, Cristiano = CR7 o recorte, Mundiales = la copa. Prohibido usar emoji o la pelota genérica cuando existe un emblema propio. Hay que salir a buscarlo.
+4. Las opciones de la pregunta 1 son VIDEO real reproduciéndose en cada tarjeta, nunca capturas congeladas de un video.
+5. Calidad: prohibido sacar capturas de un video para usarlas como foto (salen pixeladas). Fotos de alta resolución (mínimo 1080 px de lado corto) o clips HD reales. Para jugadores, material con la camiseta correcta (Argentina, Portugal). Verificar nitidez con zoom antes de mostrar.
+6. Coherencia entre opciones: si dos opciones muestran estadios, la tercera también. Mismo tipo de imagen en A, B y C.
+7. Opciones con identidad del tema (River con clips o imágenes de River, no números sueltos).
+8. Fondos negros como el aprobado, sin transparencias que dejen ver el fondo claro.
+9. Mismos recortes, mismo tratamiento de cara y misma música que los aprobados.
