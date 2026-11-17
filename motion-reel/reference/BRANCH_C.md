@@ -54,3 +54,12 @@ Los reels ya aprobados (futbol-mcp, tenis-llm, colon-temperatura, historia-roman
 7. Opciones con identidad del tema (River con clips o imágenes de River, no números sueltos).
 8. Fondos negros como el aprobado, sin transparencias que dejen ver el fondo claro.
 9. Mismos recortes, mismo tratamiento de cara y misma música que los aprobados.
+
+## Estructura del reel quiz, igual que los aprobados (user 2026-11-17, obligatorio)
+
+El trabajo hecho con otro motor (Codex) fue rechazado por no replicar esto. Antes de armar o delegar un reel, copiar la estructura de futbol-mcp/river-gpu.
+1. Cuando pregunta sobre inteligencia artificial (pregunta 2) está EN PANTALLA mirando a cámara.
+2. Cuando dice "¿cuántos acertaste?" también está en pantalla mirando a cámara.
+3. La respuesta de inteligencia artificial lleva ANIMACIONES reales: golpes de 1 a 1.5 s con siglas grandes, clips reales y gráficos propios. Nunca solo texto y tarjetas de palabras clave.
+4. Opciones, textos y tarjetas con el formato exacto del aprobado, en negro opaco, sin transparencias.
+5. Variedad de imágenes: nunca alternar dos fotos ni repetir la misma imagen o estatua. Muchos clips y fotos distintos, HD.
