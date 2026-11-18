@@ -6,6 +6,16 @@ Motion Reel supports **Codex and Claude Code** as complete execution hosts. The 
 
 Use the models and native tools available in Codex. Codex chooses its own model, reasoning effort, delegation and organization for the job; no specific Codex model, fixed subagent structure or equivalent of Sonnet/Opus is required. Planning, animation code, script execution and creative review can all be handled directly in Codex. Use delegation only when available and appropriate under the host's instructions.
 
+Suggested starting points, when available in the current host:
+
+| Task | Model | Reasoning effort |
+|---|---|---|
+| Creative direction, composition, semantic timing, planning and animation code | GPT-6.2 Sol (`gpt-6.2-sol`) | High |
+| Pipeline commands, routine code fixes and delivery preparation | GPT-6.2 Sol (`gpt-6.2-sol`) | Medium |
+| Optional review of rendered frames: legibility, composition and safe zones | GPT-6.1 Terra (`gpt-6.1-terra`) | Medium |
+
+These are starting recommendations, not mandatory model switches or separate subagents. Codex can use Sol for the whole job and decide whether a Terra review adds value. Respect the session's model selection, supported routing and the user's budget; if a suggested model is unavailable, choose from the available models. A skill cannot select a model through a tool the host does not provide. Rendering, encoding and transcription remain local script work and do not need a separate model for each stage.
+
 The `model: claude-sonnet-5-5` and `effort: medium` frontmatter belong to the Claude Code route. They do not select a Codex model, require Claude access or prevent Codex from loading and using this skill. Instructions naming Opus/Sonnet or the Claude Agent tool describe Claude's execution strategy; Codex performs the same responsibilities with its own strategy.
 
 Run the same `scripts/pipeline.py` commands and keep the same plans, project state, approvals, rendered evidence and final checks. Use Codex's supported process/session controls and wait for long-running commands to complete. The Claude Code `/codex:rescue` plugin is not needed when already running in Codex; `docs/codex-handoff.md` remains a normal project handoff file when useful.

@@ -17,6 +17,8 @@ Usá `/motion-reel` en Claude Code. El modelo y esfuerzo del frontmatter aplican
 
 **Codex:** invocá `$motion-reel` o pedile que use la skill Motion Reel. Codex decide qué modelos, esfuerzo y organización usar, sin una equivalencia obligatoria con Sonnet u Opus. Ejecuta el mismo pipeline, escribe la animación y revisa el resultado con los mismos criterios. El frontmatter de Claude y su plugin de rescate no son requisitos para Codex.
 
+Como punto de partida para Codex: **GPT-6.2 Sol con esfuerzo alto** para el plan y las animaciones, **Sol con esfuerzo medio** para ejecutar el pipeline y hacer ajustes habituales, y **GPT-6.1 Terra con esfuerzo medio** como apoyo opcional para revisar fotogramas. No obliga a crear subagentes ni a cambiar de modelo en cada etapa; Codex puede resolver el trabajo completo con Sol y adaptar la organización a lo disponible y al presupuesto. Ver [modelos sugeridos y tareas](reference/MODELS.md#codex).
+
 Detalles: [flujo y configuración](reference/PIPELINE.md), [distribución de tareas y modelos](reference/MODELS.md). El reconocimiento local con Whisper también es IA, aunque no consume tokens de Claude. El ahorro total se mide con registros comparables, incluyendo subagentes:
 
 ```powershell
