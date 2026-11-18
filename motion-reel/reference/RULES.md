@@ -2,6 +2,8 @@
 
 Apply these in every project, including one with no CLAUDE.md. A project's CLAUDE.md wins where it is stricter.
 
+In Codex, also follow the applicable `AGENTS.md` project instructions. A `CLAUDE.md` file is not required for Codex: this reference supplies the shared motion rules. The original chapter prompts describe Claude Code setup; use Codex's own project-instruction conventions when following them in Codex.
+
 ## Render contract
 - The film is a pure function of time. `window.seek(t)` paints frame t, in any order, cold or after any other frame.
 - Render mode has no CSS transitions or animations, no `setTimeout`, no `requestAnimationFrame`, no `Date`, and no state carried between frames (no module variable mutated in `run()`).

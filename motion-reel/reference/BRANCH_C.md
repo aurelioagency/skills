@@ -57,7 +57,7 @@ Los reels ya aprobados (futbol-mcp, tenis-llm, colon-temperatura, historia-roman
 
 ## Estructura del reel quiz, igual que los aprobados (user 2026-11-17, obligatorio)
 
-El trabajo hecho con otro motor (Codex) fue rechazado por no replicar esto. Antes de armar o delegar un reel, copiar la estructura de futbol-mcp/river-gpu.
+Una versión hecha con Codex fue rechazada por no replicar esta estructura visual. Codex y Claude Code pueden ejecutar esta rama usando el mismo motor de Motion Reel; el requisito es respetar el formato aprobado. Antes de armar o delegar un reel, copiar la estructura de futbol-mcp/river-gpu.
 1. Cuando pregunta sobre inteligencia artificial (pregunta 2) está EN PANTALLA mirando a cámara.
 2. Cuando dice "¿cuántos acertaste?" también está en pantalla mirando a cámara.
 3. La respuesta de inteligencia artificial lleva ANIMACIONES reales: golpes de 1 a 1.5 s con siglas grandes, clips reales y gráficos propios. Nunca solo texto y tarjetas de palabras clave.

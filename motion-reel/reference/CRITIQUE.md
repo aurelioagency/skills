@@ -1,5 +1,7 @@
 # Critique prompt
 
+**Host routing:** the Opus critic below is the Claude Code route. In Codex, choose the available model and review strategy yourself, including direct review when appropriate. The same evidence, scorecard and quality bar apply; see [MODELS.md](MODELS.md).
+
 After first-look approval, use one independent Opus critic when useful. Otherwise review with evidence first, without defending the code. Pass only the approved plan, transcript, compact metrics, current rendered evidence and unresolved findings. No full conversation or reference library.
 
 ---
